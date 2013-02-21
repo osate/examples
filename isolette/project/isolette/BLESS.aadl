@@ -1,0 +1,16 @@
+--BLESS.aadl
+--tell OSATE2 that BLESS::Assertion and BLESS::Typed are strings
+--  DO NOT INCLUDE WHEN USING BLESS PROOF TOOL
+
+property set BLESS is
+
+  Assertion : aadlstring applies to ( all );
+    --string that will be parsed as a BLESS Assertion, including enclosing << >>
+    
+  Typed : aadlstring applies to ( all );
+    --string that will be parsed as a BLESS type
+    
+  Invariant : aadlstring applies to ( all );
+    --string that will be parsed as a BLESS Assertion of component invariance
+    
+end BLESS;

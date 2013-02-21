@@ -1,0 +1,63 @@
+--iso_properties.aadl
+--these properties are used by isolette.aadl
+
+property set Iso_Properties is
+  with Isolette,     --AADL components that use the properties herein
+    Physical_Properties,  --AADL property types  
+    EMV2,  --error modeling annex V2 predeclared properties
+    Timing_Properties;
+   
+ 
+  --Table A-9. The Manage Regulator Mode Function Constant
+  Initialization_Timeout : Timing_Properties::Time => 1 sec
+    applies to (all);
+--    (Isolette::manage_regulator_mode_mrm,Isolette::manage_monitor_mode_mmm);
+
+--rate at which user interface fails
+  InterfaceFailureRate : constant EMV2::DistributionSpecification => 
+    [ProbabilityValue => 1.0E-7; Distribution => Fixed;];
+--error rate of detection of interface failure   
+  DetectionInterfaceFailureRate : constant EMV2::DistributionSpecification => 
+    [ProbabilityValue => 1.0E-10; Distribution => Fixed;];
+
+--likelihood that the temperature sensor will fail such that its value is out of range
+  TemperatureSensorOutOfRange : constant EMV2::DistributionSpecification => 
+    [ProbabilityValue => 1.0E-8; Distribution => Fixed;];
+
+--likelihood that the temperature sensor will provide incorrect value but is not out of range
+  TemperatureSensorSubtleValueError : constant EMV2::DistributionSpecification => 
+    [ProbabilityValue => 1.0E-8; Distribution => Fixed;];
+
+--rate at which manage_regulator_mode_mrm fails
+  MRMFailureRate : constant EMV2::DistributionSpecification => 
+    [ProbabilityValue => 1.0E-9; Distribution => Fixed;];
+
+--rate at which manage_heat_source_mhs fails
+  MHSFailureRate : constant EMV2::DistributionSpecification => 
+    [ProbabilityValue => 1.1E-9; Distribution => Fixed;];
+
+--rate at which regulator fails
+  RegulatorFailureRate : constant EMV2::DistributionSpecification => 
+    [ProbabilityValue => 1.2E-7; Distribution => Fixed;];
+--error rate of detection of regulator failure   
+  DetectionRegulatorFailureRate : constant EMV2::DistributionSpecification => 
+    [ProbabilityValue => 1.3E-10; Distribution => Fixed;];
+
+--rate at which manage_monitor_mode_mmm fails
+  MMMFailureRate : constant EMV2::DistributionSpecification => 
+    [ProbabilityValue => 1.4E-9; Distribution => Fixed;];
+
+--rate at which manage_alarm_ma fails
+  MAFailureRate : constant EMV2::DistributionSpecification => 
+    [ProbabilityValue => 1.5E-9; Distribution => Fixed;];
+
+--rate at which temp monitor fails
+  MonitorFailureRate : constant EMV2::DistributionSpecification => 
+    [ProbabilityValue => 1.6E-7; Distribution => Fixed;];
+--error rate of detection of temp monitor failure   
+  DetectionMonitorFailureRate : constant EMV2::DistributionSpecification => 
+    [ProbabilityValue => 1.7E-10; Distribution => Fixed;];
+    
+end Iso_Properties;  
+
+

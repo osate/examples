@@ -1,0 +1,52 @@
+--BLESS_Types.aadl
+
+package BLESS_Types public
+with Base_Types, BLESS_Properties, Data_Model, Memory_Properties, BLESS;
+
+data Integer extends Base_Types::Integer
+  properties  --operators and relation symbols defined for Integer
+    BLESS::Typed => "integer";
+    BLESS_Properties::Supported_Operators => ("+", "*", "-", "/", "mod", "rem", "**");
+    BLESS_Properties::Supported_Relations => ("=", "!=", "<", "<=", ">=", ">");
+  --how should conversion routines be declared?   
+end Integer;    
+    
+data Natural extends Base_Types::Natural
+  properties  --operators and relation symbols defined for Natural
+    BLESS::Typed => "natural";
+    BLESS_Properties::Supported_Operators => ("+", "*", "-", "/", "mod", "rem", "**");
+    BLESS_Properties::Supported_Relations => ("=", "!=", "<", "<=", ">=", ">");
+end Natural;    
+    
+data Real extends Base_Types::Float
+  properties  --operators and relation symbols defined for Float
+    BLESS::Typed => "real";
+    BLESS_Properties::Supported_Operators => ("+", "*", "-", "/", "**");
+    BLESS_Properties::Supported_Relations => ("=", "!=", "<", "<=", ">=", ">");
+end Real;    
+    
+data String extends Base_Types::String
+  properties  --operators and relation symbols defined for String
+    BLESS::Typed => "string";
+    BLESS_Properties::Supported_Operators => ("+", "-"); --just concatenation
+    BLESS_Properties::Supported_Relations => ("=", "!=", "<", "<=", ">=", ">");
+end String;    
+    
+data Fixed_Point
+  properties  --operators and relation symbols defined for fixed-point arithmetic
+    BLESS::Typed => "fixed";
+    BLESS_Properties::Supported_Operators => ("+", "*", "-", "/", "**");
+    BLESS_Properties::Supported_Relations => ("=", "!=", "<", "<=", ">=", ">");
+    Data_Model::Data_Representation => Integer;
+end Fixed_Point;
+
+data Time extends Base_Types::Integer_64  --in milliseconds
+  properties  --operators and relation symbols defined for Time
+    --don't have a way to say that Time may be multiplied or divided by scalar
+    --but not another Time
+    BLESS::Typed => "integer";
+    BLESS_Properties::Supported_Operators => ("+", "*", "-", "/");
+    BLESS_Properties::Supported_Relations => ("=", "!=", "<", "<=", ">=", ">");
+end Time;
+    
+end BLESS_Types;
