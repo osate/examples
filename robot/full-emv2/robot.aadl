@@ -1,0 +1,30 @@
+package robot_emv2only
+
+public
+
+with EMV2;
+
+
+system robot
+	annex EMV2 {**
+		use behavior robot_behavior_emv2only::normal;
+
+	**};
+end robot;
+
+system implementation robot.i
+
+end robot.i;
+
+
+system s
+end s;
+
+
+system implementation s.i
+subcomponents
+	r1 : system robot.i;
+end s.i;
+
+
+end robot_emv2only;

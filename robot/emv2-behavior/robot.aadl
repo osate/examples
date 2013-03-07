@@ -1,0 +1,165 @@
+package robot
+
+public
+
+with EMV2;
+with Base_Types;
+with Data_Model;
+
+system error_probabilities
+features
+	p_d1		: out event port;
+	p_ed1		: out event port;
+	p_d2		: out event port;
+	p_ed2		: out event port;
+	p_d3		: out event port;
+	p_ed3		: out event port;
+	p_false_neg	: out event port;
+	see_mine	: out event port;
+	explode 	: out event port;
+end error_probabilities;
+
+system implementation error_probabilities.i
+end error_probabilities.i;
+
+system robot_error
+	features
+		defuse_fail : in event port;
+		timeout		: in event port;
+	annex EMV2 {**
+		use behavior robot_behavior_emv2_behavior::normal;
+		
+		component error behavior
+		transitions
+			t1 : operational -[ defuse_fail ]-> blown;
+			t2 : operational -[ overrun     ]-> timeout;
+		end component;
+	**};
+end robot_error;
+
+system implementation robot_error.i
+end robot_error.i;
+
+system robot_behavior
+features
+	timeout 	: out event port;
+	blown 	    : out event port;
+	see_mine    : in event port;
+	explode     : in event port;
+	p_d1		: in event port;
+	p_ed1		: in event port;
+	p_d2		: in event port;
+	p_ed2		: in event port;
+	p_d3		: in event port;
+	p_ed3		: in event port;
+	p_false_neg	: in event port;
+end robot_behavior;
+
+system implementation robot_behavior.i
+subcomponents
+	time_counter: data Base_Types::Integer {Data_Model::Initial_Value => ("0");};
+	timeout_val : data Base_Types::Integer {Data_Model::Initial_Value => ("100");};
+	
+	current_cell: data Base_Types::Integer {Data_Model::Initial_Value => ("0");};
+	ncells      : data Base_Types::Integer {Data_Model::Initial_Value => ("100");};
+	
+	failures     : data Base_Types::Integer {Data_Model::Initial_Value => ("0");};
+	t_sense      : data Base_Types::Integer {Data_Model::Initial_Value => ("10");};
+	t_defuse1      : data Base_Types::Integer {Data_Model::Initial_Value => ("10");};
+	t_defuse2      : data Base_Types::Integer {Data_Model::Initial_Value => ("10");};
+	t_defuse3      : data Base_Types::Integer {Data_Model::Initial_Value => ("10");};
+	t_mark      : data Base_Types::Integer {Data_Model::Initial_Value => ("10");};
+annex behavior_specification
+{**
+		states
+		  init 			: initial complete final state ;
+		  detect_mine 	:  final state;
+		  defuse1		:  state;
+		  defuse2		:  state;
+		  mark			:  state;
+		  goto_next		:  state;
+		  not_detected	:  state;
+		  done			:  final state;
+		transitions
+		  -- From init
+		  init -[current_cell < ncells]-> detect_mine {current_cell := current_cell + 1 ; time_counter :=  t_sense};
+		  init -[current_cell >= ncells]-> done;
+		  
+		  -- From detect_mine
+		  detect_mine -[time_counter >= timeout_val]-> done;
+  		  detect_mine -[(time_counter < timeout_val) and see_mine?]-> defuse1 {time_counter := time_counter + t_defuse1};
+  		  detect_mine -[(time_counter < timeout_val) and explode?]-> done {blown!};
+  		  detect_mine -[(time_counter < timeout_val) and ( not explode?) and (not see_mine?)]-> not_detected;
+  		 
+  		  -- From defuse1
+  		 defuse1 -[time_counter >= timeout_val]-> done {timeout!};
+  		 defuse1 -[(time_counter < timeout_val) and (p_d1?) and (not p_ed1?)]-> goto_next;
+  		 defuse1 -[(time_counter < timeout_val) and (not p_d1?) and (p_ed1?)]-> done {blown!};
+  		 defuse1 -[(time_counter < timeout_val) and (not p_d1?) and (not p_ed1?)]-> defuse2 {time_counter := time_counter + t_defuse2};
+  		 
+  		 -- From defuse2
+  		 defuse2 -[time_counter >= timeout_val]-> done {timeout!};
+  		 defuse2 -[(time_counter < timeout_val) and (p_d2) and (not p_ed2?)]-> goto_next;
+  		 defuse2 -[(time_counter < timeout_val) and (not p_d2?) and (p_ed2?)]-> done {blown!};
+  		 defuse2 -[(time_counter < timeout_val) and (not p_d2?) and (not p_ed2?)]-> defuse3 {time_counter := time_counter + t_defuse3};
+  		 
+  		 defuse2 -[time_counter < timeout_val]
+  		 -- From defuse3
+  		 defuse3 -[time_counter >= timeout_val]-> done {timeout!};
+  		 defuse3 -[(time_counter < timeout_val) and (p_d3?) and (not p_ed3?)]-> goto_next;
+  		 defuse3 -[(time_counter < timeout_val) and (not p_d3?) and (p_ed3?)]-> done {blown!};
+  		 defuse3 -[(time_counter < timeout_val) and (not p_d3?) and (not p_ed3?)]-> mark {time_counter := time_counter + t_mark};
+  		 
+  		 -- From mark
+  		 mark -[time_counter >= timeout_val]-> done {timeout!};
+  		 mark -[time_counter < timeout_val]-> goto_next;
+  		 
+  		 -- From not_detected
+  		 not_detected -[ p_false_neg? ]-> goto_next_cell {failures := failures + 1};
+  		 not_detected -[ not p_false_neg? ]-> init;
+  		 
+  		 -- From goto_next
+  		 -- Later, we can add some potential faults depending on the robot behavior
+  		 goto_next -[]-> init;
+	**};
+end robot_behavior.i;
+
+
+system robot
+end robot;
+
+system implementation robot.i 
+subcomponents
+	prob 			: system error_probabilities.i;
+	error  			: system robot_error.i;
+	behavior		: system robot_behavior.i;
+connections
+	port prob.p_d1 -> behavior.p_d1;
+	port prob.p_ed1 -> behavior.p_ed1;
+	port prob.p_d2 -> behavior.p_d2;
+	port prob.p_ed2 -> behavior.p_ed2;
+	port prob.p_d3 -> behavior.p_d3;
+	port prob.p_ed3 -> behavior.p_ed3;
+	port prob.p_false_neg -> behavior.p_false_neg;
+	port prob.see_mine -> behavior.see_mine;
+	port prob.explode -> behavior.explode;
+	
+	
+	port behavior.timeout 	-> error.timeout;
+	port behavior.blown 	-> error.defuse_fail;
+	
+	
+end robot.i;
+
+
+system s 
+end s;
+
+
+system implementation s.i
+subcomponents
+	r1 : system robot.i;
+end s.i;
+
+
+end robot;

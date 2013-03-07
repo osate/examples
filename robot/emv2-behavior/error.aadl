@@ -1,0 +1,18 @@
+package robot_behavior_emv2_behavior
+
+public
+with base_types;
+	annex EMV2 {**
+		error behavior normal
+		events
+			defuse_fail 			: error event;
+			overrun					: error event;
+		states
+			operational				: initial state;
+			timeout					: state;
+			blown					: state;
+			
+
+		end behavior;
+	**};
+end robot_behavior_emv2_behavior;

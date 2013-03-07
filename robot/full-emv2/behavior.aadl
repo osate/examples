@@ -1,0 +1,90 @@
+package robot_behavior_emv2only
+
+public
+with base_types;
+
+    annex behavior_specification
+    {**
+  		variables
+    		x : Base_Types::Integer;
+    		y : MyInteger ;
+    		bool1 : Base_Types::Boolean ;
+ 		states
+    		a : state ;
+  		transitions
+    		a -[]-> a {bool1 := true} ;
+    **};
+	annex EMV2 {**
+--		error types
+--			SensorBreaks: type;
+--		end types;
+		error behavior normal
+		events
+			completed 				: error event;
+			timeout_detected	 	: error event;
+			mine_detected 			: error event;
+			mine_not_detected 		: error event;
+			move_to_next_cell 		: error event;
+			explode_detect 			: error event;
+			to_medium_defuse 		: error event;
+			to_hard_defuse 			: error event;
+			to_mark 				: error event;
+			success_low_defuse 		: error event;
+			success_medium_defuse 	: error event;
+			success_hard_defuse 	: error event;
+			failure_low_defuse 		: error event;
+			failure_medium_defuse 	: error event;
+			failure_hard_defuse 	: error event;
+			false_negative 			: error event;
+			no_false_negative 		: error event;
+		states
+			init					: initial state;
+			done					: state;
+			detect_mine				: state;
+			defuse1 				: state;
+			defuse2 				: state;
+			defuse3 				: state;
+			mark 					: state;
+			goto_next_cell 			: state;
+			not_detected 			: state;
+			blownup 				: state;
+			timeout 				: state;
+			
+		transitions
+		    -- From init
+			t0: init -[completed			]-> done;
+			--t1: init -[ not completed 	]-> detect_mine;
+			
+			--  From detect_mine
+			t10 : detect_mine -[  timeout_detected 	]-> timeout;
+			t11 : detect_mine -[ mine_detected 		]-> defuse1;
+			t12 : detect_mine -[ explode_detect 	]-> blownup;
+			t13 : detect_mine -[ mine_not_detected	]-> not_detected;
+			
+			--  From defuse1
+			t20 : defuse1 -[ timeout_detected	 	]-> timeout;
+			t21 : defuse1 -[ to_medium_defuse 		]-> defuse2;
+			t22 : defuse1 -[ success_low_defuse 	]-> goto_next_cell;
+			t23 : defuse1 -[ failure_low_defuse 	]-> blownup;
+			
+			--  From defuse2
+			t30 : defuse2 -[ timeout_detected 		]-> timeout;
+			t31 : defuse2 -[ to_hard_defuse 		]-> defuse3;
+			t32 : defuse2 -[ success_medium_defuse 	]-> goto_next_cell;
+			t33 : defuse2 -[ failure_medium_defuse 	]-> blownup;
+						
+			--  From defuse3
+			t30 : defuse3 -[ timeout_detected 		]-> timeout;
+			t31 : defuse3 -[ to_mark 				]-> mark;
+			t32 : defuse3 -[ success_medium_defuse 	]-> goto_next_cell;
+			t33 : defuse3 -[ failure_medium_defuse 	]-> blownup;
+			
+			-- From not_detected
+			t40 : not_detected -[ false_negative 		]-> goto_next_cell;
+			t41 : not_detected -[ no_false_negative 	]-> goto_next_cell;
+			
+			t99 : goto_next_cell -[ move_to_next_cell 	]-> init;
+			
+		end behavior;
+	**};
+end robot_behavior_emv2only;
