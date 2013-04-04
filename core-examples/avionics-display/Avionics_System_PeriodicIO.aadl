@@ -1,0 +1,134 @@
+package Avionics_System_PeriodicIO
+public
+with avionics_subsystems, avionics_flightmanager;
+-- This file contains several implementations of the Avionics System.
+-- The Avionics system being modeled is represented by the Flight_System declaration.
+-- It contains the subsystems as well as the execution platform (hardware).
+-- One implementation includes a PeriodicIO thread that is repsonsible for performing communicaiton with other subsystems.
+-- The second implementation achieves the same functionality without this thread - resulting in less latency.
+-- 
+-- The model has been set up to perform scheduling analysis by binding the flight manager threads to the processor via an OSATE analysis plugin.
+-- It will not be schedulable. A faster processor will still not meet the timing requirement, while the addition of a second processor does.
+-- An appropriate section of the model is commetned to indicate possible changes to the model.
+-- The model is also set up to have latency analysis performed.
+-- Performing the latency analysis on the Periodic IO implementation will show a latency that is higher due to the fact that both Periodic IO and the semantics of cross-partition communication add latency.
+system Flight_System
+end Flight_System;
+
+-- this system implementation uses the flight manager without a periodic IO thread
+-- This is done by selecting the appropriate flight manager implementation
+system implementation Flight_System.noPIO
+  subcomponents
+    Pilot_Display: device avionics_subsystems::Display.MFD;
+    Pilot_DM: process avionics_subsystems::Display_Manager.impl;
+    PCM: process avionics_subsystems::Page_Content_Manager.impl;
+    FM: process avionics_flightmanager::Flight_Manager.noPIO;
+    FD: process avionics_subsystems::Flight_Director.impl;
+    myvme: bus avionics_subsystems::VME.i;
+    displayprocessor: processor avionics_subsystems::PowerPC.Mhz350;
+    -- We can address the performance problem in two ways
+    -- 1. try to use a faster processor
+    --        displayprocessor: processor avionics_subsystems::PowerPC.Mhz500;
+    -- 2. use a second processor of the same speed
+    missionprocessor: processor avionics_subsystems::PowerPC.Mhz350;
+  connections
+    menu_cmd_to_DM: port Pilot_Display.Menu_Cmd_Pushed -> Pilot_DM.Menu_selection_from_Display {
+      Timing => Immediate;
+      Allowed_Connection_Binding => ( reference( myvme ) );
+      };
+    menu_cmd_to_PCM: port Pilot_DM.New_Page_Request_To_PCM -> PCM.New_Page_Request_From_DM {
+      Timing => Immediate;
+      };
+    menu_cmd_to_FM: port PCM.New_Page_Request_To_FM -> FM.New_Page_Request_From_PCM {
+      Timing => Immediate;
+      };
+    menu_cmd_to_FD: port FM.New_Page_Request_To_FD -> FD.New_Page_Request_From_FM {
+      Timing => Immediate;
+      };
+    page_to_FM: port FD.New_Page_Content_To_FM -> FM.New_Page_Content_from_FD {
+      Timing => Immediate;
+      };
+    page_to_PCM: port FM.New_Page_Content_To_PCM -> PCM.New_Page_Content_from_FM {
+      Timing => Immediate;
+      };
+    page_to_DM: port PCM.New_Page_Content_To_DM -> Pilot_DM.New_Page_Content_from_PCM {
+      Timing => Immediate;
+      };
+    page_to_Display: port Pilot_DM.New_Page_Image_To_Display -> Pilot_Display.Page_To_Show {
+      Timing => Immediate;
+      };
+    -- hardware connections
+    mission: bus access myvme -> missionprocessor.vmeBus;
+    display: bus access myvme -> displayprocessor.vmeBus;
+  flows
+    get_new_page: end to end flow Pilot_Display.Menu_Entry_Selected -> menu_cmd_to_DM -> Pilot_DM.cmd_request
+       -> menu_cmd_to_PCM -> PCM.cmd_request
+       -> menu_cmd_to_FM -> FM.cmd_request
+       -> menu_cmd_to_FD -> FD.process_page_request
+       -> page_to_FM -> FM.show_page
+       -> page_to_PCM -> PCM.show_page
+       -> page_to_DM -> Pilot_DM.show_page
+       -> page_to_Display -> Pilot_Display.Show_Page
+       {
+        Latency => 350 Ms .. 350 Ms;
+        };
+end Flight_System.noPIO;
+
+system implementation Flight_System.PIO
+  subcomponents
+    Pilot_Display: device avionics_subsystems::Display.MFD;
+    Pilot_DM: process avionics_subsystems::Display_Manager.impl;
+    PCM: process avionics_subsystems::Page_Content_Manager.impl;
+    FM: process avionics_flightmanager::Flight_Manager.PIO;
+    -- avionics_subsystems::Flight_Manager.impl;--
+    FD: process avionics_subsystems::Flight_Director.impl;
+    myvme: bus avionics_subsystems::VME.i;
+    displayprocessor: processor avionics_subsystems::PowerPC.Mhz350;
+    -- We can address the performance problem in two ways
+    -- 1. try to use a faster processor
+    --    displayprocessor: processor avionics_subsystems::PowerPC.Mhz500;
+    -- 2. use a second processor of the same speed
+    missionprocessor: processor avionics_subsystems::PowerPC.Mhz350;
+  connections
+    menu_cmd_to_DM: port Pilot_Display.Menu_Cmd_Pushed -> Pilot_DM.Menu_selection_from_Display {
+      Timing => Immediate;
+      Allowed_Connection_Binding => ( reference( myvme ) );
+      };
+    menu_cmd_to_PCM: port Pilot_DM.New_Page_Request_To_PCM -> PCM.New_Page_Request_From_DM {
+      Timing => Immediate;
+      };
+    menu_cmd_to_FM: port PCM.New_Page_Request_To_FM -> FM.New_Page_Request_From_PCM {
+      Timing => Immediate;
+      };
+    menu_cmd_to_FD: port FM.New_Page_Request_To_FD -> FD.New_Page_Request_From_FM {
+      Timing => Immediate;
+      };
+    page_to_FM: port FD.New_Page_Content_To_FM -> FM.New_Page_Content_from_FD {
+      Timing => Immediate;
+      };
+    page_to_PCM: port FM.New_Page_Content_To_PCM -> PCM.New_Page_Content_from_FM {
+      Timing => Immediate;
+      };
+    page_to_DM: port PCM.New_Page_Content_To_DM -> Pilot_DM.New_Page_Content_from_PCM {
+      Timing => Immediate;
+      };
+    page_to_Display: port Pilot_DM.New_Page_Image_To_Display -> Pilot_Display.Page_To_Show {
+      Timing => Immediate;
+      };
+    -- hardware connections
+    mission: bus access myvme -> missionprocessor.vmeBus;
+    display: bus access myvme -> displayprocessor.vmeBus;
+  flows
+    get_new_page: end to end flow Pilot_Display.Menu_Entry_Selected -> menu_cmd_to_DM -> Pilot_DM.cmd_request
+       -> menu_cmd_to_PCM -> PCM.cmd_request
+       -> menu_cmd_to_FM -> FM.cmd_request
+       -> menu_cmd_to_FD -> FD.process_page_request
+       -> page_to_FM -> FM.show_page
+       -> page_to_PCM -> PCM.show_page
+       -> page_to_DM -> Pilot_DM.show_page
+       -> page_to_Display -> Pilot_Display.Show_Page
+       {
+        Latency => 350 Ms .. 350 Ms;
+        };
+end Flight_System.PIO;
+end Avionics_System_PeriodicIO;

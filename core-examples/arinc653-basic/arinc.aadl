@@ -1,0 +1,123 @@
+package arinc_sample
+public
+
+with ARINC653;
+
+data dummy
+end dummy;
+
+thread thr_sensor
+features
+	value : out data port dummy;
+end thr_sensor;
+
+thread implementation thr_sensor.i
+end thr_sensor.i;
+
+process pr_data_acq
+features
+	sensor1out : out data port dummy;
+	sensor2out : out data port dummy;
+end pr_data_acq;
+
+process implementation pr_data_acq.i
+subcomponents
+	sensor1 : thread thr_sensor.i;
+	sensor2 : thread thr_sensor.i;
+connections
+	port sensor1.value -> sensor1out;
+	port sensor2.value -> sensor2out;
+end pr_data_acq.i;
+
+thread thr_filter
+features
+	sensor1inval : in data port dummy;
+	sensor2inval : in data port dummy;
+	filteredout : out data port dummy;
+end thr_filter;
+
+thread implementation thr_filter.i
+end thr_filter.i;
+
+thread thr_collector
+features
+  	filteredin : in data port dummy;
+end thr_collector;
+
+thread implementation thr_collector.i
+end thr_collector.i;
+
+process pr_stats
+features
+	sensor1in : in data port dummy;
+	sensor2in : in data port dummy;
+end pr_stats;
+
+process implementation pr_stats.i
+subcomponents
+	process1 : thread thr_filter.i;
+	process2 : thread thr_collector.i;
+connections
+	port process1.filteredout -> process2.filteredin;
+	port sensor1in -> process1.sensor1inval;
+	port sensor2in -> process1.sensor2inval;
+end pr_stats.i;
+
+memory segment
+properties
+	ARINC653::Memory_Type => (Data_Memory, Code_Memory);
+end segment;
+
+memory implementation segment.i
+end segment.i;
+
+memory ram
+end ram;
+
+memory implementation ram.i
+subcomponents
+	segment1 : memory segment.i;
+	segment2 : memory segment.i;
+end ram.i;
+
+virtual processor partition
+end partition;
+
+virtual processor implementation partition.i
+end partition.i;
+
+processor arinc_module
+end arinc_module;
+
+processor implementation arinc_module.two_partitions
+subcomponents
+	runtime1 : virtual processor partition.i;
+	runtime2 : virtual processor partition.i;
+properties
+	ARINC653::Partition_Slots => (10 ms, 20 ms);
+	ARINC653::Slots_Allocation => (reference (runtime1), reference (runtime2));
+	ARINC653::Module_Major_Frame => 30 ms;
+	ARINC653::HM_Errors => (Module_Config, Module_Init, Module_Scheduling);
+	ARINC653::HM_Module_Recovery_Actions => (Ignore, Reset, Reset);
+end arinc_module.two_partitions;
+
+system arinc653_system
+end arinc653_system;
+
+system implementation arinc653_system.i
+subcomponents
+	module : processor arinc_module.two_partitions;
+	ram : memory ram.i;
+	data_acquisition : process pr_data_acq.i;
+	statistics : process pr_stats.i;
+connections
+	port data_acquisition.sensor1out -> statistics.sensor1in;
+	port data_acquisition.sensor2out -> statistics.sensor2in;
+properties
+	Actual_Processor_Binding => (reference (module.runtime1)) applies to statistics;
+	Actual_Memory_Binding => (reference (ram.segment1)) applies to statistics;
+	Actual_Processor_Binding => (reference (module.runtime2)) applies to data_acquisition;
+	Actual_Memory_Binding => (reference (ram.segment2)) applies to data_acquisition;
+end arinc653_system.i;
+
+end arinc_sample;

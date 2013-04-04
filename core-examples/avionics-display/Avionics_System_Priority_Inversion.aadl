@@ -1,0 +1,20 @@
+package Avionics_System_Priority_Inversion
+public
+with avionics_flightmanager_shared, avionics_subsystems;
+system Flight_System 
+end Flight_System;
+
+system implementation Flight_System.Priority_Shared
+  subcomponents
+    FM: process avionics_flightmanager_shared::Flight_Manager.shareddata;
+    displayprocessor: processor avionics_subsystems::PowerPC.Mhz350;
+  properties
+    Actual_Processor_Binding => ( reference( displayprocessor ) ) applies to FM.NSP;
+    Actual_Processor_Binding => ( reference( displayprocessor ) ) applies to FM.INav;
+    Actual_Processor_Binding => ( reference( displayprocessor ) ) applies to FM.GP;
+    Actual_Processor_Binding => ( reference( displayprocessor ) ) applies to FM.FPP;
+    Actual_Processor_Binding => ( reference( displayprocessor ) ) applies to FM.APC;
+    Actual_Processor_Binding => ( reference( displayprocessor ) ) applies to FM.PerIO;
+end Flight_System.Priority_Shared;
+end Avionics_System_Priority_Inversion;
+ 

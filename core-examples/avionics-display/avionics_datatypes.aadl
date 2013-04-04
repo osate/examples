@@ -1,0 +1,61 @@
+package avionics_datatypes
+-- This package contains the data types used in the Avionics System example 
+public
+with avionics_datatypes;
+  data Menu_Cmd
+  end Menu_Cmd;
+  
+  data Page_Content
+  end Page_Content;
+  
+  data Page_Request
+  end Page_Request;
+  
+  data Page_Image
+  end Page_Image;
+  
+  data NavSignalData
+  end NavSignalData;
+    
+  data NavSensorData
+  end NavSensorData;
+  
+  data NavData
+  end NavData;
+  
+  data FuelFlowData
+  end FuelFlowData;
+  
+  data GuidanceData
+  end GuidanceData;
+  
+  data FPData
+  end FPData;
+  
+  data PerformanceData
+  end PerformanceData;
+  
+  feature group FMInData
+    features
+      fuelFlow: in data port FuelFlowData;
+      navSignal: in data port NavSignalData;
+  end FMInData;
+  
+  feature group FMInDataInv
+    inverse of FMInData
+  end FMInDataInv;
+  
+  feature group FMOutData
+    features
+      guidanceOut: out data port GuidanceData;
+      fpDataOut: out data port FPData;
+      navDataOut: out data port NavData;
+  end FMOutData;
+  
+  feature group FMOutDataInv
+    inverse of FMOutData
+  end FMOutDataInv;
+  
+  data SharedData
+  end SharedData;
+end avionics_datatypes;

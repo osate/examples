@@ -1,0 +1,147 @@
+package Avionics_SubSystem_Flow_Latency
+public
+with SEI;
+data Menu_Cmd
+end Menu_Cmd;
+
+data Page_Content
+end Page_Content;
+
+data Page_Request
+end Page_Request;
+
+data Page_Image
+end Page_Image; 
+
+device Display
+  features
+    Menu_Cmd_Pushed: out data port Menu_Cmd;
+    Page_To_Show: in data port Page_Image;
+  flows
+    Menu_Entry_Selected: flow source Menu_Cmd_Pushed {
+      Latency => 5 Ms .. 5 Ms;
+      };
+    Show_Page: flow sink Page_To_Show {
+      Latency => 10 Ms .. 10 Ms;
+      };
+end Display;
+
+device implementation Display.MFD
+end Display.MFD;
+
+system Display_Manager
+  features
+    Menu_selection_from_Display: in data port Menu_Cmd;
+    New_Page_Image_To_Display: out data port Page_Image;
+    New_Page_Request_To_PCM: out event data port Page_Request;
+    New_Page_Content_from_PCM: in event data port Page_Content;
+  flows
+    cmd_request: flow path Menu_selection_from_Display -> New_Page_Request_To_PCM {
+      Latency => 50 Ms .. 50 Ms;
+      };
+    -- the show page flow passes through the wrong port
+    --        show_page : flow path Menu_selection_from_Display -> New_Page_Image_To_Display;  -- error
+    show_page: flow path New_Page_Content_from_PCM -> New_Page_Image_To_Display {
+      Latency => 50 Ms .. 50 Ms;
+      };
+  -- corrected
+  properties
+    SEI::Is_Partition => true;
+end Display_Manager;
+
+system implementation Display_Manager.impl
+end Display_Manager.impl;
+
+system Page_Content_Manager
+  features
+    New_Page_Request_From_DM: in event data port Page_Request;
+    New_Page_Content_To_DM: out event data port Page_Content;
+    New_Page_Request_To_FM: out event data port Page_Request;
+    New_Page_Content_from_FM: in event data port Page_Content;
+  -- ports to communicate to other subsystems except for flight director
+  flows
+    cmd_request: flow path New_Page_Request_From_DM -> New_Page_Request_To_FM {
+      Latency => 50 Ms .. 50 Ms;
+      };
+    show_page: flow path New_Page_Content_from_FM -> New_Page_Content_To_DM {
+      Latency => 50 Ms .. 50 Ms;
+      };
+  properties
+    SEI::Is_Partition => true;
+end Page_Content_Manager;
+
+system implementation Page_Content_Manager.impl
+end Page_Content_Manager.impl;
+
+system Flight_Manager
+  features
+    New_Page_Request_From_PCM: in event data port Page_Request;
+    New_Page_Content_To_PCM: out event data port Page_Content;
+    New_Page_Request_To_FD: out event data port Page_Request;
+    New_Page_Content_from_FD: in event data port Page_Content;
+  flows
+    cmd_request: flow path New_Page_Request_From_PCM -> New_Page_Request_To_FD {
+      Latency => 50 Ms .. 50 Ms;
+      };
+    show_page: flow path New_Page_Content_from_FD -> New_Page_Content_To_PCM {
+      Latency => 50 Ms .. 50 Ms;
+      };
+  properties
+    SEI::Is_Partition => true;
+end Flight_Manager;
+
+system implementation Flight_Manager.impl
+end Flight_Manager.impl;
+
+system Flight_Director
+  features
+    New_Page_Request_From_FM: in event data port Page_Request;
+    New_Page_Content_To_FM: out event data port Page_Content;
+  flows
+    process_page_request: flow path New_Page_Request_From_FM -> New_Page_Content_To_FM {
+      Latency => 50 Ms .. 50 Ms;
+      };
+  properties
+    SEI::Is_Partition => true;
+end Flight_Director;
+
+system implementation Flight_Director.impl
+end Flight_Director.impl;
+
+system Flight_System
+end Flight_System;
+
+system implementation Flight_System.impl
+  subcomponents
+    Pilot_Display: device Display.MFD;
+    Pilot_DM: system Display_Manager.impl;
+    PCM: system Page_Content_Manager.impl;
+    FM: system Flight_Manager.impl;
+    FD: system Flight_Director.impl;
+  connections
+    menu_cmd_to_DM: port Pilot_Display.Menu_Cmd_Pushed -> Pilot_DM.Menu_selection_from_Display {
+      Timing => Immediate;
+      };
+    menu_cmd_to_PCM: port Pilot_DM.New_Page_Request_To_PCM -> PCM.New_Page_Request_From_DM;
+    menu_cmd_to_FM: port PCM.New_Page_Request_To_FM -> FM.New_Page_Request_From_PCM;
+    menu_cmd_to_FD: port FM.New_Page_Request_To_FD -> FD.New_Page_Request_From_FM;
+    page_to_FM: port FD.New_Page_Content_To_FM -> FM.New_Page_Content_from_FD;
+    page_to_PCM: port FM.New_Page_Content_To_PCM -> PCM.New_Page_Content_from_FM;
+    page_to_DM: port PCM.New_Page_Content_To_DM -> Pilot_DM.New_Page_Content_from_PCM;
+    page_to_Display: port Pilot_DM.New_Page_Image_To_Display -> Pilot_Display.Page_To_Show {
+      Timing => Immediate;
+      };
+  flows
+    get_new_page: end to end flow Pilot_Display.Menu_Entry_Selected -> menu_cmd_to_DM -> Pilot_DM.cmd_request
+       -> menu_cmd_to_PCM -> PCM.cmd_request
+       -> menu_cmd_to_FM -> FM.cmd_request
+       -> menu_cmd_to_FD -> FD.process_page_request
+       -> page_to_FM -> FM.show_page
+       -> page_to_PCM -> PCM.show_page
+       -> page_to_DM -> Pilot_DM.show_page
+       -> page_to_Display -> Pilot_Display.Show_Page
+       {
+        Latency => 350 Ms .. 350 Ms;
+        };
+end Flight_System.impl;
+end Avionics_SubSystem_Flow_Latency;

@@ -1,0 +1,117 @@
+--        This package contains hardware components
+--        The hardware components have resource capacity properties
+--        These property values are used in resoruce budget analysis
+--        The multi-function display also includes a flow specification with a latency value
+package HardwareParts
+public
+with HardwareParts, AppTypes, SEI;
+  memory RAM
+    features
+      Power: requires bus access PowerSupply {
+        SEI::PowerBudget => 0.1 W;
+        };
+    properties
+      Byte_Count => 256000;
+      SEI::RAMCapacity => 1.0 MByte;
+      SEI::ROMCapacity => 100.0 KByte;
+      SEI::NetWeight => 0.5 kg;
+  end RAM;
+  
+  memory ROM
+    features
+      Power: requires bus access PowerSupply {
+        SEI::PowerBudget => 0.1 W;
+        };
+    properties
+      Byte_Count => 512;
+      SEI::ROMCapacity => 100.0 KByte;
+      SEI::NetWeight => 0.2 kg;
+  end ROM;
+  
+  bus EtherSwitch
+    features
+      Power: requires bus access PowerSupply {
+        SEI::PowerBudget => 0.300 W;
+        };
+    properties
+      SEI::PowerCapacity => 1.0 W;
+      SEI::BandWidthCapacity => 100.0 Mbytesps;
+      SEI::NetWeight => 5.0 kg;
+  end EtherSwitch;
+  
+  processor Xeon
+    features
+      HS: requires bus access EtherSwitch {
+        SEI::PowerBudget => 75.0 mW;
+        };
+      Power: requires bus access PowerSupply {
+        SEI::PowerBudget => 4.9 W;
+        };
+    properties
+      SEI::NetWeight => 1.0 kg;
+  end Xeon;
+  
+  processor implementation Xeon.solo
+    subcomponents
+      MemBank1: memory RAM;
+      Membank2: memory ROM;
+    properties
+      SEI::NetWeight => 1.0 kg;
+      SEI::MIPSCapacity => 1000.0 MIPS;
+  end Xeon.solo;
+  
+  processor implementation Xeon.dualcore
+    subcomponents
+      MemBank1: memory RAM;
+      Membank2: memory ROM;
+    modes none ;
+    properties
+      SEI::NetWeight => 1.5 kg;
+      SEI::MIPSCapacity => 2000.0 MIPS;
+  end Xeon.dualcore;
+  
+  device MFD
+    features
+      Switch: requires bus access EtherSwitch;
+      DisplayToDM: feature group AppTypes::PageRequest;
+      Power: requires bus access PowerSupply {
+        SEI::PowerBudget => 80.0 W;
+        };
+    flows
+      Menu_Entry_Selected: flow source DisplayToDM {
+        Latency => 5 Ms .. 5 Ms;
+        };
+      Show_Page: flow sink DisplayToDM {
+        Latency => 10 Ms .. 10 Ms;
+        };
+    properties
+      SEI::NetWeight => 25.0 kg;
+  end MFD;
+  
+  bus LAN
+    features
+      Power: requires bus access PowerSupply {
+        SEI::PowerBudget => 0.1 W;
+        };
+    properties
+      SEI::NetWeight => 12.5 kg;
+  end LAN;
+  
+  bus PowerSupply
+    properties
+      SEI::PowerCapacity => 10.0 W;
+      SEI::NetWeight => 75.0 kg;
+  end PowerSupply;
+  
+  bus implementation PowerSupply.V30
+    properties
+      SEI::PowerCapacity => 30.0 W;
+      SEI::NetWeight => 90.0 kg;
+  end PowerSupply.V30;
+  
+  bus implementation PowerSupply.V15
+    properties
+      SEI::PowerCapacity => 15.0 W;
+      SEI::NetWeight => 75.0 kg;
+  end PowerSupply.V15;
+end HardwareParts;

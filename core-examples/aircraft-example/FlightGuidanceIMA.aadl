@@ -1,0 +1,128 @@
+package FlightGuidanceIMA
+public
+with AircraftSubsystems, HardwarePlatform, AppSystems;
+  system FlightGuidance
+    extends AircraftSubsystems::FlightGuidance
+  end FlightGuidance;
+  
+  --        a system with the application as a parts list of subsystems with resource budgets
+  --        and a platform with hardware parts with resource capacities
+  system implementation FlightGuidance.parts
+    subcomponents
+      Platform: system HardwarePlatform::ComputingPlatform.ThreeProcessorParts;
+      ApplicationSystem: system AppSystems::EmbeddedApp.SubSystemParts;
+  end FlightGuidance.parts;
+  
+  --        the same system of parts with subsystems allocated to processors
+  --        This may be an initial allocation or an allocation specified as part of requirements
+  --        Given such an allocation we can analyze whether the budgets of the llocated subsystems exceed the capacity of the processor
+  system implementation FlightGuidance.allocatedparts
+    extends FlightGuidance.parts
+    properties
+      Actual_Processor_Binding => ( reference( platform.missionprocessor1 ) ) applies to ApplicationSystem.DM;
+      Actual_Processor_Binding => ( reference( platform.missionprocessor1 ) ) applies to ApplicationSystem.PCM;
+      Actual_Processor_Binding => ( reference( platform.missionprocessor2 ) ) applies to ApplicationSystem.FM;
+      Actual_Processor_Binding => ( reference( platform.missionprocessor2 ) ) applies to ApplicationSystem.FD;
+      Actual_Processor_Binding => ( reference( platform.missionprocessor3 ) ) applies to ApplicationSystem.WAM;
+      Actual_Memory_Binding => ( reference( platform.missionprocessor2.membank1 ) ) applies to ApplicationSystem.FD;
+      Actual_Memory_Binding => ( reference( platform.missionprocessor2.membank1 ) ) applies to ApplicationSystem.FM;
+      Actual_Memory_Binding => ( reference( platform.missionprocessor1.membank1 ) ) applies to ApplicationSystem.PCM;
+      Actual_Memory_Binding => ( reference( platform.missionprocessor1.membank1 ) ) applies to ApplicationSystem.DM;
+  end FlightGuidance.allocatedparts;
+  
+  --        the system of subsystems with cross-subsystem communication specified
+  --        This allows for network bandwidth analysis
+  --        without allocation of subsystems to processors the bandwidth analysis
+  --        has to assume that all cross-subsystem communication goes over the network
+  system implementation FlightGuidance.communication
+    subcomponents
+      Platform: system HardwarePlatform::ComputingPlatform.ThreeProcessor;
+      ApplicationSystem: system AppSystems::EmbeddedApp.Topology;
+    connections
+      BusAccessConnection1: bus access Platform.BusAccess1 -> ApplicationSystem.EtherAccess;
+  end FlightGuidance.communication;
+  
+  --        the system with subsystems and their communication
+  --        the subsystems are allocated to processors; only those cross-subsystem connections
+  --        that communicate across processors are considered to produce load on the network
+  system implementation FlightGuidance.allocatedcommunication
+    extends FlightGuidance.communication
+    properties
+      Actual_Processor_Binding => ( reference( platform.missionprocessor1 ) ) applies to ApplicationSystem.DM;
+      Actual_Processor_Binding => ( reference( platform.missionprocessor1 ) ) applies to ApplicationSystem.PCM;
+      Actual_Processor_Binding => ( reference( platform.missionprocessor2 ) ) applies to ApplicationSystem.FM;
+      Actual_Processor_Binding => ( reference( platform.missionprocessor2 ) ) applies to ApplicationSystem.FD;
+      Actual_Processor_Binding => ( reference( platform.missionprocessor3 ) ) applies to ApplicationSystem.WAM;
+      Actual_Memory_Binding => ( reference( platform.missionprocessor2.membank1 ) ) applies to ApplicationSystem.FD;
+      Actual_Memory_Binding => ( reference( platform.missionprocessor2.membank1 ) ) applies to ApplicationSystem.FM;
+      Actual_Memory_Binding => ( reference( platform.missionprocessor1.membank1 ) ) applies to ApplicationSystem.PCM;
+      Actual_Memory_Binding => ( reference( platform.missionprocessor1.membank1 ) ) applies to ApplicationSystem.DM;
+      Actual_Connection_Binding => ( reference( platform.switch ) ) applies to ApplicationSystem.FMFD;
+  end FlightGuidance.allocatedcommunication;
+  
+  --        this system uses the applicaiton system with a end-to-end flow specification
+  --        this allows for end-to-end flow latency analysis at the subsystem (partition) level
+  system implementation FlightGuidance.cmdflow
+    subcomponents
+      -- hello there
+      Platform: system HardwarePlatform::ComputingPlatform.ThreeProcessor;
+      ApplicationSystem: system AppSystems::EmbeddedApp.CommandFlow;
+    connections
+      BusAccessConnection1: bus access Platform.BusAccess1 -> ApplicationSystem.EtherAccess;
+    properties
+      Actual_Processor_Binding => ( reference( platform.missionprocessor1 ) ) applies to ApplicationSystem.DM;
+      Actual_Processor_Binding => ( reference( platform.missionprocessor1 ) ) applies to ApplicationSystem.PCM;
+      Actual_Processor_Binding => ( reference( platform.missionprocessor2 ) ) applies to ApplicationSystem.FM;
+      Actual_Processor_Binding => ( reference( platform.missionprocessor2 ) ) applies to ApplicationSystem.FD;
+      Actual_Processor_Binding => ( reference( platform.missionprocessor3 ) ) applies to ApplicationSystem.WAM;
+      Actual_Memory_Binding => ( reference( platform.missionprocessor2.membank1 ) ) applies to ApplicationSystem.FD;
+      Actual_Memory_Binding => ( reference( platform.missionprocessor2.membank1 ) ) applies to ApplicationSystem.FM;
+      Actual_Memory_Binding => ( reference( platform.missionprocessor1.membank1 ) ) applies to ApplicationSystem.PCM;
+      Actual_Memory_Binding => ( reference( platform.missionprocessor1.membank1 ) ) applies to ApplicationSystem.DM;
+      Actual_Connection_Binding => ( reference( platform.switch ) ) applies to ApplicationSystem.FMFD;
+  end FlightGuidance.cmdflow;
+  
+  --        this system has the legacy flight manager implementation
+  --        this allows for priority inversion analysis
+  --        that analysis assumes that the threads are bound to a processor
+  system implementation FlightGuidance.legacy
+    subcomponents
+      Platform: system HardwarePlatform::ComputingPlatform.ThreeProcessor;
+      ApplicationSystem: system AppSystems::EmbeddedApp.Legacy;
+    connections
+      BusAccessConnection1: bus access Platform.BusAccess1 -> ApplicationSystem.EtherAccess;
+    properties
+      Actual_Processor_Binding => ( reference( platform.missionprocessor1 ) ) applies to ApplicationSystem.DM;
+      Actual_Processor_Binding => ( reference( platform.missionprocessor1 ) ) applies to ApplicationSystem.PCM;
+      Actual_Processor_Binding => ( reference( platform.missionprocessor2 ) ) applies to ApplicationSystem.FM;
+      Actual_Processor_Binding => ( reference( platform.missionprocessor2 ) ) applies to ApplicationSystem.FD;
+      Actual_Processor_Binding => ( reference( platform.missionprocessor3 ) ) applies to ApplicationSystem.WAM;
+      Actual_Memory_Binding => ( reference( platform.missionprocessor2.membank1 ) ) applies to ApplicationSystem.FD;
+      Actual_Memory_Binding => ( reference( platform.missionprocessor2.membank1 ) ) applies to ApplicationSystem.FM;
+      Actual_Memory_Binding => ( reference( platform.missionprocessor1.membank1 ) ) applies to ApplicationSystem.PCM;
+      Actual_Memory_Binding => ( reference( platform.missionprocessor1.membank1 ) ) applies to ApplicationSystem.DM;
+      Actual_Connection_Binding => ( reference( platform.switch ) ) applies to ApplicationSystem.FMFD;
+  end FlightGuidance.legacy;
+  
+  --        This system has the avionics system with the thread-based flight manager implementation that includes the periodic IO thread
+  --        This system implementation can be used for resoruce allocation & scheduling (binpacking) analysis as well as latency analysis
+  --        In case of end-to-end latency the actual latency should be larger than the latency analyzed a the subsystem level or without periodic IO.
+  --        This is due to the fact that Periodic IO is executed at the application level and delays data by one frame.
+  --        For resource allocation the platform can be changed to OneProcessor, or TwoProcessor.
+  system implementation FlightGuidance.FMPIO
+    subcomponents
+      --        platform options: SlowProcessor(Solo), OneProcessor(Duo), TwoProcessor, ThreeProcessor
+      Platform: system HardwarePlatform::ComputingPlatform.SlowProcessor;
+      ApplicationSystem: system AppSystems::EmbeddedApp.FlightManagerPIO;
+    connections
+      BusAccessConnection1: bus access Platform.BusAccess1 -> ApplicationSystem.EtherAccess;
+  end FlightGuidance.FMPIO;
+  
+  system implementation FlightGuidance.FMnoPIO
+    subcomponents
+      Platform: system HardwarePlatform::ComputingPlatform.ThreeProcessor;
+      ApplicationSystem: system AppSystems::EmbeddedApp.FlightManagernoPIO;
+    connections
+      BusAccessConnection1: bus access Platform.BusAccess1 -> ApplicationSystem.EtherAccess;
+  end FlightGuidance.FMnoPIO;
+end FlightGuidanceIMA;

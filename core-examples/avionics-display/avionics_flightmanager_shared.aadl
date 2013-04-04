@@ -1,0 +1,93 @@
+package avionics_flightmanager_shared
+-- This package elaborates the Flight Manager as a thread-based implementation
+-- This implementation performs all communication within the flight manager partition through a shared data area.
+-- The threads of the flight manager have explicitly assigned priority.
+-- Priority assignment achieves the desired flow of data between threads without explictly modeling it.
+-- When bound to a processor with preemptive scheduling the priority assignment results in priority inversion.
+-- An OSATE analysis plug-in can identify this priority inversion.
+-- The system implementation that represents the system to be instantiated is declared in a separate AADL file Avionics_System_Priority_Inversion.aadl
+public
+with avionics_subsystems, avionics_datatypes, avionics_flightmanager_shared, SEI;
+  process Flight_Manager
+    extends avionics_subsystems::Flight_Manager
+  end Flight_Manager;
+  
+  process implementation Flight_Manager.shareddata 
+    subcomponents
+      NSP: thread NavigationSensorProcessing;
+      INav: thread IntegratedNavigation;
+      GP: thread GuidanceProcessing;
+      FPP: thread FlightPlanProcessing;
+      APC: thread AircraftPerformanceCalculation;
+      PerIO: thread PeriodicIO;
+      sharedData: data avionics_datatypes::SharedData;
+    connections
+      sharedNSP: data access sharedData -> NSP.sharedDataArea;
+      sharedINav: data access sharedData -> INav.sharedDataArea;
+      sharedGP: data access sharedData -> GP.sharedDataArea;
+      sharedFPP: data access sharedData -> FPP.sharedDataArea;
+      sharedAPC: data access sharedData -> APC.sharedDataArea;
+      sharedPerIO: data access sharedData -> PerIO.sharedDataArea;
+  end Flight_Manager.shareddata;
+  
+  -- the components of the flight manager
+  thread NavigationSensorProcessing
+    features
+      sharedDataArea: requires data access avionics_datatypes::SharedData;
+    properties
+      Dispatch_Protocol => Periodic;
+      Period => 50 Ms;
+      Compute_Execution_Time => 1 Ms .. 1 Ms;
+      Priority => 2;
+  end NavigationSensorProcessing;
+  
+  thread IntegratedNavigation
+    features
+      sharedDataArea: requires data access avionics_datatypes::SharedData;
+    properties
+      Dispatch_Protocol => Periodic;
+      Period => 100 Ms;
+      Compute_Execution_Time => 1 Ms .. 1 Ms;
+      Priority => 3;
+  end IntegratedNavigation;
+  
+  thread GuidanceProcessing
+    features
+      sharedDataArea: requires data access avionics_datatypes::SharedData;
+    properties
+      Dispatch_Protocol => Periodic;
+      Period => 50 Ms;
+      Compute_Execution_Time => 1 Ms .. 1 Ms;
+      Priority => 4;
+  end GuidanceProcessing;
+  
+  thread FlightPlanProcessing
+    features
+      sharedDataArea: requires data access avionics_datatypes::SharedData;
+    properties
+      Dispatch_Protocol => Periodic;
+      Period => 200 Ms;
+      Compute_Execution_Time => 1 Ms .. 1 Ms;
+      Priority => 5;
+  end FlightPlanProcessing;
+  
+  thread AircraftPerformanceCalculation
+    features
+      sharedDataArea: requires data access avionics_datatypes::SharedData;
+    properties
+      Dispatch_Protocol => Periodic;
+      Period => 500 Ms;
+      Compute_Execution_Time => 1 Ms .. 1 Ms;
+      Priority => 6;
+  end AircraftPerformanceCalculation;
+  
+  thread PeriodicIO
+    features
+      sharedDataArea: requires data access avionics_datatypes::SharedData;
+    properties
+      Dispatch_Protocol => Periodic;
+      Period => 50 Ms;
+      Compute_Execution_Time => 1 Ms .. 1 Ms;
+      Priority => 1;
+  end PeriodicIO;
+end avionics_flightmanager_shared;
