@@ -1,0 +1,34 @@
+package ComponentWithProcessor
+public
+
+with ErrorModelLibrary;
+
+system sys
+features
+	inport1: in data port;
+	outport2: out data port;
+annex EMV2 {**
+	
+use types ErrorModelLibrary;
+use behavior ErrorModelLibrary::ThreeErrorStates;
+	
+
+error propagations
+	inport1 : in propagation {NoValue, BadValue};
+	outport2: out propagation {NoValue, BadValue, LateValue};
+	
+	processor: in propagation {NoService};
+end propagations;
+	
+component error behavior
+	transitions
+		Operational -[inport1{ BadValue }]-> BadValueState;
+		Operational -[inport1 {NoValue} or processor {NoService}]-> NoValueState;
+	propagations
+		BadValueState -[ ]-> outport2 ( BadValue);
+		NoValueState -[ ]-> outport2 ( NoValue);
+		LateValueState -[ ]-> outport2 (LateValue);
+end component;
+**};
+end sys;
+end ComponentWithProcessor;

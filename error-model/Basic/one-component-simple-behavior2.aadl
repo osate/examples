@@ -1,0 +1,31 @@
+package em2_basic2
+
+public
+
+with EMV2;
+
+	 system main
+
+	  end main;
+	  
+	  
+	  system implementation main.i
+	  	    annex EMV2 {**
+	        use types ErrorLibrary;
+	    	use behavior ErrorModelLibrary::Simple;
+	   	component error behavior
+		events
+			FailEvent: error event;
+			ResetEvent: recover event;
+		transitions
+			tfail: Operational -[Failure ]-> Failed;
+			-- reset will be successful with 0.8 probability, and fail with 0.2 probability
+			treset: Failed -[ ResetEvent ]->  (Operational with 0.8, Failed with 0.2);
+		end component;
+		properties
+			EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.1 ; Distribution => Fixed;] applies to Failure;
+			EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.2 ; Distribution => Fixed;] applies to ResetEvent;
+		
+		**};
+	  end main.i;
+end em2_basic2;

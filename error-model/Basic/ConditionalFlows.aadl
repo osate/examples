@@ -1,0 +1,124 @@
+package ConditionalFlows
+
+public
+
+with EMV2;
+
+	system sender
+	features
+		outp : out event port;
+		annex EMV2 {**
+			use types ErrorLibrary;
+			use behavior ErrorModelLibrary::Simple;
+		error propagations
+			outp: out propagation {ServiceOmission,ValueError};
+		flows
+		-- sender is an error source of ServiceOmission and of ValueError
+		-- The value error occurs when the sensor is operational
+		-- I specified a probability for the missread value error
+		-- Otherwise, we have occurrence probability on the Failure event and Reset event
+		-- those two value then get reflected in the probability for each error state.
+			src: error source outp{ServiceOmission} when Failed;
+			missread: error source outp{ValueError} when Operational;
+		end propagations;
+		component error behavior
+		events
+			FailEvent: error event;
+			ResetEvent: recover event;
+		transitions
+			tfail: Operational -[Failure ]-> Failed;
+			-- reset will be successful with 0.8 probability, and fail with 0.2 probability
+			treset: Failed -[ ResetEvent ]->  (Operational with 0.8, Failed with 0.2);
+		end component;
+		properties
+			EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.1 ; Distribution => Fixed;] applies to Failure;
+			EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.2 ; Distribution => Fixed;] applies to ResetEvent;
+			EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.22 ; Distribution => Fixed;] applies to missread;
+		**};
+	end sender;
+	
+	
+	system receiver
+	features
+		inp : in event port;
+		annex EMV2 {**
+			use types ErrorLibrary;
+			use behavior ErrorModelLibrary::Simple;
+		error propagations
+			inp: in propagation {ServiceOmission};
+		end propagations;
+		component error behavior
+		events
+			ResetEvent: recover event;
+		transitions
+		-- the receiver goes into Failed state if it fails or it has incoming service omission
+			tfail: Operational -[Failure or inp{ServiceOmission} ]-> Failed;
+			-- reset will be successful with 0.8 probability, and fail with 0.2 probability
+			treset: Failed -[ ResetEvent ]->  (Operational with 0.8, Failed with 0.2);
+		end component;
+		properties
+			EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.2 ; Distribution => Fixed;] applies to ResetEvent;
+		**};
+	end receiver;
+	
+	
+	system processing
+	features
+		inp : in event port;
+		outp: out event port;
+		annex EMV2 {**
+			use types ErrorLibrary;
+			use behavior ErrorModelLibrary::Simple;
+		error propagations
+			inp: in propagation {ServiceOmission,ValueError};
+			outp: out propagation {ServiceOmission};
+		flows
+		-- the processing unit is an error source in the case it itself fails
+		-- the optional when clause indicates the origin/source of the error propagation. 
+		-- In this case the specified state is the failure mode (condition) and the propagation is the first level effect.
+		-- We currently allow you to specify an error state or an error type (representative of the state or event)
+		 
+			failstop: error source outp {ServiceOmission} when Failed;
+		-- the processing unit passes through incoming error propagations 
+		-- detailed logic for the pass through conditions are found in the component error behavior specification
+			passthru: error path inp -> outp;
+			
+			-- POSSIBLE EMV2 improvement: allow when clause with error path.
+			-- note that when in error soruce indicates the origin of the error source, i.e., the error state that causes this propagation
+			-- we could make use of the same on error paths and error sinks.
+			-- in this case it would mean that the path or sink behavior only occurs when in the specified state.
+			-- Example: passthru: error path inp {ValueError} -> outp when Operational;
+		end propagations;
+		component error behavior
+		events
+			ResetEvent: recover event;
+		transitions
+		-- incoming service omission gets reflected in a transition to Failed
+			tfail: Operational -[Failure or inp{ServiceOmission} ]-> Failed;
+			-- reset will be successful with 0.8 probability, and fail with 0.2 probability
+			treset: Failed -[ ResetEvent ]->  (Operational with 0.8, Failed with 0.2);
+		propagations
+		-- When in operational state the processing unit passes through Value Errors
+		-- by default the incoming error types are propagated out.
+		-- in this case {ValueError} acts as a filter constraint, i.e., we are only dealing with Value Errors
+			Operational -[ inp{ValueError}]-> outp;
+		end component;
+		properties
+			EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.2 ; Distribution => Fixed;] applies to ResetEvent;
+		**};
+	end processing;
+	
+	
+	system main
+	end main;
+	
+	system implementation main.i
+	subcomponents
+		snd : system sender;
+		prc : system processing;
+		rcv : system receiver;
+	connections
+		port snd.outp -> prc.inp;
+		port prc.outp -> rcv.inp;
+	end main.i;
+end ConditionalFlows;
