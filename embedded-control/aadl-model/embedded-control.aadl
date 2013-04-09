@@ -38,6 +38,17 @@ annex EMV2 {**
 			comment => "Not critical as long as two sensors are operating";
 		]
 		applies to Failure;
+		
+		EMV2::severity => 1 applies to Failed;
+		EMV2::likelihood => C applies to Failed;
+		EMV2::hazard => 
+		[	crossreference => "A.A.A";
+			failure => "Sensor in failure state";
+			phase => "all";
+			description => "Failure of sensor";
+			comment => "Likely happen once a month";
+		]
+		applies to Failed;
 **};
 end sensor;
 
@@ -67,6 +78,21 @@ annex EMV2 {**
 			comment => "Major hazard if both are not operating";
 		]
 		applies to Failure;
+		
+				
+
+
+		
+		EMV2::severity => 1 applies to Failed;
+		EMV2::likelihood => C applies to Failed;
+		EMV2::hazard => 
+		[	crossreference => "A.A.A";
+			failure => "Actuator failed";
+			phase => "all";
+			description => "Failure of an actuator";
+			comment => "Should happen once every two months";
+		]
+		applies to Failed;
 **};
 end actuator;
 
@@ -199,28 +225,7 @@ annex EMV2 {**
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.00003 ; Distribution => Fixed;] applies to s3.Failed;
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.0001 ; Distribution => Fixed;] applies to a1.Failed;
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.0001 ; Distribution => Fixed;] applies to a2.Failed;
-		
-		EMV2::severity => 1 applies to s1.Failed,s2.Failed,s3.Failed;
-		EMV2::likelihood => C applies to s1.Failed,s2.Failed,s3.Failed;
-		EMV2::hazard => 
-		[	crossreference => "A.A.A";
-			failure => "Sensor in failure state";
-			phase => "all";
-			description => "Failure of sensor";
-			comment => "Likely happen once a month";
-		]
-		applies to s1.Failed,s2.Failed,s3.Failed;
-		
-		EMV2::severity => 1 applies to a1.Failed,a2.Failed;
-		EMV2::likelihood => C applies to a1.Failed,a2.Failed;
-		EMV2::hazard => 
-		[	crossreference => "A.A.A";
-			failure => "Actuator failed";
-			phase => "all";
-			description => "Failure of an actuator";
-			comment => "Should happen once every two months";
-		]
-		applies to a1.Failed,a2.Failed;
+
 **};
 end main.i;
 
