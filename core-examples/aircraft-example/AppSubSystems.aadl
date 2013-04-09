@@ -1,0 +1,84 @@
+--     This package defines the major subsystems of an avionics system
+--     Each subsystem is defined with resource budgets and flow specifications with latency
+--     Each subsystem is considered to be a partition
+package AppSubSystems
+public
+with AppTypes, SEI;
+  process WarningAnnunciationManager
+    properties
+      SEI::MIPSBudget => 350.0 MIPS;
+      SEI::RAMBudget => 350.0 KByte;
+      SEI::ROMBudget => 40.0 KByte;
+  end WarningAnnunciationManager;
+  
+  process DisplayManager
+    features
+      DMToDisplay: feature group AppTypes::PageReturn;
+      DMToPCM: feature group AppTypes::PageRequest;
+    flows
+      cmd_request: flow path DMToDisplay -> DMToPCM {
+        Latency => 10 Ms .. 10 Ms;
+        };
+      show_page: flow path DMToPCM -> DMToDisplay {
+        Latency => 50 Ms .. 50 Ms;
+        };
+    properties
+      SEI::Partition_Latency => 50 Ms;
+      SEI::Is_Partition => true;
+      SEI::MIPSBudget => 1200.0 MIPS;
+      SEI::RAMBudget => 150.0 KByte;
+      SEI::ROMBudget => 50.0 KByte;
+  end DisplayManager;
+  
+  process PageContentManager
+    features
+      PCMToDM: feature group AppTypes::PageReturn;
+      PCMToFM: feature group AppTypes::PageRequest;
+    flows
+      cmd_request: flow path PCMToDM -> PCMToFM {
+        Latency => 10 Ms .. 10 Ms;
+        };
+      show_page: flow path PCMToFM -> PCMToDM {
+        Latency => 50 Ms .. 50 Ms;
+        };
+    properties
+      SEI::Partition_Latency => 50 Ms;
+      SEI::Is_Partition => true;
+      SEI::MIPSBudget => 500.0 MIPS;
+      SEI::RAMBudget => 350.0 KByte;
+  end PageContentManager;
+  
+  process FlightManager
+    features
+      FMToPCM: feature group AppTypes::PageReturn;
+      FMToFD: feature group AppTypes::PageRequest;
+      FMIn: feature group AppTypes::FMInData;
+      FMOut: feature group AppTypes::FMOutData;
+    flows
+      cmd_request: flow path FMToPCM -> FMToFD {
+        Latency => 10 Ms .. 10 Ms;
+        };
+      show_page: flow path FMToFD -> FMToPCM {
+        Latency => 25 Ms .. 25 Ms;
+        };
+    properties
+      SEI::Partition_Latency => 50 Ms;
+      SEI::Is_Partition => true;
+      SEI::MIPSBudget => 1700.0 MIPS;
+      SEI::RAMBudget => 1350.0 KByte;
+  end FlightManager;
+  
+  process FlightDirector
+    features
+      FDToFM: feature group AppTypes::PageReturn;
+    flows
+      process_page_request: flow path FDToFM -> FDToFM {
+        Latency => 50 Ms .. 50 Ms;
+        };
+    properties
+      SEI::Partition_Latency => 50 Ms;
+      SEI::Is_Partition => true;
+      SEI::MIPSBudget => 450.0 MIPS;
+      SEI::RAMBudget => 750.0 KByte;
+  end FlightDirector;
+end AppSubSystems;

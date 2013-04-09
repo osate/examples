@@ -1,0 +1,144 @@
+package avionics_subsystems
+-- This package declares the subsystems and the execution platform of the Avionics System
+-- The subsystems are represented as processes to reflect the fact that they will execute as partitions
+-- Flow specifications have been added to allow for flow latency analysis of requests for new page content on a Multi-Function Display
+-- Details of each subsystem will be modeled in separate packages.
+-- An elaboration of the flight manager subsystem is included.
+public
+with avionics_subsystems, avionics_datatypes, SEI; 
+  bus LAN
+  end LAN;
+   
+  bus implementation LAN.i
+  end LAN.i;
+    
+  bus VME
+  end VME;
+   
+  bus implementation VME.i
+  end VME.i;
+  
+  processor PowerPC
+    features
+      vmeBus: requires bus access VME.i;
+  end PowerPC;
+  
+  processor implementation PowerPC.Mhz350
+    properties
+      SEI::MIPSCapacity => 200.0 MIPS;
+  end PowerPC.Mhz350;
+  
+  memory Flashmemory
+  end Flashmemory;
+  
+  processor implementation PowerPC.Mhz500
+    properties
+      SEI::MIPSCapacity => 333.3 MIPS;
+  end PowerPC.Mhz500;
+  
+  device Display
+    features
+      Menu_Cmd_Pushed: out data port avionics_datatypes::Menu_Cmd;
+      Page_To_Show: in data port avionics_datatypes::Page_Image;
+      vmeBus: requires bus access VME.i;
+    flows
+      Menu_Entry_Selected: flow source Menu_Cmd_Pushed {
+        Latency => 5 Ms .. 5 Ms;
+        };
+      Show_Page: flow sink Page_To_Show {
+        Latency => 10 Ms .. 10 Ms;
+        };
+  end Display;
+  
+  system hardware_system
+  end hardware_system;
+  
+  system implementation hardware_system.impl
+    subcomponents
+      flash1: memory Flashmemory {
+        Word_Size => 8 Bits;
+        Byte_Count => 700;
+        };
+  end hardware_system.impl;
+  
+  device implementation Display.MFD
+  end Display.MFD;
+  
+  process Display_Manager
+    features
+      Menu_selection_from_Display: in data port avionics_datatypes::Menu_Cmd;
+      New_Page_Image_To_Display: out data port avionics_datatypes::Page_Image;
+      New_Page_Request_To_PCM: out data port avionics_datatypes::Page_Request;
+      New_Page_Content_from_PCM: in data port avionics_datatypes::Page_Content;
+    flows
+      cmd_request: flow path Menu_selection_from_Display -> New_Page_Request_To_PCM {
+        Latency => 10 Ms .. 10 Ms;
+        };
+      show_page: flow path New_Page_Content_from_PCM -> New_Page_Image_To_Display {
+        Latency => 50 Ms .. 50 Ms;
+        };
+    properties
+      SEI::Is_Partition => true;
+  end Display_Manager;
+  
+  process implementation Display_Manager.impl
+  end Display_Manager.impl;
+  
+  process Page_Content_Manager
+    features
+      New_Page_Request_From_DM: in data port avionics_datatypes::Page_Request;
+      New_Page_Content_To_DM: out data port avionics_datatypes::Page_Content;
+      New_Page_Request_To_FM: out data port avionics_datatypes::Page_Request;
+      New_Page_Content_from_FM: in data port avionics_datatypes::Page_Content;
+    -- ports to communicate to other subsystems except for flight director
+    flows
+      cmd_request: flow path New_Page_Request_From_DM -> New_Page_Request_To_FM {
+        Latency => 10 Ms .. 10 Ms;
+        };
+      show_page: flow path New_Page_Content_from_FM -> New_Page_Content_To_DM {
+        Latency => 50 Ms .. 50 Ms;
+        };
+    properties
+      SEI::Is_Partition => true;
+  end Page_Content_Manager;
+  
+  process implementation Page_Content_Manager.impl
+  end Page_Content_Manager.impl;
+  
+  process Flight_Manager
+    features
+      New_Page_Request_From_PCM: in data port avionics_datatypes::Page_Request;
+      New_Page_Content_To_PCM: out data port avionics_datatypes::Page_Content;
+      New_Page_Request_To_FD: out data port avionics_datatypes::Page_Request;
+      New_Page_Content_from_FD: in data port avionics_datatypes::Page_Content;
+      FMIn: feature group avionics_datatypes::FMInData;
+      FMOut: feature group avionics_datatypes::FMOutData;
+    flows
+      cmd_request: flow path New_Page_Request_From_PCM -> New_Page_Request_To_FD {
+        Latency => 10 Ms .. 10 Ms;
+        };
+      show_page: flow path New_Page_Content_from_FD -> New_Page_Content_To_PCM {
+        Latency => 25 Ms .. 25 Ms;
+        };
+    properties
+      SEI::Is_Partition => true;
+  end Flight_Manager;
+  
+  process implementation Flight_Manager.impl
+  end Flight_Manager.impl;
+  
+  process Flight_Director
+    features
+      New_Page_Request_From_FM: in data port avionics_datatypes::Page_Request;
+      New_Page_Content_To_FM: out data port avionics_datatypes::Page_Content;
+    flows
+      process_page_request: flow path New_Page_Request_From_FM -> New_Page_Content_To_FM {
+        Latency => 50 Ms .. 50 Ms;
+        };
+    properties
+      SEI::Is_Partition => true;
+  end Flight_Director;
+  
+  process implementation Flight_Director.impl
+  end Flight_Director.impl;
+end avionics_subsystems;

@@ -1,0 +1,17 @@
+property set RockwellCollins is
+  SystemsEngmgDelayReq: Time applies to (feature group, feature group type);
+  Network_Speed: Data_Volume applies to (bus);
+  Max_Transmission_Rate: Data_Volume applies to (bus);
+  Max_Packet_Size: Size applies to (bus);
+  Smin: Size applies to (feature group, feature group type);
+  Smax: Size applies to (feature group, feature group type);
+  Long_Term_Rate: Data_Volume applies to (port);
+  Burst_Rate: Data_Volume applies to (port);
+  Entity_Type:  enumeration (Switch, Node) applies to (device);
+  Transmission_Protocol: inherit RockwellCollins::Supported_Connection_Protocols applies to (port, feature group, feature group type);
+  LAN_Config_Dictated_Processor_Binding: inherit list of  reference(processor, system) applies to (thread, thread group, process, system, device);
+  Supported_Connection_Protocols: type enumeration (HTTP, HTTPS, UDP, IP_TCP);
+  -- The following are example protocols.
+  -- (HTTP, HTTPS, UDP, IP_TPC);
+end RockwellCollins;
+ 

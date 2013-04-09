@@ -1,0 +1,139 @@
+-- This example is inspired from the embedded control
+-- example taken from the PRISM case studies.
+-- You can read more about this example on
+-- http://www.prismmodelchecker.org/casestudies/embedded.php
+
+package embedded_control
+
+public
+with EMV2;
+
+data temperature
+end temperature;
+
+data action
+end action;
+
+device sensor 
+features
+	tempval : out event data port temperature;
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior ErrorModelLibrary::Simple;
+	properties
+	    --  corresponds to lambda_s in the PRISM model
+	    --  lamba_s = 1/(30*24*60*60)
+	    --  from the specifications, it corresponds to 1 fault per month
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 3.85e-7 ; Distribution => Poisson;] applies to Failure;
+**};
+end sensor;
+
+device implementation sensor.i
+end sensor.i;
+
+device actuator
+features
+    action : in event data port action;
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior ErrorModelLibrary::Simple;
+	properties
+	    --  corresponds to lambda_a in the PRISM model
+	    --  lamba_a = 1/(2*30*24*60*60)
+	    --  from the specifications, it corresponds to 1 fault per 2 months
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.92e-7 ; Distribution => Poisson;] applies to Failure;
+**};
+end actuator;
+
+device implementation actuator.i
+end actuator.i;
+
+bus generic_bus
+end generic_bus;
+
+bus implementation generic_bus.i
+end generic_bus.i;
+ 
+processor generic_processor
+features
+   ba : requires bus access generic_bus.i;
+annex EMV2 {**
+	use types embedded_errlib;
+	use behavior embedded_errlib::SimpleAndTransient;
+	
+	properties
+	    --  corresponds to lambda_s in the PRISM model
+	    --  lamba_p = 1/(365*24*60*60)
+	    --  from the specifications, it corresponds to 1 fault per year
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 3.17e-8 ; Distribution => Poisson;] applies to Failure;
+		
+		--  corresponds to delta_r in the PRISM model
+	    --  delta_r = 1/(1/30)
+	    --  from the specifications, it corresponds to 1 recovery occurence each 30 seconds
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.03 ; Distribution => Poisson;] applies to ResetEvent;
+		
+		--  corresponds to delta_f in the PRISM model
+	    --  delta_f = 1/(1/24*60*60)
+	    --  from the specifications, it corresponds to 1 transient failure occurence each day
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.15e-5 ; Distribution => Poisson;] applies to FailureTransient;
+**};
+end generic_processor;
+
+processor output_processor extends generic_processor
+features
+	action_out : out event data port action;
+end output_processor;
+
+processor input_processor extends generic_processor
+features
+	temperature1 : in event data port temperature;
+	temperature2 : in event data port temperature;
+	temperature3 : in event data port temperature;
+end input_processor;
+
+processor main_processor extends generic_processor
+end main_processor;
+
+system main
+end main;
+
+system implementation main.i
+subcomponents
+	s1 : device sensor.i;
+	s2 : device sensor.i;
+	s3 : device sensor.i;
+	a1 : device actuator.i;
+	a2 : device actuator.i;
+	pi : processor input_processor;
+	pm : processor main_processor;
+	po : processor output_processor;
+	b  : bus generic_bus.i;
+connections
+	port s1.tempval -> pi.temperature1;
+	port s2.tempval -> pi.temperature2;
+	port s3.tempval -> pi.temperature3;
+	
+	port po.action_out -> a1.action;
+	port po.action_out -> a2.action;
+	
+	bus access b -> pi.ba;
+	bus access b -> pm.ba;
+	bus access b -> po.ba;
+properties
+    Actual_Processor_Binding => (reference (pi)) applies to s1;
+    Actual_Processor_Binding => (reference (pi)) applies to s2;
+    Actual_Processor_Binding => (reference (pi)) applies to s3;
+    
+    Actual_Processor_Binding => (reference (po)) applies to a1;
+    Actual_Processor_Binding => (reference (po)) applies to a2;
+annex EMV2 {** 
+	use behavior ErrorModelLibrary::Simple;
+	composite error behavior
+	states
+		[((s1.Operational and s2.Operational ) or (s1.Operational and s3.Operational ) or (s3.Operational and s2.Operational ) ) or (a1.Operational or a2.Operational)]-> Operational;
+		
+	end composite;
+**};
+end main.i;
+
+end embedded_control;

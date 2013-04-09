@@ -1,0 +1,76 @@
+package em2_simple_propagation
+
+public
+
+with EMV2;
+
+	system sender
+	features
+		outp : out event port;
+	end sender;
+	  
+	  
+	system implementation sender.i
+		annex EMV2 {**
+			use types ErrorLibrary;
+			use behavior ErrorModelLibrary::Simple;
+		error propagations
+			outp: out propagation {ServiceOmission};
+		flows
+			src: error source outp{ServiceOmission} when Failed;
+		end propagations;
+		component error behavior
+		events
+			FailEvent: error event;
+			ResetEvent: recover event;
+		transitions
+			tfail: Operational -[Failure ]-> Failed;
+			-- reset will be successful with 0.8 probability, and fail with 0.2 probability
+			treset: Failed -[ ResetEvent ]->  (Operational with 0.8, Failed with 0.2);
+		end component;
+		properties
+			EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.1 ; Distribution => Fixed;] applies to Failure;
+			EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.2 ; Distribution => Fixed;] applies to ResetEvent;
+		**};
+	end sender.i;
+	
+	
+	system receiver
+	features
+		inp : in event port;
+	end receiver;
+	  
+	  
+	system implementation receiver.i
+		annex EMV2 {**
+			use types ErrorLibrary;
+			use behavior ErrorModelLibrary::Simple;
+		error propagations
+			inp: in propagation {ServiceOmission};
+		end propagations;
+		component error behavior
+		events
+			FailEvent: error event;
+			ResetEvent: recover event;
+		transitions
+			tfail: Operational -[inp{ServiceOmission} ]-> Failed;
+			-- reset will be successful with 0.8 probability, and fail with 0.2 probability
+			treset: Failed -[ ResetEvent ]->  (Operational with 0.8, Failed with 0.2);
+		end component;
+		properties
+			EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.2 ; Distribution => Fixed;] applies to ResetEvent;
+		**};
+	end receiver.i;
+	
+	
+	system main
+	end main;
+	
+	system implementation main.i
+	subcomponents
+		snd : system sender.i;
+		rcv : system receiver.i;
+	connections
+		port snd.outp -> rcv.inp;
+	end main.i;
+end em2_simple_propagation;

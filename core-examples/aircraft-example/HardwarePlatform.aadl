@@ -1,0 +1,74 @@
+--       This package defines a collection of hardware platforms
+--       The hardware platform provides access to a bus such that a device
+--       in the application system can be connected to the platform
+--       The platforms differ in the number of processors
+package HardwarePlatform
+public
+with HardwareParts;
+  system ComputingPlatform
+    features
+      BusAccess1: provides bus access HardwareParts::EtherSwitch;
+  end ComputingPlatform;
+  
+  --       a platform with three dual core processors as a parts specification
+  system implementation ComputingPlatform.ThreeProcessorParts
+    subcomponents
+      MissionProcessor1: processor HardwareParts::Xeon.solo;
+      MissionProcessor2: processor HardwareParts::Xeon.solo;
+      Switch: bus HardwareParts::EtherSwitch;
+      MissionProcessor3: processor HardwareParts::Xeon.solo;
+  end ComputingPlatform.ThreeProcessorParts;
+  
+  --       a platform with a single "slow" processor (a single core Xeon)  
+  system implementation ComputingPlatform.SlowProcessor
+    subcomponents
+      MissionProcessor1: processor HardwareParts::Xeon.solo;
+      Switch: bus HardwareParts::EtherSwitch;
+    connections
+      ba1: bus access Switch -> MissionProcessor1.HS;
+      BusAccessConnection1: bus access Switch -> BusAccess1;
+  end ComputingPlatform.SlowProcessor;
+  
+  --       a platform with a single processor (a dual core Xeon)  
+  system implementation ComputingPlatform.OneProcessor
+    subcomponents
+      MissionProcessor1: processor HardwareParts::Xeon.dualcore;
+      Switch: bus HardwareParts::EtherSwitch;
+    connections
+      ba1: bus access Switch -> MissionProcessor1.HS;
+      BusAccessConnection1: bus access Switch -> BusAccess1;
+  end ComputingPlatform.OneProcessor;
+  
+  --       a platform with two dual core processors  
+  system implementation ComputingPlatform.TwoProcessor
+    subcomponents
+      MissionProcessor1: processor HardwareParts::Xeon.solo;
+      MissionProcessor2: processor HardwareParts::Xeon.solo;
+      Switch: bus HardwareParts::EtherSwitch;
+      MainPowerSupply: bus HardwareParts::PowerSupply.V15;
+    connections
+      BusAccessConnection5: bus access MainPowerSupply -> MissionProcessor1.Power;
+      ba1: bus access Switch -> MissionProcessor1.HS;
+      ba2: bus access Switch -> MissionProcessor2.HS;
+      BusAccessConnection1: bus access Switch -> BusAccess1;
+  end ComputingPlatform.TwoProcessor;
+  
+  --     a platform with three dual core processors  
+  system implementation ComputingPlatform.ThreeProcessor
+    subcomponents
+      MissionProcessor1: processor HardwareParts::Xeon.solo;
+      MissionProcessor2: processor HardwareParts::Xeon.solo;
+      MissionProcessor3: processor HardwareParts::Xeon.solo;
+      Switch: bus HardwareParts::EtherSwitch;
+      IMAPowerSupply: bus HardwareParts::PowerSupply.V15;
+    connections
+      BusAccessConnection5: bus access IMAPowerSupply -> MissionProcessor1.Power;
+      ba1: bus access Switch -> MissionProcessor1.HS;
+      ba2: bus access Switch -> MissionProcessor2.HS;
+      ba3: bus access Switch -> MissionProcessor3.HS;
+      BusAccessConnection1: bus access Switch -> BusAccess1;
+      BusAccessConnection2: bus access IMAPowerSupply -> MissionProcessor2.Power;
+      BusAccessConnection3: bus access IMAPowerSupply -> MissionProcessor3.Power;
+      BusAccessConnection4: bus access IMAPowerSupply -> Switch.Power;
+  end ComputingPlatform.ThreeProcessor;
+end HardwarePlatform;

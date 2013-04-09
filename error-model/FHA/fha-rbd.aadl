@@ -1,0 +1,99 @@
+package fha_rbd
+public
+with SEI, MILSTD882, EMV2;
+with ErrorLibrary, ErrorModelLibrary;
+
+  device PositionSensor
+    features
+      PositionReading: out data port ;
+    flows
+      f1: flow source PositionReading {
+        Latency => 2 ms .. 3 ms;
+        }; 
+    annex EMV2 {**
+        use types ErrorLibrary;
+    	use behavior ErrorModelLibrary::Simple;
+    	error propagations 
+    		PositionReading: out propagation  {ServiceOmission};
+    	flows
+		 	ef1:error source PositionReading {ServiceOmission} when Failed;
+	end propagations;
+	properties
+		EMV2::severity => 1 applies to ef1.Failed;
+		EMV2::likelihood => C applies to ef1.Failed;
+    **};
+  end PositionSensor;
+
+  device Actuator
+    features
+      ActCmd: in data port ;
+    flows
+      fs: flow sink ActCmd {
+        Latency => 2 ms .. 3 ms;
+        };
+    annex EMV2 {**
+        use types ErrorLibrary;
+    	use behavior ErrorModelLibrary::Simple;
+    	error propagations 
+    		observable operation: out propagation {ServiceOmission} ;
+    		ActCmd: in propagation  {ServiceOmission,ValueError,ItemOmission};
+    	flows
+		 ef1:error sink ActCmd{ValueError};
+		 ef2:error source operation {ServiceOmission} when Failed;
+	
+ 		end propagations;
+	 
+		properties
+			MILSTD882::severity => Catastrophic applies to operation.ServiceOmission;
+			MILSTD882::likelihood => Remote applies to operation.ServiceOmission;
+		
+    **};
+  end Actuator;
+  
+  
+  
+  processor PowerPC
+  properties
+      SEI::MIPSCapacity => 5.0 MIPS;
+  annex EMV2 {** 
+  	use types ErrorLibrary;
+	use behavior ErrorModelLibrary::Simple;
+   **};
+  end PowerPC;
+  
+
+  system AircraftFMS
+  end AircraftFMS; 
+  
+  system implementation AircraftFMS.i
+    subcomponents
+      PositionSensor: device PositionSensor;
+      Actuator1: device Actuator ;
+      Actuator2: device Actuator ;
+      FMSProcessor: processor PowerPC;
+    connections
+      sensedPosition: port PositionSensor.PositionReading  -> Actuator1.ActCmd;
+      Actuator2Cmd: port PositionSensor.PositionReading -> Actuator2.ActCmd;
+	properties 
+		Actual_Processor_Binding => (reference (FMSProcessor)) applies to PositionSensor;
+		Actual_Processor_Binding => (reference (FMSProcessor)) applies to Actuator1;
+		Actual_Processor_Binding => (reference (FMSProcessor)) applies to Actuator2;
+annex EMV2 {** 
+	use behavior ErrorModelLibrary::Simple;
+	composite error behavior
+		states
+			[PositionSensor.Operational and (Actuator1.Operational or Actuator2.Operational)]-> Operational;
+			[Actuator1.Failed and Actuator2.Failed]-> Failed;
+			[PositionSensor.Failed]-> Failed;
+		end composite;  
+	properties 
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.1 ; Distribution => Fixed;] applies to Actuator2.Failed;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.2 ; Distribution => Fixed;] applies to Actuator1.Failed;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.5 ; Distribution => Fixed;] applies to PositionSensor.Failed;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.3 ; Distribution => Fixed;] applies to FMSProcessor.Failed;
+		
+		MILSTD882::severity => Critical applies to Actuator2.ef2.Failed;
+		MILSTD882::likelihood => Remote applies to Actuator2.ef2.Failed;
+	**};
+  end AircraftFMS.i;
+end fha_rbd;
