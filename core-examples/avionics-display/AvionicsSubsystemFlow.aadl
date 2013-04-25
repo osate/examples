@@ -1,0 +1,156 @@
+package AvionicsSubsystemFlow
+public
+with SEI;
+
+
+-- Session2_cockpit_display_exercise 
+data Page_Content
+end Page_Content;
+
+data Page_Request
+end Page_Request;
+
+feature group Page_Processing
+  features
+    New_Page_Content: in data port Page_Content;
+    New_Page_Request: out data port Page_Request;
+end Page_Processing;
+--
+--feature group Page_Processing_Plug
+--  inverse of Page_Processing
+--end Page_Processing_Plug;
+
+bus LAN
+end LAN;
+
+bus implementation LAN.i
+end LAN.i;
+
+-----------------------------------------------------------------------
+device Display
+  features
+    ReqOut_ResultIn: feature group Page_Processing;
+  flows
+    Menu_Entry_Selected: flow source ReqOut_ResultIn.New_Page_Request {
+      Latency => 5 Ms .. 5 Ms;
+      };
+    Show_Page: flow sink ReqOut_ResultIn.New_Page_Content {
+      Latency => 10 Ms .. 10 Ms;
+      };
+end Display;
+
+device implementation Display.MFD
+end Display.MFD;
+
+----------------------------------------------------
+
+
+
+system Display_Manager
+  features
+    ReqIn_ResultOut: feature group inverse of Page_Processing;
+    ReqOut_ResultIn: feature group Page_Processing;
+  flows
+    cmd_request: flow path ReqIn_ResultOut.New_Page_Request -> ReqOut_ResultIn.New_Page_Request {
+      Latency => 10 Ms .. 10 Ms;
+      };
+    show_page: flow path ReqOut_ResultIn.New_Page_Content -> ReqIn_ResultOut.New_Page_Content {
+      Latency => 50 Ms .. 50 Ms;
+      };
+  properties
+    SEI::Is_Partition => true;
+end Display_Manager;
+
+system implementation Display_Manager.impl
+end Display_Manager.impl;
+
+-------------------------------------------------
+system Page_Content_Manager
+  features
+    ReqIn_ResultOut: feature group inverse of Page_Processing;
+    ReqOut_ResultIn: feature group Page_Processing;
+  flows
+    cmd_request: flow path ReqIn_ResultOut.New_Page_Request -> ReqOut_ResultIn.New_Page_Request {
+      Latency => 10 Ms .. 10 Ms;
+      };
+    show_page: flow path ReqOut_ResultIn.New_Page_Content -> ReqIn_ResultOut.New_Page_Content {
+      Latency => 50 Ms .. 50 Ms;
+      };
+  properties
+    SEI::Is_Partition => true;
+end Page_Content_Manager;
+
+system implementation Page_Content_Manager.impl
+end Page_Content_Manager.impl;
+
+---------------------------------------------------------------------------
+system Flight_Manager
+  features
+    ReqIn_ResultOut: feature group inverse of Page_Processing;
+    ReqOut_ResultIn: feature group Page_Processing;
+  flows
+    cmd_request: flow path ReqIn_ResultOut.New_Page_Request -> ReqOut_ResultIn.New_Page_Request {
+      Latency => 10 Ms .. 10 Ms;
+      };
+    show_page: flow path ReqOut_ResultIn.New_Page_Content -> ReqIn_ResultOut.New_Page_Content {
+      Latency => 25 Ms .. 25 Ms;
+      };
+  properties
+    SEI::Is_Partition => true;
+end Flight_Manager;
+
+system implementation Flight_Manager.impl
+end Flight_Manager.impl;
+
+system Flight_Director
+  features
+    ReqIn_ResultOut: feature group inverse of Page_Processing;
+  flows
+    process_page_request: flow path ReqIn_ResultOut.New_Page_Request -> ReqIn_ResultOut.New_Page_Content {
+      Latency => 50 Ms .. 50 Ms;
+      };
+  properties
+    SEI::Is_Partition => true;
+end Flight_Director;
+
+system implementation Flight_Director.impl
+end Flight_Director.impl;
+
+---------------------------------------------------------------------------------------------
+system Flight_System
+end Flight_System;
+
+system implementation Flight_System.impl
+  subcomponents
+    D: device Display.MFD;
+    DM: system Display_Manager.impl;
+    PCM: system Page_Content_Manager.impl;
+    FM: system Flight_Manager.impl;
+    FD: system Flight_Director.impl;
+    mylan: bus LAN.i;
+  connections
+    -- Display to DM connection
+    D_and_DM_conn: feature group D.ReqOut_ResultIn <-> DM.ReqIn_ResultOut;
+    -- DM to PCM connection
+    DM_and_PCM_conn: feature group DM.ReqOut_ResultIn <-> PCM.ReqIn_ResultOut;
+    -- PCM - FM connection	
+    PCM_and_FM_conn: feature group PCM.ReqOut_ResultIn <-> FM.ReqIn_ResultOut;
+    -- FM - FD connections
+    FM_and_FD_conn: feature group FM.ReqOut_ResultIn <-> FD.ReqIn_ResultOut;
+  -- PCM - FD connections
+  -- used in direct connection from PCM to FD
+  --    PCM_and_FD_conn: port group PCM.ReqOut_ResultIn -> FD.ReqIn_ResultOut;
+  flows
+    get_new_page: end to end flow D.Menu_Entry_Selected -> D_and_DM_conn -> DM.cmd_request
+       -> DM_and_PCM_conn -> PCM.cmd_request
+       -> PCM_and_FM_conn -> FM.cmd_request
+       -> FM_and_FD_conn -> FD.process_page_request
+       -> FM_and_FD_conn -> FM.show_page
+       -> PCM_and_FM_conn -> PCM.show_page
+       -> DM_and_PCM_conn -> DM.show_page
+       -> D_and_DM_conn -> D.Show_Page
+       {
+        Latency => 350 Ms .. 350 Ms;
+        };
+end Flight_System.impl;
+end AvionicsSubsystemFlow;

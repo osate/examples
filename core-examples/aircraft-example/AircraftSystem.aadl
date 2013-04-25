@@ -1,0 +1,62 @@
+-- This package contains the aircraft system model with its tier 2 systems as AADL subcomponent.
+-- This model is then expanded to include one and two levels of subcomponents of the tier 2 systems.
+package AircraftSystem
+public
+with AircraftSubsystems, FlightGuidanceIMA, SEI;
+  -- with SAVI, AircraftSubsystems;
+  -- Aircraft system: the Tier 1 system 
+  system AircraftSystem
+    properties
+      SEI::WeightLimit => 70000.0 kg;
+  end AircraftSystem;
+  
+  -- Aircraft system with Tier 2 systems as subsystems. 
+  -- This is done only specifying the AADL system type of each Tier 2 system
+  -- Instantiation of this AADL system implementation results in an instance model
+  -- of Tier 1 and Tier 2 systems of the Aircraft.
+  -- This instance model can be analyzed for physical system properties such as weight.
+  -- We can also check for model consistency such as connection to the correct bus type 
+  system implementation AircraftSystem.SubsystemSpec
+    subcomponents
+      FGS: system AircraftSubsystems::FlightGuidance;
+      HYD: bus AircraftSubsystems::HydraulicPressure;
+      LDG: system AircraftSubsystems::LandingGear;
+      NAV: system AircraftSubsystems::Navigation;
+      FUE: bus AircraftSubsystems::FuelFlow;
+      ENG: system AircraftSubsystems::Engines;
+      APU: system AircraftSubsystems::AuxiliaryPowerUnit;
+      BLD: bus AircraftSubsystems::AirFlow;
+      ACO: system AircraftSubsystems::AirConditioning;
+      CPT: system AircraftSubsystems::Cockpit;
+      ELE: bus AircraftSubsystems::ElectricalPower.V1;
+      SIG: bus AircraftSubsystems::SignalFlow;
+    connections
+      FUEtoENG: bus access FUE -> ENG.FuelSupply;
+      FUEtoAPU: bus access FUE -> APU.FuelSupply;
+      HYDtoENG: bus access HYD -> ENG.HydraulicPower;
+      FGStoHYD: bus access HYD -> FGS.HydraulicPower;
+      HYDtoLDG: bus access HYD -> LDG.HydraulicPower;
+      BLDtoACO: bus access BLD -> ACO.AirPower;
+      BLDtoENG: bus access BLD -> ENG.AirPower;
+      ELEtoENG: bus access ELE -> ENG.ElectricalPower;
+      ELEtoCPT: bus access ELE -> CPT.ElectricalSupply;
+      ELEtoNAV: bus access ELE -> NAV.ElectricalSupply;
+      ELEtoLDG: bus access ELE -> LDG.ElectricalSupply;
+      ELEtoAPU: bus access ELE -> APU.ElectricalSupply;
+      ELEtoACO: bus access ELE -> ACO.ElectricalSupply;
+      ELEtoEGS: bus access ELE -> FGS.ElectricalSupply;
+      ACOtoSIG: bus access SIG -> ACO.Signals;
+      APUtoSIG: bus access SIG -> APU.Signals;
+      LDGtoSIG: bus access SIG -> LDG.Signals;
+      NAVtoSIG: bus access SIG -> NAV.Signals;
+      FGStoSIG: bus access SIG -> FGS.Signals;
+      ENGtoSIG: bus access SIG -> ENG.Signals;
+      CPTtoSIG: bus access SIG -> CPT.Signals;
+  end AircraftSystem.SubsystemSpec;
+  
+  system implementation AircraftSystem.SubsystemImpl
+    extends AircraftSystem.SubsystemSpec
+    subcomponents
+      FGS: refined to system FlightGuidanceIMA::FlightGuidance.cmdflow;
+  end AircraftSystem.SubsystemImpl;
+end AircraftSystem;

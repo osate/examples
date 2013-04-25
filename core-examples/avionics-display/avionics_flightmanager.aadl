@@ -1,0 +1,238 @@
+package avionics_flightmanager
+-- This package elaborates the Flight Manager as a thread-based implementation
+-- This implementation performs all communication within the flight manager partition through ports and connections.
+-- The threads of the flight manager have no priority assignment and are assumed to be scheduled fixed-priority preemptively according to RMA.
+-- The threads have execution time specified, which can be used to determine schedulability of the flight manager.
+-- The threads have flow specifications such that the flow specification latency used for the subsystem latency analysis can be validated by the latency from the flight manager implementation.
+-- An OSATE analysis plug-in can identify bindings of threads to processors and perform scheduling analysis to determine whther the binding is realistic.
+-- The system implementation that represents the system to be instantiated is declared in a separate AADL file Avionics_System_PeriodicIO.aadl
+public
+with avionics_subsystems, avionics_datatypes, avionics_flightmanager;
+  process Flight_Manager
+    extends avionics_subsystems::Flight_Manager
+  end Flight_Manager;
+   
+  process implementation Flight_Manager.common
+    subcomponents
+      NSP: thread NavigationSensorProcessing;
+      INav: thread IntegratedNavigation;
+      GP: thread GuidanceProcessing;
+      FPP: thread FlightPlanProcessing; 
+      APC: thread AircraftPerformanceCalculation;
+      pageFeed: thread HandlePageRequest;
+    connections
+      navsensorconn: port NSP.navSensorDataToIN -> INav.navSensorDataFromNSP {
+        Timing => Immediate;
+        };
+      navdataconn1: port INav.navDataToGPAPC -> GP.navDataFromIN {
+        Timing => Immediate;
+        };
+      navdataconn2: port INav.navDataToGPAPC -> APC.navDataFromIN {
+        Timing => Immediate;
+        };
+      guidanceconn1: port GP.guidanceToFPP -> FPP.guidanceFromGP {
+        Timing => Immediate;
+        };
+      performancedataconn: port APC.perfDataToFPP -> FPP.perfDataFromAPC {
+        Timing => Delayed;
+        };
+      fpdataconn1: port FPP.fpDataToGPAPC -> GP.fpDataFromFPP {
+        Timing => Delayed;
+        };
+      fpdataconn2: port FPP.fpDataToGPAPC -> APC.fpDataFromFPP {
+        Timing => Immediate;
+        };
+  end Flight_Manager.common;
+  
+  process implementation Flight_Manager.noPIO
+    extends Flight_Manager.common
+    connections
+      fuelflowconn: port FMIn.fuelFlow -> APC.fuelFlow {
+        Timing => Immediate;
+        };
+      navsignalconn: port FMIn.navSignal -> NSP.navSignalDataFromSensor {
+        Timing => Immediate;
+        };
+      navdataconn3: port INav.navDataToGPAPC -> FMOut.navDataOut {
+        Timing => Immediate;
+        };
+      guidanceconn2: port GP.guidanceToFPP -> FMOut.guidanceOut {
+        Timing => Immediate;
+        };
+      fpdataconn3: port FPP.fpDataToGPAPC -> FMOut.fpDataOut {
+        Timing => Immediate;
+        };
+      inPageRequest: port New_Page_Request_From_PCM -> pageFeed.New_Page_Request_From_PCM {
+        Timing => Immediate;
+        };
+      outPageRequest: port pageFeed.New_Page_Request_To_FD -> New_Page_Request_To_FD {
+        Timing => Immediate;
+        };
+      inPageContent: port New_Page_Content_from_FD -> pageFeed.New_Page_Content_from_FD {
+        Timing => Immediate;
+        };
+      outPageContent: port pageFeed.New_Page_Content_To_PCM -> New_Page_Content_To_PCM {
+        Timing => Immediate;
+        };
+    flows
+      cmd_request: flow path New_Page_Request_From_PCM -> inPageRequest -> pageFeed.passThroughRequest
+         -> outPageRequest -> New_Page_Request_To_FD;
+      show_page: flow path New_Page_Content_from_FD -> inPageContent -> pageFeed.passThroughPage
+         -> outPageContent -> New_Page_Content_To_PCM;
+  end Flight_Manager.noPIO;
+  
+  process implementation Flight_Manager.PIO
+    extends Flight_Manager.common
+    subcomponents
+      PerIO: thread PeriodicIO;
+    connections
+      inflow: feature group FMIn <-> PerIO.fromOutside;
+      outflow: feature group PerIO.toOutside <-> FMOut;
+      fuelflowconn: port PerIO.fuelFlow -> APC.fuelFlow {
+        Timing => Immediate;
+        };
+      navsignalconn: port PerIO.navSignal -> NSP.navSignalDataFromSensor {
+        Timing => Immediate;
+        };
+      navdataconn3: port INav.navDataToGPAPC -> PerIO.navDataOut {
+        Timing => Delayed;
+        };
+      guidanceconn2: port GP.guidanceToFPP -> PerIO.guidanceOut {
+        Timing => Delayed;
+        };
+      fpdataconn3: port FPP.fpDataToGPAPC -> PerIO.fpDataOut {
+        Timing => Delayed;
+        };
+      inPageRequestPIO: port New_Page_Request_From_PCM -> PerIO.New_Page_Request_From_PCM {
+        Timing => Immediate;
+        };
+      inPageRequest: port PerIO.New_Page_Request_To_PageFeed -> pageFeed.New_Page_Request_From_PCM {
+        Timing => Immediate;
+        };
+      outPageRequest: port pageFeed.New_Page_Request_To_FD -> PerIO.New_Page_Request_From_PageFeed {
+        Timing => Delayed;
+        };
+      outPageRequestPIO: port PerIO.New_Page_Request_To_FD -> New_Page_Request_To_FD {
+        Timing => Immediate;
+        };
+      inPageContentPIO: port New_Page_Content_from_FD -> PerIO.New_Page_Content_from_FD {
+        Timing => Immediate;
+        };
+      inPageContent: port PerIO.New_Page_Content_To_PageFeed -> pageFeed.New_Page_Content_from_FD {
+        Timing => Immediate;
+        };
+      outPageContentPIO: port PerIO.New_Page_Content_To_PCM -> New_Page_Content_To_PCM {
+        Timing => Immediate;
+        };
+      outPageContent: port pageFeed.New_Page_Content_To_PCM -> PerIO.New_Page_Content_From_PageFeed {
+        Timing => Delayed;
+        };
+    flows
+      cmd_request: flow path New_Page_Request_From_PCM -> inPageRequestPIO -> PerIO.passInRequest
+         -> inPageRequest -> pageFeed.passThroughRequest
+         -> outPageRequest -> PerIO.passOutRequest
+         -> outPageRequestPIO -> New_Page_Request_To_FD;
+      show_page: flow path New_Page_Content_from_FD -> inPageContentPIO -> PerIO.passInContent
+         -> inPageContent -> pageFeed.passThroughPage
+         -> outPageContent -> PerIO.passOutContent
+         -> outPageContentPIO -> New_Page_Content_To_PCM;
+  end Flight_Manager.PIO;
+  
+  -- the components of the flight manager
+  thread NavigationSensorProcessing
+    features
+      navSignalDataFromSensor: in data port avionics_datatypes::NavSignalData;
+      navSensorDataToIN: out data port avionics_datatypes::NavSensorData;
+    properties
+      Dispatch_Protocol => Periodic;
+      Period => 50 Ms;
+      Compute_Execution_Time => 5 Ms .. 15 Ms;
+  end NavigationSensorProcessing;
+  
+  thread IntegratedNavigation
+    features
+      navSensorDataFromNSP: in data port avionics_datatypes::NavSensorData;
+      navDataToGPAPC: out data port avionics_datatypes::NavData;
+    properties
+      Dispatch_Protocol => Periodic;
+      Period => 100 Ms;
+      Compute_Execution_Time => 10 Ms .. 40 Ms;
+  end IntegratedNavigation;
+  
+  thread GuidanceProcessing
+    features
+      navDataFromIN: in data port avionics_datatypes::NavData;
+      fpDataFromFPP: in data port avionics_datatypes::FPData;
+      guidanceToFPP: out data port avionics_datatypes::GuidanceData;
+    properties
+      Dispatch_Protocol => Periodic;
+      Period => 50 Ms;
+      Compute_Execution_Time => 8 Ms .. 30 Ms;
+  end GuidanceProcessing;
+  
+  thread FlightPlanProcessing
+    features
+      guidanceFromGP: in data port avionics_datatypes::GuidanceData;
+      perfDataFromAPC: in data port avionics_datatypes::PerformanceData;
+      fpDataToGPAPC: out data port avionics_datatypes::FPData;
+    properties
+      Dispatch_Protocol => Periodic;
+      Period => 200 Ms;
+      Compute_Execution_Time => 10 Ms .. 30 Ms;
+  end FlightPlanProcessing;
+  
+  thread AircraftPerformanceCalculation
+    features
+      fpDataFromFPP: in data port avionics_datatypes::FPData;
+      navDataFromIN: in data port avionics_datatypes::NavData;
+      fuelFlow: in data port avionics_datatypes::FuelFlowData;
+      perfDataToFPP: out data port avionics_datatypes::PerformanceData;
+    properties
+      Dispatch_Protocol => Periodic;
+      Period => 500 Ms;
+      Compute_Execution_Time => 1 Ms .. 100 Ms;
+  end AircraftPerformanceCalculation;
+  
+  thread PeriodicIO
+    features
+      fromOutside: feature group avionics_datatypes::FMInData;
+      fuelFlow: out data port avionics_datatypes::FuelFlowData;
+      navSignal: out data port avionics_datatypes::NavSignalData;
+      guidanceOut: in data port avionics_datatypes::GuidanceData;
+      fpDataOut: in data port avionics_datatypes::FPData;
+      navDataOut: in data port avionics_datatypes::NavData;
+      toOutside: feature group avionics_datatypes::FMOutData;
+      New_Page_Request_From_PCM: in data port avionics_datatypes::Page_Request;
+      New_Page_Request_To_PageFeed: out data port avionics_datatypes::Page_Request;
+      New_Page_Request_From_PageFeed: in data port avionics_datatypes::Page_Request;
+      New_Page_Request_To_FD: out data port avionics_datatypes::Page_Request;
+      New_Page_Content_from_FD: in data port avionics_datatypes::Page_Content;
+      New_Page_Content_To_PageFeed: out data port avionics_datatypes::Page_Content;
+      New_Page_Content_From_PageFeed: in data port avionics_datatypes::Page_Content;
+      New_Page_Content_To_PCM: out data port avionics_datatypes::Page_Content;
+    flows
+      passInRequest: flow path New_Page_Request_From_PCM -> New_Page_Request_To_PageFeed;
+      passOutRequest: flow path New_Page_Request_From_PageFeed -> New_Page_Request_To_FD;
+      passInContent: flow path New_Page_Content_from_FD -> New_Page_Content_To_PageFeed;
+      passOutContent: flow path New_Page_Content_From_PageFeed -> New_Page_Content_To_PCM;
+    properties
+      Dispatch_Protocol => Periodic;
+      Period => 50 Ms;
+      Compute_Execution_Time => 1 Ms .. 1 Ms;
+  end PeriodicIO;
+  
+  thread HandlePageRequest
+    features
+      New_Page_Request_From_PCM: in data port avionics_datatypes::Page_Request;
+      New_Page_Content_To_PCM: out data port avionics_datatypes::Page_Content;
+      New_Page_Request_To_FD: out data port avionics_datatypes::Page_Request;
+      New_Page_Content_from_FD: in data port avionics_datatypes::Page_Content;
+    flows
+      passThroughRequest: flow path New_Page_Request_From_PCM -> New_Page_Request_To_FD;
+      passThroughPage: flow path New_Page_Content_from_FD -> New_Page_Content_To_PCM;
+    properties
+      Dispatch_Protocol => Periodic;
+      Compute_Execution_Time => 1 Ms .. 1 Ms;
+      Period => 50 Ms;
+  end HandlePageRequest;
+end avionics_flightmanager;

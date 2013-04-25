@@ -1,0 +1,76 @@
+--   This package contains the data types used in the Avionics System example
+package AppTypes
+public
+with AppTypes;
+  --   a port group type that is used in the specification of a system in terms of its subsystems
+  --   The port group type may initially be declared without providing the ports that make up the port group
+  feature group PageRequest
+    features
+      request: out data port PageRequestCmd;
+      page: in data port PageContent;
+  end PageRequest;
+  
+  feature group PageReturn
+    inverse of PageRequest
+  end PageReturn;
+  
+  data PageRequestCmd
+  end PageRequestCmd;
+  
+  data MenuCmd
+  end MenuCmd;
+  
+  data PageContent
+  end PageContent;
+  
+  data PageImage
+  end PageImage;
+  
+  data NavSignalData
+  end NavSignalData;
+  
+  data NavSensorData
+  end NavSensorData;
+  
+  data NavData
+  end NavData;
+  
+  -- hello
+  data FuelFlowData
+  end FuelFlowData;
+  
+  data GuidanceData
+    properties
+      Source_Data_Size => 8 Bytes;
+  end GuidanceData;
+  
+  data FPData
+  end FPData;
+  
+  data PerformanceData
+  end PerformanceData;
+  
+  feature group FMInData
+    features
+      fuelFlow: in data port FuelFlowData;
+      navSignal: in data port NavSignalData;
+  end FMInData;
+  
+  feature group FMInDataInv
+    inverse of FMInData
+  end FMInDataInv;
+  
+  feature group FMOutData
+    features
+      guidanceOut: out data port GuidanceData;
+      fpDataOut: out data port FPData;
+      navDataOut: out data port NavData;
+  end FMOutData;
+  
+  feature group FMOutDataInv
+    inverse of FMOutData
+  end FMOutDataInv;
+  
+  data SharedData
+  end SharedData;
+end AppTypes;

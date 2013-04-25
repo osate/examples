@@ -1,0 +1,12 @@
+package TripleErrorTypes
+public
+annex EMV2 {** 
+error types
+     Data_Fault: type;     
+     No_Data: type extends Data_Fault; 
+     Bad_Data: type extends Data_Fault; 
+end types;
+**};
+
+end TripleErrorTypes;
+

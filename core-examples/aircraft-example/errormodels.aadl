@@ -1,0 +1,93 @@
+package errormodels
+public
+  annex error_model {**
+	-- simple error model
+error model Basic
+features
+    Failed : error event;
+
+    Error_Free: initial error state;
+    Permanent_Failure: error state;
+
+    Visible_Failure: in out error propagation;
+end Basic; 
+
+error model implementation Basic.Nominal
+transitions
+     Error_Free -[Failed, in Visible_Failure]-> Permanent_Failure;
+     Permanent_Failure -[out Visible_Failure]-> Permanent_Failure;
+properties
+     Occurrence => poisson 10E-4 applies to Failed;
+     Occurrence => poisson 10E-6 applies to Visible_Failure;
+end Basic.Nominal; 
+
+error model forHardware
+features 
+HW_Error_Free: initial error state;
+HW_Activation_Fault, HW_Transient_Error, HW_Permanent_Error, HW_Detection_Action_End, HW_Error_Non_Detect, HW_In_Repair: error state;
+HW_Fault: error event {Occurrence => poisson 0.5};
+HW_Perm_Fault: error event {Occurrence => fixed 0.4};
+HW_Trans_Fault: error event {Occurrence => fixed 0.3}; 
+HW_Detection_Action: error event {Occurrence => poisson 0.1};
+HW_Failure_Perceived: error event {Occurrence => poisson 0.4};
+HW_Perm_Fault_Detect: error event {Occurrence => fixed 0.4}; 
+HW_Perm_Fault_Non_Detect: error event {Occurrence => fixed 0.4}; 
+HW_Repair_Trans: error event {Occurrence => poisson 0.4}; 
+HW_Repair_Perm: error event {Occurrence => poisson 0.4};
+HW_Transient: out error propagation {Occurrence => fixed 0.4}; 
+HW_Permanent_Non_Detect: out error propagation {Occurrence=> fixed 0.4}; 
+HW_Failed: out error propagation {Occurrence => fixed 0.4};
+end forHardware;
+
+error model implementation forHardware.general
+transitions
+HW_Error_Free-[HW_Fault]-> HW_Activation_Fault;
+HW_Activation_Fault-[HW_Trans_Fault]-> HW_Transient_Error;
+HW_Activation_Fault-[HW_Perm_Fault]-> HW_Permanent_Error;
+HW_Transient_Error-[HW_Repair_Trans]-> HW_Error_Free;
+HW_Permanent_Error-[HW_Detection_Action]-> HW_Detection_Action_End;
+HW_Detection_Action_End-[HW_Perm_Fault_Detect]-> HW_In_Repair;
+HW_Detection_Action_End-[HW_Perm_Fault_Non_Detect]-> HW_Error_Non_Detect;
+HW_Error_Non_Detect-[HW_Failure_Perceived]-> HW_In_Repair;
+HW_In_Repair-[HW_Repair_Perm]-> HW_Error_Free;
+HW_Transient_Error-[out HW_Transient]-> HW_Transient_Error;	
+HW_Error_Non_Detect-[out HW_Permanent_Non_Detect]-> HW_Error_Non_Detect;
+HW_In_Repair-[out HW_Failed]-> HW_In_Repair;
+end forHardware.general;
+
+
+error model forSoftware
+features 
+SW_Error_Free: initial error state;
+SW_Activation_Fault, SW_Detection_Action_End, SW_Error_Non_Detected, SW_Error_Detected, SW_Handling_End, SW_In_Restart: error state;
+SW_Fault: error event {Occurrence => poisson 0.1};
+SW_Detect_Action: error event {Occurrence => poisson 0.1};
+SW_Detected: error event {Occurrence => fixed 0.1};
+SW_Non_Detected: error event {Occurrence => fixed 0.1};
+SW_Non_Detected_Disappear: error event {Occurrence => poisson 0.1};
+SW_Non_Detected_Perceived: error event {Occurrence => poisson 0.1};
+SW_Handling: error event {Occurrence => poisson 0.1};
+SW_Error_Temp: error event {Occurrence => fixed 0.1};
+SW_Error_Perm: error event {Occurrence => fixed 0.1};
+SW_Restart: error event {Occurrence => poisson 0.1};
+SW_Failed: out error propagation {Occurrence => fixed 0.1};
+end forSoftware;
+
+error model implementation forSoftware.general
+transitions
+SW_Error_Free-[SW_Fault]-> SW_Activation_Fault;
+SW_Activation_Fault-[SW_Detect_Action]-> SW_Detection_Action_End;
+SW_Detection_Action_End -[SW_Detected]-> SW_Error_Detected;
+SW_Detection_Action_End -[SW_Non_Detected]-> SW_Error_Non_Detected;
+SW_Error_Non_Detected-[SW_Non_Detected_Disappear]->SW_Error_Free;
+SW_Error_Non_Detected-[SW_Non_Detected_Perceived]->SW_In_Restart;
+SW_Error_Detected-[SW_Handling]-> SW_Handling_End;
+SW_Handling_End -[SW_Error_Temp]->SW_Error_Free;
+SW_Handling_End -[SW_Error_Perm]-> SW_In_Restart;
+SW_In_Restart-[SW_Restart]-> SW_Error_Free;
+SW_In_Restart-[out SW_Failed]-> SW_In_Restart;
+end forSoftware.general;
+
+
+**};
+end errormodels;

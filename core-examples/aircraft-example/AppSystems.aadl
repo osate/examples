@@ -1,0 +1,105 @@
+--       This package defines the avionics system
+--       The system implementations represent a progression of the system model
+--       each with increasing fidelity.
+package AppSystems
+public
+with HardwareParts, AppSubSystems, Flightmanager, SEI;
+  system EmbeddedApp
+    features
+      EtherAccess: requires bus access HardwareParts::EtherSwitch;
+      PowerPlug: requires bus access;
+    properties
+      reference_processor => classifier( HardwareParts::Xeon.solo );
+  end EmbeddedApp;
+  
+  --       This system declaration defines the system as a part list
+  --       The subsystems are declared in terms of subsystem classifiers without implementation details
+  --       The subsystems are specified without any connections
+  system implementation EmbeddedApp.SubSystemParts
+    subcomponents
+      PilotDisplay: device HardwareParts::MFD;
+      WAM: process AppSubSystems::WarningAnnunciationManager;
+      DM: process AppSubSystems::DisplayManager {
+        SEI::SecurityLevel => 3;
+        };
+      PCM: process AppSubSystems::PageContentManager {
+        SEI::SecurityLevel => 4;
+        };
+      FM: process Flightmanager::FlightManager {
+        SEI::SafetyCriticality => 6;
+        };
+      FD: process AppSubSystems::FlightDirector {
+        SEI::SafetyCriticality => 7;
+        };
+  end EmbeddedApp.SubSystemParts;
+  
+  --       This system declaration defines the system as consisting of subsystems
+  --       and connections between the subsystems
+  --       The subsystems are declared in terms of subsystem classifiers without implementation details
+  --       The connections have bandwidth budgets specified
+  --       This implementation is an elaboration of the SubSystemParts implementation
+  --       by adding connections to the implementation
+  system implementation EmbeddedApp.Topology
+    extends EmbeddedApp.SubSystemParts
+    connections
+      BusAccessConnection1: bus access EtherAccess -> PilotDisplay.Switch;
+      DisplayDM: feature group PilotDisplay.DisplayToDM <-> DM.DMToDisplay {
+        SEI::BandWidthBudget => 10.0 Mbytesps;
+        };
+      DMPCM: feature group DM.DMToPCM <-> PCM.PCMToDM {
+        SEI::BandWidthBudget => 20.0 Mbytesps;
+        };
+      PCMFM: feature group PCM.PCMToFM <-> FM.FMToPCM {
+        SEI::BandWidthBudget => 15.0 Mbytesps;
+        };
+      FMFD: feature group FM.FMToFD <-> FD.FDToFM {
+        SEI::BandWidthBudget => 40.0 Mbytesps;
+        };
+  end EmbeddedApp.Topology;
+  
+  --       This system implementation is declared as an extension of the system implementation
+  --       with subsystems and their connections.  It illustrates the use of extends to associate
+  --       end-to-end flows with the system.  This could have also been done through elaboration
+  --       by adding the end-to-end flow into the previous implementation
+  --       The end-to-end flow specifies the expected end-to-end flow latency
+  system implementation EmbeddedApp.CommandFlow
+    extends EmbeddedApp.Topology
+    flows
+      get_new_page: end to end flow PilotDisplay.Menu_Entry_Selected -> DisplayDM -> DM.cmd_request
+         -> DMPCM -> PCM.cmd_request
+         -> PCMFM -> FM.cmd_request
+         -> FMFD -> FD.process_page_request
+         -> FMFD -> FM.show_page
+         -> PCMFM -> PCM.show_page
+         -> DMPCM -> DM.show_page
+         -> DisplayDM -> PilotDisplay.Show_Page
+         {
+          Latency => 350 Ms .. 350 Ms;
+          };
+  end EmbeddedApp.CommandFlow;
+  
+  --       This system implementation is a refinement of the previous system implementation
+  --       It elaborates the flight manager into a thread-based implementation with a shared data access model  
+  system implementation EmbeddedApp.Legacy
+    extends EmbeddedApp.CommandFlow
+    subcomponents
+      FM: refined to process Flightmanager::FlightManager.shareddata;
+  end EmbeddedApp.Legacy;
+  
+  --       This system implementation is a refinement of the previous system implementation
+  --       It elaborates the flight manager into a flow-based thread implementation with a periodic IO thread
+  --       The periodic IO thread performs cross-partition communication at the beginning of a frame  
+  system implementation EmbeddedApp.FlightManagerPIO
+    extends EmbeddedApp.CommandFlow
+    subcomponents
+      FM: refined to process Flightmanager::FlightManager.PIO;
+  end EmbeddedApp.FlightManagerPIO;
+  
+  --       This system implementation is a refinement of the previous system implementation
+  --       It elaborates the flight manager into a flow-based thread implementation without a periodic IO thread
+  system implementation EmbeddedApp.FlightManagernoPIO
+    extends EmbeddedApp.CommandFlow
+    subcomponents
+      FM: refined to process Flightmanager::FlightManager.noPIO;
+  end EmbeddedApp.FlightManagernoPIO;
+end AppSystems;

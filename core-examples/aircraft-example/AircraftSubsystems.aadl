@@ -1,0 +1,180 @@
+-- This package contains the Tier 2 system specifications.
+-- The AADL system type declarations correspond to spec sheets for these subsystems.
+-- Here we can assign property values for physical system characteristics.
+-- This is illustrated with the pressure property for the hydrolics.
+-- For the engine we illustrate how we can specify mode specific property values.
+package AircraftSubsystems
+public
+with AircraftSubsystems, SEI;
+  -- BUS TYPES DECLARATIONS --
+  -- the bus types may be placed in a separate package and become part of a reusable component specification library
+  bus FuelFlow
+    properties
+      SEI::GrossWeight => 400.0 kg;
+  end FuelFlow;
+  
+  bus HydraulicPressure
+    properties
+      SEI::GrossWeight => 165.0 kg;
+  end HydraulicPressure;
+  
+  bus AirFlow
+    properties
+      SEI::GrossWeight => 275.0 kg;
+  end AirFlow;
+  
+  bus ElectricalPower
+    features
+      Backbone: requires bus access ElectricalPower;
+    properties
+      SEI::GrossWeight => 75.0 kg;
+  end ElectricalPower;
+  
+  bus implementation ElectricalPower.V1
+    properties
+      SEI::GrossWeight => 75.0 kg;
+      SEI::PowerCapacity => 24000.0 W;
+  end ElectricalPower.V1;
+  
+  bus implementation ElectricalPower.V2
+    properties
+      SEI::GrossWeight => 120.0 kg;
+      SEI::PowerCapacity => 25000.0 W;
+  end ElectricalPower.V2;
+  
+  bus SignalFlow
+    properties
+      SEI::GrossWeight => 75.0 kg;
+  end SignalFlow;
+  
+  -- SUBSYSTEMS DECLARATIONS --
+  system FlightGuidance
+    features
+      ElectricalSupply: requires bus access ElectricalPower {
+        SEI::PowerBudget => 3000.0 W;
+        };
+      HydraulicPower: requires bus access HydraulicPressure;
+      Signals: requires bus access SignalFlow;
+    properties
+      SEI::WeightLimit => 300.0 kg;
+      SEI::GrossWeight => 280.0 kg;
+  end FlightGuidance;
+  
+  system Hydraulics
+    features
+      ElectricalSupply: requires bus access ElectricalPower {
+        SEI::PowerBudget => 4000.0 W;
+        };
+      HydraulicPower: requires bus access HydraulicPressure;
+      FGS_HydraulicPower: requires bus access HydraulicPressure;
+      LDG_HydraulicPower: requires bus access HydraulicPressure;
+    properties
+      SEI::WeightLimit => 500.0 kg;
+      SEI::GrossWeight => 380.0 kg;
+  end Hydraulics;
+  
+  system LandingGear
+    features
+      ElectricalSupply: requires bus access ElectricalPower {
+        SEI::PowerBudget => 6000.0 W;
+        };
+      HydraulicPower: requires bus access HydraulicPressure;
+      Signals: requires bus access SignalFlow;
+    properties
+      SEI::WeightLimit => 35000.0 kg;
+      SEI::GrossWeight => 30000.0 kg;
+  end LandingGear;
+  
+  system Navigation
+    features
+      ElectricalSupply: requires bus access ElectricalPower {
+        SEI::PowerBudget => 5500.0 W;
+        };
+      Signals: requires bus access SignalFlow;
+    properties
+      SEI::WeightLimit => 20000.0 kg;
+      SEI::GrossWeight => 10000.0 kg;
+  end Navigation;
+  
+  system Fuel
+    features
+      ElectricalSupply: requires bus access ElectricalPower {
+        SEI::PowerBudget => 4000.0 W;
+        };
+      FuelSupply: requires bus access FuelFlow;
+      AuxFuelSupply: requires bus access FuelFlow;
+  end Fuel;
+  
+  system Engines
+    features
+      ElectricalPower: requires bus access ElectricalPower {
+        SEI::PowerSupply => 20000.0 W;
+        };
+      HydraulicPower: requires bus access HydraulicPressure;
+      AirPower: requires bus access AirFlow;
+      FuelSupply: requires bus access FuelFlow;
+      Signals: requires bus access SignalFlow;
+    properties
+      SEI::GrossWeight => 15000.0 kg;
+      SEI::WeightLimit => 14000.0 kg;
+  end Engines;
+  
+  system implementation Engines.impl
+    modes
+      running: mode ;
+      stopped: initial mode ;
+  end Engines.impl;
+  
+  system Electrics
+    features
+      MainElectricalSupply: requires bus access ElectricalPower;
+      FGSElecPower: requires bus access ElectricalPower;
+      CPTElecPower: requires bus access ElectricalPower;
+      NAVElecPower: requires bus access ElectricalPower;
+      AuxElectricalSupply: requires bus access ElectricalPower;
+      ACOElecPower: requires bus access ElectricalPower;
+      BLDElecPower: requires bus access ElectricalPower;
+      LDGElecPower: requires bus access ElectricalPower;
+      HYDElecPower: requires bus access ElectricalPower;
+      FUEElecPower: requires bus access ElectricalPower;
+  end Electrics;
+  
+  system AuxiliaryPowerUnit
+    features
+      ElectricalSupply: requires bus access ElectricalPower {
+        SEI::PowerSupply => 5000.0 W;
+        };
+      FuelSupply: requires bus access FuelFlow;
+      Signals: requires bus access SignalFlow;
+    properties
+      SEI::GrossWeight => 10000.0 kg;
+  end AuxiliaryPowerUnit;
+  
+  system Bleed
+    features
+      ElectricalSupply: requires bus access ElectricalPower;
+      AirPower: requires bus access AirFlow;
+      AirDelivery: requires bus access AirFlow;
+  end Bleed;
+  
+  system AirConditioning
+    features
+      ElectricalSupply: requires bus access ElectricalPower {
+        SEI::PowerBudget => 8000.0 W;
+        };
+      AirPower: requires bus access AirFlow;
+      Signals: requires bus access SignalFlow;
+    properties
+      SEI::GrossWeight => 700.0 kg;
+  end AirConditioning;
+  
+  system Cockpit
+    features
+      ElectricalSupply: requires bus access ElectricalPower {
+        SEI::PowerBudget => 2000.0 W;
+        };
+      Signals: requires bus access SignalFlow;
+    properties
+      SEI::GrossWeight => 1500.0 kg;
+  end Cockpit;
+end AircraftSubsystems;

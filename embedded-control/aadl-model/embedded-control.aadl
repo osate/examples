@@ -20,7 +20,7 @@ features
 	tempval : out event data port temperature;
 annex EMV2 {**
 	use types ErrorLibrary;
-	use behavior ErrorModelLibrary::Simple;
+	use behavior embedded_errlib::Simple;
 	properties
 	    --  The following properties are used to fill the PRISM model
 	    --  and the FHA report.
@@ -38,6 +38,17 @@ annex EMV2 {**
 			comment => "Not critical as long as two sensors are operating";
 		]
 		applies to Failure;
+		
+		EMV2::severity => 1 applies to Failed;
+		EMV2::likelihood => C applies to Failed;
+		EMV2::hazard => 
+		[	crossreference => "A.A.A";
+			failure => "Sensor in failure state";
+			phase => "all";
+			description => "Failure of sensor";
+			comment => "Likely happen once a month";
+		]
+		applies to Failed;
 **};
 end sensor;
 
@@ -49,7 +60,7 @@ features
     action : in event data port action;
 annex EMV2 {**
 	use types ErrorLibrary;
-	use behavior ErrorModelLibrary::Simple;
+	use behavior embedded_errlib::Simple;
 	properties
 	    --  The following properties are used to fill the PRISM model
 	    --  and the FHA report.
@@ -67,6 +78,21 @@ annex EMV2 {**
 			comment => "Major hazard if both are not operating";
 		]
 		applies to Failure;
+		
+				
+
+
+		
+		EMV2::severity => 1 applies to Failed;
+		EMV2::likelihood => C applies to Failed;
+		EMV2::hazard => 
+		[	crossreference => "A.A.A";
+			failure => "Actuator failed";
+			phase => "all";
+			description => "Failure of an actuator";
+			comment => "Should happen once every two months";
+		]
+		applies to Failed;
 **};
 end actuator;
 
@@ -181,11 +207,14 @@ annex EMV2 {**
 	-- The composite error behavior is used to make the RBD evaluation.
 	-- It uses the conditions of the states section below
 	-- and uses the properties declared in the same section (the fixed values)
-	use behavior ErrorModelLibrary::Simple;
+	use behavior embedded_errlib::Simple;
 	composite error behavior
 	states
 		[((s1.Operational and s2.Operational ) or (s1.Operational and s3.Operational ) or (s3.Operational and s2.Operational ) ) or (a1.Operational or a2.Operational)]-> Operational;
-		[((s1.Failed and s2.Failed ) or (s1.Failed and s3.Failed ) or (s3.Failed and s2.Failed ) ) or (a1.Failed or a2.Failed)]-> Failed;
+		[a1.Failed or a2.Failed]-> Failed;
+		[s1.Failed and s2.Failed ]-> Failed;
+		[s1.Failed and s3.Failed ]-> Failed;
+		[s3.Failed and s2.Failed ]-> Failed;
 	end composite;
 		properties
 		
@@ -196,6 +225,7 @@ annex EMV2 {**
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.00003 ; Distribution => Fixed;] applies to s3.Failed;
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.0001 ; Distribution => Fixed;] applies to a1.Failed;
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.0001 ; Distribution => Fixed;] applies to a2.Failed;
+
 **};
 end main.i;
 

@@ -1,0 +1,38 @@
+package minimal_model
+
+public
+
+processor i5
+end i5;
+
+processor implementation i5.four_cores
+end i5.four_cores;
+
+memory ram
+end ram;
+
+memory implementation ram.i
+end ram.i;
+
+process application
+end application;
+
+process implementation application.impl
+end application.impl;
+
+system minimalist_system
+end minimalist_system;
+
+system implementation minimalist_system.i
+subcomponents
+   cpu        : processor i5.four_cores;
+   ram        : memory ram.i;
+   my_process : process application.impl;
+properties
+   Actual_Processor_Binding => (reference (cpu)) 
+                               applies to my_process;
+   Actual_Memory_Binding => (reference (ram)) 
+                               applies to my_process;
+end minimalist_system.i;
+
+end minimal_model;
