@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.osate.pluginsample;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-ClassPath: .
+Bundle-Activator: org.osate.pluginsample.Activator
+Bundle-Vendor: CMU-SEI
+Bundle-Localization: plugin
+Export-Package: org.osate.pluginsample,
+ org.osate.pluginsample.actions
+Require-Bundle: org.osate.aadl2,
+ org.osate.ui,
+ org.osate.aadl2.modelsupport,
+ org.osate.xtext.aadl2.properties;bundle-version="1.0.0",
+ org.osate.xtext.aadl2;bundle-version="1.0.0",
+ org.osate.annexsupport;bundle-version="1.0.0"
+Bundle-ActivationPolicy: lazy
+Import-Package: org.osate.annexsupport,
+ org.osate.contribution.sei.names,
+ org.osate.xtext.aadl2
+
