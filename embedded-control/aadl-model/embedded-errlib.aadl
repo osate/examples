@@ -51,10 +51,10 @@ end behavior;
 		Failed 				: state;
 		TransientFailure 	: state;
 	transitions
-		transerr: Operational 		-[ Failure ]-> Failed;
+		transerr : Operational 		-[ Failure ]-> Failed;
 	
-		transerr: Operational 		-[ FailureTransient ]-> TransientFailure;
-		treset  : TransientFailure 	-[ ResetEvent ]-> Operational;
+		transerr2: Operational 		-[ FailureTransient ]-> TransientFailure;
+		treset   : TransientFailure 	-[ ResetEvent ]-> Operational;
 	end behavior;	
 **};
 end embedded_errlib;
