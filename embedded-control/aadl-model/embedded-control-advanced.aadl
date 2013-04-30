@@ -1,0 +1,301 @@
+-- This example is inspired from the embedded control
+-- example taken from the PRISM case studies.
+-- You can read more about this example on
+-- http://www.prismmodelchecker.org/casestudies/embedded.php
+
+
+package embedded_control_advanced
+
+public
+with EMV2;
+ 
+data temperature
+end temperature;
+
+data action
+end action;
+
+device sensor
+features
+	tempval : out event data port temperature;
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior embedded_errlib::Simple;
+	properties
+	    --  The following properties are used to fill the PRISM model
+	    --  and the FHA report.
+	    --  The value here corresponds to lambda_s in the PRISM model
+	    --  lamba_s = 1/(30*24*60*60)
+	    --  from the specifications, it corresponds to 1 fault per month
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 3.85e-7 ; Distribution => Poisson;] applies to Failure;
+		EMV2::severity => 1 applies to Failure;
+		EMV2::likelihood => C applies to Failure;
+		EMV2::hazard => 
+		[	crossreference => "X.X.X.X";
+			failure => "Loss of sensor readings";
+			phase => "all";
+			description => "No position readings due to sensor failure";
+			comment => "Not critical as long as two sensors are operating";
+		]
+		applies to Failure;
+		
+		EMV2::severity => 1 applies to Failed;
+		EMV2::likelihood => C applies to Failed;
+		EMV2::hazard => 
+		[	crossreference => "A.A.A";
+			failure => "Sensor in failure state";
+			phase => "all";
+			description => "Failure of sensor";
+			comment => "Likely happen once a month";
+		]
+		applies to Failed;
+**};
+end sensor;
+
+device implementation sensor.i
+end sensor.i;
+
+device actuator
+features
+    action : in event data port action;
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior embedded_errlib::Simple;
+	properties
+	    --  The following properties are used to fill the PRISM model
+	    --  and the FHA report.
+	    --  The value here corresponds to lambda_a in the PRISM model
+	    --  lamba_a = 1/(2*30*24*60*60)
+	    --  from the specifications, it corresponds to 1 fault per 2 months
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.92e-7 ; Distribution => Poisson;] applies to Failure;
+		EMV2::severity => 1 applies to Failure;
+		EMV2::likelihood => C applies to Failure;
+		EMV2::hazard => 
+		[	crossreference => "Y.Y.Y";
+			failure => "Cannot operate";
+			phase => "all";
+			description => "Cannot operate the device";
+			comment => "Major hazard if both are not operating";
+		]
+		applies to Failure;
+**};
+end actuator;
+
+device implementation actuator.i
+end actuator.i;
+
+system bus_subsystem
+features
+	bpin  : provides bus access generic_bus.i;
+	bpm   : provides bus access generic_bus.i;
+	bpout : provides bus access generic_bus.i;
+end bus_subsystem;
+
+system implementation bus_subsystem.i
+subcomponents
+	b : bus generic_bus.i;
+connections
+	bus access bpin -> b;
+	bus access bpout -> b;
+	bus access bpm -> b;
+annex emv2 {**
+	use types embedded_errlib;
+	use behavior embedded_errlib::Simple;
+	        
+	error propagations
+		bpout: out propagation {NoService};
+		bpout: in  propagation {NoService};
+		bpin: in propagation {NoService};
+		bpin: out propagation {NoService};
+		bpm: out propagation {NoService};
+		bpm: in propagation {NoService};
+	flows
+		esource_in  : error source bpin{NoService} when Failed;
+		esink_in    : error sink bpin{NoService};
+		esource_m   : error source bpm{NoService} when Failed;
+		esink_m     : error sink bpm{NoService};
+		esource_out : error source bpout{NoService} when Failed;
+		esink_out   : error sink bpout{NoService};
+	end propagations;
+	
+component error behavior
+	transitions
+		Operational -[bpin{NoService} or bpout{NoService} or bpm{NoService}]-> Failed;
+    propagations
+      	Failed		-[]->bpout(NoService);
+      	Failed		-[]->bpin(NoService);
+      	Failed		-[]->bpm(NoService);
+   end component; 
+	**};
+end bus_subsystem.i;
+
+bus generic_bus
+end generic_bus;
+
+bus implementation generic_bus.i
+end generic_bus.i;
+
+processor generic_processor
+features
+   ba : requires bus access generic_bus.i;
+annex EMV2 {**
+	use types embedded_errlib;
+	use behavior embedded_errlib::SimpleAndTransient;
+	error propagations
+		ba: out propagation {NoService};
+		ba: in  propagation {NoService};
+	end propagations;
+	
+	component error behavior
+	transitions
+		Operational -[ba{NoService}]-> Failed;
+    propagations
+      	TransientFailure -[]->ba(NoService);
+      	Failed		-[]->ba(NoService);
+   end component; 
+   
+	properties
+		--  The following properties are used to fill the PRISM model
+	    --  and the FHA report.
+	    --  The value corresponds to lambda_s in the PRISM model
+	    --  lamba_p = 1/(365*24*60*60)
+	    --  from the specifications, it corresponds to 1 fault per year
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 3.17e-8 ; Distribution => Poisson;] applies to Failure;
+		EMV2::severity => 1 applies to Failure;
+		EMV2::likelihood => C applies to Failure;
+		EMV2::hazard => 
+		[	crossreference => "Z.Z.Z";
+			failure => "Cannot process data";
+			phase => "all";
+			description => "Permanent failure from the processor";
+			comment => "Major issue, the processor is not operating";
+		]
+		applies to Failure;
+	 	--  The following properties are used to fill the PRISM model
+	    --  and the FHA report.
+		--  The value corresponds to delta_r in the PRISM model
+	    --  delta_r = 1/(1/30)
+	    --  from the specifications, it corresponds to 1 recovery occurence each 30 seconds
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.03 ; Distribution => Poisson;] applies to ResetEvent;
+		
+		
+		--  The following properties are used to fill the PRISM model
+	    --  and the FHA report.
+		--  The value corresponds to delta_f in the PRISM model
+	    --  delta_f = 1/(1/24*60*60)
+	    --  from the specifications, it corresponds to 1 transient failure occurence each day
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.15e-5 ; Distribution => Poisson;] applies to FailureTransient;
+		EMV2::severity => 1 applies to FailureTransient;
+		EMV2::likelihood => C applies to FailureTransient;
+		EMV2::hazard => 
+		[	crossreference => "A.A.A";
+			failure => "Temporary unavailable";
+			phase => "all";
+			description => "Temporary failure of the processor";
+			comment => "Happen once a day and likely recover quickly";
+		]
+		applies to FailureTransient;
+**};
+end generic_processor;
+
+processor output_processor extends generic_processor
+features
+	action_out : out event data port action;
+end output_processor;
+
+processor input_processor extends generic_processor
+features
+	temperature1 : in event data port temperature;
+	temperature2 : in event data port temperature;
+	temperature3 : in event data port temperature;
+end input_processor;
+
+processor main_processor extends generic_processor
+end main_processor;
+
+system main
+end main;
+
+system implementation main.i
+subcomponents
+	s1 : device sensor.i;
+	s2 : device sensor.i;
+	s3 : device sensor.i;
+	a1 : device actuator.i;
+	a2 : device actuator.i;
+	pi : processor input_processor;
+	pm : processor main_processor;
+	po : processor output_processor;
+	b  : system bus_subsystem.i;
+connections
+	port s1.tempval -> pi.temperature1;
+	port s2.tempval -> pi.temperature2;
+	port s3.tempval -> pi.temperature3;
+	
+	port po.action_out -> a1.action;
+	port po.action_out -> a2.action;
+	
+	bus access pi.ba -> b.bpin;
+	bus access pm.ba -> b.bpm;
+	bus access po.ba -> b.bpout;
+properties
+    Actual_Processor_Binding => (reference (pi)) applies to s1;
+    Actual_Processor_Binding => (reference (pi)) applies to s2;
+    Actual_Processor_Binding => (reference (pi)) applies to s3;
+    
+    Actual_Processor_Binding => (reference (po)) applies to a1;
+    Actual_Processor_Binding => (reference (po)) applies to a2;
+annex EMV2 {**
+	-- The composite error behavior is used to make the RBD evaluation.
+	-- It uses the conditions of the states section below
+	-- and uses the properties declared in the same section (the fixed values)
+	use behavior embedded_errlib::Simple;
+	composite error behavior
+	states
+		[((s1.Operational and s2.Operational ) or (s1.Operational and s3.Operational ) or (s3.Operational and s2.Operational ) ) or (a1.Operational or a2.Operational)]-> Operational;
+		[a1.Failed or a2.Failed]-> Failed;
+		[s1.Failed and s2.Failed ]-> Failed;
+		[s1.Failed and s3.Failed ]-> Failed;
+		[s3.Failed and s2.Failed ]-> Failed;
+		[po.Failed or pm. Failed or pi.Failed]-> Failed;
+	end composite;
+		properties
+		
+		--  The following values are used rather for the RDB
+		--  They are not used by PRISM itself
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.00003 ; Distribution => Fixed;] applies to s1.Failed;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.00003 ; Distribution => Fixed;] applies to s2.Failed;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.00003 ; Distribution => Fixed;] applies to s3.Failed;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.0001 ; Distribution => Fixed;] applies to a1.Failed;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.0001 ; Distribution => Fixed;] applies to a2.Failed;
+		EMV2::severity => 1 applies to Failed;
+		EMV2::likelihood => C applies to Failed;
+		EMV2::hazard => 
+		[	crossreference => "A.A.A";
+			failure => "Actuator failed";
+			phase => "all";
+			description => "Failure of an actuator";
+			comment => "Should happen once every two months";
+		]
+		applies to a1.Failed;
+		
+		EMV2::hazard => 
+		[	crossreference => "A.A.A";
+			failure => "Main system failed";
+			phase => "all";
+			description => "Failure of the main system";
+			comment => "Should not happen";
+		]
+		applies to Failed;
+				EMV2::hazard => 
+		[	crossreference => "A.A.A";
+			failure => "Actuator failed";
+			phase => "all";
+			description => "Failure of an actuator";
+			comment => "Should happen once every two months";
+		]
+		applies to a2.Failed;
+**};
+end main.i;
+
+end embedded_control_advanced;
