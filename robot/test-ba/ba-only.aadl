@@ -25,10 +25,10 @@ annex behavior_specification
 {**
 states
 	init 			: initial complete final state ;
-	data_sent 	    : final state;
+	data_sent 	    : state;
 transitions
-	init -[ on dispatch ]-> data_sent {tosend := tosend + 1 ; number_out!(tosend);};
-	data_send -[]-> init;
+	init -[ on dispatch ]-> data_sent {tosend := tosend + 1 ; number_out!(tosend)};
+	data_sent -[]-> init;
 **};
 end thr_producer.i;
 
@@ -69,10 +69,10 @@ annex behavior_specification
 {**
 states
 	init 			: initial complete final state ;
-	data_received 	    : final state;
+	data_received 	    : state;
 transitions
 	init -[ on dispatch number_in ]-> data_received { received := number_in};
-	data_send -[]-> init;
+	data_received -[]-> init;
 **};
 end thr_consumer.i;
 

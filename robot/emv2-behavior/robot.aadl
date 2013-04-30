@@ -42,7 +42,7 @@ end robot_error.i;
 
 system robot_behavior
 features
-	timeout 	: out event port;
+	timeout_keyword_ba 	: out event port;
 	blown 	    : out event port;
 	see_mine    : in event port;
 	explode     : in event port;
@@ -72,12 +72,14 @@ subcomponents
 annex behavior_specification
 {**
 		states
-		  init 			: initial complete final state ;
-		  detect_mine 	:  final state;
+		  init 			: initial final state ;
+		  detect_mine 	:  state;
 		  defuse1		:  state;
 		  defuse2		:  state;
+		  defuse3		:  state;
 		  mark			:  state;
 		  goto_next		:  state;
+		  goto_next_cell:  state;
 		  not_detected	:  state;
 		  done			:  final state;
 		transitions
@@ -89,34 +91,34 @@ annex behavior_specification
 		  detect_mine -[time_counter >= timeout_val]-> done;
   		  detect_mine -[(time_counter < timeout_val) and see_mine?]-> defuse1 {time_counter := time_counter + t_defuse1};
   		  detect_mine -[(time_counter < timeout_val) and explode?]-> done {blown!};
-  		  detect_mine -[(time_counter < timeout_val) and ( not explode?) and (not see_mine?)]-> not_detected;
+  		  detect_mine -[(time_counter < timeout_val) and ( not explode'fresh) and (not see_mine'fresh)]-> not_detected;
   		 
   		  -- From defuse1
-  		 defuse1 -[time_counter >= timeout_val]-> done {timeout!};
-  		 defuse1 -[(time_counter < timeout_val) and (p_d1?) and (not p_ed1?)]-> goto_next;
-  		 defuse1 -[(time_counter < timeout_val) and (not p_d1?) and (p_ed1?)]-> done {blown!};
-  		 defuse1 -[(time_counter < timeout_val) and (not p_d1?) and (not p_ed1?)]-> defuse2 {time_counter := time_counter + t_defuse2};
+  		 defuse1 -[time_counter >= timeout_val]-> done {timeout_keyword_ba!};
+  		 defuse1 -[(time_counter < timeout_val) and (p_d1'fresh) and (not p_ed1'fresh)]-> goto_next;
+  		 defuse1 -[(time_counter < timeout_val) and (not p_d1'fresh) and (p_ed1'fresh)]-> done {blown!};
+  		 defuse1 -[(time_counter < timeout_val) and (not p_d1'fresh) and (not p_ed1'fresh)]-> defuse2 {time_counter := time_counter + t_defuse2};
   		 
   		 -- From defuse2
-  		 defuse2 -[time_counter >= timeout_val]-> done {timeout!};
-  		 defuse2 -[(time_counter < timeout_val) and (p_d2) and (not p_ed2?)]-> goto_next;
-  		 defuse2 -[(time_counter < timeout_val) and (not p_d2?) and (p_ed2?)]-> done {blown!};
-  		 defuse2 -[(time_counter < timeout_val) and (not p_d2?) and (not p_ed2?)]-> defuse3 {time_counter := time_counter + t_defuse3};
+  		 -- TODO: defuse2 -[time_counter >= timeout_val]-> done {timeout_keyword_ba!};
+  		 defuse2 -[(time_counter < timeout_val) and (p_d2'fresh) and (not p_ed2'fresh)]-> goto_next;
+  		 defuse2 -[(time_counter < timeout_val) and (not p_d2'fresh) and (p_ed2'fresh)]-> done {blown!};
+  		 defuse2 -[(time_counter < timeout_val) and (not p_d2'fresh) and (not p_ed2'fresh)]-> defuse3 {time_counter := time_counter + t_defuse3};
   		 
-  		 defuse2 -[time_counter < timeout_val]
+  		 --defuse2 -[time_counter < timeout_val]
   		 -- From defuse3
-  		 defuse3 -[time_counter >= timeout_val]-> done {timeout!};
-  		 defuse3 -[(time_counter < timeout_val) and (p_d3?) and (not p_ed3?)]-> goto_next;
-  		 defuse3 -[(time_counter < timeout_val) and (not p_d3?) and (p_ed3?)]-> done {blown!};
-  		 defuse3 -[(time_counter < timeout_val) and (not p_d3?) and (not p_ed3?)]-> mark {time_counter := time_counter + t_mark};
+  		 defuse3 -[time_counter >= timeout_val]-> done {timeout_keyword_ba!};
+  		 defuse3 -[(time_counter < timeout_val) and (p_d3'fresh) and (not p_ed3'fresh)]-> goto_next;
+  		 defuse3 -[(time_counter < timeout_val) and (not p_d3'fresh) and (p_ed3'fresh)]-> done {blown!};
+  		 defuse3 -[(time_counter < timeout_val) and (not p_d3'fresh) and (not p_ed3'fresh)]-> mark {time_counter := time_counter + t_mark};
   		 
   		 -- From mark
-  		 mark -[time_counter >= timeout_val]-> done {timeout!};
+  		 mark -[time_counter >= timeout_val]-> done {timeout_keyword_ba!};
   		 mark -[time_counter < timeout_val]-> goto_next;
   		 
   		 -- From not_detected
-  		 not_detected -[ p_false_neg? ]-> goto_next_cell {failures := failures + 1};
-  		 not_detected -[ not p_false_neg? ]-> init;
+  		 not_detected -[ p_false_neg'fresh ]-> goto_next_cell {failures := failures + 1};
+  		 not_detected -[ not p_false_neg'fresh ]-> init;
   		 
   		 -- From goto_next
   		 -- Later, we can add some potential faults depending on the robot behavior
@@ -145,7 +147,7 @@ connections
 	port prob.explode -> behavior.explode;
 	
 	
-	port behavior.timeout 	-> error.timeout;
+	port behavior.timeout_keyword_ba 	-> error.timeout;
 	port behavior.blown 	-> error.defuse_fail;
 	
 	
