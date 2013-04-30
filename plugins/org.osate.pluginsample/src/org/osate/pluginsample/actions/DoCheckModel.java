@@ -94,7 +94,8 @@ public final class DoCheckModel extends AaxlModifyActionAsJob {
 			
 			AnnexSubclause as = ccl.createOwnedAnnexSubclause();
 			AnnexSubclauseImpl asi = (AnnexSubclauseImpl) as;
-			asi.setName("annex_test");
+			asi.setName("EMV2");
+			asi.bypassUnparser(true);
 			asi.setAnnexContent("hello in annex");
 			System.out.println("si=" + si );
 			System.out.println("ccl=" + ccl );
