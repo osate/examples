@@ -15,9 +15,18 @@ end temperature;
 data action
 end action;
 
+bus pwm
+end pwm;
+
+bus serial
+end serial;
+
+bus generic
+end generic;
+
 device sensor
 features
-	tempval : out event data port temperature;
+	tempval : requires bus access pwm;
 annex EMV2 {**
 	use types ErrorLibrary;
 	use behavior embedded_errlib::Simple;
@@ -57,7 +66,7 @@ end sensor.i;
 
 device actuator
 features
-    action : in event data port action;
+    action : requires bus access pwm;
 annex EMV2 {**
 	use types ErrorLibrary;
 	use behavior embedded_errlib::Simple;
@@ -158,17 +167,18 @@ end generic_processor;
 
 processor output_processor extends generic_processor
 features
-	action_out : out event data port action;
+	action_data     : provides bus access pwm;
 end output_processor;
 
 processor input_processor extends generic_processor
 features
-	temperature1 : in event data port temperature;
-	temperature2 : in event data port temperature;
-	temperature3 : in event data port temperature;
+	temperature1 : provides bus access pwm;
+	temperature2 : provides bus access pwm;
+	temperature3 : provides bus access pwm;
 end input_processor;
 
 processor main_processor extends generic_processor
+
 end main_processor;
 
 system main
@@ -186,23 +196,17 @@ subcomponents
 	po : processor output_processor;
 	b  : bus generic_bus.i;
 connections
-	port s1.tempval -> pi.temperature1;
-	port s2.tempval -> pi.temperature2;
-	port s3.tempval -> pi.temperature3;
+	bus access s1.tempval -> pi.temperature1;
+	bus access s2.tempval -> pi.temperature2;
+	bus access s3.tempval -> pi.temperature3;
 	
-	port po.action_out -> a1.action;
-	port po.action_out -> a2.action;
+	bus access po.action_data -> a1.action;
+	bus access po.action_data -> a2.action;
 	
 	bus access b -> pi.ba;
 	bus access b -> pm.ba;
 	bus access b -> po.ba;
-properties
-    Actual_Processor_Binding => (reference (pi)) applies to s1;
-    Actual_Processor_Binding => (reference (pi)) applies to s2;
-    Actual_Processor_Binding => (reference (pi)) applies to s3;
-    
-    Actual_Processor_Binding => (reference (po)) applies to a1;
-    Actual_Processor_Binding => (reference (po)) applies to a2;
+
 annex EMV2 {**
 	-- The composite error behavior is used to make the RBD evaluation.
 	-- It uses the conditions of the states section below
@@ -216,7 +220,7 @@ annex EMV2 {**
 		[s1.Failed and s3.Failed ]-> Failed;
 		[s3.Failed and s2.Failed ]-> Failed;
 	end composite;
-		properties
+		properties 
 		
 		--  The following values are used rather for the RDB
 		--  They are not used by PRISM itself
