@@ -1,0 +1,3 @@
+property set myprops is
+	replicationfactor : aadlinteger applies to (all);
+end myprops ;

@@ -1,0 +1,106 @@
+Package busaccessarray
+public
+with SEI;
+bus PowerBus_28v
+end PowerBus_28V;
+
+system AIMS_CABINET
+end AIMS_CABINET;
+
+bus buspower
+end buspower;
+
+bus SAFEbus
+features
+power: requires bus access buspower;
+end SAFEbus;
+system AIMS_LRM
+features
+Power1: requires bus access PowerBus_28v;
+Power2: requires bus access PowerBus_28v;
+AX: requires bus access SAFEbus;
+AY: requires bus access SAFEbus;
+BX: requires bus access SAFEbus;
+BY: requires bus access SAFEbus;
+              BusPower: provides bus access buspower;
+end AIMS_LRM;
+
+system Implementation AIMS_LRM.ref
+end AIMS_LRM.ref;
+
+system implementation AIMS_CABINET.Fourbuses
+subcomponents
+LRMS : system AIMS_LRM.ref[8];
+-- separately declared four buses
+AX : bus Safebus;
+Ay : bus Safebus;
+BX : bus Safebus;
+BY : bus Safebus;
+Connections
+-- syntax error, as standard does not allow array access on connection end points
+--b1: bus access LRMS[1].BusPower -> AX.power;
+
+
+-- all 8 bus access points bound to the same AX bus access
+b1a: bus access LRMS.BusPower -> AX.power
+{Connection_Pattern => ((All_To_One));}
+;
+end AIMS_CABINET.Fourbuses;
+
+
+
+system implementation AIMS_CABINET.Fourbusesconnect
+subcomponents
+LRMS : system AIMS_LRM.ref[8];
+-- separately declared four buses
+AX : bus Safebus;
+Ay : bus Safebus;
+BX : bus Safebus;
+BY : bus Safebus;
+Connections
+-- explicit binding of LRMS[1] to AX
+b1b: bus access LRMS.BusPower -> AX.power
+{Connection_Set => ([src=>(1);dst=>(1);]);}
+;
+-- explicit binding of LRMS[2] to BX
+b1bx: bus access LRMS.BusPower -> BX.power
+{Connection_Set => ([src=>(2);dst=>(1);]);}
+;
+end AIMS_CABINET.Fourbusesconnect;
+
+
+
+system implementation AIMS_CABINET.twobytwoexplicit
+subcomponents
+LRMS : system AIMS_LRM.ref[8];
+-- 2by2 array representing AB/XY
+abxy: bus SAFEbus[2][2];
+Connections
+-- explicit specification of connections
+b2a: bus access LRMS.busPower -> abxy.power
+{Connection_Set => ([src=>(1);dst=>(1,1);]
+	,[src=>(2);dst=>(1,2);]
+	,[src=>(3);dst=>(2,1);]
+	,[src=>(4);dst=>(2,2);]
+);}
+;
+end AIMS_CABINET.twobytwoexplicit;
+
+
+system implementation AIMS_CABINET.twobytwopattern
+subcomponents
+LRMS : system AIMS_LRM.ref[8];
+-- 2by2 array representing AB/XY
+abxy: bus SAFEbus[2][2];
+Connections
+-- 2by2 bus array example connections
+-- patterns do not work for two reasons:
+-- 1: the dimension sizes do not line up
+-- 2: there is no pattern keyword that lets us flatten two dimensions into one with each connection to a separate feature
+b2: bus access LRMS.busPower -> abxy.power
+{Connection_Pattern => ((One_To_One,One_To_All));}
+;
+end AIMS_CABINET.twobytwopattern;
+
+
+end busaccessarray;

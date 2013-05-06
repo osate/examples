@@ -1,0 +1,382 @@
+package featurearray
+public
+with myprops;
+
+-- an application lane to be replicated
+-- The lane consists of three steps
+-- After each steps lanes interchange the results
+
+thread stept1
+features
+	outp: out event port ;
+end stept1;
+
+thread steptmiddle
+features
+	outp: out event port ;
+	inp: in event port [3];
+end steptmiddle;
+
+thread steptfinal
+features
+	inp: in event port [3];
+end steptfinal;
+
+
+process lane
+features
+-- ports to interchange data between lanes
+step1out: out event port;
+step2in: in event port;
+step2out: out event port;
+step3in: in event port;
+end lane;
+
+-- system with a processing lane of two steps.
+-- the processing lane is triple redundant.
+-- The output of the first step is sent to all copies of the second step.
+-- In other words, each second step receives input from step1 of all three lanes.
+-- Each step2 can then make decisions separately about the validity of the output.
+
+process implementation lane.i
+subcomponents
+	step1: thread stept1 ;
+	step2: thread steptmiddle ;
+	step3: thread steptfinal ;
+connections
+	conn12int: port step2in -> step2.inp;
+	conn12ext: port step1.outp -> step1out;
+	conn23int: port step3in -> step3.inp;
+	conn23ext: port step2.outp -> step2out;
+end lane.i;
+
+
+system toplanes
+end toplanes;
+
+-- system with a processing lane of two steps.
+-- the processing lane is triple redundant.
+-- The output of the first step is sent to all copies of the second step.
+-- In other words, each second step receives input from step1 of all three lanes.
+-- Each step2 can then make decisions separately about the validity of the output.
+
+system implementation toplanes.i
+subcomponents
+	lane: process lane.i [3];
+	bu: bus b[3];
+connections
+	conn12: port lane.step1out -> lane.step2in
+	{Connection_Pattern =>((one_to_one, one_to_all));};
+	conn23: port lane.step2out -> lane.step3in
+	{Connection_Pattern =>((one_to_one, one_to_all));};
+end toplanes.i;
+
+
+
+-- dealing with a replicated bus
+
+-- option 1: single bus as abstraction for the replication
+-- replication is bus internal and application does not deal with it
+-- property may indicate that the bus is internally replicated
+system implementation toplanes.tripleabstraction
+subcomponents
+	lane: process lane.i [3];
+	pc: processor proc[3];
+	bu: bus triplebus;
+connections
+	conn12: port lane.step1out -> lane.step2in
+	{Connection_Pattern =>((one_to_one, one_to_all));};
+	conn23: port lane.step2out -> lane.step3in
+	{Connection_Pattern =>((one_to_one, one_to_all));};
+	
+	baconn1: bus access pc.tripleba <-> bu
+	{Connection_Pattern =>((all_to_one));}
+	;
+	properties
+	actual_processor_binding => (reference(pc[1])) applies to lane[1];
+	actual_processor_binding => (reference(pc[2])) applies to lane[2];
+	actual_processor_binding => (reference(pc[3])) applies to lane[3];
+--	if not explicitly specified connection binding is inferred from processor binding
+-- here we explicitly bind the two connection patterns to the triple bus
+	actual_connection_binding => (reference (bu)) applies to conn12;
+	actual_connection_binding => (reference (bu)) applies to conn23;
+	-- attach binding to port instance. Lets us access the array.
+end toplanes.tripleabstraction;
+
+-- modeling the 3 buses explicitly
+-- How do we represent the fact that each connection should go over all three buses?
+-- In the next example we try to express it by binding the connection to all 3 buses
+system implementation toplanes.threebindings
+subcomponents
+	lane: process lane.i [3];
+	pc: processor proc[3];
+	bu: bus b[3];
+connections
+	conn12: port lane.step1out -> lane.step2in
+	{Connection_Pattern =>((one_to_one, one_to_all));};
+	conn23: port lane.step2out -> lane.step3in
+	{Connection_Pattern =>((one_to_one, one_to_all));};
+	
+	baconn1: bus access pc.ba <-> bu
+	{Connection_Pattern =>((all_to_all));}
+	;
+	properties
+	actual_processor_binding => (reference(pc[1])) applies to lane[1];
+	actual_processor_binding => (reference(pc[2])) applies to lane[2];
+	actual_processor_binding => (reference(pc[3])) applies to lane[3];
+--	we now bind each connection set to all three buses
+-- The idea is to interpret the fact that the same connection is bound to 3 buses means it should be communicated over all three
+	actual_connection_binding => (reference (bu[1]), reference (bu[2]), reference(bu[3])) applies to conn12;
+	actual_connection_binding => (reference (bu[1]), reference (bu[2]), reference(bu[3])) applies to conn23;
+	-- Although we do not get an error message, this does not work. 
+	-- The list in Actual_Connection_Binding represents the hardware components involved in a connection transfer.
+	-- While Actual_Processor_Binding allows a thread to be bound to more than one processor, connections have only one binding.
+end toplanes.threebindings;
+
+-- In the next example we use a virtual bus to represent the triple protocol
+-- it has an implemented_as model that does the replication in the protocol driver task
+system implementation toplanes.tripleprotocol
+subcomponents
+	lane: process lane.i [3];
+	pc: processor proc[3];
+	bu: bus b[3];
+	tripleprotocol: virtual bus tripleprotocol;
+connections
+	conn12: port lane.step1out -> lane.step2in
+	{Connection_Pattern =>((one_to_one, one_to_all));};
+	conn23: port lane.step2out -> lane.step3in
+	{Connection_Pattern =>((one_to_one, one_to_all));};
+	
+	baconn1: bus access pc.ba <-> bu
+	{Connection_Pattern =>((all_to_all));}
+	;
+	properties
+	actual_processor_binding => (reference(pc[1])) applies to lane[1];
+	actual_processor_binding => (reference(pc[2])) applies to lane[2];
+	actual_processor_binding => (reference(pc[3])) applies to lane[3];
+--	we now bind each connection set to the protocol
+-- The idea is to interpret the fact that the same connection is bound to 3 buses means it should be communicated over all three
+	actual_connection_binding => (reference (tripleprotocol)) applies to conn12;
+	actual_connection_binding => (reference (tripleprotocol)) applies to conn23;
+	-- now we want to bind the triplicated connections in the protocol to the HW buses
+	actual_connection_binding => (reference (tripleprotocol)) applies to conn23;
+	actual_connection_binding => (reference (tripleprotocol)) applies to conn23;
+	-- Although we do not get an error message, this does not work. 
+	-- The list in Actual_Connection_Binding represents the hardware components involved in a connection transfer.
+	-- While Actual_Processor_Binding allows a thread to be bound to more than one processor, connections have only one binding.
+end toplanes.tripleprotocol;
+
+virtual bus tripleprotocol
+properties
+    Implemented_as => classifier (comm.triple);
+end tripleprotocol;
+
+
+abstract triplebusImpl
+features
+-- the sending port of a connection is mapped to the inport.
+-- the outport is mapped to the receiving port of the connection
+	inport: in event port;
+	outport: out event port;
+end triplebusImpl;
+
+-- protocol and three buses as implementation of the triple bus abstraction
+abstract implementation triplebusImpl.basic
+subcomponents
+	bu: bus b[3];
+	protocol: abstract comm.triple;
+connections
+   incoming: port inport -> protocol.inport;
+   outgoing: port protocol.outport -> outport;
+properties
+-- bind the three connections to the three buses
+	actual_connection_binding => (reference (bu[1])) applies to protocol.xfer[1];
+	actual_connection_binding => (reference (bu[2])) applies to protocol.xfer[2];
+	actual_connection_binding => (reference (bu[3])) applies to protocol.xfer[3];
+end triplebusImpl.basic;
+
+bus b
+end b;
+
+processor proc
+features
+	ba: requires bus access b;
+	tripleba: requires bus access triplebus;
+end proc;
+
+
+bus triplebus
+properties
+	myprops::replicationfactor => 3;
+    Implemented_as => classifier (triplebusImpl.basic);
+end triplebus;
+
+
+
+-- threads to represent the tasks responsible for sending data over a triple redundant bus
+-- by explicitly 
+thread triplecommsend
+features
+	inp: in event port;
+	outp: out event port[3];
+end triplecommsend;
+
+thread triplecommreceive
+features
+	inp: in event port[3];
+	outp: out event port;
+end triplecommreceive;
+
+abstract comm
+features
+	inport: in event port;
+	outport: out event port;
+end comm;
+
+abstract implementation comm.triple
+subcomponents
+	send: thread triplecommsend;
+	receive: thread triplecommreceive;
+	connections
+	xfer: port send.outp -> receive.inp { Connection_Pattern => ((One_to_All));};
+	incomng : port inport -> send.inp;
+	outgoing: port receive.outp -> outport;
+end comm.triple;
+
+-- now a model variant in which the application threads are responsible for the triple replication
+-- they have feature arrays to accomplish this.
+
+-- feature arrays can only have a single dimension
+-- so we flatten the array of [3][3] for the incoming ports.
+-- we then use connection_set to define acceptable connections
+thread steptt1
+features
+	outp: out event port ;
+end steptt1;
+
+thread stepttmiddle
+features
+	outp: out event port ;
+	inp: in event port [9];
+end stepttmiddle;
+
+thread stepttfinal
+features
+	inp: in event port [9];
+end stepttfinal;
+
+
+process lanetriple
+features
+-- ports to interchange data between lanes
+step1out: out event port;
+step2in: in event port;
+step2out: out event port;
+step3in: in event port;
+end lanetriple;
+
+
+process implementation lanetriple.i
+subcomponents
+	step1: thread steptt1 ;
+	step2: thread stepttmiddle ;
+	step3: thread stepttfinal ;
+connections
+	conn12int: port step2in -> step2.inp;
+	conn12ext: port step1.outp -> step1out;
+	conn23int: port step3in -> step3.inp;
+	conn23ext: port step2.outp -> step2out;
+end lanetriple.i;
+
+
+-- system with a processing lane of two steps.
+-- the processing lane is triple redundant as before.
+-- We now have three buses and port arrays to deals with triple transfer
+
+system implementation toplanes.tripletriple
+subcomponents
+	lane: process lanetriple.i [3];
+	bu: bus b[3];
+connections
+	conn12bus1: port lane.step1out -> lane.step2in
+	-- connection_pattern does not work
+--	 {Connection_Pattern =>((one_to_all, one_to_all));}
+	-- we need to use conenction_set to define all connections
+	-- we define a separate connection declaration for connections going over different buses so we can refer to them in the binding
+{Connection_Set => ([src=>(1);dst=>(1,1);]
+	,[src=>(2);dst=>(1,4);]
+	,[src=>(3);dst=>(1,7);]
+,[src=>(1);dst=>(2,1);]
+	,[src=>(2);dst=>(2,4);]
+	,[src=>(3);dst=>(2,7);]
+,[src=>(1);dst=>(3,1);]
+	,[src=>(2);dst=>(3,4);]
+	,[src=>(3);dst=>(3,7);]
+);}
+	;
+	conn12bus2: port lane.step1out -> lane.step2in
+	-- connection_pattern does not work
+--	 {Connection_Pattern =>((one_to_all, one_to_all));}
+	-- we need to use conenction_set to define all connections
+	-- we define a separate connection declaration for connections going over different buses so we can refer to them in the binding
+{Connection_Set => ([src=>(1);dst=>(1,2);]
+	,[src=>(2);dst=>(1,5);]
+	,[src=>(3);dst=>(1,8);]
+,[src=>(1);dst=>(2,2);]
+	,[src=>(2);dst=>(2,5);]
+	,[src=>(3);dst=>(2,8);]
+,[src=>(1);dst=>(3,2);]
+	,[src=>(2);dst=>(3,5);]
+	,[src=>(3);dst=>(3,8);]
+);}
+	;
+	conn12bus3: port lane.step1out -> lane.step2in
+	-- connection_pattern does not work
+--	 {Connection_Pattern =>((one_to_all, one_to_all));}
+	-- we need to use conenction_set to define all connections
+	-- we define a separate connection declaration for connections going over different buses so we can refer to them in the binding
+{Connection_Set => ([src=>(1);dst=>(1,3);]
+	,[src=>(2);dst=>(1,6);]
+	,[src=>(3);dst=>(1,9);]
+,[src=>(1);dst=>(2,3);]
+	,[src=>(2);dst=>(2,6);]
+	,[src=>(3);dst=>(2,9);]
+,[src=>(1);dst=>(3,3);]
+	,[src=>(2);dst=>(3,6);]
+	,[src=>(3);dst=>(3,9);]
+);}
+	;
+	-- we can also do it with a single declaration
+	-- in this case we have to use references to the ports involved in the connections to get a unique reference
+	-- we can use array indices on ports to get to the right one. We can do it for either the oputgoing port or the incoming port.
+	conn23: port lane.step2out -> lane.step3in
+{Connection_Set => ([src=>(1);dst=>(1,1);],[src=>(1);dst=>(1,2);],[src=>(1);dst=>(1,3);]
+	,[src=>(2);dst=>(1,4);],[src=>(2);dst=>(1,5);],[src=>(2);dst=>(1,6);]
+	,[src=>(3);dst=>(1,7);],[src=>(3);dst=>(1,8);],[src=>(3);dst=>(1,9);]
+,[src=>(1);dst=>(2,1);],[src=>(1);dst=>(2,2);],[src=>(1);dst=>(2,3);]
+	,[src=>(2);dst=>(2,4);],[src=>(2);dst=>(2,5);],[src=>(2);dst=>(2,6);]
+	,[src=>(3);dst=>(2,7);],[src=>(3);dst=>(2,8);],[src=>(3);dst=>(2,9);]
+,[src=>(1);dst=>(3,1);],[src=>(1);dst=>(3,2);],[src=>(1);dst=>(3,3);]
+	,[src=>(2);dst=>(3,4);],[src=>(2);dst=>(3,5);],[src=>(2);dst=>(3,6);]
+	,[src=>(3);dst=>(3,7);],[src=>(3);dst=>(3,8);],[src=>(3);dst=>(3,9);]
+);}
+	;
+	
+	properties
+	-- one binding for each of the connection sets
+	actual_connection_binding => (reference (bu[1])) applies to conn12bus1;
+	actual_connection_binding => (reference (bu[2])) applies to conn12bus2;
+	actual_connection_binding => (reference (bu[3])) applies to conn12bus3;
+	-- now bindings attached to the right ports of conn23
+	actual_connection_binding => (reference (bu[1])) applies to lane[1].step3.inp[1], lane[1].step3.inp[4], lane[1].step3.inp[7],
+					lane[2].step3.inp[1], lane[2].step3.inp[4], lane[2].step3.inp[7],
+					lane[3].step3.inp[1], lane[3].step3.inp[4], lane[3].step3.inp[7];
+	actual_connection_binding => (reference (bu[2])) applies to lane[1].step3.inp[2], lane[1].step3.inp[5], lane[1].step3.inp[8],
+					lane[2].step3.inp[2], lane[2].step3.inp[5], lane[2].step3.inp[8],
+					lane[3].step3.inp[2], lane[3].step3.inp[5], lane[3].step3.inp[8];
+	actual_connection_binding => (reference (bu[3])) applies to lane[1].step3.inp[3], lane[1].step3.inp[6], lane[1].step3.inp[9],
+					lane[2].step3.inp[3], lane[2].step3.inp[6], lane[2].step3.inp[9],
+					lane[3].step3.inp[3], lane[3].step3.inp[6], lane[3].step3.inp[9];
+end toplanes.tripletriple;
+
+end featurearray ;
