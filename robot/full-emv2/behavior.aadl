@@ -74,14 +74,14 @@ with base_types;
 			t33 : defuse2 -[ failure_medium_defuse 	]-> blownup;
 						
 			--  From defuse3
-			t30 : defuse3 -[ timeout_detected 		]-> timeout;
-			t31 : defuse3 -[ to_mark 				]-> mark;
-			t32 : defuse3 -[ success_medium_defuse 	]-> goto_next_cell;
-			t33 : defuse3 -[ failure_medium_defuse 	]-> blownup;
+			t40 : defuse3 -[ timeout_detected 		]-> timeout;
+			t41 : defuse3 -[ to_mark 				]-> mark;
+			t42 : defuse3 -[ success_medium_defuse 	]-> goto_next_cell;
+			t43 : defuse3 -[ failure_medium_defuse 	]-> blownup;
 			
 			-- From not_detected
-			t40 : not_detected -[ false_negative 		]-> goto_next_cell;
-			t41 : not_detected -[ no_false_negative 	]-> goto_next_cell;
+			t50 : not_detected -[ false_negative 		]-> goto_next_cell;
+			t51 : not_detected -[ no_false_negative 	]-> goto_next_cell;
 			
 			t99 : goto_next_cell -[ move_to_next_cell 	]-> init;
 			
