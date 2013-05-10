@@ -35,18 +35,11 @@ with ErrorLibrary, ErrorModelLibrary;
         use types ErrorLibrary;
     	use behavior ErrorModelLibrary::Simple;
     	error propagations 
-    		observable operation: out propagation {ServiceOmission} ;
     		ActCmd: in propagation  {ServiceOmission,ValueError,ItemOmission};
     	flows
 		 ef1:error sink ActCmd{ValueError};
-		 ef2:error source operation {ServiceOmission} when Failed;
-	
  		end propagations;
-	 
-		properties
-			MILSTD882::severity => Catastrophic applies to operation.ServiceOmission;
-			MILSTD882::likelihood => Remote applies to operation.ServiceOmission;
-		
+
     **};
   end Actuator;
   
@@ -92,8 +85,6 @@ annex EMV2 {**
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.5 ; Distribution => Fixed;] applies to PositionSensor.Failed;
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.3 ; Distribution => Fixed;] applies to FMSProcessor.Failed;
 		
-		MILSTD882::severity => Critical applies to Actuator2.ef2.Failed;
-		MILSTD882::likelihood => Remote applies to Actuator2.ef2.Failed;
 	**};
   end AircraftFMS.i;
 end fha_rbd;

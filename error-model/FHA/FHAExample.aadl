@@ -53,14 +53,16 @@ with ErrorLibrary, ErrorModelLibrary;
         use types ErrorLibrary;
     	use behavior ErrorModelLibrary::Simple;
     	error propagations 
-    		observable operation: out propagation {ServiceOmission} ;
+    	    operation: out propagation {ServiceOmission} ;
     		ActCmd: in propagation  {ServiceOmission,ValueError,ItemOmission};
     	flows
 		 ef1:error sink ActCmd{ValueError};
-		 ef2:error source operation {ServiceOmission} when Failed;
+		 ef2:error source operation {ServiceOmission} ;
 	
  end propagations;
-	 
+	  propagation paths
+ 	operation: propagation point;
+ end paths;
 	properties
 	-- the property is associated with an a specific error type of an outgoing observable propagation point
 	-- it uses the MILSTD882 specific variant of the hazard property, the severity and likelihood values are enumeration literals.
