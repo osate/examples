@@ -1,0 +1,15 @@
+property set Processor_Properties is
+
+Speed : Processor_Properties::SpeedSpecification applies to (processor);
+
+SpeedSpecification : type record (
+	Ips : aadlreal units Processor_Properties::Processor_Speed_IPS;
+	Freq : aadlreal units Processor_Properties::Processor_Speed_Freq;
+	Kind : list of Processor_Properties::SpeedKind;);
+	
+  	Processor_Speed_IPS: type units (KIPS, MIPS => KIPS * 1000, GIPS => MIPS * 1000);
+	Processor_Speed_Freq: type units (Khz, Mhz => Khz * 1000, GHz => MHz * 1000);
+	
+	SpeedKind : type enumeration (IPS, FREQ);
+
+end Processor_Properties;
