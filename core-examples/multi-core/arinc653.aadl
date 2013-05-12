@@ -1,0 +1,112 @@
+package arinc_multi_core
+public
+with ARINC653;
+
+virtual processor partition_runtime
+end partition_runtime;
+
+virtual processor implementation partition_runtime.i
+end partition_runtime.i;
+
+processor core
+end core;
+
+processor implementation core.i
+subcomponents
+	runtimes : virtual processor partition_runtime.i[2];
+modes
+	normal : initial mode;
+	redundant : mode;
+properties
+	ARINC653::Partition_Slots => (100 ms);
+	ARINC653::Slots_Allocation => (reference (runtimes[0])) in modes (normal);
+	ARINC653::Slots_Allocation => (reference (runtimes[1])) in modes (redundant);
+end core.i;
+
+system multi_core
+end multi_core;
+
+-- First core is dedicated for partition at criticality level A
+-- Second core is dedicatd for partition at criticality level B
+-- Does it make sense to applies the criticality to a processor
+-- component to model the fact that a processor is dedicated
+-- to a particular critility level ? In that case, it would mean
+-- that all its sub-components are associated with this criticality level.
+
+-- Also, here we would see the benefits for assigning properties
+-- using indexes such as applies to cores[0 .. 1] or
+-- cores[0].runtimes[0 .. 1].
+system implementation multi_core.dual
+subcomponents
+	cores : processor core.i[2];
+properties
+	ARINC653::Criticality => LEVEL_A applies to cores[0].runtimes[0];
+	ARINC653::Criticality => LEVEL_A applies to cores[0].runtimes[1];
+	ARINC653::Criticality => LEVEL_B applies to cores[1].runtimes[0];
+	ARINC653::Criticality => LEVEL_B applies to cores[1].runtimes[1];
+end multi_core.dual;
+
+system implementation multi_core.quad
+subcomponents
+	cores : processor core.i[4];
+end multi_core.quad;
+
+
+process partition
+end partition;
+
+process implementation partition.i
+modes
+	normal : initial mode;
+	redundant : mode;
+end partition.i;
+
+memory segment
+end segment;
+
+memory implementation segment.i
+end segment.i;
+
+memory ram
+end ram;
+
+memory implementation ram.i
+subcomponents
+	segments : memory segment.i;
+end ram.i;
+
+
+
+system main
+end main;
+
+-- We will consider the first partition as critical (LEVEL A)
+-- and the other as less critical (LEVEL B)
+-- The first partition can then be associated with one of the two
+-- runtime of the first core while the second can be associated
+-- with one of the two runtime of the second core.
+
+-- When operating in the normal mode, partitions are then associated
+-- with the first runtime. In the redundant mode, it is associated
+-- with the second runtime.
+system implementation main.normal
+subcomponents
+	partitions : process partition.i[2];
+	mem        : memory ram.i;
+	cpu        : system multi_core.dual;
+properties
+	Allowed_Processor_Binding => (reference (cpu.cores[0].runtimes[0]),reference (cpu.cores[0].runtimes[1])) applies to partitions[0]; 
+	Allowed_Processor_Binding => (reference (cpu.cores[1].runtimes[0]),reference (cpu.cores[1].runtimes[1])) applies to partitions[1]; 
+	Actual_Processor_Binding =>  (reference (cpu.cores[0].runtimes[0])) in modes (normal) applies to partitions[0];
+	Actual_Processor_Binding =>  (reference (cpu.cores[0].runtimes[1])) in modes (redundant) applies to partitions[0];
+	Actual_Processor_Binding =>  (reference (cpu.cores[1].runtimes[0])) in modes (normal) applies to partitions[1];
+	Actual_Processor_Binding =>  (reference (cpu.cores[1].runtimes[1])) in modes (redundant) applies to partitions[1];
+
+-- The memory allocation would be different from the mode, we use the same
+-- segment for all modes.
+	Actual_Memory_Binding => (reference (mem.segments[0])) applies to partitions[0];
+	Actual_Memory_Binding => (reference (mem.segments[0])) applies to partitions[1];	
+end main.normal;
+
+
+end arinc_multi_core;

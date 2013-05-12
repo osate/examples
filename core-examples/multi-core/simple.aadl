@@ -1,0 +1,62 @@
+package simple_multi_core
+public
+
+processor core
+end core;
+
+processor implementation core.i
+end core.i;
+
+system multi_core
+end multi_core;
+
+system implementation multi_core.dual
+subcomponents
+	cores : processor core.i[2];
+end multi_core.dual;
+
+system implementation multi_core.quad
+subcomponents
+	cores : processor core.i[4];
+end multi_core.quad;
+
+
+process partition
+end partition;
+
+process implementation partition.i
+modes
+	normal : initial mode;
+	redundant : mode;
+end partition.i;
+
+system main
+end main;
+
+system implementation main.normal
+subcomponents
+	partitions : process partition.i[2];
+	cpu        : system multi_core.dual;
+properties
+	Allowed_Processor_Binding => (reference (cpu.cores[0])) applies to partitions[0]; 
+	Allowed_Processor_Binding => (reference (cpu.cores[1])) applies to partitions[1]; 
+end main.normal;
+
+
+system implementation main.redundant
+subcomponents
+	partitions : process partition.i[2];
+	cpu        : system multi_core.dual;
+modes
+	normal : initial mode;
+	redundant : mode;
+properties
+	Allowed_Processor_Binding => (reference (cpu.cores[0]), reference (cpu.cores[2])) applies to partitions[0]; 
+	Allowed_Processor_Binding => (reference (cpu.cores[1]), reference (cpu.cores[3])) applies to partitions[1]; 
+	Actual_Processor_Binding => (reference (cpu.cores[0])) in modes (normal) applies to partitions[0];
+	Actual_Processor_Binding => (reference (cpu.cores[2])) in modes (redundant) applies to partitions[0];
+	Actual_Processor_Binding => (reference (cpu.cores[1])) in modes (normal) applies to partitions[1];
+	Actual_Processor_Binding => (reference (cpu.cores[3])) in modes (redundant) applies to partitions[1];
+end main.redundant;
+
+end simple_multi_core;
