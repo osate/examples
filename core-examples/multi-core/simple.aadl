@@ -1,4 +1,4 @@
-package simple_multi_core
+package Multi_Core_Simple
 public
 
 processor core
@@ -59,4 +59,4 @@ properties
 	Actual_Processor_Binding => (reference (cpu.cores[3])) in modes (redundant) applies to partitions[1];
 end main.redundant;
 
-end simple_multi_core;
+end Multi_Core_Simple;

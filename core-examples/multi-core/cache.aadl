@@ -1,0 +1,81 @@
+package Multi_Core_Cache
+
+public
+
+bus cpubus
+end cpubus;
+
+bus implementation cpubus.l2
+end cpubus.l2;
+
+memory registers
+properties
+	Byte_Count => 1_000;
+end registers;
+
+memory implementation registers.i
+end registers.i;
+
+memory cache
+end cache;
+
+memory l1cache extends cache
+end l1cache;
+
+memory l2cache extends cache
+features
+	sysbus : requires bus access cpubus.l2;
+end l2cache;
+
+memory implementation l1cache.i
+end l1cache.i;
+
+memory implementation l2cache.i
+end l2cache.i;
+
+
+processor core
+features
+	l2access : requires bus access cpubus.l2;
+end core;
+
+-- Each core has a L1 cache of approx. 64kB
+-- See http://en.wikipedia.org/wiki/Intel_Core_%28microarchitecture%29
+-- For the latency time, some numbers are available on
+-- http://arstechnica.com/gadgets/2002/07/caching/2/
+processor implementation core.i
+subcomponents
+	regs : memory registers.i {Latency => 1 ns .. 3 ns;};
+	l1   : memory l1cache.i {Latency => 2 ns .. 8 ns;};
+properties
+	Byte_Count => 64000 applies to l1;
+end core.i;
+
+system multi_core
+end multi_core;
+
+
+-- The L2 cache size may vary, from 1MB to 8MB
+-- See http://en.wikipedia.org/wiki/Intel_Core_%28microarchitecture%29
+-- For the latency time, some numbers are available on
+-- http://arstechnica.com/gadgets/2002/07/caching/2/
+system implementation multi_core.dual
+subcomponents
+	sysbus : bus cpubus.l2;
+	l2mem  : memory l2cache.i;
+	cores : processor core.i[2];
+connections
+	bus access l2mem.sysbus   -> sysbus {Latency => 5 ns .. 12 ns;};
+	bus access cores.l2access -> sysbus {Latency => 5 ms .. 12 ns;};
+--  FIXME: we would support something like that in the future
+--	bus access cores[0 .. 1].l2access -> sysbus;
+properties
+	Byte_Count => 2_000_000 applies to l2mem;
+end multi_core.dual;
+
+system implementation multi_core.quad
+subcomponents
+	cores : processor core.i[4];
+end multi_core.quad;
+
+end Multi_Core_Cache;

@@ -1,4 +1,4 @@
-package arinc_multi_core
+package Multi_Core_Arinc_Example
 public
 with ARINC653;
 with Processor_Properties;
@@ -114,4 +114,4 @@ properties
 end main.normal;
 
 
-end arinc_multi_core;
+end Multi_Core_Arinc_Example;

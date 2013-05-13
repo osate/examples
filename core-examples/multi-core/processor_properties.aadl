@@ -1,15 +1,32 @@
 property set Processor_Properties is
 
-Speed : Processor_Properties::SpeedSpecification applies to (processor);
+	-- Speed is a record that indicate the performance of the processor
+	-- using different metrics: MIPS, frequency, etc.
+	Speed : Processor_Properties::SpeedSpecification applies to (processor);
 
-SpeedSpecification : type record (
-	Ips : aadlreal units Processor_Properties::Processor_Speed_IPS;
-	Freq : aadlreal units Processor_Properties::Processor_Speed_Freq;
-	Kind : list of Processor_Properties::SpeedKind;);
+	SpeedSpecification : type record (
+		Ips : aadlreal units Processor_Properties::Processor_Speed_IPS;
+		Freq : aadlreal units Processor_Properties::Processor_Speed_Freq;
+		Kind : list of Processor_Properties::SpeedKind;
+	);
 	
   	Processor_Speed_IPS: type units (KIPS, MIPS => KIPS * 1000, GIPS => MIPS * 1000);
 	Processor_Speed_Freq: type units (Khz, Mhz => Khz * 1000, GHz => MHz * 1000);
 	
 	SpeedKind : type enumeration (IPS, FREQ);
-
+	
+	--  The processor family is used to have details about the implementation
+	--  for example endianness, etc.
+	Processor_Family_Kind : type enumeration (ARM, AVR, PowerPC, x86, x86_64);
+	Processor_Family : Processor_Properties::Processor_Family_Kind applies to (processor);
+	
+	--  Standard issue: we might change that and changee the definition
+	--  of the Word_Size properties in the Memory_Properties
+	--  property set.
+	Word_Size: Size applies to (processor);
+	
+	-- Specify the identifier of a core. Would be useful
+	-- for code generation purpose, generate the call
+	-- to migrate a task over two cores;
+	Core_Id : aadlinteger 0 .. Max_Aadlinteger applies to (processor);
 end Processor_Properties;
