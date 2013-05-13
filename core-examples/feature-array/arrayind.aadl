@@ -1,0 +1,86 @@
+package array_ind
+
+--  This package is an example of how to use the array indexes
+--  for pointing feature arrays. The changes would be discussed
+--  during the AADL summer meeting.
+--  Details of the meeting can be found on:
+-- https://wiki.sei.cmu.edu/aadl/index.php/Topics_and_discussions_for_the_2013_Summer_meeting
+
+public
+
+bus mybus
+end mybus;
+
+device sensor
+features
+	bconn : requires bus access mybus;
+end sensor;
+
+
+system sensor_array
+features
+	sensors_accesses : requires bus access mybus[100];
+end sensor_array;
+
+-- Connection_Pattern: by default, we should specify One_To_One
+-- It can be applied as soon as we reference more than one feature
+-- in the connection sources OR the connection destination
+
+-- First implementation
+-- Why the connection pattern is a list of list ?
+system implementation sensor_array.i1
+subcomponents
+	sensors : device sensor[100];
+connections
+	bus access sensors.bconn -> sensors_accesses {Connection_Pattern => ((One_To_One));};
+end sensor_array.i1;
+
+
+system main
+end main;
+
+-- First implementation: we connect all the bus accesses to one bus
+system implementation main.i1
+subcomponents
+	array : system sensor_array.i1;
+	mybus : bus mybus;
+connections
+	bus access array.sensors_accesses -> mybus {Connection_Pattern => ((All_To_One));};
+end main.i1; 
+
+-- Second implementation: we connect each array connection to one bus
+system implementation main.i2
+subcomponents
+	array : system sensor_array.i1;
+	mybus : bus mybus[100];
+connections
+	bus access array.sensors_accesses -> mybus {Connection_Pattern => ((One_To_One));};
+-- equivalent to 
+--  bus access array.sensors_accessses[0 .. 99] -> mybus[0 .. 99];
+end main.i2; 
+
+-- Third implementation: we connect half to one bus, the other to another
+system implementation main.i3
+subcomponents
+	array : system sensor_array.i1;
+	mybus1 : bus mybus;
+	mybus2 : bus mybus;
+--connections
+--	bus access array.sensors_accesses[0 .. 49] -> mybus1 {Connection_Pattern => ((All_To_One));};
+--    bus access array.sensors_accesses[0 .. 49] -> mybus1 {Connection_Pattern => ((All_To_One));};
+end main.i3; 
+
+
+-- Third implementation: the first access being connected
+-- only to one bus while the other being connected to other
+system implementation main.i4
+subcomponents
+	array : system sensor_array.i1;
+	onebus        : bus mybus;
+	multiplebuses : bus mybus[99];
+--connections
+--	bus access array.sensors_accesses[1] -> onebus;};
+--  bus access array.sensors_accesses[1 .. 99] -> multiplebuses {Connection_Pattern => ((One_To_One));};
+end main.i4; 
+
+end array_ind;

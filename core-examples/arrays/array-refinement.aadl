@@ -1,0 +1,53 @@
+-- This package is an example of how to refine components
+-- with an array. The changes would be discussed
+-- during the AADL summer meeting.
+-- Details of the meeting can be found on:
+-- https://wiki.sei.cmu.edu/aadl/index.php/Topics_and_discussions_for_the_2013_Summer_meeting
+
+package array_refinement
+public
+
+device genericsensor
+end genericsensor;
+
+
+device specific_sensor1 extends genericsensor
+end specific_sensor1;
+
+device specific_sensor2 extends genericsensor
+end specific_sensor2;
+
+system main
+end main;
+
+system implementation main.i
+subcomponents
+	d : device genericsensor;
+	a : device genericsensor[2];
+end main.i;
+
+system main2 extends main
+end main2;
+
+system implementation main2.i extends main.i
+subcomponents
+	d : refined to device specific_sensor2;
+end main2.i;
+
+system main3 extends main
+end main3;
+
+system implementation main3.i extends main.i
+subcomponents
+	d : refined to device specific_sensor2;
+	a : refined to device specific_sensor1[2];
+	
+--  Actually, we can only refine a complete array
+--  with another type. We might suggest to be able
+--  to refine each array index as long as the refined
+--  subcomponent extends the initial type.
+--	a[0] : refined to device specific_sensor1;
+--	a[1] : refined to device specific_sensor2;
+end main3.i;
+
+end array_refinement;

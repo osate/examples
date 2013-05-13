@@ -1,0 +1,51 @@
+package array_variability
+public
+
+data mydata
+end mydata;
+
+system subsystem_out
+prototypes
+	myfeaturetype : data;
+features
+	dout: out data port myfeaturetype;
+end subsystem_out;
+
+system implementation subsystem_out.i
+end subsystem_out.i;
+
+system subsystem_in
+prototypes
+	myfeaturetype : data;
+features
+	din: in data port myfeaturetype;
+end subsystem_in;
+
+system implementation subsystem_in.i
+end subsystem_in.i;
+
+system mysystem
+end mysystem;
+
+
+-- Here, we specify the size of the array with the type
+-- We may also want to specify just the array size itself.
+system implementation mysystem.i1
+--subcomponents
+--	subcomp1 : system subsystem_out.i (myfeaturetype=> data mydata[10]);
+--	subcomp2 : system subsystem_in.i (myfeaturetype=> data mydata[10]);
+--connections
+--	 port subcomp1.dout -> subcomp2.din {Connection_Pattern => ((All_To_One));};
+end mysystem.i1;
+
+-- An example of the combination of both the array size customisation
+-- and the connection_pattern property
+system implementation mysystem.i2
+--subcomponents
+--	subcomp1 : system subsystem_out.i (myfeaturetype=> data mydata[10]);
+--	subcomp2 : system subsystem_in.i (myfeaturetype=> data mydata[20]);
+--connections
+--	 port subcomp1.dout -> subcomp2.din {Connection_Pattern => ((All_To_All));};
+end mysystem.i2;
+
+end array_variability;
