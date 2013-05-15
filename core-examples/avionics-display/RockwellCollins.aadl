@@ -1,12 +1,14 @@
 property set RockwellCollins is
   SystemsEngmgDelayReq: Time applies to (feature group, feature group type);
-  Network_Speed: Data_Volume_Units applies to (bus);
-  Max_Transmission_Rate: Data_Volume_Units applies to (bus);
+		
+Data_Rate_Type : type aadlinteger units Data_Rate_Units ;
+  Network_Speed: RockwellCollins::Data_Rate_Type applies to (bus);
+  Max_Transmission_Rate: RockwellCollins::Data_Rate_Type applies to (bus);
   Max_Packet_Size: Size applies to (bus);
   Smin: Size applies to (feature group, feature group type);
   Smax: Size applies to (feature group, feature group type);
-  Long_Term_Rate: Data_Rate_Units applies to (port);
-  Burst_Rate: Data_Rate_Units applies to (port);
+  Long_Term_Rate: RockwellCollins::Data_Rate_Type applies to (port);
+  Burst_Rate: RockwellCollins::Data_Rate_Type applies to (port);
   Entity_Type:  enumeration (Switch, Node) applies to (device);
   Transmission_Protocol: inherit RockwellCollins::Supported_Connection_Protocols applies to (port, feature group, feature group type);
   LAN_Config_Dictated_Processor_Binding: inherit list of  reference(processor, system) applies to (thread, thread group, process, system, device);
