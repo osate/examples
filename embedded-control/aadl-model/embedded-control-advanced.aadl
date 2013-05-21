@@ -3,6 +3,10 @@
 -- You can read more about this example on
 -- http://www.prismmodelchecker.org/casestudies/embedded.php
 
+-- This is the Advanced version, the related AADL tutorial
+-- is available on 
+-- https://wiki.sei.cmu.edu/aadl/index.php/Embedded_Control_Example_-_Advanced_Version
+
 
 package embedded_control_advanced
 
@@ -221,11 +225,11 @@ annex emv2 {**
 		bpm: out propagation {NoService};
 		bpm: in propagation {NoService};
 	flows
-		esource_in  : error source bpin{NoService} when Failed;
+		esource_in  : error source bpin{NoService};
 		esink_in    : error sink bpin{NoService};
-		esource_m   : error source bpm{NoService} when Failed;
+		esource_m   : error source bpm{NoService};
 		esink_m     : error sink bpm{NoService};
-		esource_out : error source bpout{NoService} when Failed;
+		esource_out : error source bpout{NoService};
 		esink_out   : error sink bpout{NoService};
 	end propagations;
 	
@@ -234,6 +238,7 @@ annex emv2 {**
 		t1 : Operational -[bpin{NoService}]-> 	Failed;
 		t2 : Operational -[bpout{NoService}]-> 	Failed;
 		t3 : Operational -[bpm{NoService}]-> 	Failed;
+	    t4 : Failed      -[bpm{NoError} and bpout{NoError} and bpin{NoError}]-> Operational;
 	propagations
 	    bp1: Failed -[]->bpout(NoService);
 	    bp2: Failed -[]->bpin(NoService);
@@ -246,12 +251,12 @@ end bus_subsystem.i;
 system main
 end main;
 
-system implementation main.i
+system implementation main.i 
 subcomponents
 	s1 : device sensor.i;
 	s2 : device sensor.i;
 	s3 : device sensor.i;
-	a1 : device actuator.i;
+	a1 : device actuator.i; 
 	a2 : device actuator.i;
 	pi : processor input_processor;
 	pm : processor main_processor;
@@ -270,7 +275,7 @@ connections
 	bus access po.ba <-> b.bpout;
     
     
-annex EMV2 {**
+annex EMV2 {** 
 	use behavior embedded_errlib::Simple;
 	-- The composite error behavior is used to make the RBD evaluation.
 	-- It uses the conditions of the states section below
@@ -287,7 +292,7 @@ annex EMV2 {**
 		properties 
 		
 		--  The following values are used rather for the RDB
-		--  They are not used by PRISM itself
+		--  They are not used by PRISM itself 
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.00003 ; Distribution => Fixed;] applies to s1.Failed;
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.00003 ; Distribution => Fixed;] applies to s2.Failed;
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.00003 ; Distribution => Fixed;] applies to s3.Failed;
