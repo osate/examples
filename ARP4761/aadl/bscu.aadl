@@ -4,6 +4,7 @@ public
 
 with common;
 with Base_Types;
+with error_library;
 
 -- This is the implementation of the BSCU of the system
 -- The BSCU contains two subsystems.
@@ -25,6 +26,9 @@ with Base_Types;
 
 -- The command system if part of each bscu subsystem.
 -- It produces data from the brake pedal value.
+-- This component is an error sink for the error side
+-- and may fail from power-related error
+-- and service-related error (no pedal).
 system command
 features
 	pwr   : requires bus access common::power.generic;
@@ -34,8 +38,32 @@ features
 end command;
 
 system implementation command.i
+annex EMV2 {**
+	use types     error_library;
+	use behavior  error_library::simple;
+	
+	error propagations
+		pwr   : in propagation {NoPower};
+		pedal : in propagation {NoService};
+	flows
+		nopwr : error sink pwr{NoPower};
+		nopedal : error sink pedal{NoService};
+	end propagations;
+	
+	component error behavior
+	transitions
+		t1 : Operational -[pwr{NoPower}]-> Failed;
+		t2 : Operational -[pedal{NoService}]-> Failed;
+	end component;
+**};
 end command.i;
 
+
+--  The monitor component receive the values
+--  (brake and skid values) from the command system
+--  and check if the system is valid or not. We have
+--  one monitor for each BSCU.
+--  The monitor may fail if he has no power.
 system monitor
 features
 	pwr   : requires bus access common::power.generic;
@@ -45,6 +73,21 @@ features
 end monitor;
 
 system implementation monitor.i
+annex EMV2 {**
+	use types     error_library;
+	use behavior  error_library::simple;
+	
+	error propagations
+		pwr   : in propagation {NoPower};
+	flows
+		nopwr : error sink pwr{NoPower};
+	end propagations;
+	
+	component error behavior
+	transitions
+		t1 : Operational -[pwr{NoPower}]-> Failed;
+	end component;
+**};
 end monitor.i;
 
 
@@ -66,6 +109,14 @@ connections
 	isvalid    : port mon.valid -> valid;
 	pwrmon     : bus access pwr <-> mon.pwr;
     pwrcmd     : bus access pwr <-> cmd.pwr;
+annex EMV2 {**
+	use behavior error_library::simple;
+	composite error behavior
+	states
+		[mon.failed or cmd.failed]-> Failed;
+		[mon.operational and cmd.operational]-> Operational;
+	end composite;
+**};
 end bscu_subsystem.i;
 
 
@@ -87,6 +138,16 @@ features
 	pedal1            : requires bus access common::pwm.generic;
 	pedal2            : requires bus access common::pwm.generic;
 	Select_Alternate  : out data port Base_Types::Boolean;
+annex EMV2 {**
+	use types error_library;
+	
+	error propagations
+		pwr1   : in propagation {NoPower};
+		pwr2   : in propagation {NoPower};
+		pedal1 : in propagation {NoService};
+		pedal2 : in propagation {NoService};
+	end propagations;
+**};
 end bscu;
 
 
