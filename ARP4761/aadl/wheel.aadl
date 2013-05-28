@@ -1,0 +1,26 @@
+package wheel
+
+public
+
+with common;
+
+
+system wheel
+end wheel;
+
+
+system wheel_one_input extends wheel
+features
+	input : requires bus access common::pressure.i;
+end wheel_one_input;
+
+
+system wheel_two_inputs extends wheel
+features
+	green_input : requires bus access common::pressure.i;
+	blue_input : requires bus access common::pressure.i;
+end wheel_two_inputs;
+
+
+
+end wheel;

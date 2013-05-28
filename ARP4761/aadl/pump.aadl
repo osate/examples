@@ -1,0 +1,17 @@
+package pump
+
+
+public
+
+with common;
+
+system pump
+features
+	pressure_output : provides bus access common::pressure.i;
+end pump;
+
+
+system implementation pump.i
+end pump.i;
+
+end pump;

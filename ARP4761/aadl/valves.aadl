@@ -1,0 +1,64 @@
+package valves
+
+public
+
+with base_types;
+with common;
+
+system generic
+features
+	input : requires bus access common::pressure.i;
+	output : provides bus access common::pressure.i;
+end generic;
+
+system implementation generic.i
+end generic.i;
+
+system generic_pwm_input extends generic
+features
+	input_pwm : requires bus access common::pwm.generic;
+end generic_pwm_input;
+
+system implementation generic_pwm_input.i
+end generic_pwm_input.i;
+
+
+system boolean_shutoff extends generic
+features
+	boolean_input : in data port Base_Types::Boolean;
+end boolean_shutoff;
+
+system cmd_shutoff extends generic
+features
+	cmd_input : in data port common::command.skid;
+end cmd_shutoff;
+
+system selector
+features
+	green_input : requires bus access common::pressure.i;
+	blue_input : requires bus access common::pressure.i;
+	green_output : provides bus access common::pressure.i;
+	blue_output : provides bus access common::pressure.i;
+end selector;
+
+
+system implementation selector.i
+end selector.i;
+
+
+system selector_subsystem
+features
+	green_input      : requires bus access common::pressure.i;
+	blue_input       : requires bus access common::pressure.i;
+	select_alternate : in data port Base_Types::Boolean;
+	cmd_nor          : in data port common::command.skid;
+	cmd_alt          : in data port common::command.skid;
+	output           : provides bus access common::pressure.i;
+end selector_subsystem;
+
+system implementation selector_subsystem.i
+end selector_subsystem.i;
+
+
+end valves;
+

@@ -23,4 +23,14 @@ end command.brake;
 data implementation command.skid
 end command.skid;
 
+
+-- The pressure bus represents the pressure sent/received by
+-- other devices/pumps
+bus pressure
+end pressure;
+
+
+bus implementation pressure.i
+end pressure.i;
+
 end common;

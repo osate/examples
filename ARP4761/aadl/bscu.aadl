@@ -138,6 +138,8 @@ features
 	pedal1            : requires bus access common::pwm.generic;
 	pedal2            : requires bus access common::pwm.generic;
 	Select_Alternate  : out data port Base_Types::Boolean;
+	cmd_nor           : out data port common::command.skid; 
+	cmd_alt           : out data port common::command.skid; 
 annex EMV2 {**
 	use types error_library;
 	
@@ -156,6 +158,7 @@ subcomponents
 	sub1    : system bscu_subsystem.i;
 	sub2    : system bscu_subsystem.i;
 	select  : system select_alternate;
+
 connections
 	sub1pwr        : bus access pwr1 <-> sub1.pwr;
 	sub2pwr        : bus access pwr2 <-> sub2.pwr;
