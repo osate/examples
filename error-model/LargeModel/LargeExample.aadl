@@ -39,7 +39,7 @@ propagations
    Fail_Unknown -[ ]-> O(Bad_Data);
    Fail_Stopped -[ ]-> O(No_Data);
 -- these conditions represent the Guard_In declaration in the EM V1 Example
-  Operational -[B{Data_Fault} or A{Data_Fault}]-> mask;
+  Operational -[B{Data_Fault} or A{Data_Fault}]-> all(noerror);
   Operational -[A{Data_Fault} and B{Data_Fault}]-> O(Bad_Data);
 detections
    Operational -[1 ormore(A{No_Data},A{Bad_Data})]-> A_Failed!;

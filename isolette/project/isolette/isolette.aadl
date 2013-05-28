@@ -256,11 +256,11 @@ annex EMV2
     ifd: error source interface_failure{ServiceOmission};
     ekoor: error sink current_temperature{OutOfRange};  --detects out-of-range
     epsve: error path current_temperature{SubtleValueError} 
-      -> displayed_temp{SubtleValueError};
+      -> displayed_temp(SubtleValueError);
   end propagations;
   component error behavior
     detections  --in "failed" state put value on port interface_failure
-      failed -[ ]-> interface_failure;
+      failed -[ ]-> interface_failure!;
   end component;
   properties  --set occurrence
     EMV2::OccurrenceDistribution => Iso_Properties::DetectionInterfaceFailureRate 
@@ -295,11 +295,11 @@ annex EMV2
   internal_failure: in propagation {ServiceOmission};
   flows  --model error in detection and reporting
     mrmsve: error path current_temperature{SubtleValueError} 
-      -> regulator_mode{RegulatorModeError};  --bad temp causes bad mode
+      -> regulator_mode(RegulatorModeError);  --bad temp causes bad mode
     mrmif: error path interface_failure{ServiceOmission} 
-      -> regulator_mode{RegulatorModeError};  --missing interface failure signal causes bad mode
+      -> regulator_mode(RegulatorModeError);  --missing interface failure signal causes bad mode
     mrmin: error path internal_failure{ServiceOmission} 
-      -> regulator_mode{RegulatorModeError};  --missing internal failure signal causes bad mode
+      -> regulator_mode(RegulatorModeError);  --missing internal failure signal causes bad mode
   end propagations;
   component error behavior
 --    detections  --in "failed" state put value on port interface_failure
@@ -409,9 +409,9 @@ annex EMV2
   --no errors from desired_range
   flows  --model error in detection and reporting
     mrmsve: error path current_temperature{SubtleValueError} 
-      -> heat_control{HeatControlError};  --bad temp causes bad heat control
+      -> heat_control(HeatControlError);  --bad temp causes bad heat control
     mrmif: error path regulator_mode{RegulatorModeError} 
-      -> heat_control{HeatControlError};  --bad mode causes bad heat control
+      -> heat_control(HeatControlError);  --bad mode causes bad heat control
   end propagations;
     properties  --set failure rate for manage_heat_source_mhs
     EMV2::OccurrenceDistribution => Iso_Properties::MHSFailureRate 
@@ -552,11 +552,11 @@ annex EMV2
     {OutOfRange,SubtleValueError};
   flows  --model error in detection and reporting
     mmmiff: error path interface_failure{ServiceOmission} 
-      -> monitor_mode{MonitorModeError};
+      -> monitor_mode(MonitorModeError);
     mmminf: error path internal_failure{ServiceOmission} 
-      -> monitor_mode{MonitorModeError};
+      -> monitor_mode(MonitorModeError);
     mmmct: error path current_temperature{SubtleValueError} 
-      -> monitor_mode{MonitorModeError};
+      -> monitor_mode(MonitorModeError);
   end propagations;
     properties  --"fail" is the internal event that cause
       EMV2::OccurrenceDistribution => Iso_Properties::MMMFailureRate 
@@ -661,9 +661,9 @@ annex EMV2
     {OutOfRange,SubtleValueError};
   flows  --model error in detection and reporting
     mame: error path monitor_mode{MonitorModeError} 
-      -> alarm_control{AlarmError};
+      -> alarm_control(AlarmError);
     mact: error path current_temperature{SubtleValueError} 
-      -> alarm_control{AlarmError};
+      -> alarm_control(AlarmError);
   end propagations;
     properties  --"fail" is the internal event that cause
       EMV2::OccurrenceDistribution => Iso_Properties::MAFailureRate 
