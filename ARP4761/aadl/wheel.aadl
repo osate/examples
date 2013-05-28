@@ -14,13 +14,16 @@ features
 	input : requires bus access common::pressure.i;
 end wheel_one_input;
 
+system implementation wheel_one_input.i
+end wheel_one_input.i;
 
-system wheel_two_inputs extends wheel
+system wheel_two_inputs extends wheel_one_input
 features
 	green_input : requires bus access common::pressure.i;
 	blue_input : requires bus access common::pressure.i;
 end wheel_two_inputs;
 
-
+system implementation wheel_two_inputs.i
+end wheel_two_inputs.i;
 
 end wheel;

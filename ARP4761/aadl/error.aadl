@@ -6,12 +6,12 @@ annex EMV2 {**
 		NoService : type;
 	end types;
 
-error behavior ThreeState
-states
-  Operational: initial state; 
-  NonCriticalModeFailure: state; 
-  CriticalModeFailure: state; 
-end behavior;
+	error behavior ThreeState
+	states
+	  Operational: initial state; 
+	  NonCriticalModeFailure: state; 
+	  CriticalModeFailure: state; 
+	end behavior;
 	
 	error behavior ThreeErrorStates
 		events

@@ -8,6 +8,13 @@ with common;
 system pump
 features
 	pressure_output : provides bus access common::pressure.i;
+annex EMV2 {**
+	use types error_library;
+	use behavior error_library::simple;
+	
+	component error behavior
+	end component;
+**};
 end pump;
 
 

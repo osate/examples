@@ -11,23 +11,72 @@ with pump;
 --  Dummy component for the wheel brake system.
 --
 system wbs
+
 end wbs;
+
+system implementation wbs.generic
+subcomponents
+    --  The two pumps at the top of the diagram
+	blue_pump  : system pump::pump.i;
+	green_pump : system pump::pump.i;
+	
+	--  The selector subsystem
+	selector   : system valves::selector;
+	bscu       : system bscu::bscu.i;
+
+	wheel      : system wheel::wheel;
+annex EMV2 {**
+	use types error_library;
+	use behavior error_library::simple;
+	
+	composite error behavior
+		
+	end composite;
+**};
+end wbs.generic;
+
+
+
+--  Basic/naive version that abstracts all the valves with
+--  a selector_subsystem. This selector subsystem hide
+--  the physical logic behind the selector, shutoff and meter/anti-skid
+--  valves.
+system implementation wbs.basic extends wbs.generic
+subcomponents	
+	--  The selector subsystem
+	selector   : refined to system valves::selector_basic{Classifier_Substitution_Rule => Type_Extension;};
+	wheel      : refined to system wheel::wheel_one_input.i{Classifier_Substitution_Rule => Type_Extension;};
+connections
+	blue_to_selector    : bus access blue_pump.pressure_output  <-> selector.blue_input; 
+	green_to_selector   : bus access green_pump.pressure_output <-> selector.green_input;
+	
+	bscu_sel_to_selector : port bscu.Select_Alternate -> selector.Select_Alternate;
+	bscu_cmdnor_to_selector : port bscu.cmd_nor -> selector.cmd_nor;
+	bscu_cmdalt_to_selector : port bscu.cmd_alt -> selector.cmd_alt;
+	
+	selector_to_wheel   : bus access selector.output <-> wheel.input;
+annex EMV2 {**
+	use types error_library;
+	use behavior error_library::simple;
+	
+	composite error behavior
+		
+	end composite;
+**};
+end wbs.basic;
 
 
 --
 --  This is the first candidate architecture for the Wheel Brake
 --  System. This system see the details of the selector valve
 -- 
-system implementation wbs.candidate1
+system implementation wbs.detailed extends wbs.generic
 subcomponents
-	blue_pump  : system pump::pump.i;
-	green_pump : system pump::pump.i;
-	selector   : system valves::selector.i;
-	bscu       : system bscu::bscu.i;
+	selector   : refined to system valves::selector_detailed{Classifier_Substitution_Rule => Type_Extension;};
 	shutoff    : system valves::boolean_shutoff;
-	green_skid : system valves::cmd_shutoff;
-	blue_skid  : system valves::cmd_shutoff;
-	wheel      : system wheel::wheel_two_inputs;
+	green_skid : system valves::cmd_shutoff; 
+	blue_skid  : system valves::cmd_shutoff; 
+	wheel      : refined to system wheel::wheel_two_inputs.i {Classifier_Substitution_Rule => Type_Extension;}; 
 connections
     --  We connect the blue pump directly to the selector valve.
     --  For the green pump, we connect it to the shutoff valve that
@@ -51,34 +100,11 @@ connections
 	--  We see that as a physical model, not a logical one.
 	bskid_to_wheel      : bus access blue_skid.output <-> wheel.blue_input;
 	gskid_to_wheel      : bus access green_skid.output <-> wheel.green_input;
-end wbs.candidate1;
+end wbs.detailed;
  
 
 
---  Second iteration where we abstract all the valves with
---  a selector_subsystem. This selector subsystem hide
---  the physical logic behind the selector, shutoff and meter/anti-skid
---  valves.
-system implementation wbs.candidate2
-subcomponents
-    --  The two pumps at the top of the diagram
-	blue_pump  : system pump::pump.i;
-	green_pump : system pump::pump.i;
-	
-	--  The selector subsystem
-	selector   : system valves::selector_subsystem.i;
-	bscu       : system bscu::bscu.i;
-	wheel      : system wheel::wheel_one_input;
-connections
-	blue_to_selector    : bus access blue_pump.pressure_output  <-> selector.blue_input; 
-	green_to_selector   : bus access green_pump.pressure_output <-> selector.green_input;
-	
-	bscu_sel_to_selector : port bscu.Select_Alternate -> selector.Select_Alternate;
-	bscu_cmdnor_to_selector : port bscu.cmd_nor -> selector.cmd_nor;
-	bscu_cmdalt_to_selector : port bscu.cmd_alt -> selector.cmd_alt;
-	
-	selector_to_wheel   : bus access selector.output <-> wheel.input; 
-end wbs.candidate2;
+
 
 
 end wbs;

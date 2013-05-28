@@ -33,12 +33,16 @@ features
 	cmd_input : in data port common::command.skid;
 end cmd_shutoff;
 
+
+
+
 system selector
 features
 	green_input : requires bus access common::pressure.i;
 	blue_input : requires bus access common::pressure.i;
-	green_output : provides bus access common::pressure.i;
-	blue_output : provides bus access common::pressure.i;
+	select_alternate : in data port Base_Types::Boolean;
+	cmd_nor          : in data port common::command.skid;
+	cmd_alt          : in data port common::command.skid;
 end selector;
 
 
@@ -46,18 +50,17 @@ system implementation selector.i
 end selector.i;
 
 
-system selector_subsystem
+system selector_basic extends selector
 features
-	green_input      : requires bus access common::pressure.i;
-	blue_input       : requires bus access common::pressure.i;
-	select_alternate : in data port Base_Types::Boolean;
-	cmd_nor          : in data port common::command.skid;
-	cmd_alt          : in data port common::command.skid;
 	output           : provides bus access common::pressure.i;
-end selector_subsystem;
+end selector_basic;
 
-system implementation selector_subsystem.i
-end selector_subsystem.i;
+
+system selector_detailed extends selector
+features
+	green_output : provides bus access common::pressure.i;
+	blue_output  : provides bus access common::pressure.i;
+end selector_detailed;
 
 
 end valves;
