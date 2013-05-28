@@ -30,7 +30,8 @@ annex EMV2 {**
 	use behavior error_library::simple;
 	
 	composite error behavior
-		
+	states
+		[blue_pump.Failed and green_pump.Failed and bscu.Failed]-> Failed;
 	end composite;
 **};
 end wbs.generic;
@@ -55,20 +56,12 @@ connections
 	bscu_cmdalt_to_selector : port bscu.cmd_alt -> selector.cmd_alt;
 	
 	selector_to_wheel   : bus access selector.output <-> wheel.input;
-annex EMV2 {**
-	use types error_library;
-	use behavior error_library::simple;
-	
-	composite error behavior
-		
-	end composite;
-**};
 end wbs.basic;
 
 
 --
---  This is the first candidate architecture for the Wheel Brake
---  System. This system see the details of the selector valve
+--  Version with more details of the implementation, showing detail
+--  about the hydraulic system.
 -- 
 system implementation wbs.detailed extends wbs.generic
 subcomponents

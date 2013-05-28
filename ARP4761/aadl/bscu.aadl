@@ -5,6 +5,7 @@ public
 with common;
 with Base_Types;
 with error_library;
+with EMV2;
 
 -- This is the implementation of the BSCU of the system
 -- The BSCU contains two subsystems.
@@ -116,6 +117,16 @@ annex EMV2 {**
 		[mon.failed or cmd.failed]-> Failed;
 		[mon.operational and cmd.operational]-> Operational;
 	end composite;
+	properties
+		EMV2::hazard => 
+		[	crossreference => "TBD";
+			failure => "Failure of a BSCU";
+			phase => "TBD";
+			description => "Failure of the BSCU, either from the monitor, the command or both";
+			comment => "Would be critical if two subsystem (primary and redundant) are deffective";
+		]
+		applies to Failed;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 3.3e-5 ; Distribution => Fixed;] applies to Failed;
 **};
 end bscu_subsystem.i;
 
@@ -143,6 +154,7 @@ features
 annex EMV2 {**
 	use types error_library;
 	
+	
 	error propagations
 		pwr1   : in propagation {NoPower};
 		pwr2   : in propagation {NoPower};
@@ -167,6 +179,31 @@ connections
 	selectvalid1   : port sub1.valid -> select.input1;
 	selectvalid2   : port sub2.valid -> select.input2;
 	selectvalidout : port select.result -> Select_Alternate;
+annex EMV2 {**
+	use types error_library;
+	use behavior error_library::simple;
+	
+	
+	component error behavior
+	transitions
+		nopower : Operational -[pwr1{NoPower} and pwr2{NoPower}]-> Failed;
+	end component;
+	
+	composite error behavior
+	states
+		[sub1.Failed and sub2.Failed]-> Failed;
+	end composite;
+	
+	properties
+			EMV2::hazard => 
+		[	crossreference => "TBD";
+			failure => "No power line";
+			phase => "TBD";
+			description => "Permanent failure of power supply source";
+			comment => "Would be critical if both power supplies are lost";
+		]
+		applies to pwr1, pwr2;
+**};
 end bscu.i;
 
 
