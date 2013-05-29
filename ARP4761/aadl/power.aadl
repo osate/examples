@@ -1,0 +1,35 @@
+package power
+
+public
+with common;
+
+system power
+features
+	line1 : provides bus access common::power.generic;
+	line2 : provides bus access common::power.generic;
+annex EMV2 {**
+	use types error_library;
+	use behavior error_library::simple;
+
+	error propagations
+		line1 : out propagation {NoPower};
+		line2 : out propagation {NoPower};
+	flows
+		f1 : error source line1{NoPower};
+		f2 : error source line2{NoPower};
+	end propagations;
+**};
+end power;
+
+system implementation power.generic
+subcomponents
+    --  Power buses
+	power_supply1 : bus common::power.generic;
+	power_supply2 : bus common::power.generic;
+connections
+	pwr1 : bus access line1 <-> power_supply1;
+	pwr2 : bus access line2 <-> power_supply2;
+
+end power.generic;
+
+end power;
