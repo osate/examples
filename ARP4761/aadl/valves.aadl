@@ -38,11 +38,21 @@ end cmd_shutoff;
 
 system selector
 features
+	accumulator_input: requires bus access common::pressure.i;
 	green_input      : requires bus access common::pressure.i;
 	blue_input       : requires bus access common::pressure.i;
 	select_alternate : in data port Base_Types::Boolean;
 	cmd_nor          : in data port common::command.skid;
 	cmd_alt          : in data port common::command.skid;
+annex EMV2 {**
+	use types error_library;
+	
+	error propagations
+		accumulator_input 	: in propagation{NoService};
+		green_input 		: in propagation{NoService};
+		blue_input  		: in propagation{NoService};
+	end propagations;
+**};
 end selector;
 
 
@@ -53,6 +63,17 @@ end selector.i;
 system selector_basic extends selector
 features
 	output           : provides bus access common::pressure.i;
+annex EMV2 {**
+	use types error_library;
+	
+	error propagations
+		output : out propagation{NoService};
+	flows
+		ns1 : error path green_input{NoService} 		-> output;
+		ns2 : error path blue_input{NoService} 			-> output;
+		ns3 : error path accumulator_input{NoService} 	-> output;
+	end propagations;
+**};
 end selector_basic;
 
 
@@ -60,6 +81,19 @@ system selector_detailed extends selector
 features
 	green_output : provides bus access common::pressure.i;
 	blue_output  : provides bus access common::pressure.i;
+annex EMV2 {**
+	use types error_library;
+	
+	error propagations
+		green_output 	: out propagation{NoService};
+		blue_output 	: out propagation{NoService};
+	flows
+		ns1 : error path green_input{NoService} 		-> green_output;
+		ns2 : error path blue_input{NoService} 			-> blue_output;
+		ns3 : error path accumulator_input{NoService} 	-> green_output;
+		ns4 : error path accumulator_input{NoService} 	-> blue_output;
+	end propagations;
+**};
 end selector_detailed;
 
 

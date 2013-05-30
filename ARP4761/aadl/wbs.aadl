@@ -26,21 +26,27 @@ subcomponents
 	blue_pump  : system pump::pump.i;
 	green_pump : system pump::pump.i;
 	
+	--  The accumulator pump
+	accumulator: system pump::pump.i;
+	
 	--  The selector subsystem
 	selector   : system valves::selector;
 	bscu       : system bscu::bscu.i;
 
 	wheel      : system wheel::wheel;
 connections
-	power1     : bus access power.line1 <-> bscu.pwr1;
-	power2     : bus access power.line2 <-> bscu.pwr2;  
+    accu_to_sel: bus access selector.accumulator_input <-> accumulator.pressure_output;
+	power1     : bus access bscu.pwr1 <-> power.line1;
+	power2     : bus access power.line2 <-> bscu.pwr2;
 annex EMV2 {**
 	use types error_library;
 	use behavior error_library::simple;
 
 	composite error behavior
 	states
-		[blue_pump.Failed and green_pump.Failed and bscu.Failed]-> Failed;
+--		[blue_pump.Failed and green_pump.Failed and bscu.Failed and accumulator.Failed]-> Failed;
+		[bscu.Failed and accumulator.Failed]-> Failed;
+		[blue_pump.Failed and green_pump.Failed and accumulator.Failed]-> Failed;
 	end composite;
 **};
 end wbs.generic;

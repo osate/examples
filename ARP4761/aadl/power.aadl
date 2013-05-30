@@ -74,7 +74,6 @@ system power
 features
 	line1 : provides bus access common::power.generic;
 	line2 : provides bus access common::power.generic;
-
 end power;
 
 system implementation power.generic
@@ -85,7 +84,6 @@ subcomponents
 connections
 	pwr1 : bus access  battery1.socket <-> line1;
 	pwr2 : bus access  battery2.socket <-> line2;
-
 end power.generic;
 
 end power;
