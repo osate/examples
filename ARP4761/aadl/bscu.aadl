@@ -6,6 +6,7 @@ with common;
 with Base_Types;
 with error_library;
 with EMV2;
+with ARP4761;
 
 -- This is the implementation of the BSCU of the system
 -- The BSCU contains two subsystems.
@@ -85,9 +86,23 @@ annex EMV2 {**
 	end propagations;
 	
 	component error behavior
+	events
+		InvalidReport : error event;
 	transitions
 		t1 : Operational -[pwr{NoPower}]-> Failed;
+		t2 : Operational -[InvalidReport]-> Failed;
 	end component;
+	properties
+		ARP4761::severity => Minor applies to InvalidReport;
+		ARP4761::likelihood => Probable applies to InvalidReport;
+		EMV2::hazard => 
+			[	crossreference => "TBD";
+				failure => "Invalid Report from BSCU Monitor";
+				phase => "TBD";
+				description => "Report from a Monitor that causes an invalid switch to the alternate mode";
+				comment => "Minor Hazard";
+			]
+			applies to InvalidReport;
 **};
 end monitor.i;
 
@@ -126,6 +141,8 @@ annex EMV2 {**
 			comment => "Would be critical if two subsystem (primary and redundant) are deffective";
 		]
 		applies to Failed;
+		ARP4761::severity => Major applies to Failed;
+		ARP4761::likelihood => Probable applies to Failed;
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 3.3e-5 ; Distribution => Fixed;] applies to Failed;
 **};
 end bscu_subsystem.i;

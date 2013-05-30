@@ -38,8 +38,8 @@ end cmd_shutoff;
 
 system selector
 features
-	green_input : requires bus access common::pressure.i;
-	blue_input : requires bus access common::pressure.i;
+	green_input      : requires bus access common::pressure.i;
+	blue_input       : requires bus access common::pressure.i;
 	select_alternate : in data port Base_Types::Boolean;
 	cmd_nor          : in data port common::command.skid;
 	cmd_alt          : in data port common::command.skid;

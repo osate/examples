@@ -2,33 +2,89 @@ package power
 
 public
 with common;
+with ARP4761;
+with EMV2;
 
-system power
+device battery
 features
-	line1 : provides bus access common::power.generic;
-	line2 : provides bus access common::power.generic;
+	socket : provides bus access common::power.generic;
 annex EMV2 {**
 	use types error_library;
 	use behavior error_library::simple;
 
 	error propagations
-		line1 : out propagation {NoPower};
-		line2 : out propagation {NoPower};
+		socket : out propagation {NoPower};
 	flows
-		f1 : error source line1{NoPower};
-		f2 : error source line2{NoPower};
+		f1 : error source socket{NoPower};
 	end propagations;
+	component error behavior
+	events
+		Depleted : error event;
+		Explode  : error event;
+	transitions
+		Operational -[Depleted]-> Failed;
+		Operational -[Explode]-> Failed;
+	propagations
+		p1: Failed -[]-> socket(NoPower);
+		normal : Operational -[]-> mask;
+	end component;
+	properties
+		ARP4761::severity => Major applies to socket.NoPower;
+		ARP4761::likelihood => Probable applies to socket.NoPower;
+		EMV2::hazard => 
+			[	crossreference => "ARP4761 page 277 figure 9";
+				failure => "Loss of Power Source";
+				phase => "TBD";
+				description => "Loss of one power source";
+				comment => "Major hazard if both power are lost";
+			]
+			applies to socket.NoPower;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.35e-5 ; Distribution => Poisson;] applies to socket.NoPower;
+--		EMV2::OccurrenceDistribution => [ ProbabilityValue => 6.75e-5 ; Distribution => Fixed;] applies to socket.NoPower;
+
+		ARP4761::severity => Catastrophic applies to Explode;		
+		ARP4761::likelihood =>  ExtremelyImprobable applies to Explode;
+		EMV2::hazard => 
+			[	crossreference => "TBD";
+				failure => "Battery Explode";
+				phase => "TBD";
+				description => "Battery Explode, major hazard";
+				comment => "Have a physical impact on the surrounding components";
+			]
+			applies to Explode;
+			
+		ARP4761::severity => Major applies to Depleted;		
+		ARP4761::likelihood => Probable applies to Depleted;
+		EMV2::hazard => 
+			[	crossreference => "TBD";
+				failure => "Battery Depleted";
+				phase => "TBD";
+				description => "No more power in the battery";
+				comment => "Can be an issue if redundant battery is failing also";
+			]
+			applies to Depleted;
 **};
+end battery;
+
+
+device implementation battery.generic
+end battery.generic;
+
+system power
+features
+	line1 : provides bus access common::power.generic;
+	line2 : provides bus access common::power.generic;
+
 end power;
 
 system implementation power.generic
 subcomponents
     --  Power buses
-	power_supply1 : bus common::power.generic;
-	power_supply2 : bus common::power.generic;
+	battery1 : device battery.generic;
+	battery2 : device battery.generic;
 connections
-	pwr1 : bus access line1 <-> power_supply1;
-	pwr2 : bus access line2 <-> power_supply2;
+	pwr1 : bus access  battery1.socket <-> line1;
+	pwr2 : bus access  battery2.socket <-> line2;
 
 end power.generic;
 
