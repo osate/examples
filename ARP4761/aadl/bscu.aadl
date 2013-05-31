@@ -157,7 +157,6 @@ features
 	input2 : in data port Base_Types::Boolean;
 	result : out data port Base_Types::Boolean;
 annex EMV2 {**
-
 	use types error_library;
 	use behavior error_library::simple;
 	
@@ -166,7 +165,13 @@ annex EMV2 {**
 	flows
 		f1 : error source result{ValueError};
 	end propagations;
-	
+
+--
+--  We consider that the component may have an inconsistent
+--  behavior and select the alternate source where there is
+--  no reason for that. We capture that using a single
+--  event called InternalError.
+--	
 	component error behavior
 	events
 		InternalError : error event;
@@ -210,8 +215,6 @@ annex EMV2 {**
 	error propagations
 		pwr1   : in propagation {NoPower};
 		pwr2   : in propagation {NoPower};
-		pedal1 : in propagation {NoService};
-		pedal2 : in propagation {NoService};
 	end propagations;
 **};
 end bscu;
@@ -246,6 +249,7 @@ annex EMV2 {**
 		[sub1.Failed and sub2.Failed]-> Failed;
 		[sub1.Failed and sub2.Operational]-> Alternate;
 		[sub1.Operational and sub2.Operational and select.Failed]-> Alternate;
+		[sub1.Operational and sub2.Operational and select.Operational]->Operational;
 	end composite;
 	
 	properties

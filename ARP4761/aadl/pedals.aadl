@@ -1,0 +1,52 @@
+package pedals
+
+public
+
+with common;
+with EMV2;
+with ARP4761;
+--
+--  This is a stub component for the pedal
+-- 
+system pedals
+features
+	signal1 : provides bus access common::pwm.generic;
+	signal2 : provides bus access common::pwm.generic;
+annex EMV2 {**
+	use types error_library;
+	use behavior error_library::simple;
+	
+	error propagations
+		signal1 : out propagation {NoService};
+		signal2 : out propagation {NoService};
+	flows
+		f1 : error source signal1{NoService};
+		f2 : error source signal2{NoService};
+	end propagations;
+	
+	component error behavior
+	events
+		InternalFault : error event;
+	transitions
+		nosignal : Operational -[InternalFault]-> Failed;
+	propagations
+		p1 : Failed -[]-> signal1(NoService);
+		p2 : Failed -[]-> signal2(NoService);
+	end component;
+
+	properties
+			EMV2::hazard => 
+		[	crossreference => "TBD";
+			failure => "No signal for the pedals so that the BSCU cannot produce any results for the brakes.";
+			phase => "TBD";
+			description => "No signal from the pedals";
+			comment => "Would be critical if both power supplies are lost";
+		]
+		applies to signal1.NoService, signal2.NoService;
+**};
+end pedals;
+
+system implementation pedals.generic
+end pedals.generic;
+
+end pedals;

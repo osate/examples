@@ -33,9 +33,9 @@ annex EMV2 {**
 		ARP4761::likelihood => Probable applies to socket.NoPower;
 		EMV2::hazard => 
 			[	crossreference => "ARP4761 page 277 figure 9";
-				failure => "Loss of Power Source";
-				phase => "TBD";
-				description => "Loss of one power source";
+				failure => "Loss of one power source, might be critical if both are lost (primary and redundant)";
+				phase => "Landing/RTO";
+				description => "Loss of Electrical Power to BSCU";
 				comment => "Major hazard if both power are lost";
 			]
 			applies to socket.NoPower;

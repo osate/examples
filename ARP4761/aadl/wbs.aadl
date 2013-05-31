@@ -8,6 +8,7 @@ with valves;
 with wheel;
 with pump;
 with power;
+with pedals;
 with ARP4761;
 with EMV2;
 
@@ -21,6 +22,9 @@ end wbs;
 
 system implementation wbs.generic
 subcomponents
+	-- Pedal subsystem
+	pedals			: system pedals::pedals.generic;
+
 	-- Power subsystem
 	power      		: system power::power.generic;
 	
@@ -43,6 +47,8 @@ connections
     accu_to_sel: bus access selector.accumulator_input <-> accumulator.pressure_output;
 	power1     : bus access bscu.pwr1 <-> power.line1;
 	power2     : bus access power.line2 <-> bscu.pwr2;
+	pedal1     : bus access pedals.signal1 <-> bscu.pedal1;
+	pedal2     : bus access pedals.signal2 <-> bscu.pedal2;
 annex EMV2 {**
 	-- The WBS system has the following error states:
 	-- Operational
@@ -156,7 +162,7 @@ connections
 	green_to_shutoff    : bus access green_pump.pressure_output <-> shutoff.input;
 	shutoff_to_selector : bus access shutoff.output <-> selector.green_input;
 	bscu_to_shutoff     : port bscu.Select_Alternate -> shutoff.boolean_input;
-	
+	 
 	--  Connect the command from the BSCU to the skid valves
 	bscu_to_gskid       : port bscu.cmd_nor -> green_skid.cmd_input;
 	bscu_to_bskid       : port bscu.cmd_alt -> blue_skid.cmd_input;
