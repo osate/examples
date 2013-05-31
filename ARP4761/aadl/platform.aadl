@@ -1,0 +1,42 @@
+package platform
+public
+
+virtual processor partition
+end partition;
+
+virtual processor implementation partition.generic
+end partition.generic;
+
+processor cpu
+end cpu;
+
+processor implementation cpu.ima
+subcomponents
+	partition1 : virtual processor partition.generic;
+	partition2 : virtual processor partition.generic;
+	partition3 : virtual processor partition.generic;
+	partition4 : virtual processor partition.generic;
+end cpu.ima;
+
+processor implementation cpu.single
+end cpu.single;
+
+
+system platform
+end platform;
+
+
+system implementation platform.ima
+subcomponents
+	cpu : processor cpu.ima;
+end platform.ima;
+
+system implementation platform.federated
+subcomponents
+	cpu1 : processor cpu.single;
+	cpu2 : processor cpu.single;
+end platform.federated;
+
+
+
+end platform;

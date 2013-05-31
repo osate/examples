@@ -37,7 +37,7 @@ subcomponents
 	
 	--  The selector subsystem
 	selector   		: system valves::selector;
-	bscu       		: system bscu::bscu.i;
+	bscu       		: system bscu::bscu.generic;
 
 	wheel      		: system wheel::wheel;
 	
@@ -47,8 +47,8 @@ connections
     accu_to_sel: bus access selector.accumulator_input <-> accumulator.pressure_output;
 	power1     : bus access bscu.pwr1 <-> power.line1;
 	power2     : bus access power.line2 <-> bscu.pwr2;
-	pedal1     : bus access pedals.signal1 <-> bscu.pedal1;
-	pedal2     : bus access pedals.signal2 <-> bscu.pedal2;
+	pedal1     : port pedals.signal1 -> bscu.pedal1;
+	pedal2     : port pedals.signal2 -> bscu.pedal2;
 annex EMV2 {**
 	-- The WBS system has the following error states:
 	-- Operational
@@ -181,7 +181,15 @@ end wbs.detailed;
  
 
 
+system implementation wbs.federated extends wbs.detailed
+subcomponents
+	bscu : refined to system bscu::bscu.federated;
+end wbs.federated;
 
 
+system implementation wbs.ima extends wbs.detailed
+subcomponents
+	bscu : refined to system bscu::bscu.ima;
+end wbs.ima;
 
 end wbs;

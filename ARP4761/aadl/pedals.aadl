@@ -10,8 +10,8 @@ with ARP4761;
 -- 
 system pedals
 features
-	signal1 : provides bus access common::pwm.generic;
-	signal2 : provides bus access common::pwm.generic;
+	signal1 : out data port common::command.pedal;
+	signal2 : out data port common::command.pedal;
 annex EMV2 {**
 	use types error_library;
 	use behavior error_library::simple;

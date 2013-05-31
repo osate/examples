@@ -23,6 +23,9 @@ end command.brake;
 data implementation command.skid
 end command.skid;
 
+data implementation command.pedal
+end command.pedal;
+
 data implementation command.announce
 end command.announce;
 
