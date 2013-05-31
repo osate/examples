@@ -3,6 +3,7 @@ package wbs
 public
 
 with bscu;
+with communication;
 with valves;
 with wheel;
 with pump;
@@ -21,20 +22,23 @@ end wbs;
 system implementation wbs.generic
 subcomponents
 	-- Power subsystem
-	power      : system power::power.generic;
+	power      		: system power::power.generic;
 	
     --  The two pumps at the top of the diagram
-	blue_pump  : system pump::pump.i;
-	green_pump : system pump::pump.i;
+	blue_pump  		: system pump::pump.i;
+	green_pump 		: system pump::pump.i;
 	
 	--  The accumulator pump
-	accumulator: system pump::pump.i;
+	accumulator		: system pump::pump.i;
 	
 	--  The selector subsystem
-	selector   : system valves::selector;
-	bscu       : system bscu::bscu.i;
+	selector   		: system valves::selector;
+	bscu       		: system bscu::bscu.i;
 
-	wheel      : system wheel::wheel;
+	wheel      		: system wheel::wheel;
+	
+	-- Annunciation device
+	annunciation 	: device communication::annunciation.i;
 connections
     accu_to_sel: bus access selector.accumulator_input <-> accumulator.pressure_output;
 	power1     : bus access bscu.pwr1 <-> power.line1;
@@ -42,7 +46,8 @@ connections
 annex EMV2 {**
 	-- The WBS system has the following error states:
 	-- Operational
-	-- TotalBrakingLoss
+	-- AnnunciatedTotalBrakingLoss
+	-- UnannunciatedTotalBrakingLoss
 	-- PartialBrakingLoss
 	-- AsymmetricLoss
 	-- InadvertentBrake
@@ -52,13 +57,15 @@ annex EMV2 {**
 	composite error behavior
 	states
 --		[blue_pump.Failed and green_pump.Failed and bscu.Failed and accumulator.Failed]-> Failed;
-		[bscu.Failed and accumulator.Failed]-> TotalBrakingLoss;
-		[blue_pump.Failed and green_pump.Failed and accumulator.Failed]-> TotalBrakingLoss;
+				[bscu.Failed and accumulator.Failed and annunciation.Failed]-> AnnunciatedBrakingLoss;
+		[blue_pump.Failed and green_pump.Failed and accumulator.Failed and annunciation.Failed]-> AnnunciatedBrakingLoss;
+		[bscu.Failed and accumulator.Failed and annunciation.Failed]-> UnannunciatedBrakingLoss;
+		[blue_pump.Failed and green_pump.Failed and accumulator.Failed and annunciation.Failed]-> UnannunciatedBrakingLoss;
 	end composite;
 	
 	properties
-		ARP4761::severity => Hazardous applies to TotalBrakingLoss;
-		ARP4761::likelihood => ExtremelyImprobable applies to TotalBrakingLoss;
+		ARP4761::severity => Hazardous applies to AnnunciatedBrakingLoss,UnannunciatedBrakingLoss;
+		ARP4761::likelihood => ExtremelyImprobable applies to AnnunciatedBrakingLoss,UnannunciatedBrakingLoss;
 		EMV2::hazard => 
 			[	crossreference => "AIR6110 page 35 figure 17";
 				failure => "Crew detect the failure when the brakes are operated (unanunciated) or select an appropaite landing spot (annunciated)";
@@ -66,7 +73,7 @@ annex EMV2 {**
 				description => "Total Loss of Wheel Braking";
 				comment => "Reference to crew procedures for loss of normal and reserve modes";
 			]
-			applies to TotalBrakingLoss;
+			applies to AnnunciatedBrakingLoss,UnannunciatedBrakingLoss;
 			
 		ARP4761::severity => Hazardous applies to PartialBrakingLoss;
 		ARP4761::likelihood => ExtremelyImprobable applies to PartialBrakingLoss;
@@ -101,6 +108,9 @@ annex EMV2 {**
 				comment => "Crew cannot detect the failure by the asymmetry which is very small. Brake temperature can reach very high temperature.";
 			]
 			applies to InadvertentBrake;
+		
+
+	
 **};
 end wbs.generic;
 

@@ -23,6 +23,8 @@ end command.brake;
 data implementation command.skid
 end command.skid;
 
+data implementation command.announce
+end command.announce;
 
 -- The pressure bus represents the pressure sent/received by
 -- other devices/pumps
@@ -32,5 +34,7 @@ end pressure;
 
 bus implementation pressure.i
 end pressure.i;
+
+
 
 end common;

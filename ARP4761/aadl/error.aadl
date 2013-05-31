@@ -4,6 +4,7 @@ annex EMV2 {**
 	error types
 		NoPower   				: type;
 		NoService 				: type;
+		ValueError				: type;
 	end types;
 
 	error behavior ThreeState
@@ -35,13 +36,21 @@ annex EMV2 {**
 		Failed : state;
 	end behavior;
 	
-	error behavior WBS
+	error behavior bscu
 	states
 		Operational : initial state ;
-		TotalBrakingLoss 	: state;
-		PartialBrakingLoss 	: state;
-		AsymmetricLoss 	: state;
-		InadvertentBrake 	: state;
+		Alternate   : state;
+		Failed 		: state;
+	end behavior;
+	
+	error behavior WBS
+	states
+		Operational 				: initial state ;
+		AnnunciatedBrakingLoss 		: state;
+		UnannunciatedBrakingLoss 	: state;
+		PartialBrakingLoss 			: state;
+		AsymmetricLoss 				: state;
+		InadvertentBrake 			: state;
 	end behavior;	
 	
 	error behavior SimpleAndTransient

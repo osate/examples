@@ -134,10 +134,10 @@ annex EMV2 {**
 	end composite;
 	properties
 		EMV2::hazard => 
-		[	crossreference => "TBD";
-			failure => "Failure of a BSCU";
-			phase => "TBD";
-			description => "Failure of the BSCU, either from the monitor, the command or both";
+		[	crossreference => "ARP4761 figure L4 page 215";
+			failure => "Failure of the BSCU, either from the monitor, the command or both";
+			phase => "all";
+			description => "Failure of a BSCU";
 			comment => "Would be critical if two subsystem (primary and redundant) are deffective";
 		]
 		applies to Failed;
@@ -156,6 +156,41 @@ features
 	input1 : in data port Base_Types::Boolean;
 	input2 : in data port Base_Types::Boolean;
 	result : out data port Base_Types::Boolean;
+annex EMV2 {**
+
+	use types error_library;
+	use behavior error_library::simple;
+	
+	error propagations
+		result : out propagation{ValueError};
+	flows
+		f1 : error source result{ValueError};
+	end propagations;
+	
+	component error behavior
+	events
+		InternalError : error event;
+	transitions
+		t1 : Operational -[InternalError]-> Failed;
+	propagations
+		p1 : Failed -[]-> result(ValueError);
+	end component;
+	
+	properties
+		-- EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.30e-5 ; Distribution => Fixed;] applies to InternalError;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 3.6e-6 ; Distribution => Poisson;] applies to InternalError;
+	
+		ARP4761::severity => Hazardous applies to InternalError;
+		ARP4761::likelihood => ExtremelyImprobable applies to InternalError;
+		EMV2::hazard => 
+			[	crossreference => "ARP4761 figure L4 page 215";
+				failure => "";
+				phase => "all";
+				description => "BSCU validity monitor incorrectly report a Failure causing switch to alternate";
+				comment => "";
+			]
+			applies to InternalError;
+**};
 end select_alternate;
 
 
@@ -198,7 +233,7 @@ connections
 	selectvalidout : port select.result -> Select_Alternate;
 annex EMV2 {**
 	use types error_library;
-	use behavior error_library::simple;
+	use behavior error_library::bscu;
 	
 	
 	component error behavior
@@ -209,6 +244,8 @@ annex EMV2 {**
 	composite error behavior
 	states
 		[sub1.Failed and sub2.Failed]-> Failed;
+		[sub1.Failed and sub2.Operational]-> Alternate;
+		[sub1.Operational and sub2.Operational and select.Failed]-> Alternate;
 	end composite;
 	
 	properties
