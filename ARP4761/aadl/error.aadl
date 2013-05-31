@@ -2,8 +2,8 @@ package error_library
 public
 annex EMV2 {**
 	error types
-		NoPower   : type;
-		NoService : type;
+		NoPower   				: type;
+		NoService 				: type;
 	end types;
 
 	error behavior ThreeState
@@ -32,8 +32,17 @@ annex EMV2 {**
 	error behavior Simple
 	states
 		Operational : initial state ;
-		Failed : state ;
+		Failed : state;
 	end behavior;
+	
+	error behavior WBS
+	states
+		Operational : initial state ;
+		TotalBrakingLoss 	: state;
+		PartialBrakingLoss 	: state;
+		AsymmetricLoss 	: state;
+		InadvertentBrake 	: state;
+	end behavior;	
 	
 	error behavior SimpleAndTransient
 	events

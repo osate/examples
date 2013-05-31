@@ -47,7 +47,7 @@ annex EMV2 {**
 		EMV2::hazard => 
 			[	crossreference => "TBD";
 				failure => "Battery Explode";
-				phase => "TBD";
+				phase => "all";
 				description => "Battery Explode, major hazard";
 				comment => "Have a physical impact on the surrounding components";
 			]
@@ -58,7 +58,7 @@ annex EMV2 {**
 		EMV2::hazard => 
 			[	crossreference => "TBD";
 				failure => "Battery Depleted";
-				phase => "TBD";
+				phase => "all";
 				description => "No more power in the battery";
 				comment => "Can be an issue if redundant battery is failing also";
 			]
