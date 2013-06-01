@@ -32,31 +32,34 @@ with ARP4761;
 -- This component is an error sink for the error side
 -- and may fail from power-related error
 -- and service-related error (no pedal).
-abstract command
+process command
 features
 	brake : out data port common::command.brake;
 	skid  : out data port common::command.skid;
-	pedal : in data port common::command.pedal;
+	pedalvalue : in data port common::command.pedal;
 end command;
  
-abstract implementation command.i
+process implementation command.i
 annex EMV2 {**
 	use types     error_library;
 	use behavior  error_library::simple;
 
 	
 	error propagations
-		pedal 		: in propagation {NoService};
-		processor 	: in propagation {SoftwareFailure,HardwareFailure};
+		pedalvalue 		: in propagation {NoService};
+		processor 		: in propagation {SoftwareFailure,HardwareFailure};
 	flows
-		nopedal : error sink pedal{NoService};
-		fsoft 	: error sink processor{SoftwareFailure,HardwareFailure};
+		nopedal 		: error sink pedalvalue{NoService};
+		platformerr		: error sink processor{SoftwareFailure};
+		platformerrhard : error sink processor{HardwareFailure};
 		
 	end propagations;
 	
 	component error behavior
 	transitions
-		t1 : Operational -[pedal{NoService}]-> Failed;
+		terrfrompedal 		: Operational -[pedalvalue{NoService}]-> Failed;
+		terrfromplatformsoft : Operational -[processor{SoftwareFailure}]-> Failed;
+		terrfromplatformhard : Operational -[processor{HardwareFailure}]-> Failed;
 	end component;
 **};
 end command.i;
@@ -67,14 +70,14 @@ end command.i;
 --  and check if the system is valid or not. We have
 --  one monitor for each BSCU.
 --  The monitor may fail if he has no power.
-abstract monitor
+process monitor
 features
 	brake : in data port common::command.brake;
 	skid  : in data port common::command.skid;
 	valid : out data port Base_Types::Boolean;
 end monitor;
 
-abstract implementation monitor.i
+process implementation monitor.i
 annex EMV2 {**
 	use types     error_library;
 	use behavior  error_library::simple;
@@ -89,7 +92,10 @@ annex EMV2 {**
 	events
 		InvalidReport : error event;
 	transitions
-		t2 : Operational -[InvalidReport]-> Failed;
+		terrinvalidreport    : Operational -[InvalidReport]-> Failed;
+		terrfromplatformsoft : Operational -[processor{SoftwareFailure}]-> Failed;
+		terrfromplatformhard : Operational -[processor{HardwareFailure}]-> Failed;
+
 	end component;
 	properties
 		ARP4761::severity => Minor applies to InvalidReport;
@@ -115,10 +121,10 @@ end bscu_subsystem;
 
 system implementation bscu_subsystem.generic
 subcomponents
-	mon   		: abstract monitor.i;
-	cmd   		: abstract command.i;
+	mon   		: process monitor.i;
+	cmd   		: process command.i;
 connections
-	pedaltocmd : port pedal -> cmd.pedal;
+	pedaltocmd : port pedal -> cmd.pedalvalue;
 	brakecmd   : port cmd.brake -> mon.brake;
 	skidcmd    : port cmd.skid -> mon.skid;
 	isvalid    : port mon.valid -> valid;
@@ -158,18 +164,6 @@ annex EMV2 {**
 end bscu_subsystem.generic;
 
 
-system implementation bscu_subsystem.basic extends bscu_subsystem.generic
-subcomponents 
-	mon   		: refined to system;
-	cmd   		: refined to system;
-end bscu_subsystem.basic;
-
-
-system implementation bscu_subsystem.software extends bscu_subsystem.generic
-subcomponents
-	mon   		: refined to process;
-	cmd   		: refined to process;
-end bscu_subsystem.software;
 
 
 --  The select alternate is a binary operator that produces
@@ -246,8 +240,8 @@ end bscu;
 
 system implementation bscu.generic
 subcomponents
-	sub1    : system bscu_subsystem.basic;
-	sub2    : system bscu_subsystem.basic;
+	sub1    : system bscu_subsystem.generic;
+	sub2    : system bscu_subsystem.generic;
 	select  : system select_alternate;
 
 connections
@@ -292,8 +286,6 @@ end bscu.generic;
 
 system implementation bscu.federated extends bscu.generic
 subcomponents
-	sub1     : refined to system bscu_subsystem.software;
-	sub2     : refined to system bscu_subsystem.software;
 	platform : system platform::platform.federated;
 properties
 	Actual_Processor_Binding => (reference (platform.cpu1)) applies to sub1.cmd;
@@ -306,8 +298,6 @@ end bscu.federated;
 
 system implementation bscu.ima extends bscu.generic
 subcomponents
-	sub1    : refined to system bscu_subsystem.software;
-	sub2    : refined to system bscu_subsystem.software;
 	platform : system platform::platform.ima;
 properties
 	Actual_Processor_Binding => (reference (platform.cpu.partition1)) applies to sub1.cmd;

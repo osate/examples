@@ -40,7 +40,7 @@ annex EMV2 {**
 	end behavior;
 	
 	error behavior bscu
-	states
+	states 
 		Operational : initial state ;
 		Alternate   : state;
 		Failed 		: state;
