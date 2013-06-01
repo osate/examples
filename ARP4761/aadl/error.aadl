@@ -5,6 +5,9 @@ annex EMV2 {**
 		NoPower   				: type;
 		NoService 				: type;
 		ValueError				: type;
+		PlatformFailure			: type;
+		HardwareFailure			: type extends PlatformFailure;
+		SoftwareFailure			: type extends PlatformFailure;
 	end types;
 
 	error behavior ThreeState

@@ -43,11 +43,15 @@ abstract implementation command.i
 annex EMV2 {**
 	use types     error_library;
 	use behavior  error_library::simple;
+
 	
 	error propagations
-		pedal : in propagation {NoService};
+		pedal 		: in propagation {NoService};
+		processor 	: in propagation {SoftwareFailure,HardwareFailure};
 	flows
 		nopedal : error sink pedal{NoService};
+		fsoft 	: error sink processor{SoftwareFailure,HardwareFailure};
+		
 	end propagations;
 	
 	component error behavior
@@ -74,6 +78,13 @@ abstract implementation monitor.i
 annex EMV2 {**
 	use types     error_library;
 	use behavior  error_library::simple;
+	
+	error propagations
+		processor : in propagation {SoftwareFailure,HardwareFailure};
+	flows
+		fsoft : error sink processor{SoftwareFailure,HardwareFailure};
+	end propagations;
+	
 	component error behavior
 	events
 		InvalidReport : error event;
