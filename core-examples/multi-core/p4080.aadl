@@ -1,5 +1,11 @@
 package p4080
 
+--
+--  This is a model of the P4080 processor made by FreeScale
+--  The description and datasheet is available on
+--  http://www.freescale.com/webapp/sps/site/prod_summary.jsp?code=P4080
+--
+
 public
 
 with Processor_Properties;
