@@ -33,6 +33,8 @@ end l1cache.i;
 memory implementation l2cache.i
 end l2cache.i;
 
+memory l3cache extends cache
+end l3cache;
 
 processor core
 features

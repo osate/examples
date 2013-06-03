@@ -6,7 +6,7 @@ property set Processor_Properties is
 
 	SpeedSpecification : type record (
 		Ips : aadlreal units Processor_Properties::Processor_Speed_IPS;
-		Freq : aadlreal units Processor_Properties::Processor_Speed_Freq;
+		Freq : range of aadlreal units Processor_Properties::Processor_Speed_Freq;
 		Kind : list of Processor_Properties::SpeedKind;
 	);
 	
@@ -14,6 +14,12 @@ property set Processor_Properties is
 	Processor_Speed_Freq: type units (Khz, Mhz => Khz * 1000, GHz => MHz * 1000);
 	
 	SpeedKind : type enumeration (IPS, FREQ);
+	
+	Power_Units: type units
+  	(W, KW => W * 1000, MW => KW * 1000, GW => MW * 1000, TW => GW * 1000);
+  
+ 	Power_Dissipe :  range of aadlreal units Processor_Properties::Power_Units applies to (system, processor, device, memory);
+	
 	
 	--  The processor family is used to have details about the implementation
 	--  for example endianness, etc.

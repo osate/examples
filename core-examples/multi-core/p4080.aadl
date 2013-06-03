@@ -1,0 +1,66 @@
+package p4080
+
+public
+
+with Processor_Properties;
+with Multi_Core_Cache;
+
+--
+--  The bus to share the L3 cache among cores
+--
+bus l3cachebus extends Multi_Core_Cache::cpubus
+end l3cachebus;
+
+--
+--  The L3 memory to be shared among cores.
+--
+memory l3cache extends Multi_Core_Cache::cache
+features
+	sysbus : requires bus access l3cachebus;
+end l3cache;
+
+--
+--  The e500mc component represents a core of the SoC
+--  In total, the processor has eight cores.
+--
+processor e500mc
+features
+	l3access : requires bus access l3cachebus;
+properties
+	Processor_Properties::Speed => [Freq => 700.0 Mhz .. 1.5 GHz; Kind => (FREQ);];
+end e500mc;
+
+processor implementation e500mc.generic
+subcomponents
+	--  Each core has 32K dcache and icache
+	--  and 128kB L2 cache
+	--  See specs page 71 for details.
+	dcache  : memory Multi_Core_Cache::cache {Byte_Count => 32_000;};
+	icache  : memory Multi_Core_Cache::cache {Byte_Count => 32_000;}; 
+	l2cache : memory Multi_Core_Cache::cache {Byte_Count => 128_000;};
+
+end e500mc.generic;  
+
+
+--
+--  This component represents the main SoC processor
+--  with its eight cores.
+--
+system p4080
+end p4080;
+ 
+system implementation p4080.i
+subcomponents
+	cores : processor 	e500mc.generic[8];
+	l3bus : bus 		l3cachebus;
+	l3mem : memory 		l3cache;
+connections
+	cores2cache : bus access cores.l3access <-> l3bus;
+	mem2cache   : bus access l3mem.sysbus <-> l3bus;
+properties
+	--  See the Power Management specifications on page 98
+	Processor_Properties::Power_Dissipe => 20.0 W .. 30.0 W;
+end p4080.i;
+
+
+end p4080;
