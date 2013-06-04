@@ -31,9 +31,14 @@ end l3cache;
 --
 processor e500mc
 features
-	l3access : requires bus access l3cachebus;
+	l3access 	: requires bus access l3cachebus;
+	temp_alert 	: in event port;
+modes
+	Nominal 	: initial mode;
+	Degraded 	: mode;
 properties
-	Processor_Properties::Speed => [Freq => 700.0 Mhz .. 1.5 GHz; Kind => (FREQ);];
+	Processor_Properties::Speed => [Freq => 0.0 Mhz .. 750.0 GHz; Kind => (FREQ);] in modes (Degraded);
+	Processor_Properties::Speed => [Freq => 0.0 Mhz .. 1.5 GHz; Kind => (FREQ);] in modes (Nominal);
 end e500mc;
 
 processor implementation e500mc.generic
@@ -44,8 +49,7 @@ subcomponents
 	dcache  : memory Multi_Core_Cache::cache {Byte_Count => 32_000;};
 	icache  : memory Multi_Core_Cache::cache {Byte_Count => 32_000;}; 
 	l2cache : memory Multi_Core_Cache::cache {Byte_Count => 128_000;};
-
-end e500mc.generic;  
+end e500mc.generic;   
 
 
 --
@@ -53,6 +57,9 @@ end e500mc.generic;
 --  with its eight cores.
 --
 system p4080
+modes
+	Nominal 	: initial mode;
+	Degraded 	: mode;
 end p4080;
  
 system implementation p4080.i
@@ -64,9 +71,63 @@ connections
 	cores2cache : bus access cores.l3access <-> l3bus;
 	mem2cache   : bus access l3mem.sysbus <-> l3bus;
 properties
-	--  See the Power Management specifications on page 98
+	
 	Processor_Properties::Power_Dissipe => 20.0 W .. 30.0 W;
+	--  See the Power Management specifications on page 98
 end p4080.i;
+
+
+
+
+--
+--  The sensor device capture the temperature sensor thay
+--  may trigger a switch to the degraded execution mode.
+--
+device sensor
+features
+	alert : out event port;
+annex EMV2 {**
+	use types 		Error_Processor;
+	use behavior 	Error_Processor::Simple;
+	error propagations
+		alert : out propagation {HighTemperature};
+	flows
+		f2 : error source alert{HighTemperature}; 
+	end propagations;
+**};
+end sensor;
+
+device implementation sensor.temperature
+end sensor.temperature;
+
+processor implementation e500mc.error
+annex EMV2 {**
+	use types 		Error_Processor;
+	use behavior 	Error_Processor::Simple;
+	error propagations
+		temp_alert : in propagation {HighTemperature};
+	flows
+		f1 : error sink temp_alert{HighTemperature}; 
+	end propagations;
+	
+	component error behavior
+	transitions
+		t1: Operational -[temp_alert{HighTemperature}]-> Degraded;
+	mode mappings
+		Operational in modes (Nominal);
+		Degraded    in modes (Degraded);
+	end component;
+**};
+end e500mc.error;
+
+
+system implementation p4080.error extends p4080.i
+subcomponents
+	temperature_sensor 	: device sensor.temperature;
+	cores 				: refined to processor 	e500mc.error[8];
+connections
+	port temperature_sensor.alert -> cores.temp_alert;
+end p4080.error;
 
 
 end p4080;

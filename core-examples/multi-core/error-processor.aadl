@@ -1,0 +1,15 @@
+package Error_Processor
+public
+annex EMV2 {**
+	error types
+		HighTemperature : type;
+	end types;
+	
+	error behavior Simple
+	states
+		Operational : initial state;
+		Degraded	: state;
+	end behavior;
+
+**};
+end Error_Processor;

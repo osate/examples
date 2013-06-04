@@ -10,7 +10,7 @@ annex EMV2 {**
 		SoftwareFailure			: type extends PlatformFailure;
 	end types;
 
-	error behavior ThreeState
+	error behavior ThreeState 
 	states
 	  Operational: initial state; 
 	  NonCriticalModeFailure: state; 
