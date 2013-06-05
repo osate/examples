@@ -46,7 +46,7 @@ modes
 	Nominal 	: initial mode;
 	Degraded 	: mode;
 properties
-	Processor_Properties::Speed => [Freq => 0.0 Mhz .. 750.0 GHz; Kind => (FREQ);] in modes (Degraded);
+	Processor_Properties::Speed => [Freq => 0.0 Mhz .. 750.0 MHz; Kind => (FREQ);] in modes (Degraded);
 	Processor_Properties::Speed => [Freq => 0.0 Mhz .. 1.5 GHz; Kind => (FREQ);] in modes (Nominal);
 end e500mc;
 
