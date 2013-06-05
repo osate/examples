@@ -50,9 +50,6 @@ end runtime_data_processing;
 virtual processor runtime_actuator_control
 end runtime_actuator_control;
 
-system arinc_example
-end arinc_example;
-
 
 --
 --  Memory
@@ -70,14 +67,21 @@ subcomponents
 	segment3 : memory segment;
 end ram.three_segments;
 
+------------------------------------------------------------------
+-- Main system
+------------------------------------------------------------------
+
+system arinc_example
+end arinc_example;
 
 --
---  Main system
+--  Main system that is generic, with the regular processor
 --
-system implementation arinc_example.i
+
+system implementation arinc_example.generic
 subcomponents
 	ram					: memory ram.three_segments;
-	cpu					: system p4080::p4080.error;
+	cpu					: system p4080::p4080.i;
 	acquisition 		: process sensor_acquisition;
 	processing 			: process data_processing;
 	control 			: process actuator_control;
@@ -86,6 +90,8 @@ subcomponents
 	runtime_control 	: virtual processor runtime_actuator_control;
 connections
 	ram2rambus 			: bus access ram.ram_bus <-> cpu.ram_bus;
+	acq2proc			: port acquisition.vout -> processing.vin;
+	proc2ctrl			: port processing.vout   -> control.vin;
 properties
     --  Bind the partitions runtimes to the processor cores
 	Actual_Processor_Binding => (reference (cpu.core1),reference (cpu.core2)) applies to runtime_acquisition;
@@ -101,6 +107,14 @@ properties
 	Actual_Memory_Binding => (reference (ram.segment1)) applies to acquisition;
 	Actual_Memory_Binding => (reference (ram.segment2)) applies to processing;
 	Actual_Memory_Binding => (reference (ram.segment3)) applies to control;
-end arinc_example.i;
+end arinc_example.generic;
+
+--
+--  Main system with the processor that has the error description.
+--
+system implementation arinc_example.error extends arinc_example.generic
+subcomponents
+	cpu					: refined to system p4080::p4080.error;
+end arinc_example.error;
 
 end Arinc_P4080;
