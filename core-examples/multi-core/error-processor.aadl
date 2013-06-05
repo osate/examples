@@ -1,5 +1,12 @@
 package Error_Processor
 public
+
+--
+--  This is a basic error model for a processor
+--  that is used to captur ethe P4080 processor
+--  and its two modes.
+--
+
 annex EMV2 {**
 	error types
 		HighTemperature : type;

@@ -1,0 +1,106 @@
+package Arinc_P4080
+public
+
+--
+--  This package represents an ARINC example deployed on a P4080 processor
+--  It models three partitions being allocated on size different cores: each
+--  partition being associated with two cores. This would be a typical 
+--  use of a redundancy: when a core failed, the partition migrated
+--  to another core.
+--  Note that for this example, we associate the partition address space
+--  to a virtual processor and associate the virtual processor
+--  with the different cores. We thus assume that the underlying OS can
+--  migrate the partition runtime context from one core to another.
+-- 
+
+with P4080;
+
+data d
+end d;
+
+--
+--  Partition address spaces
+--
+
+process sensor_acquisition
+features
+	vout : out data port d;
+end sensor_acquisition;
+
+process data_processing
+features
+	vin : in data port d;
+	vout : out data port d;
+end data_processing;
+
+process actuator_control
+features
+	vin : in data port d;
+end actuator_control;
+
+--
+--  Partition runtimes
+--
+virtual processor runtime_sensor_acquisition
+end runtime_sensor_acquisition;
+
+virtual processor runtime_data_processing
+end runtime_data_processing;
+
+virtual processor runtime_actuator_control
+end runtime_actuator_control;
+
+system arinc_example
+end arinc_example;
+
+
+--
+--  Memory
+--
+memory segment
+end segment;
+
+memory ram extends p4080::ram
+end ram;
+
+memory implementation ram.three_segments 
+subcomponents
+	segment1 : memory segment; 
+	segment2 : memory segment;
+	segment3 : memory segment;
+end ram.three_segments;
+
+
+--
+--  Main system
+--
+system implementation arinc_example.i
+subcomponents
+	ram					: memory ram.three_segments;
+	cpu					: system p4080::p4080.error;
+	acquisition 		: process sensor_acquisition;
+	processing 			: process data_processing;
+	control 			: process actuator_control;
+	runtime_acquisition : virtual processor runtime_sensor_acquisition;
+	runtime_processing 	: virtual processor runtime_data_processing;
+	runtime_control 	: virtual processor runtime_actuator_control;
+connections
+	ram2rambus 			: bus access ram.ram_bus <-> cpu.ram_bus;
+properties
+    --  Bind the partitions runtimes to the processor cores
+	Actual_Processor_Binding => (reference (cpu.core1),reference (cpu.core2)) applies to runtime_acquisition;
+	Actual_Processor_Binding => (reference (cpu.core3),reference (cpu.core4)) applies to runtime_processing;
+	Actual_Processor_Binding => (reference (cpu.core5),reference (cpu.core6)) applies to runtime_control;
+	
+	--  Bind the partitions address space to the partitions runtimes
+	Actual_Processor_Binding => (reference (runtime_acquisition)) 	applies to acquisition;
+	Actual_Processor_Binding => (reference (runtime_processing)) 	applies to processing;
+	Actual_Processor_Binding => (reference (runtime_control)) 		applies to control;
+	
+	-- Then, bind the memory to the partitions
+	Actual_Memory_Binding => (reference (ram.segment1)) applies to acquisition;
+	Actual_Memory_Binding => (reference (ram.segment2)) applies to processing;
+	Actual_Memory_Binding => (reference (ram.segment3)) applies to control;
+end arinc_example.i;
+
+end Arinc_P4080;

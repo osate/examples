@@ -6,10 +6,18 @@ package p4080
 --  http://www.freescale.com/webapp/sps/site/prod_summary.jsp?code=P4080
 --
 
+--  Different models are proposed:
+--  	* A regular model with the processor and its memories
+--		* A model with the error-model that also contains the fault description
+--
+
 public
 
 with Processor_Properties;
 with Multi_Core_Cache;
+
+bus ram_bus
+end ram_bus;
 
 --
 --  The bus to share the L3 cache among cores
@@ -32,6 +40,7 @@ end l3cache;
 processor e500mc
 features
 	l3access 	: requires bus access l3cachebus;
+	ram_bus 	: requires bus access ram_bus;
 	temp_alert 	: in event port;
 modes
 	Nominal 	: initial mode;
@@ -52,11 +61,23 @@ subcomponents
 end e500mc.generic;   
 
 
---
+memory ram
+features
+	ram_bus : requires bus access ram_bus;
+end ram;
+
+memory implementation ram.generic
+end ram.generic;
+
+--------------------------------------------------------------
+--  First version of the component: the regular, without
+--  any fault description.
 --  This component represents the main SoC processor
 --  with its eight cores.
---
+--------------------------------------------------------------
 system p4080
+features
+	ram_bus : provides bus access ram_bus;
 modes
 	Nominal 	: initial mode;
 	Degraded 	: mode;
@@ -64,12 +85,39 @@ end p4080;
  
 system implementation p4080.i
 subcomponents
-	cores : processor 	e500mc.generic[8];
-	l3bus : bus 		l3cachebus;
-	l3mem : memory 		l3cache;
+	core1 	: processor 	e500mc.generic;
+	core2 	: processor 	e500mc.generic;
+	core3 	: processor 	e500mc.generic;
+	core4 	: processor 	e500mc.generic;
+	core5 	: processor 	e500mc.generic;
+	core6 	: processor 	e500mc.generic;
+	core7 	: processor 	e500mc.generic;
+	core8 	: processor 	e500mc.generic;
+	l3bus 	: bus 			l3cachebus;
+	rambus 	: bus 			ram_bus;
+	l3mem 	: memory 		l3cache;
 connections
-	cores2cache : bus access cores.l3access <-> l3bus;
-	mem2cache   : bus access l3mem.sysbus <-> l3bus;
+	cores2cache1 : bus access core1.l3access <-> l3bus;
+	cores2cache2 : bus access core2.l3access <-> l3bus;
+	cores2cache3 : bus access core3.l3access <-> l3bus;
+	cores2cache4 : bus access core4.l3access <-> l3bus;
+	cores2cache5 : bus access core5.l3access <-> l3bus;
+	cores2cache6 : bus access core6.l3access <-> l3bus;
+	cores2cache7 : bus access core7.l3access <-> l3bus;
+	cores2cache8 : bus access core8.l3access <-> l3bus;
+	
+	cores2ram1   : bus access core1.ram_bus <-> rambus;
+	cores2ram2   : bus access core2.ram_bus <-> rambus;
+	cores2ram3   : bus access core3.ram_bus <-> rambus;
+	cores2ram4   : bus access core4.ram_bus <-> rambus;
+	cores2ram5   : bus access core5.ram_bus <-> rambus;
+	cores2ram6   : bus access core6.ram_bus <-> rambus;
+	cores2ram7   : bus access core7.ram_bus <-> rambus;
+	cores2ram8   : bus access core8.ram_bus <-> rambus;
+	
+	extramaccess : bus access rambus <-> ram_bus;
+	
+	mem2cache    : bus access l3mem.sysbus <-> l3bus;
 properties
 	
 	Processor_Properties::Power_Dissipe => 20.0 W .. 30.0 W;
@@ -78,9 +126,13 @@ end p4080.i;
 
 
 
+------------------------------------------------------------
+--  Second version of the component: the one with
+--  the error model
+------------------------------------------------------------
 
 --
---  The sensor device capture the temperature sensor thay
+--  The sensor device capture the temperature sensor that
 --  may trigger a switch to the degraded execution mode.
 --
 device sensor
@@ -100,7 +152,7 @@ end sensor;
 device implementation sensor.temperature
 end sensor.temperature;
 
-processor implementation e500mc.error
+processor implementation e500mc.error extends e500mc.generic
 annex EMV2 {**
 	use types 		Error_Processor;
 	use behavior 	Error_Processor::Simple;
@@ -112,8 +164,13 @@ annex EMV2 {**
 	
 	component error behavior
 	transitions
+		--  When the HighTemperature error is triggered, we
+		--  fall in the Degraded Mode
 		t1: Operational -[temp_alert{HighTemperature}]-> Degraded;
 	mode mappings
+		--  Then, we bind the error model to the component mode
+		--  so that when we switched to the Degraded mode, we 
+		--  also switch the core speed.
 		Operational in modes (Nominal);
 		Degraded    in modes (Degraded);
 	end component;
@@ -124,9 +181,23 @@ end e500mc.error;
 system implementation p4080.error extends p4080.i
 subcomponents
 	temperature_sensor 	: device sensor.temperature;
-	cores 				: refined to processor 	e500mc.error[8];
+	core1 				: refined to processor e500mc.error;
+	core2 				: refined to processor e500mc.error;
+	core3 				: refined to processor e500mc.error;
+	core4 				: refined to processor e500mc.error;
+	core5 				: refined to processor e500mc.error;
+	core6 				: refined to processor e500mc.error;
+	core7 				: refined to processor e500mc.error;
+	core8 				: refined to processor e500mc.error;
 connections
-	port temperature_sensor.alert -> cores.temp_alert;
+	port temperature_sensor.alert -> core1.temp_alert;
+	port temperature_sensor.alert -> core2.temp_alert;
+	port temperature_sensor.alert -> core3.temp_alert;
+	port temperature_sensor.alert -> core4.temp_alert;
+	port temperature_sensor.alert -> core5.temp_alert;
+	port temperature_sensor.alert -> core6.temp_alert;
+	port temperature_sensor.alert -> core7.temp_alert;
+	port temperature_sensor.alert -> core8.temp_alert;
 end p4080.error;
 
 

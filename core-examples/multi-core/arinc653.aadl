@@ -3,6 +3,18 @@ public
 with ARINC653;
 with Processor_Properties;
 
+--
+--  This example shows how to design a partitioned
+--  architecture for a multi-core architecture.
+--  This model puts the partition runtime (virtual processor)
+--  within the processor (processor core) components.
+--
+--  This example aims at showing one pattern for modelling
+--  ARINC653 with multi-core architecture and does not aim
+--  at modelling the complete hardware or software architecture.
+--
+
+
 virtual processor partition_runtime
 end partition_runtime;
 

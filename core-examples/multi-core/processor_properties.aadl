@@ -8,7 +8,7 @@ property set Processor_Properties is
 		Ips : aadlreal units Processor_Properties::Processor_Speed_IPS;
 		Freq : range of aadlreal units Processor_Properties::Processor_Speed_Freq;
 		Kind : list of Processor_Properties::SpeedKind;
-	);
+	); 
 	
   	Processor_Speed_IPS: type units (KIPS, MIPS => KIPS * 1000, GIPS => MIPS * 1000);
 	Processor_Speed_Freq: type units (Khz, Mhz => Khz * 1000, GHz => MHz * 1000);

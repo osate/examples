@@ -2,6 +2,13 @@ package Multi_Core_Cache
 
 public
 
+--
+--  The following example consists in showing how we can model
+--  a multi-core architecture with its cache system. Such a model
+--  would be useful to make performance analysis of the processor
+--  itself.
+--
+
 bus cpubus
 end cpubus;
 
