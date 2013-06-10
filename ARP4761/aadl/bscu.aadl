@@ -237,6 +237,35 @@ annex EMV2 {**
 **};
 end bscu;
 
+system implementation bscu.basic
+annex EMV2 {**
+	use types error_library;
+	use behavior error_library::bscu;
+	
+	error propagations
+	flows
+		es1   : error sink pwr1{NoPower};
+		es2   : error sink pwr2{NoPower};
+	end propagations;
+	component error behavior
+	transitions
+		nopower1 : Operational -[pwr1{NoPower}]-> Failed;
+		nopower2 : Operational -[pwr2{NoPower}]-> Failed;
+	end component;
+	
+	
+	properties
+			EMV2::hazard => 
+		[	crossreference => "TBD";
+			failure => "No power line";
+			phase => "TBD";
+			description => "Permanent failure of power supply source";
+			comment => "Would be critical if both power supplies are lost";
+		]
+		applies to pwr1, pwr2;
+**};
+end bscu.basic;
+
 
 system implementation bscu.generic
 subcomponents

@@ -6,7 +6,7 @@ annex EMV2 {**
 		NoService 				: type;
 		ValueError				: type;
 		PlatformFailure			: type;
-		HardwareFailure			: type extends PlatformFailure;
+		HardwareFailure			: type extends PlatformFailure; 
 		SoftwareFailure			: type extends PlatformFailure;
 	end types;
 

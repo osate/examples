@@ -17,7 +17,6 @@ with EMV2;
 --  Dummy component for the wheel brake system.
 --
 system wbs
-
 end wbs;
 
 system implementation wbs.generic
@@ -110,8 +109,10 @@ annex EMV2 {**
 			[	crossreference => "AIR6110 page 37 figure 17";
 				failure => "Inadvertent wheel brake application";
 				phase => "Takeoff";
-				description => "Undetected inadvertent wheel brake on one wheel without locking the wheel.";
-				comment => "Crew cannot detect the failure by the asymmetry which is very small. Brake temperature can reach very high temperature.";
+				description => "Undetected inadvertent wheel brake on one wheel 
+				                without locking the wheel.";
+				comment => "Crew cannot detect the failure by the asymmetry which is very small. 
+				            Brake temperature can reach very high temperature.";
 			]
 			applies to InadvertentBrake;
 		
@@ -127,11 +128,12 @@ end wbs.generic;
 --  the physical logic behind the selector, shutoff and meter/anti-skid
 --  valves.
 system implementation wbs.basic extends wbs.generic
-subcomponents	
+subcomponents
+	bscu : refined to system bscu::bscu.basic;
 	--  The selector subsystem
 	selector   : refined to system valves::selector_basic{Classifier_Substitution_Rule => Type_Extension;};
 	wheel      : refined to system wheel::wheel_one_input.i{Classifier_Substitution_Rule => Type_Extension;};
-connections
+connections 
 	blue_to_selector    : bus access blue_pump.pressure_output  <-> selector.blue_input; 
 	green_to_selector   : bus access green_pump.pressure_output <-> selector.green_input;
 	
@@ -179,7 +181,6 @@ connections
 	gskid_to_wheel      : bus access green_skid.output <-> wheel.green_input;
 end wbs.detailed;
  
-
 
 system implementation wbs.federated extends wbs.detailed
 subcomponents
