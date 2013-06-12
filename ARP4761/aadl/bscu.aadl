@@ -47,9 +47,13 @@ annex EMV2 {**
 	
 	error propagations
 		pedalvalue 		: in propagation {NoService};
+		brake			: out propagation{NoValue};
+		skid			: out propagation{NoValue};
 		processor 		: in propagation {SoftwareFailure,HardwareFailure};
 	flows
 		nopedal 		: error sink pedalvalue{NoService};
+		noskid			: error source skid{NoValue};
+		nobrake			: error source brake{NoValue};
 		platformerr		: error sink processor{SoftwareFailure,HardwareFailure};
 	end propagations;
 	
@@ -58,6 +62,14 @@ annex EMV2 {**
 		terrfrompedal 		: Operational -[pedalvalue{NoService}]-> Failed;
 		terrfromplatformsoft : Operational -[processor{SoftwareFailure}]-> Failed;
 		terrfromplatformhard : Operational -[processor{HardwareFailure}]-> Failed;
+	propagations
+	    --  Here, we can imply that the NoService error from pedalvalue
+	    --  is transformed into a NoValue on brake and skid features.
+	    --  So, basically, this should be shown in the FMEA/FaultImpact
+	    --  report. So, the report should show the error flows
+	    --  pedals/NoService -> commands/brake/skid/NoValue -> monitor/NoValue -> selector/ValueError 
+		p1 : Failed -[]-> brake(NoValue);
+		p2 : Failed -[]-> skid(NoValue);
 	end component;
 **};
 end command.i;
@@ -82,8 +94,14 @@ annex EMV2 {**
 	
 	error propagations
 		processor : in propagation {SoftwareFailure,HardwareFailure};
+		brake     : in propagation {NoValue};
+		skid      : in propagation {NoValue};
+		valid     : out propagation {NoValue};
 	flows
 		fsoft : error sink processor{SoftwareFailure,HardwareFailure};
+		val   : error source valid{NoValue};
+		bsink : error sink brake{NoValue};
+		ssink : error sink skid{NoValue};
 	end propagations;
 	
 	component error behavior
@@ -91,9 +109,12 @@ annex EMV2 {**
 		InvalidReport : error event;
 	transitions
 		terrinvalidreport    : Operational -[InvalidReport]-> Failed;
+		noskid               : Operational -[skid{NoValue}]-> Failed;
+		nobrake              : Operational -[brake{NoValue}]-> Failed;
 		terrfromplatformsoft : Operational -[processor{SoftwareFailure}]-> Failed;
 		terrfromplatformhard : Operational -[processor{HardwareFailure}]-> Failed;
-
+	propagations
+		p1 : Failed -[]-> valid(NoValue);
 	end component;
 	properties
 		ARP4761::severity => Minor applies to InvalidReport;
@@ -177,10 +198,14 @@ annex EMV2 {**
 	use behavior error_library::simple;
 	
 	error propagations
+		input1 : in propagation {NoValue};
+		input2 : in propagation {NoValue};
 		result : out propagation{ValueError};
 	flows
 		f1 : error source result{ValueError};
-	end propagations;
+		f2 : error sink input1{NoValue};
+		f3 : error sink input2{NoValue};
+	end propagations;  
 
 --
 --  We consider that the component may have an inconsistent
@@ -193,6 +218,9 @@ annex EMV2 {**
 		InternalError : error event;
 	transitions
 		t1 : Operational -[InternalError]-> Failed;
+		--  If we do not have any value from each monitor,
+		--  we are no longer able to send a valid data.
+		t2 : Operational -[input1{NoValue} and input2{NoValue}]-> Failed; 
 	propagations
 		p1 : Failed -[]-> result(ValueError);
 	end component;
