@@ -16,9 +16,11 @@ annex EMV2 {**
 	use behavior error_library::simple;
 
 	error propagations
-		processor : out propagation {SoftwareFailure};
+		bindings : out propagation {SoftwareFailure, HardwareFailure};
+		processor : in  propagation {HardwareFailure};
 	flows
-		fsoft : error source processor{SoftwareFailure};
+		fsoft : error source bindings{SoftwareFailure};
+		fhard : error path processor{HardwareFailure} -> bindings;
 	end propagations;
 
 	component error behavior
@@ -28,7 +30,7 @@ annex EMV2 {**
 		Operational -[SoftwareFailure]-> Failed;
 	propagations
 		normal : Operational -[]-> mask;
-		p2     : Failed -[]-> processor(SoftwareFailure);
+		p2     : Failed -[]-> bindings(SoftwareFailure);
 	end component;
 	properties
 		ARP4761::severity => Major applies to SoftwareFailure;
@@ -66,24 +68,24 @@ annex EMV2 {**
 	--  added for all processors.
 	--	
 	error propagations
-		processor : out propagation {HardwareFailure};
+		bindings : out propagation {HardwareFailure};
 	flows
-		f1 : error source processor{HardwareFailure};
+		f1 : error source bindings{HardwareFailure};
 	end propagations;
 
 
 	component error behavior
 	events
-		HardwareFailure : error event;
+		InternalFailure : error event;
 	transitions
-		Operational -[HardwareFailure]-> Failed;
+		Operational -[InternalFailure]-> Failed;
 	propagations
 		normal : Operational -[]-> mask;
-		pfail  : Failed -[]-> processor(HardwareFailure);
+		pfail  : Failed -[]-> bindings(HardwareFailure);
 	end component;
 	properties
-		ARP4761::severity => Major applies to HardwareFailure;
-		ARP4761::likelihood => Probable applies to HardwareFailure;
+		ARP4761::severity => Major applies to InternalFailure;
+		ARP4761::likelihood => Probable applies to InternalFailure;
 		EMV2::hazard => 
 			[	crossreference => "TBD";
 				failure => "";
@@ -91,8 +93,8 @@ annex EMV2 {**
 				description => "Hardware Failure (processor, device, etc.)";
 				comment => "Impact all software components associated to the hardware";
 			]
-			applies to HardwareFailure;
-		EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.35e-5 ; Distribution => Poisson;] applies to HardwareFailure;
+			applies to InternalFailure;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.35e-5 ; Distribution => Poisson;] applies to InternalFailure;
 --		EMV2::OccurrenceDistribution => [ ProbabilityValue => 6.75e-5 ; Distribution => Fixed;] applies to HardwareFailure;
 
 **};

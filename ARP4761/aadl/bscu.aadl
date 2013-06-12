@@ -50,9 +50,7 @@ annex EMV2 {**
 		processor 		: in propagation {SoftwareFailure,HardwareFailure};
 	flows
 		nopedal 		: error sink pedalvalue{NoService};
-		platformerr		: error sink processor{SoftwareFailure};
-		platformerrhard : error sink processor{HardwareFailure};
-		
+		platformerr		: error sink processor{SoftwareFailure,HardwareFailure};
 	end propagations;
 	
 	component error behavior
