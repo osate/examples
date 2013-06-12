@@ -48,9 +48,16 @@ annex EMV2 {**
 	use types error_library;
 	
 	error propagations
+		select_alternate    : in propagation{NoValue};
+		cmd_nor    			: in propagation{NoValue};
+		cmd_alt    			: in propagation{NoValue};
 		accumulator_input 	: in propagation{NoService};
 		green_input 		: in propagation{NoService};
 		blue_input  		: in propagation{NoService};
+	flows
+		f1 : error sink cmd_nor{NoValue};
+		f2 : error sink cmd_alt{NoValue};
+		f3 : error sink select_alternate{NoValue};
 	end propagations;
 **};
 end selector;

@@ -164,6 +164,8 @@ connections
 	green_to_shutoff    : bus access green_pump.pressure_output <-> shutoff.input;
 	shutoff_to_selector : bus access shutoff.output <-> selector.green_input;
 	bscu_to_shutoff     : port bscu.Select_Alternate -> shutoff.boolean_input;
+	
+	bscu_to_selector    : port bscu.Select_Alternate -> selector.select_alternate;
 	 
 	--  Connect the command from the BSCU to the skid valves
 	bscu_to_gskid       : port bscu.cmd_nor -> green_skid.cmd_input;
