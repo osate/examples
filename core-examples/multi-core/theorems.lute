@@ -1,0 +1,16 @@
+theorem checktype
+
+foreach p in { element in Processor_Set | Is_Of_Type (element, "e500mc")}
+do
+   check Property_Exists (p, "Processor_Properties::Speed");
+
+end;
+
+
+theorem checkfamily
+
+foreach p in { element in Processor_Set | Is_Of_Type (element, "e500mc")}
+do
+   check Property_Exists (p, "Processor_Properties::Processor_Family");
+
+end;
