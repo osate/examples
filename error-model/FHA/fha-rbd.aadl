@@ -14,9 +14,9 @@ with ErrorLibrary, ErrorModelLibrary;
         use types ErrorLibrary;
     	use behavior ErrorModelLibrary::Simple;
     	error propagations 
-    		PositionReading: out propagation  {ServiceOmission};
+    		PositionReading: out propagation  {ServiceOmission,ValueError,ItemOmission};
     	flows
-		 	ef1:error source PositionReading {ServiceOmission} when Failed;
+		 	ef1:error source PositionReading {ServiceOmission,ValueError,ItemOmission} when Failed;
 	end propagations;
 	properties
 		EMV2::severity => 1 applies to ef1.Failed;
