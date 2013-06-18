@@ -133,9 +133,11 @@ end monitor.i;
 
 system bscu_subsystem
 features
-	pwr   : requires bus access common::power.generic;
-	pedal : in data port common::command.pedal;
-	valid : out data port Base_Types::Boolean; 
+	pwr      : requires bus access common::power.generic;
+	pedal    : in data port common::command.pedal;
+	cmd_skid : out data port common::command.skid;
+	cmd_brk  : out data port common::command.brake;
+	valid    : out data port Base_Types::Boolean; 
 end bscu_subsystem;
 
 system implementation bscu_subsystem.generic
@@ -143,23 +145,28 @@ subcomponents
 	mon   		: process monitor.i;
 	cmd   		: process command.i;
 connections
-	pedaltocmd : port pedal -> cmd.pedalvalue;
-	brakecmd   : port cmd.brake -> mon.brake;
-	skidcmd    : port cmd.skid -> mon.skid;
-	isvalid    : port mon.valid -> valid;
+	pedaltocmd    : port pedal     -> cmd.pedalvalue;
+	brakecmd      : port cmd.brake -> mon.brake;
+	brakecmd_ext  : port cmd.brake -> cmd_brk;
+	skidcmd_ext   : port cmd.skid  -> cmd_skid;
+	skidcmd       : port cmd.skid  -> mon.skid;
+	isvalid       : port mon.valid -> valid;
 annex EMV2 {**
 	use types     error_library;
-	use behavior error_library::simple;
+	use behavior  error_library::simple;
 	
 	error propagations
-		pwr   : in propagation {NoPower};
+		pwr       : in propagation {NoPower};
+		valid     : out propagation {NoValue};
 	flows
-		nopwr : error sink pwr{NoPower};
+	    nopwr   : error path pwr{NoPower} -> valid(NoValue);
 	end propagations;
 	
 	component error behavior
-		transitions
+	transitions
 		t1 : Operational -[pwr{NoPower}]-> Failed;
+	propagations
+		p1 : Failed -[]-> valid(NoValue);
 	end component;
 	
 	composite error behavior
@@ -222,7 +229,7 @@ annex EMV2 {**
 		--  we are no longer able to send a valid data.
 		t2 : Operational -[input1{NoValue} and input2{NoValue}]-> Failed; 
 	propagations
-		p1 : Failed -[]-> result(ValueError);
+		p1 : Failed -[]-> result(NoValue);
 	end component;
 	
 	properties
@@ -307,6 +314,8 @@ connections
 	selectvalid1   : port sub1.valid -> select.input1;
 	selectvalid2   : port sub2.valid -> select.input2;
 	selectvalidout : port select.result -> Select_Alternate;
+	sub1skid       : port sub1.cmd_skid -> cmd_nor;
+	sub2skid       : port sub2.cmd_skid -> cmd_alt;
 annex EMV2 {**
 	use types error_library;
 	use behavior error_library::bscu;

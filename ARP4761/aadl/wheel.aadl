@@ -31,7 +31,7 @@ annex EMV2 {**
 	
 	component error behavior
 	transitions
-		t1 : Operational -[ input{NoService}]-> Failed;
+		t1 : Operational -[input{NoService}]-> Failed;
 	end component;
 **};
 end wheel_one_input;

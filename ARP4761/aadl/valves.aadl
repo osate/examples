@@ -9,6 +9,16 @@ system generic
 features
 	input : requires bus access common::pressure.i;
 	output : provides bus access common::pressure.i;
+annex EMV2 {**
+	use types     error_library;
+	use behavior  error_library::simple;
+	error propagations
+		input  : in propagation {NoService};
+		output : out propagation {NoService};
+	flows
+		f1 : error path input{NoService} -> output; 
+	end propagations;
+**};
 end generic;
 
 system implementation generic.i
@@ -31,6 +41,28 @@ end boolean_shutoff;
 system cmd_shutoff extends generic
 features
 	cmd_input : in data port common::command.skid;
+annex EMV2 {**
+	use types     error_library;
+	use behavior  error_library::simple;
+	
+	error propagations
+		cmd_input : in propagation {NoValue};
+	flows
+	    --  We assume that if we get no value on the input, we do
+	    --  not produce any pressure at all. Then, we propagate a
+	    --  NoService error on the output.
+		f1 : error path cmd_input{NoValue} -> output(NoService);
+		f2 : error source output{NoService};
+	end propagations;
+	
+	component error behavior
+	transitions
+		t1 : Operational -[cmd_input{NoValue}]-> Failed;
+		t2 : Operational -[input{NoService}]-> Failed;
+	propagations
+		p1 : Failed -[]-> output(NoService);
+	end component;
+**};
 end cmd_shutoff;
 
 
@@ -89,8 +121,8 @@ features
 	green_output : provides bus access common::pressure.i;
 	blue_output  : provides bus access common::pressure.i;
 annex EMV2 {**
-	use types error_library;
-	
+	use types       error_library;
+	use behavior    error_library::simple;
 	error propagations
 		green_output 	: out propagation{NoService};
 		blue_output 	: out propagation{NoService};
@@ -99,7 +131,21 @@ annex EMV2 {**
 		ns2 : error path blue_input{NoService} 			-> blue_output;
 		ns3 : error path accumulator_input{NoService} 	-> green_output;
 		ns4 : error path accumulator_input{NoService} 	-> blue_output;
+		ns5 : error path cmd_alt{NoValue}               -> blue_output(NoService);
+		ns6 : error path cmd_nor{NoValue}               -> green_output(NoService);
+		ns7 : error path Select_Alternate{NoValue}      -> green_output(NoService);
+		ns8 : error path Select_Alternate{NoValue}      -> blue_output(NoService);
 	end propagations;
+
+	component error behavior
+	transitions
+		t1 : Operational -[select_alternate{NoValue}]-> Failed;
+		t2 : Operational -[cmd_alt{NoValue}]-> Failed;
+		t3 : Operational -[cmd_nor{NoValue}]-> Failed;
+	propagations
+		p1: Failed -[]-> green_output(NoService);
+		p2: Failed -[]-> blue_output(NoService);
+	end component;
 **};
 end selector_detailed;
 
