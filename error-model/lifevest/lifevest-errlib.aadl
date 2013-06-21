@@ -1,0 +1,15 @@
+package lifevest_errlib
+public
+annex EMV2 {**
+	error types
+		NotVisible : type;
+	end types;
+
+	error behavior Simple
+	states
+		Operational : initial state ;
+		Failed : state ;
+	end behavior ;
+	
+**};
+end lifevest_errlib;
