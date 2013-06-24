@@ -1,0 +1,86 @@
+package unhandled_faults
+
+public
+
+
+system sender
+features
+	valueout : out event port;
+end sender;
+
+
+system implementation sender.i1
+annex EMV2 {**
+	use types ErrorLibrary;
+	
+	error propagations
+		valueout : out propagation {ValueError};
+	flows
+		f1 : error source valueout {ValueError};
+	end propagations;
+**};
+end sender.i1;
+
+
+system implementation sender.i2
+annex EMV2 {**
+	use types ErrorLibrary;
+	
+	error propagations
+		valueout : out propagation {TimingError};
+	flows
+		f1 : error source valueout {TimingError};
+	end propagations;
+**};
+end sender.i2;
+
+system receiver
+features
+	valuein : in event port;
+end receiver;
+
+system implementation receiver.i1
+annex EMV2 {**
+	use types ErrorLibrary;
+	
+	error propagations
+		valuein : in propagation {ValueError};
+	flows
+		f1 : error sink valuein {ValueError}; 
+	end propagations;
+**};
+end receiver.i1;
+
+
+system implementation receiver.i2
+annex EMV2 {**
+	use types ErrorLibrary;
+	
+	error propagations
+		valuein : in propagation {TimingError};
+	flows
+		f1 : error sink valuein {TimingError}; 
+	end propagations;
+**};
+end receiver.i2;
+
+system assembly
+end assembly;
+
+system implementation assembly.i
+subcomponents
+	s1_1 : system sender.i1;
+	s1_2 : system sender.i1;
+	s2_1 : system sender.i2;
+	s2_2 : system sender.i2;
+	r1_1 : system receiver.i1;
+	r1_2 : system receiver.i1;
+	r2_1 : system receiver.i2;
+	r2_2 : system receiver.i2;
+connections
+	c1 : port s1_1.valueout -> r1_1.valuein;
+	c2 : port s1_2.valueout -> r1_1.valuein;
+end assembly.i;
+
+
+end unhandled_faults;
