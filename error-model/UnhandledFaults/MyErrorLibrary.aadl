@@ -1,0 +1,12 @@
+--ErrorLibrary.aadl
+
+package MyErrorLibrary
+public
+annex EMV2 {**
+error types 
+MySuper: type;
+MySpecial: type extends MySuper; 
+MySpecial2: type extends MySuper; 
+end types;
+**}; 
+ end MyErrorLibrary;

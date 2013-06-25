@@ -1,0 +1,59 @@
+package unhandled_faults2
+
+public
+
+
+system sender
+features
+	valueout : out event port;
+end sender;
+
+
+system implementation sender.i1
+annex EMV2 {**
+	use types MyErrorLibrary;
+	
+	error propagations
+		valueout : out propagation {MySpecial};
+	flows
+		f1 : error source valueout {MySpecial};
+	end propagations;
+**};
+end sender.i1;
+
+
+system receiver
+features
+	valuein : in event port;
+end receiver;
+
+system implementation receiver.i1
+annex EMV2 {**
+	use types MyErrorLibrary;
+	
+	error propagations
+		valuein : in propagation {MySuper};
+	flows
+		f1 : error sink valuein {MySuper}; 
+	end propagations;
+**};
+end receiver.i1;
+
+
+
+system assembly
+end assembly;
+
+system implementation assembly.i
+subcomponents
+	s1_1 : system sender.i1;
+
+	r1_1 : system receiver.i1;
+
+connections  
+	c1 : port s1_1.valueout -> r1_1.valuein;  
+
+end assembly.i;
+
+
+end unhandled_faults2;
