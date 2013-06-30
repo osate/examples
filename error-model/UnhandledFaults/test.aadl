@@ -67,12 +67,18 @@ end receiver.i1;
 system implementation receiver.i2
 annex EMV2 {**
 	use types ErrorLibrary;
+	use behavior ErrorModelLibrary::Simple;
 	
 	error propagations
 		valuein : in propagation {TimingError};
 	flows
 		f1 : error sink valuein {TimingError}; 
 	end propagations;
+	
+	component error behavior
+	transitions
+		Operational -[ Failure ]-> Failed;
+	end component;
 **};
 end receiver.i2; 
 
@@ -107,6 +113,18 @@ connections
 	c1 : port s1_1.valueout -> r1_1.valuein;
 	c2 : port s1_2.valueout -> r1_1.valuein;
 	c3 : port s3_1.valueout -> r2_1.valuein; 
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior ErrorModelLibrary::Simple;
+	
+	component error behavior
+	end component;
+	
+	composite error behavior
+	states
+		[ r2_1.Failed ]-> Failed;
+	end composite;
+**};	
 end assembly.i;
 
 
