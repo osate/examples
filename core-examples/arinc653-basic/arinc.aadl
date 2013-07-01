@@ -9,6 +9,10 @@ end dummy;
 thread thr_sensor
 features
 	value : out data port dummy;
+properties
+	Source_Stack_Size => 200 Bytes;
+	Source_Data_Size => 200 Bytes;
+	Source_Code_Size => 200 Bytes;
 end thr_sensor;
 
 thread implementation thr_sensor.i
@@ -34,6 +38,10 @@ features
 	sensor1inval : in data port dummy;
 	sensor2inval : in data port dummy;
 	filteredout : out data port dummy;
+properties
+	Source_Stack_Size => 200 Bytes;
+	Source_Data_Size => 200 Bytes;
+	Source_Code_Size => 200 Bytes;
 end thr_filter;
 
 thread implementation thr_filter.i
@@ -66,6 +74,7 @@ end pr_stats.i;
 memory segment
 properties
 	ARINC653::Memory_Type => (Data_Memory, Code_Memory);
+	Byte_Count => 1000;
 end segment;
 
 memory implementation segment.i
@@ -91,11 +100,13 @@ end arinc_module;
 
 processor implementation arinc_module.two_partitions
 subcomponents
-	runtime1 : virtual processor partition.i;
-	runtime2 : virtual processor partition.i;
+	runtime1 : virtual processor partition.i {ARINC653::Criticality => LEVEL_B;};
+	runtime2 : virtual processor partition.i {ARINC653::Criticality => LEVEL_A;};
 properties
 	ARINC653::Partition_Slots => (10 ms, 20 ms);
-	ARINC653::Slots_Allocation => (reference (runtime1), reference (runtime2));
+	ARINC653::Slots_Allocation => (reference (runtime1), 
+		                           reference (runtime2)
+	);
 	ARINC653::Module_Major_Frame => 30 ms;
 	ARINC653::HM_Errors => (Module_Config, Module_Init, Module_Scheduling);
 	ARINC653::HM_Module_Recovery_Actions => (Ignore, Reset, Reset);
