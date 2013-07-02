@@ -50,6 +50,10 @@ end thr_filter.i;
 thread thr_collector
 features
   	filteredin : in data port dummy;
+properties
+	Source_Stack_Size => 100 KByte;
+	Source_Data_Size => 100 KByte;
+	Source_Code_Size => 100 KByte;
 end thr_collector;
 
 thread implementation thr_collector.i
