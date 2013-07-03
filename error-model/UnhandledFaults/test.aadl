@@ -108,7 +108,7 @@ end receiver.i3;
 system implementation receiver2.i1
 annex EMV2 {**
 	use types ErrorLibrary;
-	use behavior ErrorModelLibrary::Simple;
+	use behavior ErrorModelLibrary::Simple; 
 	error propagations
 		valuein1 : in propagation {LateDelivery};
 		valueout1 : out propagation {ValueError};
@@ -177,8 +177,10 @@ annex EMV2 {**
 	use behavior ErrorModelLibrary::Simple;
 	error propagations
 		valuein1 : in propagation {ValueError, TimingError};
+		valueout1 : out propagation {ValueError};
 	flows 
 		f4 : error sink valuein1 {ValueError, TimingError};
+		f5 : error source valueout1{ValueError};
 	end propagations;
 	
 	component error behavior
@@ -186,7 +188,10 @@ annex EMV2 {**
 	-- Warning, I do not have a transition from Failed to Operational
 		t1 : Operational -[ valuein1{ValueError} ]-> Failed; 
 	-- Error: transitions with the same source state and condition must be unique
-		t2 : Operational -[ valuein1{ValueError} ]-> Operational; 
+		t2 : Operational -[ valuein1{ValueError} ]-> Operational;
+	propagations
+	-- ERROR rule C7: error sink cannot be used to propagate an error.
+		p1 : Operational -[valuein1{ValueError}]-> valueout1(ValueError);
 	end component;
 **};
 end receiver2.i4;
@@ -332,5 +337,28 @@ annex EMV2 {**
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.4 ; Distribution => Fixed;] applies to r2_1.Failed;
 **};	
 end assembly.i2;
+
+
+system implementation assembly.i3
+subcomponents
+	recv1 : system receiver2.i4;
+	recv2 : system receiver2.i4;
+connections
+	c0 : port recv1.valueout1 -> recv2.valuein1;
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior ErrorModelLibrary::Simple;
+	
+	component error behavior
+	end component;
+	
+	composite error behavior
+	states
+
+		[ recv1.Failed ]-> Failed;
+		[ recv2.Operational ]-> Operational;
+	end composite;
+**};	
+end assembly.i3;
 
 end unhandled_faults;
