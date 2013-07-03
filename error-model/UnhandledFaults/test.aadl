@@ -185,6 +185,8 @@ annex EMV2 {**
 	transitions
 	-- Warning, I do not have a transition from Failed to Operational
 		t1 : Operational -[ valuein1{ValueError} ]-> Failed; 
+	-- Error: transitions with the same source state and condition must be unique
+		t2 : Operational -[ valuein1{ValueError} ]-> Operational; 
 	end component;
 **};
 end receiver2.i4;
@@ -211,6 +213,29 @@ annex EMV2 {**
 	end component;
 **};
 end receiver2.i5;
+
+
+system implementation receiver2.i6
+annex EMV2 {**
+	use types ErrorLibrary; 
+	use behavior ErrorModelLibrary::Simple;
+	error propagations
+		valuein1 : in propagation {ValueError};
+	flows 
+		f4 : error sink valuein1 {ValueError};
+	end propagations;
+	
+	component error behavior
+	events
+		e1 : error event;
+	transitions
+	-- Error : e1 is not referenced
+	-- we should have something like
+	--    t0 : Operational -[e1]-> Operational;
+		t1 : Operational -[ valuein1{ValueError} ]-> Failed; 
+	end component;
+**};
+end receiver2.i6;
 
 system assembly
 end assembly;
@@ -245,6 +270,26 @@ annex EMV2 {**
 end assembly.i;
 
 
+system implementation assembly.i0
+subcomponents
+	r2_1 : system receiver.i2;
+	r2_2 : system receiver.i2;
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior ErrorModelLibrary::Simple;
+	
+	component error behavior
+	end component;
+	
+	composite error behavior
+	states
+	-- ERROR: we do not define the state of r2_2 for the operational
+	-- state
+		[ r2_1.Failed and r2_2.Failed ]-> Failed;
+		[ r2_1.Operational ]-> Operational;
+	end composite;
+**};	
+end assembly.i0;
 
 system implementation assembly.i2
 subcomponents
