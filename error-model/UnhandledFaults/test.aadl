@@ -148,6 +148,7 @@ annex EMV2 {**
 	
 	component error behavior
 	propagations
+	    -- Test for violation of rule C4
 		p1 : Operational -[ valuein1{LateDelivery}]-> valueout1(ValueError); -- OK, we have the path
 		p3 : Operational -[ valuein2{LateDelivery}]-> valueout2(ValueError); -- error, we should declare a path here
 	end component;
@@ -166,6 +167,7 @@ annex EMV2 {**
 	
 	component error behavior
 	propagations
+	    -- Violation of C6
 		p1 : Operational -[]-> valueout1(ValueError); -- Error, I should also have another one for TimingError
 	end component;
 **};
@@ -186,9 +188,10 @@ annex EMV2 {**
 	component error behavior
 	transitions
 	-- Warning, I do not have a transition from Failed to Operational
-		t1 : Operational -[ valuein1{ValueError} ]-> Failed; 
+		transsimilar1 : Operational -[ valuein1{ValueError} ]-> Failed; 
 	-- Error: transitions with the same source state and condition must be unique
-		t2 : Operational -[ valuein1{ValueError} ]-> Operational;
+		transsimilar2 : Operational -[ valuein1{ValueError} ]-> Operational;
+	-- Violation of C9
 	propagations
 	-- ERROR rule C7: error sink cannot be used to propagate an error.
 		p1 : Operational -[valuein1{ValueError}]-> valueout1(ValueError);
@@ -320,6 +323,7 @@ annex EMV2 {**
 		e1 : error event;
 		e2 : error event;
 	transitions
+	-- Violation of C2: all event and incoming error propagation MUST be referenced for each transition
 		t1 : Operational -[e1]-> Failed;
 		t2 : Operational -[e2]-> Failed;
 	end component;
@@ -360,5 +364,38 @@ annex EMV2 {**
 	end composite;
 **};	
 end assembly.i3;
+
+
+system implementation assembly.i4
+subcomponents
+	recv1 : system receiver2.i5;
+	recv2 : system receiver2.i5;
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior ErrorModelLibrary::Simple;
+	
+	component error behavior
+	end component;
+	
+	composite error behavior
+	states
+
+		[ recv1.Failed ]-> Failed;
+		[ recv2.Operational ]-> Operational;
+	end composite;
+**};	
+end assembly.i4;
+
+system implementation assembly.i5
+subcomponents
+	recv1 : system receiver2.i2;
+	recv2 : system receiver2.i2;
+end assembly.i5;
+
+system implementation assembly.i6
+subcomponents
+	recv1 : system receiver2.i3;
+	recv2 : system receiver2.i3;
+end assembly.i6;
 
 end unhandled_faults;
