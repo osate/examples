@@ -53,12 +53,36 @@ annex EMV2 {**
 		-- that use it as an error path.
 		-- The subcomponent should declare it as an error
 		-- sink as well.
+		-- Violation of C15
 		f1 : error sink valuein{ValueError};
 	end propagations;
 **};	
 end assembly.i;
 
 
+
+
+system implementation assembly.i2
+subcomponents
+	s1 : system intermediate.i1;
+connections
+	c1 : port valuein -> s1.valuein;
+	c2 : port s1.valueout -> valueout1;
+	c3 : port s1.valueout -> valueout2; 
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior ErrorModelLibrary::Simple;
+	
+	error propagations
+		valuein  : in propagation {ValueError};
+		valueout1 : out propagation {ValueError};
+		valueout2 : out propagation {ValueError};
+	flows
+		-- Violation of C14: we should also have a path from valuein to valueout2
+		f1 : error path valuein{ValueError} -> valueout1(ValueError);
+	end propagations;
+**};	
+end assembly.i2;
 
 
 end unhandled_faults3;
