@@ -375,14 +375,26 @@ annex EMV2 {**
 	use behavior ErrorModelLibrary::Simple;
 	
 	component error behavior
+	events
+		e1 : error event;
+		e2 : error event;
+	transitions
+		Operational -[e1]-> Failed;
+		Failed -[e2]-> Operational;
 	end component;
 	
 	composite error behavior
+	
 	states
-
 		[ recv1.Failed ]-> Failed;
 		[ recv2.Operational ]-> Operational;
 	end composite;
+	-- Rule C13: must be consistent for recv1.Failed and e1 and inconsistent for recv2 and e2
+	properties
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.1 ; Distribution => Fixed;] applies to recv1.Failed;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.1 ; Distribution => Fixed;] applies to recv2.Operational;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.1 ; Distribution => Fixed;] applies to e1;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.2 ; Distribution => Fixed;] applies to e2;	
 **};	
 end assembly.i4;
 
@@ -396,6 +408,7 @@ system implementation assembly.i6
 subcomponents
 	recv1 : system receiver2.i3;
 	recv2 : system receiver2.i3;
+
 end assembly.i6;
 
 end unhandled_faults;
