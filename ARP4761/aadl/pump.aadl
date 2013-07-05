@@ -27,7 +27,7 @@ annex EMV2 {**
 		t1 : Operational -[ HydraulicError]-> Failed;
 	propagations
 		p1     : Failed 		-[]-> pressure_output(Noservice);
-		normal : Operational 	-[]-> mask;
+		normal : Operational 	-[]-> pressure_output(NoError);
 	end component;
 	
 	properties
