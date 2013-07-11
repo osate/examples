@@ -230,7 +230,7 @@ annex emv2 {**
 		esource_m   : error source bpm{NoService};
 		esink_m     : error sink bpm{NoService};
 		esource_out : error source bpout{NoService};
-		esink_out   : error sink bpout{NoService};
+		esink_out   : error sink bpout{NoService}; 
 	end propagations;
 	
 	component error behavior
