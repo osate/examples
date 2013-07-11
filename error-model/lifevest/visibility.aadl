@@ -1,0 +1,55 @@
+package visibility
+
+public
+with EMV2;
+
+system visibility
+features
+	visibility : out event port;
+end visibility;
+
+system implementation visibility.functional
+annex EMV2 {**
+	use types lifevest_errlib;
+	
+	error propagations
+		visibility : out propagation {NotVisible};
+	flows
+		f1 : error source visibility {NotVisible};
+	end propagations;
+
+    
+**};
+end visibility.functional;
+
+system implementation visibility.impl extends visibility.functional
+annex EMV2 {**
+	use types lifevest_errlib;
+	use behavior lifevest_errlib::simple;
+	component error behavior
+	events
+		battery_threshold: error event;
+		sensor_clogged   : error event;
+		led_damaged      : error event;
+	transitions
+		t1 : Operational -[battery_threshold]-> Failed;
+		t2 : Operational -[sensor_clogged]-> Failed;
+		t3 : Operational -[led_damaged]-> Failed;
+	propagations
+		p1 : Failed -[]-> visibility(NotVisible);
+	end component;
+	properties
+		EMV2::severity => 1 applies to visibility.NotVisible;
+		EMV2::likelihood => C applies to visibility.NotVisible;
+		EMV2::hazard => 
+			[crossreference => "1.1.1";
+			 failure => "Loss of sensor readings";
+			 phase => "all";
+			 description => "No position readings due to sensor failure";
+			 comment => "Becomes major hazard, if no rdeundant sensor";
+		]
+		applies to visibility.NotVisible;	
+**};
+end visibility.impl;
+
+end visibility;

@@ -1,0 +1,89 @@
+package unhandled_faults3
+
+public
+
+with EMV2;
+
+system intermediate
+features
+	ivaluein : in event port;
+	ivalueout : out event port;
+end intermediate;
+
+
+system implementation intermediate.i1
+annex EMV2 {**
+	use types ErrorLibrary;
+	
+	error propagations
+		ivaluein  : in propagation {ValueError};
+		ivalueout : out propagation {ValueError};
+	flows
+--		f12 : error path ivaluein -> ivalueout;
+		f12 : error sink ivaluein{ValueError};
+	end propagations;
+**};
+end intermediate.i1;
+
+
+system assembly
+features
+	avaluein : in event port;
+	avalueout1 : out event port;
+	avalueout2 : out event port;
+end assembly;
+
+system implementation assembly.i
+subcomponents
+	s1 : system intermediate.i1;
+connections
+	c1 : port avaluein -> s1.ivaluein;
+	c2 : port s1.ivalueout -> avalueout1;
+	c3 : port s1.ivalueout -> avalueout2; 
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior ErrorModelLibrary::Simple;
+	
+	error propagations
+		avaluein  : in propagation {ValueError};
+		avalueout1 : out propagation {ValueError};
+		avalueout2 : out propagation {ValueError};
+	flows
+		-- ERROR, if valuein is a sink, it should
+		-- not be connected to a component
+		-- that use it as an error path.
+		-- The subcomponent should declare it as an error
+		-- sink as well.
+		-- Violation of C15
+		f1 : error sink avaluein{ValueError};
+	end propagations;
+**};	
+end assembly.i;
+
+
+
+
+system implementation assembly.i2
+subcomponents
+	s1 : system intermediate.i1;
+connections
+	c1 : port avaluein -> s1.ivaluein;
+	c2 : port s1.ivalueout -> avalueout1;
+	c3 : port s1.ivalueout -> avalueout2; 
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior ErrorModelLibrary::Simple;
+	
+	error propagations
+		avaluein  : in propagation {ValueError};
+		avalueout1 : out propagation {ValueError};
+		avalueout2 : out propagation {ValueError};
+	flows
+		-- Violation of C14: we should also have a path from valuein to valueout2
+		f1 : error path avaluein{ValueError} -> avalueout1(ValueError);
+	end propagations;
+**};	
+end assembly.i2;
+
+
+end unhandled_faults3;

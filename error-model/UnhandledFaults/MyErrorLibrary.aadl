@@ -1,0 +1,23 @@
+--ErrorLibrary.aadl
+
+package MyErrorLibrary
+public
+annex EMV2 {**
+	error types 
+		MySuper: type;
+		MySpecial: type extends MySuper; 
+		MySpecial2: type extends MySuper; 
+	end types;
+
+	error behavior Simple
+	events
+		Failure : error event ;
+	states
+		Operational : initial state ;
+		Failed : state ;
+	transitions
+		BadValueTransition : Operational -[ Failure ]-> Failed ;
+	end behavior ;
+
+**}; 
+end MyErrorLibrary;

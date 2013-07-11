@@ -1,0 +1,39 @@
+package lifevest
+
+public
+with flotation;
+with visibility;
+
+system lifevest
+end lifevest;
+
+system fault_catch
+features
+	visibility : in event port;
+annex EMV2 {**
+	use types lifevest_errlib;
+	
+	error propagations
+		visibility : in propagation {NotVisible};
+	flows
+		f1 : error sink visibility {NotVisible};
+	end propagations;
+**};
+end fault_catch;
+
+system implementation lifevest.functional
+subcomponents
+	float : system flotation::flotation.functional;
+	vis   : system visibility::visibility.functional;
+	catch : system fault_catch;
+connections
+	port vis.visibility -> catch.visibility;
+end lifevest.functional;
+
+
+system implementation lifevest.impl extends lifevest.functional
+subcomponents
+	vis : refined to system visibility::visibility.impl;
+end lifevest.impl;
+
+end lifevest; 

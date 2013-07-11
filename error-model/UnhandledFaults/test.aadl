@@ -1,0 +1,414 @@
+package unhandled_faults
+
+public
+
+with EMV2;
+
+system sender
+features
+	valueout : out event port;
+end sender;
+
+
+system implementation sender.i1
+annex EMV2 {**
+	use types ErrorLibrary;
+	
+	error propagations
+		valueout : out propagation {ValueError};
+	flows
+		f1 : error source valueout {ValueError};
+	end propagations;
+**};
+end sender.i1;
+
+
+system implementation sender.i2
+annex EMV2 {**
+	use types ErrorLibrary;
+	
+	error propagations
+		valueout : out propagation {TimingError};
+	flows
+		f1 : error source valueout {TimingError};
+	end propagations;
+**};
+end sender.i2;
+
+system implementation sender.i3
+annex EMV2 {**
+	use types ErrorLibrary;
+	
+	error propagations
+		valueout : out propagation {EarlyDelivery};
+	flows
+		f1 : error source valueout {EarlyDelivery};
+	end propagations;
+**};
+end sender.i3;
+
+system receiver
+features
+	valuein : in event port;
+end receiver;
+
+system receiver2
+features
+	valuein1 : in event port;
+	valuein2 : in event port;
+	valueout1 : out event port;
+	valueout2 : out event port;
+end receiver2;
+
+system implementation receiver.i1
+annex EMV2 {**
+	use types ErrorLibrary;
+	
+	error propagations
+		valuein : in propagation {ValueError};
+	flows
+		f1 : error sink valuein {ValueError}; 
+	end propagations;
+**};
+end receiver.i1;
+
+
+system implementation receiver.i2
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior ErrorModelLibrary::Simple;
+	
+	error propagations
+		valuein : in propagation {TimingError};
+	flows
+		f1 : error sink valuein {TimingError}; 
+	end propagations;
+	
+	component error behavior
+	transitions
+		Operational -[ Failure ]-> Failed;
+	end component;
+**};
+end receiver.i2; 
+
+system implementation receiver.i3
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior ErrorModelLibrary::Simple;
+	error propagations
+		valuein : in propagation {LateDelivery};
+	flows
+		f1 : error sink valuein {LateDelivery}; 
+	end propagations;
+	
+
+**};
+end receiver.i3;
+
+system implementation receiver2.i1
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior ErrorModelLibrary::Simple; 
+	error propagations
+		valuein1 : in propagation {LateDelivery};
+		valueout1 : out propagation {ValueError};
+		valuein2 : in propagation {LateDelivery};
+		valueout2 : out propagation {ValueError};
+	flows
+		f1 : error sink valuein1 {LateDelivery}; 
+		f2 : error source valueout1 {ValueError};
+		f3 : error sink valuein2 {LateDelivery}; 
+		f4 : error source valueout2 {ValueError};
+	end propagations;
+	
+	component error behavior
+	propagations
+		p1 : Operational -[ valuein1{LateDelivery}]-> valueout1(ValueError); -- should raise error
+		p2 : Operational -[ valuein1{LateDelivery}]-> valueout1(NoError); -- OK
+		p3 : Operational -[ valuein2{LateDelivery}]-> valueout2(ValueError); -- error, we should declare a path here
+	end component;
+**};
+end receiver2.i1;
+
+
+system implementation receiver2.i2
+annex EMV2 {**
+	use types ErrorLibrary; 
+	use behavior ErrorModelLibrary::Simple;
+	error propagations
+		valuein1 : in propagation {LateDelivery};
+		valueout1 : out propagation {ValueError};
+		valuein2 : in propagation {LateDelivery};
+		valueout2 : out propagation {ValueError};
+	flows
+		f1 : error path valuein1 {LateDelivery} -> valueout1 (ValueError);
+		f3 : error sink valuein2 {LateDelivery}; 
+		f4 : error source valueout2 {ValueError};
+	end propagations;
+	
+	component error behavior
+	propagations
+	    -- Test for violation of rule C4
+		p1 : Operational -[ valuein1{LateDelivery}]-> valueout1(ValueError); -- OK, we have the path
+		p3 : Operational -[ valuein2{LateDelivery}]-> valueout2(ValueError); -- error, we should declare a path here
+	end component;
+**};
+end receiver2.i2;
+
+system implementation receiver2.i3
+annex EMV2 {**
+	use types ErrorLibrary; 
+	use behavior ErrorModelLibrary::Simple;
+	error propagations
+		valueout1 : out propagation {ValueError, TimingError};
+	flows 
+		f4 : error source valueout1 {ValueError, TimingError};
+	end propagations;
+	
+	component error behavior
+	propagations
+	    -- Violation of C6
+		p1 : Operational -[]-> valueout1(ValueError); -- Error, I should also have another one for TimingError
+	end component;
+**};
+end receiver2.i3;
+
+system implementation receiver2.i4
+annex EMV2 {**
+	use types ErrorLibrary; 
+	use behavior ErrorModelLibrary::Simple;
+	error propagations
+		valuein1 : in propagation {ValueError, TimingError};
+		valueout1 : out propagation {ValueError};
+	flows 
+		f4 : error sink valuein1 {ValueError, TimingError};
+		f5 : error source valueout1{ValueError};
+	end propagations;
+	
+	component error behavior
+	transitions
+	-- Warning, I do not have a transition from Failed to Operational
+		transsimilar1 : Operational -[ valuein1{ValueError} ]-> Failed; 
+	-- Error: transitions with the same source state and condition must be unique
+		transsimilar2 : Operational -[ valuein1{ValueError} ]-> Operational;
+	-- Violation of C9
+	propagations
+	-- ERROR rule C7: error sink cannot be used to propagate an error.
+		p1 : Operational -[valuein1{ValueError}]-> valueout1(ValueError);
+	end component;
+**};
+end receiver2.i4;
+
+system implementation receiver2.i5
+annex EMV2 {**
+	use types ErrorLibrary; 
+	use behavior ErrorModelLibrary::Simple;
+	error propagations
+		valuein1 : in propagation {LateDelivery};
+		valueout1 : out propagation {ValueError};
+		valuein2 : in propagation {LateDelivery};
+		valueout2 : out propagation {ValueError};
+	flows
+		f1 : error path valuein1 {LateDelivery} -> valueout1 (ValueError);
+		f3 : error sink valuein2 {LateDelivery}; 
+		f4 : error source valueout2 {ValueError};
+	end propagations;
+	
+	component error behavior
+	propagations
+		p1 : Operational -[]-> valueout1(ValueError); -- Error, this is part of an error path
+		p3 : Operational -[]-> valueout2(ValueError); -- OK
+	end component;
+**};
+end receiver2.i5;
+
+
+system implementation receiver2.i6
+annex EMV2 {**
+	use types ErrorLibrary; 
+	use behavior ErrorModelLibrary::Simple;
+	error propagations
+		valuein1 : in propagation {ValueError};
+	flows 
+		f4 : error sink valuein1 {ValueError};
+	end propagations;
+	
+	component error behavior
+	events
+		e1 : error event;
+	transitions
+	-- Error : e1 is not referenced
+	-- we should have something like
+	--    t0 : Operational -[e1]-> Operational;
+		t1 : Operational -[ valuein1{ValueError} ]-> Failed; 
+	end component;
+**};
+end receiver2.i6;
+
+system assembly
+end assembly;
+
+system implementation assembly.i
+subcomponents
+	s1_1 : system sender.i1;
+	s1_2 : system sender.i1;
+	s2_1 : system sender.i2;
+	s2_2 : system sender.i2;
+	s3_1 : system sender.i3;
+	r1_1 : system receiver.i1;
+	r1_2 : system receiver.i1;
+	r2_1 : system receiver.i2;
+	r2_2 : system receiver.i2;
+connections
+	c1 : port s1_1.valueout -> r1_1.valuein;
+	c2 : port s1_2.valueout -> r1_1.valuein;
+	c3 : port s3_1.valueout -> r2_1.valuein; 
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior ErrorModelLibrary::Simple;
+	
+	component error behavior
+	end component;
+	
+	composite error behavior
+	states
+		[ r2_1.Failed ]-> Failed;
+	end composite;
+**};	
+end assembly.i;
+
+
+system implementation assembly.i0
+subcomponents
+	r2_1 : system receiver.i2;
+	r2_2 : system receiver.i2;
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior ErrorModelLibrary::Simple;
+	
+	component error behavior
+	end component;
+	
+	composite error behavior
+	states
+	-- ERROR: we do not define the state of r2_2 for the operational
+	-- state
+		[ r2_1.Failed and r2_2.Failed ]-> Failed;
+		[ r2_1.Operational ]-> Operational;
+	end composite;
+**};	
+end assembly.i0;
+
+system implementation assembly.i2
+subcomponents
+	s1_1 : system sender.i1;
+	s1_2 : system sender.i1;
+	s2_1 : system sender.i2;
+	s2_2 : system sender.i2;
+	s3_1 : system sender.i3;
+	r1_1 : system receiver.i1;
+	r1_2 : system receiver.i1;
+	r2_1 : system receiver.i2;
+	r2_2 : system receiver.i2;
+connections
+	c1 : port s1_1.valueout -> r1_1.valuein;
+	c2 : port s1_2.valueout -> r1_1.valuein;
+	c3 : port s3_1.valueout -> r2_1.valuein; 
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior ErrorModelLibrary::Simple;
+	
+	component error behavior
+	events
+		e1 : error event;
+		e2 : error event;
+	transitions
+	-- Violation of C2: all event and incoming error propagation MUST be referenced for each transition
+		t1 : Operational -[e1]-> Failed;
+		t2 : Operational -[e2]-> Failed;
+	end component;
+	
+	composite error behavior
+	states
+		[ r2_1.Failed ]-> Failed;
+	end composite;
+	-- ERROR because the occurrence value between the events in the component
+	-- error behavior does not match the occurrence value of
+	--  the component in the composite error behavior.
+	properties
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.2 ; Distribution => Fixed;] applies to e1;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.1 ; Distribution => Fixed;] applies to e2;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.4 ; Distribution => Fixed;] applies to r2_1.Failed;
+**};	
+end assembly.i2;
+
+
+system implementation assembly.i3
+subcomponents
+	recv1 : system receiver2.i4;
+	recv2 : system receiver2.i4;
+connections
+	c0 : port recv1.valueout1 -> recv2.valuein1;
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior ErrorModelLibrary::Simple;
+	
+	component error behavior
+	end component;
+	
+	composite error behavior
+	states
+
+		[ recv1.Failed ]-> Failed;
+		[ recv2.Operational ]-> Operational;
+	end composite;
+**};	
+end assembly.i3;
+
+
+system implementation assembly.i4
+subcomponents
+	recv1 : system receiver2.i5;
+	recv2 : system receiver2.i5;
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior ErrorModelLibrary::Simple;
+	
+	component error behavior
+	events
+		e1 : error event;
+		e2 : error event;
+	transitions
+		Operational -[e1]-> Failed;
+		Failed -[e2]-> Operational;
+	end component;
+	
+	composite error behavior
+	
+	states
+		[ recv1.Failed ]-> Failed;
+		[ recv2.Operational ]-> Operational;
+	end composite;
+	-- Rule C13: must be consistent for recv1.Failed and e1 and inconsistent for recv2 and e2
+	properties
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.1 ; Distribution => Fixed;] applies to recv1.Failed;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.1 ; Distribution => Fixed;] applies to recv2.Operational;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.1 ; Distribution => Fixed;] applies to e1;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.2 ; Distribution => Fixed;] applies to e2;	
+**};	
+end assembly.i4;
+
+system implementation assembly.i5
+subcomponents
+	recv1 : system receiver2.i2;
+	recv2 : system receiver2.i2;
+end assembly.i5;
+
+system implementation assembly.i6
+subcomponents
+	recv1 : system receiver2.i3;
+	recv2 : system receiver2.i3;
+
+end assembly.i6;
+
+end unhandled_faults;
