@@ -67,7 +67,7 @@ annex EMV2 {**
 	    --  is transformed into a NoValue on brake and skid features.
 	    --  So, basically, this should be shown in the FMEA/FaultImpact
 	    --  report. So, the report should show the error flows
-	    --  pedals/NoService -> commands/brake/skid/NoValue -> monitor/NoValue -> selector/ValueError 
+	    --  pedals/NoService -> commands/brake/skid/NoValue -> monitor/NoValue -> selector/NoValue 
 		p1 : Failed -[]-> brake(NoValue);
 		p2 : Failed -[]-> skid(NoValue);
 	end component;
@@ -207,9 +207,9 @@ annex EMV2 {**
 	error propagations
 		input1 : in propagation {NoValue};
 		input2 : in propagation {NoValue};
-		result : out propagation{ValueError};
+		result : out propagation{NoValue};
 	flows
-		f1 : error source result{ValueError};
+		f1 : error source result{NoValue};
 		f2 : error sink input1{NoValue};
 		f3 : error sink input2{NoValue};
 	end propagations;  

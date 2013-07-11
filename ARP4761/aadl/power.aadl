@@ -26,7 +26,7 @@ annex EMV2 {**
 		Operational -[Explode]-> Failed;
 	propagations
 		p1: Failed -[]-> socket(NoPower);
-		normal : Operational -[]-> mask;
+		normal : Operational -[]-> socket(NoError);
 	end component;
 	properties
 		ARP4761::severity => Major applies to socket.NoPower;
