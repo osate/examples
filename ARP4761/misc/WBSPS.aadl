@@ -1,0 +1,7 @@
+property set WBSPS is
+IsFunction : inherit AadlBoolean applies to (all);
+
+PhaseType: type enumeration (Taxi,Takeoff, RejectTakeoffBeforeV1, RejectTakeoffAfterV1,Climb,Cruise,Descent, TouchAndGo, Landing );
+
+Phase: WBSPS::PhaseType applies to (all);
+end WBSPS;
