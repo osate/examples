@@ -117,9 +117,29 @@ system ElectricPower
 properties
 	WBSPS::IsFunction => true;
 annex EMV2 {**
-	use behavior WBSErrorLib::TwostateWBS;
+	use behavior WBSErrorLib::Twostate;
+	component error behavior
+	events
+		Failure : error event;
+	transitions
+		t1 : Operational -[ Failure ]-> Failed;
+	end component;
 **};
 end ElectricPower;
+
+system Command
+properties
+	WBSPS::IsFunction => true;
+annex EMV2 {**
+	use behavior WBSErrorLib::Twostate;
+	component error behavior
+	events
+		Failure : error event;
+	transitions
+		t1 : Operational -[ Failure ]-> Failed;
+	end component;
+**};
+end Command;
 
 system implementation ElectricPower.basic
 end ElectricPower.basic;
@@ -140,7 +160,14 @@ system Annunciation
 properties
 	WBSPS::IsFunction => true;
 annex EMV2 {**
-	use behavior WBSErrorLib::TwostateWBS;
+	use behavior WBSErrorLib::Twostate;
+	
+	component error behavior
+	events
+		Failure : error event;
+	transitions
+		t1 : Operational -[Failure]-> Failed;	
+	end component;
 **};
 end Annunciation;
 
@@ -170,7 +197,7 @@ system implementation ApplyWheelBrake.basic
 subcomponents
 	BrakeWheel: system BrakeByWheel;
 	WBControl: system WBControl;
-	BrakeCommand: system BrakeCommand;
+	BrakeCommand: system BrakeCommand.basic;
 	BrakeStatus: system WBStatus;
 annex EMV2 {**
 	use types WBSErrorLib;
@@ -180,7 +207,7 @@ annex EMV2 {**
 	states
 	    -- FHA for Unnanunciated loss of all wheel
 	    -- from AIR6110 page 49
-		[BrakeWheel.Failed and WBControl.Failed]-> Failed;
+		[BrakeWheel.Failed or BrakeCommand.Failed]-> Failed;
 	end composite;
 **};
 end ApplyWheelBrake.basic;
@@ -191,8 +218,27 @@ properties
 	WBSPS::IsFunction => true;
 annex EMV2 {**
 	use behavior WBSErrorLib::TwostateWBS;
+	component error behavior
+	events
+		LossHydraulicSupply : error event;
+		LossHydraulicComponents : error event;
+	transitions
+		t1 : Operational -[ LossHydraulicSupply]-> Failed;
+		t2 : Operational -[ LossHydraulicComponents]-> Failed;
+	end component;
 **};
 end BrakeByWheel;
+
+system implementation BrakeByWheel.basic
+properties
+	WBSPS::IsFunction => true;
+annex EMV2 {**
+	
+	use behavior WBSErrorLib::Twostate;
+	
+
+**};
+end BrakeByWheel.basic;
 
 system NoseWheelSteering
 annex EMV2 {**
@@ -219,9 +265,29 @@ annex EMV2 {**
 **};
 end BrakeCommand;
 
-system DecelerateThrottle
+system implementation BrakeCommand.basic
+subcomponents
+	electricPower    : system ElectricPower;
+	command          : system Command;
 annex EMV2 {**
 	use behavior WBSErrorLib::TwostateWBS;
+	composite error behavior
+	states
+		[electricPower.Failed or command.Failed ]-> Failed;
+	end composite;
+**};
+end BrakeCommand.basic;
+
+system DecelerateThrottle
+annex EMV2 {**
+	use behavior WBSErrorLib::Twostate;
+	component error behavior
+	events
+		Failure : error event;
+	transitions
+		t1 : Operational -[ Failure]-> Failed;
+
+	end component;
 **};
 end DecelerateThrottle;
 
