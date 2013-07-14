@@ -1,0 +1,27 @@
+package Throttle
+public
+with GenericFunctions;
+with WBSPS,EMV2,ARP4761;
+
+
+system DecelerateThrottle
+annex EMV2 {**
+	use behavior WBSErrorLib::Twostate;
+	component error behavior
+	events
+		Failure : error event;
+	transitions
+		t1 : Operational -[ Failure]-> Failed;
+
+	end component;
+**};
+end DecelerateThrottle;
+
+end Throttle;
+
+
+
+
+
+
+
