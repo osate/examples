@@ -3,6 +3,10 @@ public
 annex EMV2 {**
 	error types
 	WBError: type;
+	HydraulicLossBlue : type;
+	HydraulicLossGreen : type;
+	HydraulicLossComponents : type;
+	
 	TotalWBLoss: type extends WBError;
 	TotalWBLossAnunciated: type extends TotalWBLoss;
 	TotalWBLossUnanunciated: type extends TotalWBLoss;
@@ -15,6 +19,8 @@ annex EMV2 {**
 	WBErrorSet: type set {TotalWBLossAnunciated,TotalWBLossUnanunciated,PartialSymmetricalWBLoss,
 		AssymetricalWBLoss,InadvertentWB
 	};
+	
+	HydraulicErrors: type set {HydraulicLossBlue,HydraulicLossGreen,HydraulicLossComponents};
 	end types;
 	
 	error behavior Twostate

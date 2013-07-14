@@ -20,6 +20,15 @@ connections
 	c3 : feature alert.isFailing -> decelerate.fromAlert;
 	c4 : feature steering.isFailing -> decelerate.fromSteering;
 	c5 : feature status.isFailing -> decelerate.fromStatus;
+annex EMV2 {**
+	use types WBSErrorLib;
+	use behavior WBSErrorLib::Twostate;
+
+	composite error behavior
+	states
+		[decelerate.Failed]-> Failed;
+	end composite;                
+ **};
 end Aircraft.basic;
 
 

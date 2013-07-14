@@ -12,7 +12,6 @@ annex EMV2 {**
 		Failure : error event;
 	transitions
 		t1 : Operational -[ Failure]-> Failed;
-
 	end component;
 **};
 end DecelerateThrottle;

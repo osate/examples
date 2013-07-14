@@ -126,6 +126,15 @@ subcomponents
 	normal    : system NormalBrakeSystem;
 	alternate : system GenericBrakeSystem;
 	emergency : system GenericBrakeSystem;
+annex EMV2 {**
+	use types WBSErrorLib;
+	use behavior WBSErrorLib::TwostateWBS;
+
+	composite error behavior
+	states
+		[normal.Failed or alternate.Failed or emergency.Failed]-> Failed;
+	end composite;                
+ **};
 end DecelerateOnGround.basic;
 
 system DecelerateWheels
