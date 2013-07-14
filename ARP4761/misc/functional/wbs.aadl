@@ -52,7 +52,17 @@ annex EMV2 {**
 		fromBSCU : out propagation;
 	flows
 		f1 : error source fromBSCU;
-	end propagations;	
+	end propagations;
+	
+	component error behavior
+	events
+		lossBrakingCommand : error event;
+	transitions
+		t1 : Operational -[lossBrakingCommand]-> Failed;
+		t2 : Operational -[ fromElectrical ]-> Failed;
+	propagations
+		p1 : Failed -[]-> fromBSCU;
+	end component;
 **};
 end CommandControl.basic;
 
@@ -126,6 +136,8 @@ subcomponents
 	normal    : system NormalBrakeSystem;
 	alternate : system GenericBrakeSystem;
 	emergency : system GenericBrakeSystem;
+connections
+	c1 : feature fromBSCU -> normal.fromBSCU;
 annex EMV2 {**
 	use types WBSErrorLib;
 	use behavior WBSErrorLib::TwostateWBS;
