@@ -73,7 +73,9 @@ annex EMV2 {**
 	states
 		[Control_Primary.Failed or Control_Secondary.Failed]-> Failed;
 	end composite;
-	
+	properties
+		--  See AIR6110 page 49 for details
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 3.3e-5 ; Distribution => Poisson;] applies to lossBrakingCommand;
 **};
 end CommandControl.basic;
 
@@ -118,6 +120,10 @@ annex EMV2 {**
 		t2 : Operational -[ fromHydraulic{HydraulicLossComponents} ]-> Failed;
 		t3 : Operational -[ fromBSCU ]-> Failed;
 	end component;
+	
+	properties
+		-- Probability evaluated according to AIR6110, page 49
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.0e-4 ; Distribution => Poisson;] applies to Failed; 
 **};
 end NormalBrakeSystem;
 
@@ -156,7 +162,13 @@ annex EMV2 {**
 	composite error behavior
 	states
 		[normal.Failed or alternate.Failed or emergency.Failed]-> Failed;
-	end composite;                
+	end composite;   
+	
+	
+	properties
+		-- Probability evaluated according to AIR6110, page 49
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 5.0e-3 ; Distribution => Poisson;] applies to alternate.Failed;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 5.0e-3 ; Distribution => Poisson;] applies to emergency.Failed;
  **};
 end DecelerateOnGround.basic;
 
@@ -236,11 +248,12 @@ annex EMV2 {**
 	states
 	    -- FHA for Unnanunciated loss of all wheel
 	    -- from AIR6110 page 49
-		[decelerateonground.Failed]-> Failed;
+--		[decelerateonground.Failed]-> Failed.TotalWBLossUnanunciated;  
+		[decelerateonground.Failed]-> Failed;  
 	end composite;
-
+ 
 	properties
-	              EMV2::hazard => 
+		EMV2::hazard => 
               [      crossreference => "AIR6110 page 36";
               failure => "Total Loss of wheel braking - Unannunciated loss of wheel braking";
               phase => "Landing or RTO";
@@ -248,23 +261,25 @@ annex EMV2 {**
               comment => "";
               ]
               applies to Failed.TotalWBLossAnunciated;
-              ARP4761::Severity => Hazardous applies to Failed.TotalWBLossAnunciated;
-              ARP4761::Likelihood => Remote applies to Failed.TotalWBLossAnunciated;
+	ARP4761::Severity => Hazardous applies to Failed.TotalWBLossAnunciated;
+	ARP4761::Likelihood => Remote applies to Failed.TotalWBLossAnunciated;
               
 
 
-              EMV2::hazard => 
+	EMV2::hazard => 
               [      crossreference => "AIR6110 page 36";
               failure => "Total Loss of wheel braking - Annunciated loss of wheel braking";
               phase => "Landing";
               description => "Crew selects a more suitable airport, notifies emergency ground support, and prepares occupants for runway overrun. The crew uses spoilers and thrust reversers to the maximum extent possible.";
               comment => "";
               ]
-              applies to Failed.TotalWBLossUnanunciated;
-              ARP4761::Severity => Hazardous applies to Failed.TotalWBLossUnanunciated;      
-              ARP4761::Likelihood => Remote applies to Failed.TotalWBLossUnanunciated;      
+		applies to Failed.TotalWBLossUnanunciated;
+	ARP4761::Severity => Hazardous applies to Failed.TotalWBLossUnanunciated;      
+	ARP4761::Likelihood => Remote applies to Failed.TotalWBLossUnanunciated;
+	-- Probability should be 5e-7 according to AIR6110, page 49
+	EMV2::OccurrenceDistribution => [ ProbabilityValue => 5.0e-7 ; Distribution => Poisson;] applies to Failed.TotalWBLossUnanunciated;
               
-              EMV2::hazard => 
+	EMV2::hazard => 
               [      crossreference => "AIR6110 page 36";
               failure => "Partial Symmetrical Loss of Wheel Braking - Unannunciated partial symmetrical loss of wheel braking";
               phase => "Landing or RTO";
@@ -272,11 +287,11 @@ annex EMV2 {**
               comment => "Potentially catastrophic – to be confirmed by analysis";
               ]
               applies to Failed.PartialSymmetricalWBLossUnAnunciated;
-              ARP4761::Severity => Hazardous applies to Failed.PartialSymmetricalWBLossUnAnunciated;      
-              ARP4761::Likelihood => Remote applies to Failed.PartialSymmetricalWBLossUnAnunciated;      
+	ARP4761::Severity => Hazardous applies to Failed.PartialSymmetricalWBLossUnAnunciated;      
+	ARP4761::Likelihood => Remote applies to Failed.PartialSymmetricalWBLossUnAnunciated;      
               
               
-              EMV2::hazard => 
+	EMV2::hazard => 
               [      crossreference => "AIR6110 page 36";
               failure => "Partial Symmetrical Loss of Wheel Braking - Annunciated partial symmetrical loss of wheel braking";
               phase => "Landing";
@@ -284,9 +299,8 @@ annex EMV2 {**
               comment => "";
               ]
               applies to Failed.PartialSymmetricalWBLossanunciated;
-              ARP4761::Severity => Major applies to Failed.PartialSymmetricalWBLossanunciated;   
-              ARP4761::Likelihood => Remote applies to Failed.PartialSymmetricalWBLossanunciated;  
-                
+	ARP4761::Severity => Major applies to Failed.PartialSymmetricalWBLossanunciated;   
+	ARP4761::Likelihood => Remote applies to Failed.PartialSymmetricalWBLossanunciated;             
  **};
 end DecelerateWheels.basic;
 

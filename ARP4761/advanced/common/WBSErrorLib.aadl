@@ -30,14 +30,14 @@ annex EMV2 {**
 		failed:state ;
 	end behavior;
 	
-	error behavior TwostateWBS
+	error behavior TwostateWBS 
 	use types WBSErrorLib;
 	states
 		Operational:initial state;
 -- WORK
 --		failed:state {TotalWBLoss,PartialSymmetricalWBLoss,AssymetricalWBLoss,InadvertentWB};
 -- NOT WORKING
-		failed:state {TotalWBLoss,PartialSymmetricalWBLoss,AssymetricalWBLoss,InadvertentWB};
+		failed:state {TotalWBLossAnunciated,TotalWBLossUnanunciated,PartialSymmetricalWBLoss,AssymetricalWBLoss,InadvertentWB};
 	end behavior;
 **};
 end WBSErrorLib;

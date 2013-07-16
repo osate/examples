@@ -29,6 +29,10 @@ annex EMV2 {**
 		p2 : Failed -[]-> isFailing(HydraulicLossGreen);
 		p3 : Failed -[]-> isFailing(HydraulicLossComponents);
 	end component;
+	properties
+		-- Probability evaluated according to AIR6110, page 49
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 3.3e-5 ; Distribution => Poisson;] applies to GreenPumpError;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 3.3e-5 ; Distribution => Poisson;] applies to ComponentError; 
 **};
 end Hydraulic;
 
