@@ -1,4 +1,4 @@
-package aircraft
+package main
 public
 with GenericFunctions;
 with WBSPS,EMV2,ARP4761,WheelBrake,Throttle,Electrical,Hydraulic;
@@ -81,4 +81,4 @@ annex EMV2 {**
 end DecelerateAircraft.basic;
 
 
-end aircraft;
+end main;
