@@ -1,7 +1,7 @@
 package main
 public
 with GenericFunctions;
-with WBSPS,EMV2,ARP4761,WheelBrake,Throttle,Electrical,Hydraulic;
+with WBSPS,EMV2,ARP4761,WheelBrake::Main,Throttle,Electrical,Hydraulic;
 
 system Aircraft
 end Aircraft;
@@ -61,14 +61,14 @@ end DecelerateAircraft;
  
 system implementation DecelerateAircraft.basic
 subcomponents
-	DecelerateWheels  : system   WheelBrake::DecelerateWheels.basic;
+	DecelerateWheels  : system   WheelBrake::Main::DecelerateWheels.basic;
 	DecelerateThrottle: system   Throttle::DecelerateThrottle;
 connections
 	c1 : feature fromElectrical -> DecelerateWheels.fromElectrical;
-	c2 : feature fromHydraulic -> DecelerateWheels.fromHydraulic;
-	c3 : feature fromAlert -> DecelerateWheels.fromAlert;
-	c4 : feature fromSteering -> DecelerateWheels.fromSteering;
-	c5 : feature fromStatus -> DecelerateWheels.fromStatus;
+	c2 : feature fromHydraulic  -> DecelerateWheels.fromHydraulic;
+	c3 : feature fromAlert      -> DecelerateWheels.fromAlert;
+	c4 : feature fromSteering   -> DecelerateWheels.fromSteering;
+	c5 : feature fromStatus     -> DecelerateWheels.fromStatus;
 annex EMV2 {**
 	use types WBSErrorLib;
 	use behavior WBSErrorLib::TwostateWBS;
