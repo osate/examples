@@ -1,0 +1,69 @@
+package flt_sw
+public
+with flt_computer,SEI;
+
+system flt_sw_apps
+ features
+   flight_data: in out data port;
+end flt_sw_apps ;
+
+system flt_director
+ -- add input, output data features as needed
+end flt_director ;
+
+system guidance
+  
+end guidance ;
+
+system implementation flt_sw_apps.impl1
+
+subcomponents
+my_flt_director: system flt_director;
+my_guidance: system guidance;
+connections
+  none;
+end flt_sw_apps.impl1 ;
+
+system implementation flt_sw_apps.impl2
+subcomponents
+my_flt_director: system flt_director;
+my_guidance: system guidance;
+connections
+  none;
+end flt_sw_apps.impl2 ;
+
+
+system implementation flt_sw_apps.impl3
+subcomponents
+my_flt_director: system flt_director;
+my_guidance: system guidance;
+connections
+  none;
+
+end flt_sw_apps.impl3 ;
+
+system implementation flt_sw_apps.impl4
+subcomponents
+my_flt_director: system flt_director;
+my_guidance: system guidance;
+connections
+  none;
+
+end flt_sw_apps.impl4 ;
+
+
+-- or another approach - create a single, generic sw collections
+system implementation flt_sw_apps.generic
+subcomponents
+ generic_flt_director: system flt_director;
+ generic_flt_guidance: system guidance; 
+connections
+  none;
+flows
+  none;
+modes
+  none;
+properties
+  none;
+end flt_sw_apps.generic ;
+end flt_sw ;

@@ -1,0 +1,62 @@
+package top_level_flt_assembly
+public
+with flt_sw, flt_computer, flt_system,SEI;
+
+system quad_redundant_flt_system
+features
+  none;
+end quad_redundant_flt_system ;
+
+-- First approach, example showing four separate (but allegedly identical) flight systems
+-- This example allows for different modifications to each system, if
+-- future system specific mods are possible.  Each system will be independent, and
+-- potentially out of sync.
+
+system implementation quad_redundant_flt_system.impl
+subcomponents
+ flt_sys_1: system flt_system::flt_system.impl1;
+ flt_sys_2: system flt_system::flt_system.impl2;
+ flt_sys_3: system flt_system::flt_system.impl3;
+ flt_sys_4: system flt_system::flt_system.impl4; 
+connections
+  -- example connections...one flt_system to other three.
+  -- if fully interconnected, will need to show more connections, depending on
+  -- redundancy pattern
+  -- this shows logical connections
+  -- if you need to show hardware connections, you would do that in a different
+  -- hardware config package.  To add more detail you would need to specify 
+  -- allowed and actual bindings of the flt_sw to the flt_computer.
+  c1: port flt_sys_1.outflight_data -> flt_sys_2.inflight_data;
+  c2: port flt_sys_1.outflight_data -> flt_sys_3.inflight_data;
+  c3: port flt_sys_1.outflight_data -> flt_sys_4.inflight_data;
+  
+  c4: port flt_sys_2.outflight_data -> flt_sys_1.inflight_data;
+  c5: port flt_sys_3.outflight_data -> flt_sys_1.inflight_data;
+  c6: port flt_sys_4.outflight_data -> flt_sys_1.inflight_data;
+ end quad_redundant_flt_system.impl ;
+
+
+---- second approach, the composition of one generic system replicated 4 times
+-- in this example, all four flight systems are guaranteed to be identical. If
+-- a change is made to either the sw or the hw, all four systems in this composition
+-- will be identical.
+
+system implementation quad_redundant_flt_system.generic
+subcomponents
+  flt_sys_1: system flt_system::flt_system.generic;
+  flt_sys_2: system flt_system::flt_system.generic;
+  flt_sys_3: system flt_system::flt_system.generic;
+  flt_sys_4: system flt_system::flt_system.generic;  
+connections
+  c1: port flt_sys_1.outflight_data <-> flt_sys_2.inflight_data;
+  c2: port flt_sys_1.outflight_data <-> flt_sys_3.inflight_data;
+  c3: port flt_sys_1.outflight_data <-> flt_sys_4.inflight_data;
+  
+  c4: port flt_sys_2.outflight_data <-> flt_sys_1.inflight_data;
+  c5: port flt_sys_3.outflight_data <-> flt_sys_1.inflight_data;
+  c6: port flt_sys_4.outflight_data <-> flt_sys_1.inflight_data;
+  -- add additional connections if necessary, eg. to make all systems fully interconnected
+end quad_redundant_flt_system.generic ;
+
+
+end top_level_flt_assembly ;

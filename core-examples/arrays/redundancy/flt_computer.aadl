@@ -1,0 +1,49 @@
+package flt_computer
+public
+with flt_sw,SEI;
+system flt_computer
+  
+end flt_computer ;
+
+processor power_PC
+  
+end power_PC ;
+
+system implementation flt_computer.impl1
+subcomponents
+ my_flt_computer: processor power_PC;
+connections
+  none;
+end flt_computer.impl1 ;
+
+system implementation flt_computer.impl2
+subcomponents
+ my_flt_computer: processor power_PC;
+connections
+  none;
+end flt_computer.impl2 ;
+
+system implementation flt_computer.impl3
+subcomponents
+ my_flt_computer: processor power_PC;
+connections
+  none;
+end flt_computer.impl3 ;
+
+system implementation flt_computer.impl4
+subcomponents
+ my_flt_computer: processor power_PC;
+connections
+  none;
+end flt_computer.impl4 ;
+
+-- 2nd approach, create a generic hw system 
+-- with the intention of replicating it n times
+system implementation flt_computer.generic
+subcomponents
+ my_flt_computer: processor power_PC;
+connections
+  none;
+end flt_computer.generic ;
+
+end flt_computer ;

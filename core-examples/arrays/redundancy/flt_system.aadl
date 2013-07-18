@@ -1,0 +1,111 @@
+package flt_system
+public
+with flt_sw, flt_computer,SEI;
+
+system flt_system
+features
+	inflight_data:  in data port;
+	outflight_data:  out data port;
+end flt_system ;
+
+-- one approach: create four implementations 
+-- this allows the modification of each implementation should it
+-- be necessary down the road
+system implementation flt_system.impl1
+subcomponents
+  sw1: system flt_sw::flt_sw_apps.impl1;
+  hw1: system flt_computer::flt_computer.impl1;
+ connections
+  none;
+end flt_system.impl1 ;
+
+system implementation flt_system.impl2
+subcomponents
+  sw: system flt_sw::flt_sw_apps.impl2;
+  hw: system flt_computer::flt_computer.impl2;
+connections
+  none;
+end flt_system.impl2 ;
+
+system implementation flt_system.impl3
+subcomponents
+  sw: system flt_sw::flt_sw_apps.impl3;
+  hw: system flt_computer::flt_computer.impl3;
+connections
+  none;
+end flt_system.impl3 ;
+
+system implementation flt_system.impl4
+subcomponents
+  sw: system flt_sw::flt_sw_apps.impl4;
+  hw: system flt_computer::flt_computer.impl4;
+connections
+  none;
+end flt_system.impl4 ;
+
+
+-- a second approach
+-- A generic hw-sw system with the expectation of replicating it n times
+system implementation flt_system.generic
+subcomponents
+  sw: system flt_sw::flt_sw_apps.generic;
+  hw: system flt_computer::flt_computer.generic;
+connections
+  none;
+end flt_system.generic ;
+
+
+-- Third approach - quad redundant fully connected
+system implementation flt_system.impl
+subcomponents
+  my_flt_system: system flt_system.generic[4];
+connections
+ c1: port my_flt_system.outflight_data -> my_flt_system.inflight_data {
+ Connection_Pattern => ((All_To_All));
+ };
+end flt_system.impl ;
+
+
+-- fourth approach - quad redundant connected to voter
+system voter
+features
+	flt_input: in data port[4];
+	flt_output: out data port;
+end voter ;
+	
+system implementation flt_system.impl_quad
+subcomponents
+  my_flt_system: system flt_system.generic[4];
+  my_voter: system voter;
+connections
+ c1: port my_flt_system.outflight_data -> my_voter.flt_input
+{Connection_Pattern => ((One_To_One));};
+ 
+-- {
+-- --Connection_Pattern => ((Next_Next));
+-- 
+-- 
+-- Connection_Set =>  ([src=>(1);dst=>(1);]
+--	,[src=>(2);dst=>(2);]
+--	,[src=>(3);dst=>(3);]
+--	,[src=>(4);dst=>(4);]
+--);
+--};
+end flt_system.impl_quad;
+
+-- fifth approach - quad redundant with enumerated/explicit connections
+-- element1 -> element3, element2-> element 4
+	
+system implementation flt_system.impl_quad2
+subcomponents
+  my_flt_system: system flt_system.generic[4];
+ 
+connections
+ c1: port my_flt_system.outflight_data -> my_flt_system.inflight_data {
+ Connection_Set =>  ([src=>(1);dst=>(3);]
+	,[src=>(2);dst=>(4);]);
+ };
+
+end flt_system.impl_quad2 ;
+
+end flt_system ;
