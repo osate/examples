@@ -22,7 +22,9 @@ with ErrorLibrary, ErrorModelLibrary;
     		PositionReading: out propagation  {ServiceOmission,ValueError,ItemOmission};
     	flows
     	
-		 ef1:error source PositionReading {ServiceOmission,ValueError,ItemOmission} when Failed;
+		 ef1:error source PositionReading {ServiceOmission} when Failed;
+		 ef2:error source PositionReading {ValueError} when Failed;
+		 ef3:error source PositionReading {ItemOmission} when Failed;
 	end propagations;
 	properties
 	-- property is associated with the error behavior state as the source of an error source.
