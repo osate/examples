@@ -1,0 +1,52 @@
+package WheelBrake::CommandControl
+public
+with GenericFunctions;
+with WBSPS,EMV2,ARP4761;
+with WheelBrake::Generic;
+
+
+system CommandControl extends WheelBrake::Generic::GenericFunction
+features
+	fromBSCU : feature;
+end CommandControl;
+
+system implementation CommandControl.basic extends WheelBrake::Generic::GenericFunction.basic
+subcomponents
+	Control_Primary : system GenericFunctions::Generic.basic;
+	Control_Secondary : system GenericFunctions::Generic.basic;
+properties
+	WBSPS::IsFunction => true;
+annex EMV2 {**
+	use types WBSErrorLib;
+	use behavior WBSErrorLib::Twostate;
+
+	error propagations
+		fromBSCU : out propagation;
+	flows
+		f1 : error source fromBSCU;
+	end propagations;
+	
+	
+	component error behavior
+	events
+		lossBrakingCommand : error event;
+	transitions
+		t1 : Operational -[lossBrakingCommand]-> Failed;
+		t2 : Operational -[ fromElectrical ]-> Failed;
+	propagations
+		p1 : Failed -[]-> fromBSCU;
+	end component;
+
+	composite error behavior
+	states
+		[Control_Primary.Failed or Control_Secondary.Failed]-> Failed;
+	end composite;
+	properties
+		--  See AIR6110 page 49 for details
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 3.3e-5 ; Distribution => Poisson;] applies to lossBrakingCommand;
+**};
+end CommandControl.basic;
+
+
+
+end WheelBrake::CommandControl;

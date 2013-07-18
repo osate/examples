@@ -1,0 +1,43 @@
+package WBSErrorLib
+public
+annex EMV2 {**
+	error types
+	WBError: type;
+	HydraulicLossBlue : type;
+	HydraulicLossGreen : type;
+	HydraulicLossComponents : type;
+	
+	TotalWBLoss: type extends WBError;
+	TotalWBLossAnunciated: type extends TotalWBLoss;
+	TotalWBLossUnanunciated: type extends TotalWBLoss;
+	PartialSymmetricalWBLoss: type extends WBError;
+	PartialSymmetricalWBLossAnunciated: type extends PartialSymmetricalWBLoss;
+	PartialSymmetricalWBLossUnanunciated: type extends PartialSymmetricalWBLoss;
+	AssymetricalWBLoss: type extends WBError;
+	InadvertentWB: type extends WBError;
+	
+	WBErrorSet: type set {TotalWBLossAnunciated,TotalWBLossUnanunciated,PartialSymmetricalWBLoss,
+		AssymetricalWBLoss,InadvertentWB
+	};
+	
+	HydraulicErrors: type set {HydraulicLossBlue,HydraulicLossGreen,HydraulicLossComponents};
+	end types;
+	
+	error behavior Twostate
+	use types WBSErrorLib;
+	states
+		Operational:initial state;
+		failed:state ;
+	end behavior;
+	
+	error behavior TwostateWBS 
+	use types WBSErrorLib;
+	states
+		Operational:initial state;
+-- WORK
+--		failed:state {TotalWBLoss,PartialSymmetricalWBLoss,AssymetricalWBLoss,InadvertentWB};
+-- NOT WORKING
+		failed:state {TotalWBLossAnunciated,TotalWBLossUnanunciated,PartialSymmetricalWBLoss,AssymetricalWBLoss,InadvertentWB};
+	end behavior;
+**};
+end WBSErrorLib;

@@ -1,0 +1,59 @@
+package WheelBrake::Generic
+public
+with GenericFunctions;
+with WBSPS,EMV2,ARP4761;
+
+system GenericFunction
+features
+	fromElectrical : feature;
+	fromHydraulic  : feature;
+	fromAlert      : feature;
+	fromSteering   : feature;
+	fromStatus     : feature;
+properties
+	WBSPS::IsFunction => true;
+annex EMV2 {**
+	use types WBSErrorLib;
+	use behavior WBSErrorLib::Twostate;
+
+	error propagations
+		fromElectrical : in propagation;
+		fromHydraulic  : in propagation HydraulicErrors;
+		fromAlert      : in propagation;
+		fromSteering   : in propagation;
+		fromStatus     : in propagation;
+	flows
+		f1 : error sink fromElectrical;
+		f2 : error sink fromHydraulic HydraulicErrors;
+		f3 : error sink fromAlert;
+		f4 : error sink fromSteering;
+		f5 : error sink fromStatus;
+	end propagations;	
+**};
+end GenericFunction;
+
+
+system implementation GenericFunction.basic
+end GenericFunction.basic;
+
+
+system GenericBrakeSystem
+properties
+	WBSPS::IsFunction => true;
+annex EMV2 {**
+	use types WBSErrorLib;
+	use behavior WBSErrorLib::Twostate;
+
+	component error behavior
+	events
+		Failure : error event;
+	transitions
+		t1 : Operational -[ Failure ]-> Failed;
+	end component;
+**};
+end GenericBrakeSystem;
+
+system implementation GenericBrakeSystem.basic
+end GenericBrakeSystem.basic;
+
+end WheelBrake::Generic;
