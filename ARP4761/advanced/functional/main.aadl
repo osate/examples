@@ -75,7 +75,7 @@ annex EMV2 {**
 
 	composite error behavior
 	states
-		[DecelerateWheels.Failed or DecelerateThrottle.Failed]-> Failed;
+		[DecelerateWheels.Failed{TotalWBLossAnunciated} or DecelerateWheels.Failed{TotalWBLossUnanunciated} or DecelerateThrottle.Failed]-> Failed;
 	end composite;                
  **};
 end DecelerateAircraft.basic;
