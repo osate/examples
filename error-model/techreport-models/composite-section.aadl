@@ -1,0 +1,28 @@
+package composite_section
+public
+	with EMV2;
+  
+	device thermostat
+  	annex EMV2 {** 
+		use behavior ErrorModelLibrary::Simple;  
+	**};
+	end thermostat;
+ 
+	system temp_regulator
+  	end temp_regulator; 
+  
+	system implementation temp_regulator.i
+    subcomponents
+		t1: device Thermostat;
+		t2: device Thermostat;
+	annex EMV2 {** 
+		use behavior ErrorModelLibrary::Simple;
+		composite error behavior
+		states
+			[t1.Operational or t2.Operational]-> Operational; 
+			[t1.Failed and t2.Failed]-> Failed;
+		end composite;  
+	**};
+  	end temp_regulator.i;
+  
+end composite_section; 
