@@ -1,0 +1,37 @@
+package fanout
+public
+
+data d
+end d;
+
+system producer
+features
+	f1 : out event data port d {Fan_Out_Policy => Broadcast;};
+end producer;
+
+system consumer
+features
+	f1 : in event data port d;
+	f2 : in event data port d;
+end consumer;
+
+bus mybus
+end mybus;
+
+system main
+end main;
+
+system implementation main.i
+subcomponents
+	p1 : system producer;
+	c1 : system consumer;
+	c2 : system consumer;
+	b : bus mybus;
+connections
+	port p1.f1 -> c1.f1 {Actual_Connection_Binding => (reference (b));};
+	port p1.f1 -> c1.f2 {Actual_Connection_Binding => (reference (b));};
+	port p1.f1 -> c2.f1 {Actual_Connection_Binding => (reference (b));};
+	port p1.f1 -> c2.f2 {Actual_Connection_Binding => (reference (b));};
+end main.i;
+
+end fanout;
