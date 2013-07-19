@@ -47,11 +47,11 @@ annex EMV2 {**
 	use behavior WBSErrorLib::Twostate;
 
 	error propagations
-		fromElectrical : in propagation;
-		fromHydraulic  : in propagation;
-		fromAlert      : in propagation;
-		fromSteering   : in propagation;
-		fromStatus     : in propagation;
+		fromElectrical : in propagation {WBError};
+		fromHydraulic  : in propagation HydraulicErrors;
+		fromAlert      : in propagation {WBError};
+		fromSteering   : in propagation {WBError};
+		fromStatus     : in propagation {WBError};
 	end propagations;	
 **};
 end DecelerateAircraft;

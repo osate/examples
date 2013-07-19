@@ -21,9 +21,9 @@ annex EMV2 {**
 	use behavior WBSErrorLib::Twostate;
 
 	error propagations
-		fromBSCU : out propagation;
+		fromBSCU : out propagation {WBError};
 	flows
-		f1 : error source fromBSCU;
+		f1 : error source fromBSCU {WBError};
 	end propagations;
 	
 	
@@ -32,9 +32,9 @@ annex EMV2 {**
 		lossBrakingCommand : error event;
 	transitions
 		t1 : Operational -[lossBrakingCommand]-> Failed;
-		t2 : Operational -[ fromElectrical ]-> Failed;
+		t2 : Operational -[ fromElectrical {WBError} ]-> Failed;
 	propagations
-		p1 : Failed -[]-> fromBSCU;
+		p1 : Failed -[]-> fromBSCU(WBError);
 	end component;
 
 	composite error behavior

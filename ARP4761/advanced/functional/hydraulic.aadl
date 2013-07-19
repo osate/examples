@@ -10,7 +10,7 @@ annex EMV2 {**
 	use types WBSErrorLib;
 	use behavior WBSErrorLib::Twostate;
 	error propagations
-		isFailing : out propagation HydraulicErrors;
+		isFailing : out propagation HydraulicErrors; 
 	flows
 		f1 : error source isFailing HydraulicErrors;
 	end propagations;

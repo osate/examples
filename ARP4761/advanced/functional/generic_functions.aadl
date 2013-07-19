@@ -10,11 +10,12 @@ features
 properties
 	WBSPS::IsFunction => true;
 annex EMV2 {**
+	use types WBSErrorLib;
 	use behavior WBSErrorLib::Twostate;
 	error propagations
-		isFailing : out propagation;
+		isFailing : out propagation {WBError};
 	flows
-		f1 : error source isFailing;
+		f1 : error source isFailing {WBError};
 	end propagations;
 	
 	component error behavior
@@ -23,7 +24,7 @@ annex EMV2 {**
 	transitions
 		t1 : Operational -[ Failure ]-> Failed;
 	propagations
-		p1 : Failed -[]-> isFailing;
+		p1 : Failed -[]-> isFailing (WBError);
 	end component;
 **};
 end Generic;

@@ -17,17 +17,17 @@ annex EMV2 {**
 
 	error propagations
 		fromHydraulic 	: in propagation HydraulicErrors;
-		fromBSCU  		: in propagation;
+		fromBSCU  		: in propagation {WBError};
 	flows
 		f1 : error sink fromHydraulic HydraulicErrors;
-		f2 : error sink fromBSCU;	
+		f2 : error sink fromBSCU{WBError};	
 	end propagations;
 	
 	component error behavior
 	transitions
 		t1 : Operational -[ fromHydraulic{HydraulicLossGreen} ]-> Failed;
 		t2 : Operational -[ fromHydraulic{HydraulicLossComponents} ]-> Failed;
-		t3 : Operational -[ fromBSCU ]-> Failed;
+		t3 : Operational -[ fromBSCU{WBError} ]-> Failed;
 	end component;
 	
 	properties
@@ -48,9 +48,9 @@ annex EMV2 {**
 	use behavior WBSErrorLib::Twostate;
 
 	error propagations
-		fromBSCU  		: in propagation;
+		fromBSCU  		: in propagation {WBError};
 	flows
-		f2 : error sink fromBSCU;	
+		f2 : error sink fromBSCU {WBError};	
 	end propagations;
 
 **};
@@ -94,11 +94,11 @@ annex EMV2 {**
 	use behavior WBSErrorLib::Twostate;
 
 	error propagations
-		fromElectrical : in propagation;
+		fromElectrical : in propagation {WBError};
 		fromHydraulic  : in propagation HydraulicErrors;
-		fromAlert      : in propagation;
-		fromSteering   : in propagation;
-		fromStatus     : in propagation;
+		fromAlert      : in propagation {WBError};
+		fromSteering   : in propagation {WBError};
+		fromStatus     : in propagation {WBError};
 
 	end propagations;	
 **};
@@ -143,11 +143,11 @@ annex EMV2 {**
 
 
 	error propagations
-		fromElectrical : in propagation;
-		fromHydraulic  : in propagation;
-		fromAlert      : in propagation;
-		fromSteering   : in propagation;
-		fromStatus     : in propagation;
+		fromElectrical : in propagation{WBError};
+		fromHydraulic  : in propagation{WBError};
+		fromAlert      : in propagation{WBError};
+		fromSteering   : in propagation{WBError};
+		fromStatus     : in propagation{WBError};
 
 	end propagations;	
 
@@ -156,8 +156,9 @@ annex EMV2 {**
 	states
 	    -- FHA for Unnanunciated loss of all wheel
 	    -- from AIR6110 page 49
-		[decelerateonground.Failed and in fromAlert]-> Failed(TotalWBLossAnunciated);
---		[decelerateonground.Failed and in fromAlert{NoError}]-> Failed(TotalWBLossAnunciated);
+--		[decelerateonground.Failed]-> Failed(TotalWBLossAnunciated);
+		[decelerateonground.Failed]-> Failed(TotalWBLossUnAnunciated); 
+		[decelerateonground.Failed and in fromAlert{WBError}]-> Failed(TotalWBLossAnunciated);
 --		[decelerateonground.Failed]-> Failed;  
 	end composite;
  

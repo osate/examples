@@ -17,17 +17,17 @@ annex EMV2 {**
 	use behavior WBSErrorLib::Twostate;
 
 	error propagations
-		fromElectrical : in propagation;
+		fromElectrical : in propagation {WBError};
 		fromHydraulic  : in propagation HydraulicErrors;
-		fromAlert      : in propagation;
-		fromSteering   : in propagation;
-		fromStatus     : in propagation;
+		fromAlert      : in propagation {WBError};
+		fromSteering   : in propagation {WBError};
+		fromStatus     : in propagation {WBError};
 	flows
-		f1 : error sink fromElectrical;
+		f1 : error sink fromElectrical {WBError};
 		f2 : error sink fromHydraulic HydraulicErrors;
-		f3 : error sink fromAlert;
-		f4 : error sink fromSteering;
-		f5 : error sink fromStatus;
+		f3 : error sink fromAlert {WBError};
+		f4 : error sink fromSteering {WBError};
+		f5 : error sink fromStatus {WBError};
 	end propagations;	
 **};
 end GenericFunction;
