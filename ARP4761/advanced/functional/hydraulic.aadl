@@ -1,10 +1,10 @@
-package Hydraulic
+package functional::Hydraulic
 public
-with WBSPS,EMV2,ARP4761,GenericFunctions;
+with WBSPS,EMV2,ARP4761,functional::GenericFunctions;
 
 
 
-system Hydraulic extends GenericFunctions::Generic
+system Hydraulic extends functional::GenericFunctions::Generic
 
 annex EMV2 {**
 	use types WBSErrorLib;
@@ -36,7 +36,7 @@ annex EMV2 {**
 **};
 end Hydraulic;
 
-system implementation Hydraulic.basic extends GenericFunctions::Generic.basic
+system implementation Hydraulic.basic extends functional::GenericFunctions::Generic.basic
 end Hydraulic.basic;
 
-end Hydraulic;
+end functional::Hydraulic;

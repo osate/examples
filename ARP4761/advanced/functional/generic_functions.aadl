@@ -1,4 +1,4 @@
-package GenericFunctions
+package functional::GenericFunctions
 public
 with WBSPS,EMV2,ARP4761;
 
@@ -32,4 +32,4 @@ end Generic;
 system implementation Generic.basic
 end Generic.basic;
 
-end GenericFunctions;
+end functional::GenericFunctions;

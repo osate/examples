@@ -1,6 +1,6 @@
-package WheelBrake::Generic
+package functional::WheelBrake::Generic
 public
-with GenericFunctions;
+with functional::GenericFunctions;
 with WBSPS,EMV2,ARP4761;
 
 system GenericFunction
@@ -56,4 +56,4 @@ end GenericBrakeSystem;
 system implementation GenericBrakeSystem.basic
 end GenericBrakeSystem.basic;
 
-end WheelBrake::Generic;
+end functional::WheelBrake::Generic;

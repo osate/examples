@@ -1,11 +1,11 @@
-package WheelBrake::Main
+package functional::WheelBrake::Main
 public
-with GenericFunctions;
+with functional::GenericFunctions;
 with WBSPS,EMV2,ARP4761;
-with WheelBrake::Generic;
-with WheelBrake::CommandControl;
+with functional::WheelBrake::Generic;
+with functional::WheelBrake::CommandControl;
 
-system NormalBrakeSystem extends WheelBrake::Generic::GenericBrakeSystem
+system NormalBrakeSystem extends functional::WheelBrake::Generic::GenericBrakeSystem
 features
 	fromHydraulic: feature;
 	fromBSCU     : feature;
@@ -38,7 +38,7 @@ end NormalBrakeSystem;
 
 
 
-system DecelerateOnGround extends WheelBrake::Generic::GenericFunction
+system DecelerateOnGround extends functional::WheelBrake::Generic::GenericFunction
 features
 	fromBSCU     : feature;
 properties
@@ -56,11 +56,11 @@ annex EMV2 {**
 **};
 end DecelerateOnGround;
 
-system implementation DecelerateOnGround.basic extends WheelBrake::Generic::GenericFunction.basic
+system implementation DecelerateOnGround.basic extends functional::WheelBrake::Generic::GenericFunction.basic
 subcomponents
 	normal    : system NormalBrakeSystem;
-	alternate : system WheelBrake::Generic::GenericBrakeSystem;
-	emergency : system WheelBrake::Generic::GenericBrakeSystem;
+	alternate : system functional::WheelBrake::Generic::GenericBrakeSystem;
+	emergency : system functional::WheelBrake::Generic::GenericBrakeSystem;
 connections
 	c1 : feature fromBSCU -> normal.fromBSCU;
 annex EMV2 {**
@@ -108,9 +108,9 @@ system implementation DecelerateWheels.basic
 subcomponents
     -- List of functions is available in AIR6110 page 30
 	decelerateonground : system DecelerateOnGround.basic;
-	directionalcontrol     : system WheelBrake::CommandControl::CommandControl.basic;
-	stopmainlanding      : system WheelBrake::Generic::GenericFunction.basic;
-	preventmotion         : system WheelBrake::Generic::GenericFunction.basic;
+	directionalcontrol     : system functional::WheelBrake::CommandControl::CommandControl.basic;
+	stopmainlanding      : system functional::WheelBrake::Generic::GenericFunction.basic;
+	preventmotion         : system functional::WheelBrake::Generic::GenericFunction.basic;
 connections
 	c11 : feature fromElectrical -> decelerateonground.fromElectrical;
 	c12 : feature fromHydraulic -> decelerateonground.fromHydraulic;
@@ -215,4 +215,4 @@ annex EMV2 {**
 end DecelerateWheels.basic;
 
 
-end WheelBrake::Main;
+end functional::WheelBrake::Main;

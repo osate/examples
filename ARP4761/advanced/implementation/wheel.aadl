@@ -1,0 +1,76 @@
+package impl::wheel
+
+public
+
+with common;
+
+
+system wheel
+end wheel;
+
+
+--
+--  This is an example of one wheel with one
+--  input. We do not represent the two channels,
+--  we rather abstract the two channels into a
+--  single one.
+--
+
+system wheel_one_input extends wheel
+features
+	input : requires bus access common::pressure.i;
+annex EMV2 {**
+	use types WBSErrorLib;
+	use behavior WBSErrorLib::Twostate;
+	
+	error propagations
+		input : in propagation{NoService};
+	flows
+		ns1 : error sink input{NoService};
+	end propagations;
+	
+	component error behavior
+	transitions
+		t1 : Operational -[input{NoService}]-> Failed;
+	end component;
+**};
+end wheel_one_input;
+
+system implementation wheel_one_input.i
+end wheel_one_input.i;
+
+
+--
+--  This is an example of a wheel with two
+--  input, one from each pump. The other model
+--  abstracts the two pumps in a single bus.
+--  This model explicitly represents the two channels.
+--
+
+system wheel_two_inputs extends wheel_one_input
+features
+	green_input : requires bus access common::pressure.i;
+	blue_input : requires bus access common::pressure.i;
+annex EMV2 {**
+	use types WBSErrorLib;
+	use behavior WBSErrorLib::Twostate;
+	error propagations
+		green_input : in propagation{NoService};
+		blue_input : in propagation{NoService};
+	flows
+		ns1 : error sink green_input{NoService};
+		ns2 : error sink blue_input{NoService};
+	end propagations;
+	
+	component error behavior
+	transitions
+		t1 : Operational -[ green_input{NoService}]-> Failed;
+		t2 : Operational -[ blue_input{NoService}]-> Failed;
+	end component;
+**};
+end wheel_two_inputs;
+
+system implementation wheel_two_inputs.i
+end wheel_two_inputs.i;
+
+end impl::wheel;

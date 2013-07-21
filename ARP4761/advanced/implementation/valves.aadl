@@ -1,9 +1,9 @@
-package valves
+package impl::valves
 
 public
 
 with base_types;
-with common; 
+with common;
 
 system generic
 features
@@ -77,7 +77,7 @@ features
 	cmd_nor          : in data port common::command.skid;
 	cmd_alt          : in data port common::command.skid;
 annex EMV2 {**
-	use types error_library;
+	use types WBSErrorLib;
 	
 	error propagations
 		select_alternate    : in propagation{NoValue};
@@ -103,7 +103,7 @@ system selector_basic extends selector
 features
 	output           : provides bus access common::pressure.i;
 annex EMV2 {**
-	use types error_library;
+	use types WBSErrorLib;
 	
 	error propagations
 		output : out propagation{NoService};
@@ -121,8 +121,8 @@ features
 	green_output : provides bus access common::pressure.i;
 	blue_output  : provides bus access common::pressure.i;
 annex EMV2 {**
-	use types       error_library;
-	use behavior    error_library::simple;
+	use types       WBSErrorLib;
+	use behavior    WBSErrorLib::TwoState;
 	error propagations
 		green_output 	: out propagation{NoService};
 		blue_output 	: out propagation{NoService};
@@ -150,5 +150,5 @@ annex EMV2 {**
 end selector_detailed;
 
 
-end valves;
+end impl::valves;
 

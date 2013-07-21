@@ -1,0 +1,43 @@
+package impl::common
+
+public
+
+bus power
+end power;
+
+bus implementation power.generic
+end power.generic;
+
+bus pwm
+end pwm;
+
+bus implementation pwm.generic
+end pwm.generic;
+ 
+data command
+end command;
+
+data implementation command.brake
+end command.brake;
+
+data implementation command.skid
+end command.skid;
+
+data implementation command.pedal
+end command.pedal;
+
+data implementation command.announce
+end command.announce;
+
+-- The pressure bus represents the pressure sent/received by
+-- other devices/pumps
+bus pressure
+end pressure;
+
+
+bus implementation pressure.i
+end pressure.i;
+
+
+
+end impl::common;

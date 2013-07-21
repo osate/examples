@@ -1,0 +1,22 @@
+package integration::main
+
+public
+
+with functional::main;
+with impl::wbs;
+
+system main
+end main;
+
+system implementation main.impl
+subcomponents
+	functional : system functional::main::Aircraft.basic;
+	wbs_impl   : system impl::wbs::wbs.ima;
+properties
+--	Actual_Processor_Binding => (reference (functional.decelerate.DecelerateWheels)) applies to wbs_impl.bscu;
+	Actual_Processor_Binding => (reference (wbs_impl.bscu)) applies to functional.decelerate.DecelerateWheels;
+
+end main.impl;
+
+
+end integration::main;

@@ -7,6 +7,14 @@ annex EMV2 {**
 	HydraulicLossGreen : type;
 	HydraulicLossComponents : type;
 	
+	NoService: type extends WBError;
+	NoValue: type extends NoService;
+	NoPower: type extends NoService;
+	
+	SoftwareFailure: type;
+	HardwareFailure: type;
+	
+	
 	TotalWBLoss: type extends WBError;
 	TotalWBLossAnunciated: type extends TotalWBLoss;
 	TotalWBLossUnanunciated: type extends TotalWBLoss;

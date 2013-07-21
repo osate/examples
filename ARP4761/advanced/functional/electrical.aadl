@@ -1,13 +1,13 @@
-package Electrical
+package functional::Electrical
 public
-with WBSPS,EMV2,ARP4761,GenericFunctions;
+with WBSPS,EMV2,ARP4761,functional::GenericFunctions;
 
 
 
-system Electrical extends GenericFunctions::Generic
+system Electrical extends functional::GenericFunctions::Generic
 end Electrical;
 
-system implementation Electrical.basic extends GenericFunctions::Generic.basic
+system implementation Electrical.basic extends functional::GenericFunctions::Generic.basic
 end Electrical.basic;
 
-end Electrical;
+end functional::Electrical;

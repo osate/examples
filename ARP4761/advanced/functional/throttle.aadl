@@ -1,6 +1,6 @@
-package Throttle
+package functional::Throttle
 public
-with GenericFunctions;
+with functional::GenericFunctions;
 with WBSPS,EMV2,ARP4761;
 
 
@@ -16,7 +16,7 @@ annex EMV2 {**
 **};
 end DecelerateThrottle;
 
-end Throttle;
+end functional::Throttle;
 
 
 

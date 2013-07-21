@@ -1,7 +1,7 @@
-package main
+package functional::main
 public
-with GenericFunctions;
-with WBSPS,EMV2,ARP4761,WheelBrake::Main,Throttle,Electrical,Hydraulic;
+with functional::GenericFunctions;
+with WBSPS,EMV2,ARP4761,functional::WheelBrake::Main,functional::Throttle,functional::Electrical,functional::Hydraulic;
 
 system Aircraft
 end Aircraft;
@@ -9,11 +9,11 @@ end Aircraft;
 system implementation Aircraft.basic
 subcomponents
 	decelerate : system DecelerateAircraft.basic;
-	electrical : system Electrical::Electrical.basic;
-	hydraulic  : system Hydraulic::Hydraulic.basic;
-	alert      : system GenericFunctions::Generic.basic;
-	steering   : system GenericFunctions::Generic.basic;
-	status     : system GenericFunctions::Generic.basic;
+	electrical : system functional::Electrical::Electrical.basic;
+	hydraulic  : system functional::Hydraulic::Hydraulic.basic;
+	alert      : system functional::GenericFunctions::Generic.basic;
+	steering   : system functional::GenericFunctions::Generic.basic;
+	status     : system functional::GenericFunctions::Generic.basic;
 connections
 	c1 : feature electrical.isFailing -> decelerate.fromElectrical;
 	c2 : feature hydraulic.isFailing -> decelerate.fromHydraulic;
@@ -61,8 +61,8 @@ end DecelerateAircraft;
  
 system implementation DecelerateAircraft.basic
 subcomponents
-	DecelerateWheels  : system   WheelBrake::Main::DecelerateWheels.basic;
-	DecelerateThrottle: system   Throttle::DecelerateThrottle;
+	DecelerateWheels  : system   functional::WheelBrake::Main::DecelerateWheels.basic;
+	DecelerateThrottle: system   functional::Throttle::DecelerateThrottle;
 connections
 	c1 : feature fromElectrical -> DecelerateWheels.fromElectrical;
 	c2 : feature fromHydraulic  -> DecelerateWheels.fromHydraulic;
@@ -81,4 +81,4 @@ annex EMV2 {**
 end DecelerateAircraft.basic;
 
 
-end main;
+end functional::main;
