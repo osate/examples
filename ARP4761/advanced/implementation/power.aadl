@@ -13,9 +13,11 @@ annex EMV2 {**
 	use behavior WBSErrorLib::Twostate;
 
 	error propagations
-		socket : out propagation {NoPower};
+		socket 		: out propagation {NoPower};
+		bindings 	: out propagation {NoPower};
 	flows
 		f1 : error source socket{NoPower};
+		f2 : error source bindings{NoPower};
 	end propagations;
 	component error behavior
 	events
@@ -74,6 +76,16 @@ system power
 features
 	line1 : provides bus access common::power.generic;
 	line2 : provides bus access common::power.generic;
+annex EMV2 {**
+	use types WBSErrorLib;
+	use behavior WBSErrorLib::Twostate;
+
+	error propagations
+		bindings 	: out propagation {NoPower};
+	flows
+		f0 : error source bindings{NoPower};
+	end propagations;
+**};
 end power;
 
 system implementation power.generic

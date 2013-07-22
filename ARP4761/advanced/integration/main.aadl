@@ -20,8 +20,10 @@ properties
 --  runtime component. 
 	Actual_Processor_Binding => (reference (wbs_impl.bscu)) applies to functional.alert;
 	Actual_Processor_Binding => (reference (wbs_impl)) applies to functional.decelerate.DecelerateWheels;
-	Actual_Processor_Binding => (reference (wbs_impl.blue_pump)) applies to functional.hydraulic;
-	Actual_Processor_Binding => (reference (wbs_impl.green_pump)) applies to functional.hydraulic;
+	Actual_Processor_Binding => (reference (wbs_impl.blue_pump),reference (wbs_impl.green_pump),reference (wbs_impl.accumulator)) applies to functional.hydraulic;
+	Actual_Processor_Binding => (reference (wbs_impl.power)) applies to functional.electrical;
+
+
 annex EMV2 {**
 	use types WBSErrorLib;
 	use behavior WBSErrorLib::Twostate;
