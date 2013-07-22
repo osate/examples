@@ -2,13 +2,13 @@ package impl::wbs
 
 public
 
-with bscu;
-with communication;
-with valves;
-with wheel;
-with pump;
-with power;
-with pedals;
+with impl::bscu;
+with impl::communication;
+with impl::valves;
+with impl::wheel;
+with impl::pump;
+with impl::power;
+with impl::pedals;
 with ARP4761;
 with EMV2;
 
@@ -22,32 +22,32 @@ end wbs;
 system implementation wbs.generic
 subcomponents
 	-- Pedal subsystem
-	pedals			: system pedals::pedals.generic;
+	pedals			: system impl::pedals::pedals.generic;
 
 	-- Power subsystem
-	power      		: system power::power.generic;
+	power      		: system impl::power::power.generic;
 	
     --  The two pumps at the top of the diagram
-	blue_pump  		: system pump::pump.i;
-	green_pump 		: system pump::pump.i;
+	blue_pump  		: system impl::pump::pump.i;
+	green_pump 		: system impl::pump::pump.i;
 	
 	--  The accumulator pump
-	accumulator		: system pump::pump.i;
+	accumulator		: system impl::pump::pump.i;
 	
 	--  The selector subsystem
-	selector   		: system valves::selector;
-	bscu       		: system bscu::bscu.generic;
+	selector   		: system impl::valves::selector;
+	bscu       		: system impl::bscu::bscu.generic;
 
-	wheel      		: system wheel::wheel;
+	wheel      		: system impl::wheel::wheel;
 	
 	-- Annunciation device
-	annunciation 	: device communication::annunciation.i;
+	annunciation 	: device impl::communication::annunciation.i;
 connections
     accu_to_sel: bus access selector.accumulator_input <-> accumulator.pressure_output;
 	power1     : bus access bscu.pwr1 <-> power.line1;
 	power2     : bus access power.line2 <-> bscu.pwr2;
 	pedal1     : port pedals.signal1 -> bscu.pedal1;
-	pedal2     : port pedals.signal2 -> bscu.pedal2;
+	pedal2     : port pedals.signal2 -> bscu.pedal2; 
 annex EMV2 {**
 	-- The WBS system has the following error states:
 	-- Operational
@@ -79,10 +79,10 @@ end wbs.generic;
 --  valves.
 system implementation wbs.basic extends wbs.generic
 subcomponents
-	bscu : refined to system bscu::bscu.basic;
+	bscu : refined to system impl::bscu::bscu.basic;
 	--  The selector subsystem
-	selector   : refined to system valves::selector_basic{Classifier_Substitution_Rule => Type_Extension;};
-	wheel      : refined to system wheel::wheel_one_input.i{Classifier_Substitution_Rule => Type_Extension;};
+	selector   : refined to system impl::valves::selector_basic{Classifier_Substitution_Rule => Type_Extension;};
+	wheel      : refined to system impl::wheel::wheel_one_input.i{Classifier_Substitution_Rule => Type_Extension;};
 connections 
 	blue_to_selector    : bus access blue_pump.pressure_output  <-> selector.blue_input; 
 	green_to_selector   : bus access green_pump.pressure_output <-> selector.green_input;
@@ -101,18 +101,18 @@ end wbs.basic;
 -- 
 system implementation wbs.detailed extends wbs.generic
 subcomponents
-	selector   : refined to system valves::selector_detailed{Classifier_Substitution_Rule => Type_Extension;};
-	shutoff    : system valves::boolean_shutoff;
-	green_skid : system valves::cmd_shutoff; 
-	blue_skid  : system valves::cmd_shutoff; 
-	wheel      : refined to system wheel::wheel_two_inputs.i {Classifier_Substitution_Rule => Type_Extension;}; 
+	selector   : refined to system impl::valves::selector_detailed{Classifier_Substitution_Rule => Type_Extension;};
+	shutoff    : system impl::valves::boolean_shutoff;
+	green_skid : system impl::valves::cmd_shutoff; 
+	blue_skid  : system impl::valves::cmd_shutoff; 
+	wheel      : refined to system impl::wheel::wheel_two_inputs.i {Classifier_Substitution_Rule => Type_Extension;}; 
 connections
     --  We connect the blue pump directly to the selector valve.
     --  For the green pump, we connect it to the shutoff valve that
-    --  is later connected to the selector valve after.
+    --  is later connected to the selector valve after. 
 	blue_to_selector    : bus access blue_pump.pressure_output  <-> selector.blue_input; 
 	green_to_shutoff    : bus access green_pump.pressure_output <-> shutoff.input;
-	shutoff_to_selector : bus access shutoff.output <-> selector.green_input;
+	shutoff_to_selector : bus access shutoff.output <-> selector.green_input; 
 	bscu_to_shutoff     : port bscu.Select_Alternate -> shutoff.boolean_input;
 	
 	bscu_to_selector    : port bscu.Select_Alternate -> selector.select_alternate;
@@ -124,7 +124,7 @@ connections
 	--  Connect the output pressure from the selector
 	--  to the anti-skid components
 	selector_to_gskid   : bus access selector.green_output <-> green_skid.input;
-	selector_to_bskid   : bus access selector.blue_output  <-> blue_skid.input;
+	selector_to_bskid   : bus access selector.blue_output  <-> blue_skid.input; 
 	
 	--  Connect the anti-skid system to the wheel. In this version,
 	--  we see the wheel as having two paths for getting the pressure.
@@ -136,13 +136,13 @@ end wbs.detailed;
 
 system implementation wbs.federated extends wbs.detailed
 subcomponents
-	bscu : refined to system bscu::bscu.federated;
+	bscu : refined to system impl::bscu::bscu.federated;
 end wbs.federated;
 
 
 system implementation wbs.ima extends wbs.detailed
 subcomponents
-	bscu : refined to system bscu::bscu.ima;
+	bscu : refined to system impl::bscu::bscu.ima;
 end wbs.ima;
 
 end impl::wbs;

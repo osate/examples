@@ -5,7 +5,6 @@ public
 with common;
 with platform;
 with Base_Types;
-with error_library;
 with EMV2;
 with ARP4761;
 

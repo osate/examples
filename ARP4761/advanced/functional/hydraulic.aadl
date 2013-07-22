@@ -10,9 +10,13 @@ annex EMV2 {**
 	use types WBSErrorLib;
 	use behavior WBSErrorLib::Twostate;
 	error propagations
+		processor : in propagation {NoService};
 		isFailing : out propagation HydraulicErrors; 
 	flows
 		f1 : error source isFailing HydraulicErrors;
+		f2 : error path processor{NoService} -> isFailing (HydraulicLossBlue);
+		f3 : error path processor{NoService} -> isFailing (HydraulicLossGreen);
+		f4 : error path processor{NoService} -> isFailing (HydraulicLossComponents);
 	end propagations;
 	
 	component error behavior

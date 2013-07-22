@@ -266,6 +266,8 @@ annex EMV2 {**
 	error propagations
 		pwr1   : in propagation {NoPower};
 		pwr2   : in propagation {NoPower};
+		pedal1 : in propagation {NoService};
+		pedal2 : in propagation {NoService};
 	end propagations;
 **};
 end bscu;
@@ -277,8 +279,9 @@ annex EMV2 {**
 	
 	error propagations
 	flows
-		es1   : error sink pwr1{NoPower};
-		es2   : error sink pwr2{NoPower};
+		es1   	: error sink pwr1{NoPower};
+		es2   	: error sink pwr2{NoPower};
+
 	end propagations;
 	component error behavior
 	transitions

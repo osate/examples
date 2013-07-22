@@ -10,8 +10,8 @@ features
 	input : requires bus access common::pressure.i;
 	output : provides bus access common::pressure.i;
 annex EMV2 {**
-	use types     error_library;
-	use behavior  error_library::simple;
+	use types WBSErrorLib;
+	use behavior WBSErrorLib::Twostate;
 	error propagations
 		input  : in propagation {NoService};
 		output : out propagation {NoService};
@@ -42,8 +42,8 @@ system cmd_shutoff extends generic
 features
 	cmd_input : in data port common::command.skid;
 annex EMV2 {**
-	use types     error_library;
-	use behavior  error_library::simple;
+	use types WBSErrorLib;
+	use behavior WBSErrorLib::Twostate;
 	
 	error propagations
 		cmd_input : in propagation {NoValue};
@@ -51,8 +51,8 @@ annex EMV2 {**
 	    --  We assume that if we get no value on the input, we do
 	    --  not produce any pressure at all. Then, we propagate a
 	    --  NoService error on the output.
-		f1 : error path cmd_input{NoValue} -> output(NoService);
-		f2 : error source output{NoService};
+		f1 : error path cmd_input{NoValue} 		-> output(NoService);
+		f3 : error source output{NoService};
 	end propagations;
 	
 	component error behavior
