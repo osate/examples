@@ -1,0 +1,41 @@
+package test_bindings
+
+public
+
+system s1
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior ErrorModelLibrary::Simple;
+	error propagations
+		bindings: out propagation {ValueError};
+	flows
+		f1 : error source bindings{ValueError};
+	end propagations;
+**};
+end s1;
+
+system s2
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior ErrorModelLibrary::Simple;
+	error propagations
+		processor: in propagation {ValueError};
+	flows
+		f1 : error sink processor{ValueError};
+	end propagations;
+**};
+end s2;
+
+
+system s3
+end s3;
+
+system implementation s3.i
+subcomponents
+	first : system s1;
+	second : system s2;
+properties
+	Actual_Processor_Binding => (reference (first)) applies to second;
+end s3.i;
+
+end test_bindings;
