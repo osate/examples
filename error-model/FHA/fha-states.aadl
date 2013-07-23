@@ -1,0 +1,176 @@
+package fha_states
+
+public
+
+with EMV2,ARP4761;
+
+
+system main
+end main;
+
+system implementation main.i
+subcomponents
+	s1 : system subsys1;
+	s2 : system subsys1;
+end main.i;
+
+system implementation main.i2
+subcomponents
+	s1 : system subsys2.i;
+	s2 : system subsys2.i;
+end main.i2;
+
+system subsys2
+annex EMV2 {**
+	use types FHAErrorLib;
+	
+	**};
+end subsys2;
+
+system implementation subsys2.i
+annex EMV2 {**
+	use types FHAErrorLib;
+	use behavior FHAErrorLib::TwostateWBS;
+
+
+
+
+	properties
+	
+		EMV2::hazard => 
+              [      crossreference => "no reference";
+              failure => "no failure";
+              phase => "";
+              description => ".";
+              comment => "";
+              ]
+              applies to Operational;
+	ARP4761::Severity => Hazardous applies to Operational;
+	ARP4761::Likelihood => Remote applies to Operational;
+		
+		EMV2::hazard => 
+              [      crossreference => "AIR6110 page 36";
+              failure => "Total Loss of wheel braking - Unannunciated loss of wheel braking";
+              phase => "Landing or RTO";
+              description => "Crew detects the failure when the brakes are operated. The crew uses spoilers and thrust reversers to the maximum extent possible. This may result in a runway overrun.";
+              comment => "";
+              ]
+              applies to Failed.TotalWBLossAnunciated;
+	ARP4761::Severity => Hazardous applies to Failed.TotalWBLossAnunciated;
+	ARP4761::Likelihood => Remote applies to Failed.TotalWBLossAnunciated;
+              
+
+
+	EMV2::hazard => 
+              [      crossreference => "AIR6110 page 36";
+              failure => "Total Loss of wheel braking - Annunciated loss of wheel braking";
+              phase => "Landing";
+              description => "Crew selects a more suitable airport, notifies emergency ground support, and prepares occupants for runway overrun. The crew uses spoilers and thrust reversers to the maximum extent possible.";
+              comment => "";
+              ]
+		applies to Failed.TotalWBLossUnanunciated;
+	ARP4761::Severity => Hazardous applies to Failed.TotalWBLossUnanunciated;      
+	ARP4761::Likelihood => Remote applies to Failed.TotalWBLossUnanunciated;
+	-- Probability should be 5e-7 according to AIR6110, page 49
+	EMV2::OccurrenceDistribution => [ ProbabilityValue => 5.0e-7 ; Distribution => Poisson;] applies to Failed.TotalWBLossUnanunciated;
+              
+	EMV2::hazard => 
+              [      crossreference => "AIR6110 page 36";
+              failure => "Partial Symmetrical Loss of Wheel Braking - Unannunciated partial symmetrical loss of wheel braking";
+              phase => "Landing or RTO";
+              description => "The crew detects the failure when the brakes are used. Crew uses available wheel braking, spoilers and thrust reversers available to maximum extent to decelerate the aircraft. The temperature on wheels of the loaded brakes increases and could reach point where wheel/fire failure occurs. Depending on number of brakes lost result could be an overrun.";
+              comment => "Potentially catastrophic – to be confirmed by analysis";
+              ]
+              applies to Failed.PartialSymmetricalWBLossUnAnunciated;
+	ARP4761::Severity => Hazardous applies to Failed.PartialSymmetricalWBLossUnAnunciated;      
+	ARP4761::Likelihood => Remote applies to Failed.PartialSymmetricalWBLossUnAnunciated;      
+              
+              
+	EMV2::hazard => 
+              [      crossreference => "AIR6110 page 36";
+              failure => "Partial Symmetrical Loss of Wheel Braking - Annunciated partial symmetrical loss of wheel braking";
+              phase => "Landing";
+              description => "The crew is aware that there is a partial loss of braking before landing. Crew uses wheel braking, spoilers and thrust reversers available to maximum extent to decelerate the aircraft. The temperature on wheels of the loaded brakes increases and could reach point where wheel/fire failure occurs. Depending on number of brakes lost result could be an overrun.";
+              comment => "";
+              ]
+              applies to Failed.PartialSymmetricalWBLossanunciated;
+	ARP4761::Severity => Major applies to Failed.PartialSymmetricalWBLossanunciated;   
+	ARP4761::Likelihood => Remote applies to Failed.PartialSymmetricalWBLossanunciated;             
+ **};
+end subsys2.i;
+
+
+system subsys1
+annex EMV2 {**
+	use types FHAErrorLib;
+	use behavior FHAErrorLib::TwostateWBS;
+
+
+
+
+	properties
+	
+		EMV2::hazard => 
+              [      crossreference => "no reference";
+              failure => "no failure";
+              phase => "";
+              description => ".";
+              comment => "";
+              ]
+              applies to Operational;
+	ARP4761::Severity => Hazardous applies to Operational;
+	ARP4761::Likelihood => Remote applies to Operational;
+		
+		EMV2::hazard => 
+              [      crossreference => "AIR6110 page 36";
+              failure => "Total Loss of wheel braking - Unannunciated loss of wheel braking";
+              phase => "Landing or RTO";
+              description => "Crew detects the failure when the brakes are operated. The crew uses spoilers and thrust reversers to the maximum extent possible. This may result in a runway overrun.";
+              comment => "";
+              ]
+              applies to Failed.TotalWBLossAnunciated;
+	ARP4761::Severity => Hazardous applies to Failed.TotalWBLossAnunciated;
+	ARP4761::Likelihood => Remote applies to Failed.TotalWBLossAnunciated;
+              
+
+
+	EMV2::hazard => 
+              [      crossreference => "AIR6110 page 36";
+              failure => "Total Loss of wheel braking - Annunciated loss of wheel braking";
+              phase => "Landing";
+              description => "Crew selects a more suitable airport, notifies emergency ground support, and prepares occupants for runway overrun. The crew uses spoilers and thrust reversers to the maximum extent possible.";
+              comment => "";
+              ]
+		applies to Failed.TotalWBLossUnanunciated;
+	ARP4761::Severity => Hazardous applies to Failed.TotalWBLossUnanunciated;      
+	ARP4761::Likelihood => Remote applies to Failed.TotalWBLossUnanunciated;
+	-- Probability should be 5e-7 according to AIR6110, page 49
+	EMV2::OccurrenceDistribution => [ ProbabilityValue => 5.0e-7 ; Distribution => Poisson;] applies to Failed.TotalWBLossUnanunciated;
+              
+	EMV2::hazard => 
+              [      crossreference => "AIR6110 page 36";
+              failure => "Partial Symmetrical Loss of Wheel Braking - Unannunciated partial symmetrical loss of wheel braking";
+              phase => "Landing or RTO";
+              description => "The crew detects the failure when the brakes are used. Crew uses available wheel braking, spoilers and thrust reversers available to maximum extent to decelerate the aircraft. The temperature on wheels of the loaded brakes increases and could reach point where wheel/fire failure occurs. Depending on number of brakes lost result could be an overrun.";
+              comment => "Potentially catastrophic – to be confirmed by analysis";
+              ]
+              applies to Failed.PartialSymmetricalWBLossUnAnunciated;
+	ARP4761::Severity => Hazardous applies to Failed.PartialSymmetricalWBLossUnAnunciated;      
+	ARP4761::Likelihood => Remote applies to Failed.PartialSymmetricalWBLossUnAnunciated;      
+              
+              
+	EMV2::hazard => 
+              [      crossreference => "AIR6110 page 36";
+              failure => "Partial Symmetrical Loss of Wheel Braking - Annunciated partial symmetrical loss of wheel braking";
+              phase => "Landing";
+              description => "The crew is aware that there is a partial loss of braking before landing. Crew uses wheel braking, spoilers and thrust reversers available to maximum extent to decelerate the aircraft. The temperature on wheels of the loaded brakes increases and could reach point where wheel/fire failure occurs. Depending on number of brakes lost result could be an overrun.";
+              comment => "";
+              ]
+              applies to Failed.PartialSymmetricalWBLossanunciated;
+	ARP4761::Severity => Major applies to Failed.PartialSymmetricalWBLossanunciated;   
+	ARP4761::Likelihood => Remote applies to Failed.PartialSymmetricalWBLossanunciated;             
+ **};
+end subsys1;
+
+
+end fha_states;
