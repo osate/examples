@@ -42,6 +42,7 @@ annex EMV2 {**
 	use types WBSErrorLib;
 	states
 		Operational:initial state;
+--		failed : state WBErrorSet;
 -- WORK
 --		failed:state {TotalWBLoss,PartialSymmetricalWBLoss,AssymetricalWBLoss,InadvertentWB};
 -- NOT WORKING
