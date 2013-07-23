@@ -8,9 +8,9 @@ system Electrical extends functional::GenericFunctions::Generic
 annex EMV2 {**
 	use types WBSFunctionalErrorLib;
 	error propagations
-		processor : in propagation {AnyFunctionalError};
+		processor : in propagation {WBSMappingErrorLib::AnyError};
 	flows
-		f1 : error path processor{AnyFunctionalError} -> isFailing(AnyFunctionalError);
+		f1 : error path processor{WBSMappingErrorLib::AnyError} -> isFailing(AnyFunctionalError);
 	end propagations;
 **};
 end Electrical;

@@ -32,7 +32,7 @@ annex EMV2 {**
 		--  Here, we just capture the fact that the system is failing
 		--  if its functions are failing. We then refer to the
 		--  system failures.
-		[functional.Failed]-> Failed;
+		[functional.Failed]-> Failed; 
 	end composite;                
  **};
 end main.impl;

@@ -10,13 +10,16 @@ annex EMV2 {**
 	use types WBSFunctionalErrorLib;
 	use behavior WBSFunctionalErrorLib::Twostate;
 	error propagations
-		processor : in propagation {AnyFunctionalError};
+		processor : in propagation {WBSMappingErrorLib::AnyError};
 		isFailing : out propagation HydraulicErrors; 
 	flows
 		f1 : error source isFailing HydraulicErrors;
-		f2 : error path processor{AnyFunctionalError} -> isFailing (HydraulicLossBlue);
-		f3 : error path processor{AnyFunctionalError} -> isFailing (HydraulicLossGreen);
-		f4 : error path processor{AnyFunctionalError} -> isFailing (HydraulicLossComponents);
+		f2 : error path processor{WBSMappingErrorLib::AnyError} -> isFailing (HydraulicLossBlue);
+		f3 : error path processor{WBSMappingErrorLib::AnyError} -> isFailing (HydraulicLossGreen);
+		f4 : error path processor{WBSMappingErrorLib::AnyError} -> isFailing (HydraulicLossComponents);
+--		f2 : error path processor -> isFailing use mappings WBSMappingErrorLib::ImplementationToFunction;
+--		f3 : error path processor -> isFailing (HydraulicLossGreen);
+--		f4 : error path processor -> isFailing (HydraulicLossComponents);
 	end propagations;
 	
 	component error behavior
