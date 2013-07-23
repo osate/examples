@@ -13,23 +13,23 @@ features
 properties
 	WBSPS::IsFunction => true;
 annex EMV2 {**
-	use types WBSErrorLib;
-	use behavior WBSErrorLib::Twostate;
+	use types WBSFunctionalErrorLib;
+	use behavior WBSFunctionalErrorLib::Twostate;
 
 	error propagations
-		fromElectrical : in propagation {WBError};
+		fromElectrical : in propagation {AnyFunctionalError};
 		fromHydraulic  : in propagation HydraulicErrors;
-		fromAlert      : in propagation {WBError};
-		fromSteering   : in propagation {WBError};
-		fromStatus     : in propagation {WBError};
+		fromAlert      : in propagation {AnyFunctionalError};
+		fromSteering   : in propagation {AnyFunctionalError};
+		fromStatus     : in propagation {AnyFunctionalError};
 	flows
-		f1 : error sink fromElectrical {WBError};
+		f1 : error sink fromElectrical {AnyFunctionalError};
 		f2 : error sink fromHydraulic HydraulicErrors;
-		f3 : error sink fromAlert {WBError};
-		f4 : error sink fromSteering {WBError};
-		f5 : error sink fromStatus {WBError};
+		f3 : error sink fromAlert {AnyFunctionalError};
+		f4 : error sink fromSteering {AnyFunctionalError};
+		f5 : error sink fromStatus {AnyFunctionalError};
 	end propagations;	
-**};
+**}; 
 end GenericFunction;
 
 
@@ -41,8 +41,8 @@ system GenericBrakeSystem
 properties
 	WBSPS::IsFunction => true;
 annex EMV2 {**
-	use types WBSErrorLib;
-	use behavior WBSErrorLib::Twostate;
+	use types WBSFunctionalErrorLib;
+	use behavior WBSFunctionalErrorLib::Twostate;
 
 	component error behavior
 	events

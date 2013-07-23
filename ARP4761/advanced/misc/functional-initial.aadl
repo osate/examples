@@ -14,8 +14,8 @@ subcomponents
 	DecelerateWheels: system DecelerateWheels.basic;
 	DecelerateThrottle: system DecelerateThrottle;
 annex EMV2 {**
-	use types WBSErrorLib;
-	use behavior WBSErrorLib::TwostateWBS;
+	use types WBSFunctionalErrorLib;
+	use behavior WBSFunctionalErrorLib::TwostateWBS;
 
 	composite error behavior
 	states
@@ -41,8 +41,8 @@ subcomponents
 	hydraulicPower   : system HydraulicPower;
 	annunciation     : system Annunciation;
 annex EMV2 {**
-	use types WBSErrorLib;
-	use behavior WBSErrorLib::TwostateWBS;
+	use types WBSFunctionalErrorLib;
+	use behavior WBSFunctionalErrorLib::TwostateWBS;
 
 	composite error behavior
 	states
@@ -106,7 +106,7 @@ system CrewAlert
 properties
 	WBSPS::IsFunction => true;
 annex EMV2 {**
-	use behavior WBSErrorLib::TwostateWBS;
+	use behavior WBSFunctionalErrorLib::TwostateWBS;
 **};
 end CrewAlert;
 
@@ -117,7 +117,7 @@ system ElectricPower
 properties
 	WBSPS::IsFunction => true;
 annex EMV2 {**
-	use behavior WBSErrorLib::Twostate;
+	use behavior WBSFunctionalErrorLib::Twostate;
 	component error behavior
 	events
 		Failure : error event;
@@ -131,7 +131,7 @@ system Command
 properties
 	WBSPS::IsFunction => true;
 annex EMV2 {**
-	use behavior WBSErrorLib::Twostate;
+	use behavior WBSFunctionalErrorLib::Twostate;
 	component error behavior
 	events
 		Failure : error event;
@@ -148,7 +148,7 @@ system HydraulicPower
 properties
 	WBSPS::IsFunction => true;
 annex EMV2 {**
-	use behavior WBSErrorLib::TwostateWBS;
+	use behavior WBSFunctionalErrorLib::TwostateWBS;
 **};
 end HydraulicPower;
 
@@ -160,7 +160,7 @@ system Annunciation
 properties
 	WBSPS::IsFunction => true;
 annex EMV2 {**
-	use behavior WBSErrorLib::Twostate;
+	use behavior WBSFunctionalErrorLib::Twostate;
 	
 	component error behavior
 	events
@@ -178,7 +178,7 @@ system AirCraftStatus
 properties
 	WBSPS::IsFunction => true;
 annex EMV2 {**
-	use behavior WBSErrorLib::TwostateWBS;
+	use behavior WBSFunctionalErrorLib::TwostateWBS;
 **};
 end AirCraftStatus;
 
@@ -189,7 +189,7 @@ system ApplyWheelBrake
 properties
 	WBSPS::IsFunction => true;
 annex EMV2 {**
-	use behavior WBSErrorLib::TwostateWBS;
+	use behavior WBSFunctionalErrorLib::TwostateWBS;
 **};
 end ApplyWheelBrake;
 
@@ -200,8 +200,8 @@ subcomponents
 	BrakeCommand: system BrakeCommand.basic;
 	BrakeStatus: system WBStatus;
 annex EMV2 {**
-	use types WBSErrorLib;
-	use behavior WBSErrorLib::TwostateWBS;
+	use types WBSFunctionalErrorLib;
+	use behavior WBSFunctionalErrorLib::TwostateWBS;
 
 	composite error behavior
 	states
@@ -217,7 +217,7 @@ system BrakeByWheel
 properties
 	WBSPS::IsFunction => true;
 annex EMV2 {**
-	use behavior WBSErrorLib::TwostateWBS;
+	use behavior WBSFunctionalErrorLib::TwostateWBS;
 	component error behavior
 	events
 		LossHydraulicSupply : error event;
@@ -234,7 +234,7 @@ properties
 	WBSPS::IsFunction => true;
 annex EMV2 {**
 	
-	use behavior WBSErrorLib::Twostate;
+	use behavior WBSFunctionalErrorLib::Twostate;
 	
 
 **};
@@ -242,26 +242,26 @@ end BrakeByWheel.basic;
 
 system NoseWheelSteering
 annex EMV2 {**
-	use behavior WBSErrorLib::TwostateWBS;
+	use behavior WBSFunctionalErrorLib::TwostateWBS;
 **};
 end NoseWheelSteering;
 
 system WBControl
 annex EMV2 {**
-	use behavior WBSErrorLib::TwostateWBS;
+	use behavior WBSFunctionalErrorLib::TwostateWBS;
 **};
 end WBControl;
 
 
 system WBStatus
 annex EMV2 {**
-	use behavior WBSErrorLib::TwostateWBS;
+	use behavior WBSFunctionalErrorLib::TwostateWBS;
 **};
 end WBStatus;
 
 system BrakeCommand
 annex EMV2 {**
-	use behavior WBSErrorLib::TwostateWBS;
+	use behavior WBSFunctionalErrorLib::TwostateWBS;
 **};
 end BrakeCommand;
 
@@ -270,7 +270,7 @@ subcomponents
 	electricPower    : system ElectricPower;
 	command          : system Command;
 annex EMV2 {**
-	use behavior WBSErrorLib::TwostateWBS;
+	use behavior WBSFunctionalErrorLib::TwostateWBS;
 	composite error behavior
 	states
 		[electricPower.Failed or command.Failed ]-> Failed;
@@ -280,7 +280,7 @@ end BrakeCommand.basic;
 
 system DecelerateThrottle
 annex EMV2 {**
-	use behavior WBSErrorLib::Twostate;
+	use behavior WBSFunctionalErrorLib::Twostate;
 	component error behavior
 	events
 		Failure : error event;

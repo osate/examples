@@ -1,0 +1,10 @@
+package WBSMappingErrorLib
+public
+annex EMV2 {**
+	error behavior Basic
+	states
+		Operational	:initial state;
+		Failed		:state ;
+	end behavior;
+**};
+end WBSMappingErrorLib;

@@ -1,13 +1,13 @@
-package WBSErrorLib
+package WBSImplementationErrorLib
 public
 annex EMV2 {**
 	error types
-	WBError: type;
+	AnyImplementationError: type;
 	HydraulicLossBlue : type;
 	HydraulicLossGreen : type;
 	HydraulicLossComponents : type;
 	
-	NoService: type extends WBError;
+	NoService: type extends AnyImplementationError;
 	NoValue: type extends NoService;
 	NoPower: type extends NoService;
 	
@@ -15,14 +15,14 @@ annex EMV2 {**
 	HardwareFailure: type;
 	
 	
-	TotalWBLoss: type extends WBError;
+	TotalWBLoss: type extends AnyImplementationError;
 	TotalWBLossAnunciated: type extends TotalWBLoss;
 	TotalWBLossUnanunciated: type extends TotalWBLoss;
-	PartialSymmetricalWBLoss: type extends WBError;
+	PartialSymmetricalWBLoss: type extends AnyImplementationError;
 	PartialSymmetricalWBLossAnunciated: type extends PartialSymmetricalWBLoss;
 	PartialSymmetricalWBLossUnanunciated: type extends PartialSymmetricalWBLoss;
-	AssymetricalWBLoss: type extends WBError;
-	InadvertentWB: type extends WBError;
+	AssymetricalWBLoss: type extends AnyImplementationError;
+	InadvertentWB: type extends AnyImplementationError;
 	
 	WBErrorSet: type set {TotalWBLossAnunciated,TotalWBLossUnanunciated,PartialSymmetricalWBLoss,
 		AssymetricalWBLoss,InadvertentWB
@@ -32,21 +32,17 @@ annex EMV2 {**
 	end types;
 	
 	error behavior Twostate
-	use types WBSErrorLib;
+	use types WBSFunctionalErrorLib;
 	states
 		Operational:initial state;
 		failed:state ;
 	end behavior;
 	
 	error behavior TwostateWBS 
-	use types WBSErrorLib;
+	use types WBSFunctionalErrorLib;
 	states
 		Operational:initial state;
---		failed : state WBErrorSet;
--- WORK
---		failed:state {TotalWBLoss,PartialSymmetricalWBLoss,AssymetricalWBLoss,InadvertentWB};
--- NOT WORKING
-		failed:state {TotalWBLossAnunciated,TotalWBLossUnanunciated,PartialSymmetricalWBLoss,AssymetricalWBLoss,InadvertentWB};
+		Failed : state HydraulicErrors;
 	end behavior;
 **};
-end WBSErrorLib;
+end WBSImplementationErrorLib;

@@ -17,13 +17,13 @@ subcomponents
 properties
 	WBSPS::IsFunction => true;
 annex EMV2 {**
-	use types WBSErrorLib;
-	use behavior WBSErrorLib::Twostate;
+	use types WBSFunctionalErrorLib;
+	use behavior WBSFunctionalErrorLib::Twostate;
 
 	error propagations
-		fromBSCU : out propagation {WBError};
+		fromBSCU : out propagation {AnyFunctionalError};
 	flows
-		f1 : error source fromBSCU {WBError};
+		f1 : error source fromBSCU {AnyFunctionalError}; 
 	end propagations;
 	
 	
@@ -32,9 +32,9 @@ annex EMV2 {**
 		lossBrakingCommand : error event;
 	transitions
 		t1 : Operational -[lossBrakingCommand]-> Failed;
-		t2 : Operational -[ fromElectrical {WBError} ]-> Failed;
+		t2 : Operational -[ fromElectrical {AnyFunctionalError} ]-> Failed;  
 	propagations
-		p1 : Failed -[]-> fromBSCU(WBError);
+		p1 : Failed -[]-> fromBSCU(AnyFunctionalError);
 	end component;
 
 	composite error behavior

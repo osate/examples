@@ -11,16 +11,16 @@ system pump
 features
 	pressure_output : provides bus access common::pressure.i;
 annex EMV2 {**
-	use types WBSErrorLib;
-	use behavior WBSErrorLib::Twostate;
+	use types WBSImplementationErrorLib;
+	use behavior WBSImplementationErrorLib::Twostate;
 	
 	error propagations
 	--  The bindings information are here the
-		bindings 		: out propagation {NoService};
+		bindings 		: out propagation {AnyImplementationError};
 		pressure_output : out propagation {NoService};
 	flows
 		nopressure 		: error source pressure_output{NoService};
-		nopressurefunc 	: error source bindings{NoService};
+		nopressurefunc 	: error source bindings{AnyImplementationError};
 	end propagations;
 	
 	component error behavior

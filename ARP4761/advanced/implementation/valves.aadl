@@ -10,8 +10,8 @@ features
 	input : requires bus access common::pressure.i;
 	output : provides bus access common::pressure.i;
 annex EMV2 {**
-	use types WBSErrorLib;
-	use behavior WBSErrorLib::Twostate;
+	use types WBSImplementationErrorLib;
+	use behavior WBSImplementationErrorLib::Twostate;
 	error propagations
 		input  : in propagation {NoService};
 		output : out propagation {NoService};
@@ -42,8 +42,8 @@ system cmd_shutoff extends generic
 features
 	cmd_input : in data port common::command.skid;
 annex EMV2 {**
-	use types WBSErrorLib;
-	use behavior WBSErrorLib::Twostate;
+	use types WBSImplementationErrorLib;
+	use behavior WBSImplementationErrorLib::Twostate;
 	
 	error propagations
 		cmd_input : in propagation {NoValue};
@@ -77,7 +77,7 @@ features
 	cmd_nor          : in data port common::command.skid;
 	cmd_alt          : in data port common::command.skid;
 annex EMV2 {**
-	use types WBSErrorLib;
+	use types WBSImplementationErrorLib;
 	
 	error propagations
 		select_alternate    : in propagation{NoValue};
@@ -103,7 +103,7 @@ system selector_basic extends selector
 features
 	output           : provides bus access common::pressure.i;
 annex EMV2 {**
-	use types WBSErrorLib;
+	use types WBSImplementationErrorLib;
 	
 	error propagations
 		output : out propagation{NoService};
@@ -121,8 +121,8 @@ features
 	green_output : provides bus access common::pressure.i;
 	blue_output  : provides bus access common::pressure.i;
 annex EMV2 {**
-	use types       WBSErrorLib;
-	use behavior    WBSErrorLib::TwoState;
+	use types       WBSImplementationErrorLib;
+	use behavior    WBSImplementationErrorLib::TwoState;
 	error propagations
 		green_output 	: out propagation{NoService};
 		blue_output 	: out propagation{NoService};

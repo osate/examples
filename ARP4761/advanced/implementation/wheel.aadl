@@ -20,8 +20,8 @@ system wheel_one_input extends wheel
 features
 	input : requires bus access common::pressure.i;
 annex EMV2 {**
-	use types WBSErrorLib;
-	use behavior WBSErrorLib::Twostate;
+	use types WBSImplementationErrorLib;
+	use behavior WBSImplementationErrorLib::Twostate;
 	
 	error propagations
 		input : in propagation{NoService};
@@ -52,8 +52,8 @@ features
 	green_input : requires bus access common::pressure.i;
 	blue_input : requires bus access common::pressure.i;
 annex EMV2 {**
-	use types WBSErrorLib;
-	use behavior WBSErrorLib::Twostate;
+	use types WBSImplementationErrorLib;
+	use behavior WBSImplementationErrorLib::Twostate;
 	error propagations
 		green_input : in propagation{NoService};
 		blue_input : in propagation{NoService};

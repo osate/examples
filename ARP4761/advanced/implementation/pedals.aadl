@@ -13,8 +13,8 @@ features
 	signal1 : out data port common::command.pedal;
 	signal2 : out data port common::command.pedal;
 annex EMV2 {**
-	use types WBSErrorLib;
-	use behavior WBSErrorLib::Twostate;
+	use types WBSImplementationErrorLib;
+	use behavior WBSImplementationErrorLib::Twostate;
 	
 	error propagations
 		signal1 : out propagation {NoService};

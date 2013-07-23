@@ -12,22 +12,22 @@ features
 properties
 	WBSPS::IsFunction => true;
 annex EMV2 {**
-	use types WBSErrorLib;
-	use behavior WBSErrorLib::Twostate;
+	use types WBSFunctionalErrorLib;
+	use behavior WBSFunctionalErrorLib::Twostate;
 
 	error propagations
 		fromHydraulic 	: in propagation HydraulicErrors;
-		fromBSCU  		: in propagation {WBError};
+		fromBSCU  		: in propagation {AnyFunctionalError};
 	flows
 		f1 : error sink fromHydraulic HydraulicErrors;
-		f2 : error sink fromBSCU{WBError};	
+		f2 : error sink fromBSCU{AnyFunctionalError};	
 	end propagations;
 	
 	component error behavior
 	transitions
 		t1 : Operational -[ fromHydraulic{HydraulicLossGreen} ]-> Failed;
 		t2 : Operational -[ fromHydraulic{HydraulicLossComponents} ]-> Failed;
-		t3 : Operational -[ fromBSCU{WBError} ]-> Failed;
+		t3 : Operational -[ fromBSCU{AnyFunctionalError} ]-> Failed;
 	end component;
 	
 	properties
@@ -44,13 +44,13 @@ features
 properties
 	WBSPS::IsFunction => true;
 annex EMV2 {**
-	use types WBSErrorLib;
-	use behavior WBSErrorLib::Twostate;
+	use types WBSFunctionalErrorLib;
+	use behavior WBSFunctionalErrorLib::Twostate;
 
 	error propagations
-		fromBSCU  		: in propagation {WBError};
+		fromBSCU  		: in propagation {AnyFunctionalError};
 	flows
-		f2 : error sink fromBSCU {WBError};	
+		f2 : error sink fromBSCU {AnyFunctionalError};	
 	end propagations;
 
 **};
@@ -64,8 +64,8 @@ subcomponents
 connections
 	c1 : feature fromBSCU -> normal.fromBSCU;
 annex EMV2 {**
-	use types WBSErrorLib;
-	use behavior WBSErrorLib::TwostateWBS;
+	use types WBSFunctionalErrorLib;
+	use behavior WBSFunctionalErrorLib::TwostateWBS;
 
 	composite error behavior
 	states
@@ -90,14 +90,14 @@ features
 properties
 	WBSPS::IsFunction => true;
 annex EMV2 {**
-	use types WBSErrorLib;
+	use types WBSFunctionalErrorLib;
 
 	error propagations
-		fromElectrical : in propagation {WBError};
+		fromElectrical : in propagation {AnyFunctionalError};
 		fromHydraulic  : in propagation HydraulicErrors;
-		fromAlert      : in propagation {WBError};
-		fromSteering   : in propagation {WBError};
-		fromStatus     : in propagation {WBError};
+		fromAlert      : in propagation {AnyFunctionalError};
+		fromSteering   : in propagation {AnyFunctionalError};
+		fromStatus     : in propagation {AnyFunctionalError};
 
 	end propagations;	
 **};
@@ -137,16 +137,16 @@ connections
 
 	c50 : feature directionalcontrol.fromBSCU -> decelerateonground.fromBSCU;
 annex EMV2 {**
-	use types WBSErrorLib;
-	use behavior WBSErrorLib::TwostateWBS;
+	use types WBSFunctionalErrorLib;
+	use behavior WBSFunctionalErrorLib::TwostateWBS;
 
 
 	error propagations
-		fromElectrical : in propagation{WBError};
-		fromHydraulic  : in propagation{WBError};
-		fromAlert      : in propagation{WBError};
-		fromSteering   : in propagation{WBError};
-		fromStatus     : in propagation{WBError};
+		fromElectrical : in propagation{AnyFunctionalError};
+		fromHydraulic  : in propagation{AnyFunctionalError};
+		fromAlert      : in propagation{AnyFunctionalError};
+		fromSteering   : in propagation{AnyFunctionalError};
+		fromStatus     : in propagation{AnyFunctionalError};
 
 	end propagations;	
 
@@ -157,7 +157,7 @@ annex EMV2 {**
 	    -- from AIR6110 page 49
 --		[decelerateonground.Failed]-> Failed(TotalWBLossAnunciated);
 		[decelerateonground.Failed]-> Failed(TotalWBLossUnAnunciated); 
-		[decelerateonground.Failed and in fromAlert{WBError}]-> Failed(TotalWBLossAnunciated);
+		[decelerateonground.Failed and in fromAlert{AnyFunctionalError}]-> Failed(TotalWBLossAnunciated);
 --		[decelerateonground.Failed]-> Failed;  
 	end composite;
  

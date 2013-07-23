@@ -21,8 +21,8 @@ connections
 	c4 : feature steering.isFailing -> decelerate.fromSteering;
 	c5 : feature status.isFailing -> decelerate.fromStatus;
 annex EMV2 {**
-	use types WBSErrorLib;
-	use behavior WBSErrorLib::Twostate;
+	use types WBSFunctionalErrorLib;
+	use behavior WBSFunctionalErrorLib::Twostate;
 
 	composite error behavior
 	states
@@ -43,15 +43,15 @@ features
 properties
 	WBSPS::IsFunction => true;
 annex EMV2 {**
-	use types WBSErrorLib;
-	use behavior WBSErrorLib::Twostate;
+	use types WBSFunctionalErrorLib;
+	use behavior WBSFunctionalErrorLib::Twostate;
 
 	error propagations
-		fromElectrical : in propagation {WBError};
+		fromElectrical : in propagation {AnyFunctionalError};
 		fromHydraulic  : in propagation HydraulicErrors;
-		fromAlert      : in propagation {WBError};
-		fromSteering   : in propagation {WBError};
-		fromStatus     : in propagation {WBError};
+		fromAlert      : in propagation {AnyFunctionalError};
+		fromSteering   : in propagation {AnyFunctionalError};
+		fromStatus     : in propagation {AnyFunctionalError};
 	end propagations;	
 **};
 end DecelerateAircraft;
@@ -70,8 +70,8 @@ connections
 	c4 : feature fromSteering   -> DecelerateWheels.fromSteering;
 	c5 : feature fromStatus     -> DecelerateWheels.fromStatus;
 annex EMV2 {**
-	use types WBSErrorLib;
-	use behavior WBSErrorLib::TwostateWBS;
+	use types WBSFunctionalErrorLib;
+	use behavior WBSFunctionalErrorLib::TwostateWBS;
 
 	composite error behavior
 	states

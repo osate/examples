@@ -9,15 +9,15 @@ device battery
 features
 	socket : provides bus access common::power.generic;
 annex EMV2 {**
-	use types WBSErrorLib;
-	use behavior WBSErrorLib::Twostate;
+	use types WBSImplementationErrorLib;
+	use behavior WBSImplementationErrorLib::Twostate;
 
 	error propagations
 		socket 		: out propagation {NoPower};
-		bindings 	: out propagation {NoPower};
+		bindings 	: out propagation {AnyImplementationError};
 	flows
 		f1 : error source socket{NoPower};
-		f2 : error source bindings{NoPower};
+		f2 : error source bindings{AnyImplementationError};
 	end propagations;
 	component error behavior
 	events
@@ -77,13 +77,13 @@ features
 	line1 : provides bus access common::power.generic;
 	line2 : provides bus access common::power.generic;
 annex EMV2 {**
-	use types WBSErrorLib;
-	use behavior WBSErrorLib::Twostate;
+	use types WBSImplementationErrorLib;
+	use behavior WBSImplementationErrorLib::Twostate;
 
 	error propagations
-		bindings 	: out propagation {NoPower};
+		bindings 	: out propagation {AnyImplementationError};
 	flows
-		f0 : error source bindings{NoPower};
+		f0 : error source bindings{AnyImplementationError};
 	end propagations;
 **};
 end power;

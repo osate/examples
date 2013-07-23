@@ -27,8 +27,8 @@ features
 	information : out data port common::command.announce;
 annex EMV2 {**
 
-	use types WBSErrorLib;
-	use behavior WBSErrorLib::Twostate;
+	use types WBSImplementationErrorLib;
+	use behavior WBSImplementationErrorLib::Twostate;
 	
 	error propagations
 		information : out propagation{NoService};

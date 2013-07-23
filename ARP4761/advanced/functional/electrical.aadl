@@ -6,10 +6,11 @@ with WBSPS,EMV2,ARP4761,functional::GenericFunctions;
 
 system Electrical extends functional::GenericFunctions::Generic
 annex EMV2 {**
+	use types WBSFunctionalErrorLib;
 	error propagations
-		processor : in propagation {NoService};
+		processor : in propagation {AnyFunctionalError};
 	flows
-		f1 : error path processor{NoService} -> isFailing(WBError);
+		f1 : error path processor{AnyFunctionalError} -> isFailing(AnyFunctionalError);
 	end propagations;
 **};
 end Electrical;

@@ -7,16 +7,16 @@ with WBSPS,EMV2,ARP4761,functional::GenericFunctions;
 system Hydraulic extends functional::GenericFunctions::Generic
 
 annex EMV2 {**
-	use types WBSErrorLib;
-	use behavior WBSErrorLib::Twostate;
+	use types WBSFunctionalErrorLib;
+	use behavior WBSFunctionalErrorLib::Twostate;
 	error propagations
-		processor : in propagation {NoService};
+		processor : in propagation {AnyFunctionalError};
 		isFailing : out propagation HydraulicErrors; 
 	flows
 		f1 : error source isFailing HydraulicErrors;
-		f2 : error path processor{NoService} -> isFailing (HydraulicLossBlue);
-		f3 : error path processor{NoService} -> isFailing (HydraulicLossGreen);
-		f4 : error path processor{NoService} -> isFailing (HydraulicLossComponents);
+		f2 : error path processor{AnyFunctionalError} -> isFailing (HydraulicLossBlue);
+		f3 : error path processor{AnyFunctionalError} -> isFailing (HydraulicLossGreen);
+		f4 : error path processor{AnyFunctionalError} -> isFailing (HydraulicLossComponents);
 	end propagations;
 	
 	component error behavior

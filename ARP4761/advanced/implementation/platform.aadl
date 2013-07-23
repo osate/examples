@@ -12,8 +12,8 @@ with ARP4761;
 --
 virtual processor partition
 annex EMV2 {**
-	use types WBSErrorLib;
-	use behavior WBSErrorLib::Twostate;
+	use types WBSImplementationErrorLib;
+	use behavior WBSImplementationErrorLib::Twostate;
 
 	error propagations
 		bindings : out propagation {SoftwareFailure, HardwareFailure};
@@ -60,8 +60,8 @@ end partition.generic;
 -- 
 processor cpu
 annex EMV2 {**
-	use types WBSErrorLib;
-	use behavior WBSErrorLib::Twostate;
+	use types WBSImplementationErrorLib;
+	use behavior WBSImplementationErrorLib::Twostate;
 
 	--
 	--  The HardwareFailure would be automatically
@@ -119,8 +119,8 @@ end cpu.ima;
 --
 processor implementation cpu.single
 annex EMV2 {**
-	use types WBSErrorLib;
-	use behavior WBSErrorLib::Twostate;
+	use types WBSImplementationErrorLib;
+	use behavior WBSImplementationErrorLib::Twostate;
 
 	error propagations
 		processor : out propagation {SoftwareFailure};

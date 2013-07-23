@@ -47,7 +47,7 @@ connections
 	power1     : bus access bscu.pwr1 <-> power.line1;
 	power2     : bus access power.line2 <-> bscu.pwr2;
 	pedal1     : port pedals.signal1 -> bscu.pedal1;
-	pedal2     : port pedals.signal2 -> bscu.pedal2; 
+	pedal2     : port pedals.signal2 -> bscu.pedal2;  
 annex EMV2 {**
 	-- The WBS system has the following error states:
 	-- Operational
@@ -56,8 +56,8 @@ annex EMV2 {**
 	-- PartialBrakingLoss
 	-- AsymmetricLoss
 	-- InadvertentBrake
-	use types WBSErrorLib;
-	use behavior WBSErrorLib::TwostateWBS;
+	use types WBSImplementationErrorLib;
+	use behavior WBSImplementationErrorLib::TwostateWBS;
 
 	composite error behavior
 	states
@@ -70,7 +70,7 @@ annex EMV2 {**
 		[bscu.Failed and accumulator.Failed and annunciation.Operational]-> Failed(TotalWBLossAnunciated);	end composite;
 **};
 end wbs.generic;
-
+ 
 
 
 --  Basic/naive version that abstracts all the valves with

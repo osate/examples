@@ -6,7 +6,7 @@ with WBSPS,EMV2,ARP4761;
 
 system DecelerateThrottle
 annex EMV2 {**
-	use behavior WBSErrorLib::Twostate;
+	use behavior WBSFunctionalErrorLib::Twostate;
 	component error behavior
 	events
 		Failure : error event;
