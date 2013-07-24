@@ -217,7 +217,7 @@ system BrakeByWheel
 properties
 	WBSPS::IsFunction => true;
 annex EMV2 {**
-	use behavior WBSFunctionalErrorLib::TwostateWBS;
+	use behavior WBSFunctionalErrorLib::Twostate;
 	component error behavior
 	events
 		LossHydraulicSupply : error event;
