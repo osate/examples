@@ -1,10 +1,6 @@
 package WBSMappingErrorLib
 public
 annex EMV2 {**
-	error types
-		AnyError :  type;
-	end types;
-	
 	
 	error behavior Basic
 	states

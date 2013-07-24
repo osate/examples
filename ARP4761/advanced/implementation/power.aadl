@@ -14,10 +14,10 @@ annex EMV2 {**
 
 	error propagations
 		socket 		: out propagation {NoPower};
-		bindings 	: out propagation {WBSMappingErrorLib::AnyError};
+		bindings 	: out propagation {AnyImplementationError};
 	flows
 		f1 : error source socket{NoPower};
-		f2 : error source bindings{WBSMappingErrorLib::AnyError};
+		f2 : error source bindings{AnyImplementationError};
 	end propagations;
 	component error behavior
 	events

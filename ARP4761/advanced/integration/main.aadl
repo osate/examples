@@ -25,6 +25,7 @@ properties
 
 
 annex EMV2 {**
+	use type equivalence WBSMappingErrorLib::FunctionToImplementation;
 	use behavior WBSMappingErrorLib::Basic;
 
 	composite error behavior
@@ -33,7 +34,8 @@ annex EMV2 {**
 		--  if its functions are failing. We then refer to the
 		--  system failures.
 		[functional.Failed]-> Failed; 
-	end composite;                
+	end composite;
+	
  **};
 end main.impl;
 

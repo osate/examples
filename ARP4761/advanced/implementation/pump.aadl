@@ -16,11 +16,11 @@ annex EMV2 {**
 	
 	error propagations
 	--  The bindings information are here the
-		bindings 		: out propagation {WBSMappingErrorLib::AnyError};
+		bindings 		: out propagation {AnyImplementationError};
 		pressure_output : out propagation {NoService};
 	flows
 		nopressure 		: error source pressure_output{NoService};
-		nopressurefunc 	: error source bindings{WBSMappingErrorLib::AnyError};
+		nopressurefunc 	: error source bindings{AnyImplementationError};
 	end propagations;
 	
 	component error behavior
@@ -30,7 +30,7 @@ annex EMV2 {**
 		t1 : Operational -[ HydraulicError]-> Failed;
 	propagations
 		p1     : Failed 		-[]-> pressure_output(Noservice);
-		p2     : Failed 		-[]-> bindings(WBSMappingErrorLib::AnyError); 
+		p2     : Failed 		-[]-> bindings(AnyImplementationError); 
 		normal : Operational 	-[]-> pressure_output(NoError);
 	end component;
 	
