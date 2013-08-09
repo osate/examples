@@ -1,0 +1,122 @@
+package error_modes
+
+public
+
+with EMV2;
+
+
+thread thr_sender
+features
+	outevent : out event port;
+annex EMV2 {**
+	use types ErrorModelLibrary;
+	error propagations
+		outevent : out propagation {LateValue};
+	flows
+		f1 : error source outevent{LateValue};
+	end propagations;
+**};
+end thr_sender;
+
+thread implementation thr_sender.i
+end thr_sender.i;
+
+
+
+thread thr_receiver
+features
+	inevent : in event port;
+end thr_receiver;
+
+thread implementation thr_receiver.i
+end thr_receiver.i;
+
+process sender
+features
+	outevent : out event port;
+end sender;
+
+
+process implementation sender.i
+subcomponents
+	thr : thread thr_sender.i;
+connections
+	c1 : port thr.outevent -> outevent;
+end sender.i;
+
+process receiver
+features
+	inevent : in event port;
+modes
+	nominal : initial mode;
+	recovery: mode;
+end receiver;
+
+process implementation receiver.i
+subcomponents
+	thr1 : thread thr_receiver.i in modes (nominal,recovery);
+	thr2: thread thr_receiver.i in modes (recovery);
+connections
+	c1 : port inevent -> thr1.inevent;
+	c2 : port inevent -> thr2.inevent;
+modes
+	nominal-[self.triggerrecovery]->recovery;
+	recovery-[self.triggernormal]->nominal;
+annex EMV2 {**
+	use types ErrorModelLibrary;
+	use behavior ErrorModelLibrary::Simple;
+	
+	error propagations
+		inevent : in propagation{LateValue};
+	flows
+		f1 : error sink inevent{LateValue};
+	end propagations;
+	
+	component error behavior
+	transitions
+		t1 : Operational -[inevent{LateValue}]-> Failed;
+		t2 : Failed -[inevent{NoError}]-> Operational;
+	end component;
+**};
+end receiver.i;
+
+
+process implementation receiver.with_transitions extends receiver.i
+annex EMV2 {**
+	component error behavior
+	detections
+		Operational-[inevent{LateValue}]->self.triggerrecovery!;
+		Failed-[inevent{NoError}]->self.triggernormal!;
+	end component;
+**};
+end receiver.with_transitions;
+
+
+process implementation receiver.with_mappings extends receiver.i
+annex EMV2 {**
+	component error behavior
+	mode mappings
+		Operational in modes (nominal);
+		Failed		in modes (recovery);
+	end component;
+**};
+end receiver.with_mappings;
+
+
+system s
+end s;
+
+system implementation s.transitions
+subcomponents
+	snd : process sender.i;
+	rcv : process receiver.with_transitions;
+connections
+	c1 : port snd.outevent -> rcv.inevent;
+end s.transitions;
+
+system implementation s.mappings extends s.transitions
+subcomponents
+	rcv : refined to process receiver.with_mappings;
+end s.mappings;
+
+end error_modes;
