@@ -1,4 +1,4 @@
-package DualFGS
+package ModalDualFGS
 public
 
 system FG
@@ -43,6 +43,9 @@ features
 FromAP1Port: in data port;
 FromAP2Port: in data port;
 OutPort: out data port;
+requires modes
+Critical: mode;
+NonCritical: initial mode;
 annex emv2 {**
 	use types ErrorModelLibrary;
   use behavior ErrorModelLibrary::Simple; 
@@ -58,6 +61,22 @@ component error behavior
       Operational -[FromAP1Port{NoValue} and FromAP2Port{NoValue}]-> OutPort(NoValue);
   end component;
 	**};
+annex emv2 {**
+	use types ErrorModelLibrary;
+  use behavior ErrorModelLibrary::Simple; 
+component error behavior
+    propagations  
+      Operational -[FromAP1Port{NoValue} and FromAP2Port{NoValue}]-> OutPort(NoValue);
+  end component;
+	**} in modes (noncritical);
+annex emv2 {**
+	use types ErrorModelLibrary;
+  use behavior ErrorModelLibrary::Simple; 
+component error behavior
+    propagations  
+      Operational -[FromAP1Port{NoValue} and FromAP2Port{NoValue}]-> OutPort(NoValue);
+  end component;
+	**} in modes (critical);
 end AC;
 
 
@@ -71,20 +90,21 @@ Critical: mode;
 NonCritical: initial mode;
 annex emv2 {**
 	use types ErrorModelLibrary;
-  use behavior ErrorModelLibrary::ThreeState;
+  use behavior ErrorModelLibrary::Simple;
 	error propagations
 	inport: in propagation {NoValue};
 	outport : out propagation {NoValue};
 	powersupply: in propagation {NoService};
 	flows
-	esource: error source outport{NoValue} when CriticalModefailure;
+	esource: error source outport{NoValue} when Failed;
 	ePath: error path inport{NoValue} -> outport(NoValue);
 	epPower: error path powersupply{NoService} -> outport(NoValue);
 	end propagations;
 	**};
 end FGS;
 
-system implementation FGS.impl
+
+system implementation FGS.modal
 subcomponents
 AP1: system AP;
 AP2: system AP;
@@ -105,22 +125,31 @@ Actual_Connection_Binding => (reference (network))
   applies to FGStoFG1,FGStoFG2,FG1toAP1,FG2toAP2,AP1toAC,AP2toAC,ACtoFGS;
 annex emv2 {**
   use types ErrorModelLibrary;        
-  use behavior ErrorModelLibrary::ThreeState;
+  use behavior ErrorModelLibrary::Simple;
+composite error behavior 
+ states
+   [(FG1.Operational and AP1.Operational) or (FG2.Operational and AP2.Operational)
+     and AC.Operational]->Operational ;
+    [AC.Operational and 
+  1 ormore (FG1.Failed, AP1.Failed) and 
+     FG2.Operational and AP2.Operational
+     or 1 ormore (FG2.Failed, AP2.Failed) and 
+     FG1.Operational and AP1.Operational]-> Failed;
+end composite;
+**} in modes (NonCritical);
+annex emv2 {**
+  use types ErrorModelLibrary;        
+  use behavior ErrorModelLibrary::Simple;
 composite error behavior 
  states
     [AP1.Operational and AP2.Operational
  and FG1.Operational and FG2.Operational and AC.Operational]->Operational ;
-    [AC.Operational and 
-  1 ormore (FG1.Failed, AP1.Failed) and 
-     FG2.Operational and AP2.Operational
-  or 1 ormore (FG2.Failed, AP2.Failed) and 
-     FG1.Operational and AP1.Operational]-> NoncriticalModeFailure;
-    [AC.Failed or 
+     [AC.Failed or 
     1 ormore (AP1.Failed, FG1.Failed) 
-    and 1 ormore (AP1.Failed, FG2.Failed)]->CriticalModefailure ;
+    and 1 ormore (AP1.Failed, FG2.Failed)]->failed ;
 end composite;
-**};
-end FGS.impl;
+**} in modes (Critical);
+end FGS.modal;
 
 bus PowerSupply
 annex emv2 {**
@@ -156,4 +185,4 @@ component error behavior
 	**};
 end EtherSwitch;
 
-end DualFGS;
+end ModalDualFGS;

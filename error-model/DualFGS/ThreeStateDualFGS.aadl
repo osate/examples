@@ -1,4 +1,4 @@
-package DualFGS
+package ThreeStateDualFGS
 public
 
 system FG
@@ -43,6 +43,9 @@ features
 FromAP1Port: in data port;
 FromAP2Port: in data port;
 OutPort: out data port;
+requires modes
+Critical: mode;
+NonCritical: initial mode;
 annex emv2 {**
 	use types ErrorModelLibrary;
   use behavior ErrorModelLibrary::Simple; 
@@ -58,7 +61,24 @@ component error behavior
       Operational -[FromAP1Port{NoValue} and FromAP2Port{NoValue}]-> OutPort(NoValue);
   end component;
 	**};
+annex emv2 {**
+	use types ErrorModelLibrary;
+  use behavior ErrorModelLibrary::Simple; 
+component error behavior
+    propagations  
+      Operational -[FromAP1Port{NoValue} and FromAP2Port{NoValue}]-> OutPort(NoValue);
+  end component;
+	**} in modes (noncritical);
+annex emv2 {**
+	use types ErrorModelLibrary;
+  use behavior ErrorModelLibrary::Simple; 
+component error behavior
+    propagations  
+      Operational -[FromAP1Port{NoValue} and FromAP2Port{NoValue}]-> OutPort(NoValue);
+  end component;
+	**} in modes (critical);
 end AC;
+
 
 
 system FGS
@@ -84,7 +104,7 @@ annex emv2 {**
 	**};
 end FGS;
 
-system implementation FGS.impl
+system implementation FGS.threestate
 subcomponents
 AP1: system AP;
 AP2: system AP;
@@ -120,7 +140,8 @@ composite error behavior
     and 1 ormore (AP1.Failed, FG2.Failed)]->CriticalModefailure ;
 end composite;
 **};
-end FGS.impl;
+end FGS.threestate;
+
 
 bus PowerSupply
 annex emv2 {**
@@ -156,4 +177,4 @@ component error behavior
 	**};
 end EtherSwitch;
 
-end DualFGS;
+end ThreeStateDualFGS;

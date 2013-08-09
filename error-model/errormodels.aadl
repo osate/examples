@@ -1,25 +1,21 @@
 package errormodels
 public
-  annex error_model {**
+-- EM V1 state machines from Dependability Modeling Report.
+-- Converted the first to EMV2
+with emv2;
+  annex EMV2 {**
 	-- simple error model
-error model Basic
-features
+error behavior Basic
+events
     Failed : error event;
-
-    Error_Free: initial error state;
-    Permanent_Failure: error state;
-
-    Visible_Failure: in out error propagation;
-end Basic; 
-
-error model implementation Basic.Nominal
+states
+    Error_Free: initial state;
+    Permanent_Failure: state;
 transitions
-     Error_Free -[Failed, in Visible_Failure]-> Permanent_Failure;
-     Permanent_Failure -[out Visible_Failure]-> Permanent_Failure;
+     Error_Free -[Failed]-> Permanent_Failure;
 properties
-     Occurrence => poisson 10E-4 applies to Failed;
-     Occurrence => poisson 10E-6 applies to Visible_Failure;
-end Basic.Nominal; 
+     EMV2::OccurrenceDistribution => [ProbabilityValue => 10.0E-4; Distribution => Poisson;] applies to Failed;
+end behavior; 
 
 error model forHardware
 features 
@@ -90,4 +86,27 @@ end forSoftware.general;
 
 
 **};
+
+system s
+features
+	inport : in event port;
+	outport: out event port;
+annex EMV2{**
+	use types ErrorLibrary;
+	use behavior errormodels::Basic;
+error propagations
+    inport: in propagation{ServiceOmission};
+    outport: out propagation{ServiceOmission};
+end propagations;
+component error behavior
+transitions
+     Error_Free -[inport]-> Permanent_Failure;
+propagations
+     Permanent_Failure -[]-> outport(ServiceOmission);
+end component;
+properties
+     EMV2::OccurrenceDistribution => [ProbabilityValue => 10.0E-6; Distribution => Poisson;] applies to outport.ServiceOmission;
+**};
+end s;
+
 end errormodels;
