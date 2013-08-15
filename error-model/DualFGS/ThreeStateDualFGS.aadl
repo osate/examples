@@ -44,11 +44,11 @@ FromAP1Port: in data port;
 FromAP2Port: in data port;
 OutPort: out data port;
 requires modes
-Critical: mode;
-NonCritical: initial mode;
+  Critical: mode;
+  NonCritical: initial mode;
 annex emv2 {**
 	use types ErrorModelLibrary;
-  use behavior ErrorModelLibrary::Simple; 
+  use behavior ErrorModelLibrary::ThreeStateAC; 
 	error propagations
 	FromAP1Port: in propagation {NoValue};
 	FromAP2Port: in propagation {NoValue};
@@ -56,9 +56,13 @@ annex emv2 {**
 	end propagations;
 	
 component error behavior
-    propagations  
-      Failed-[]->Outport(NoValue);
-      Operational -[FromAP1Port{NoValue} and FromAP2Port{NoValue}]-> OutPort(NoValue);
+transitions
+  Operational -[FromAP1Port{NoValue} or FromAP2Port{NoValue}]-> SingleInput;
+  Operational -[FromAP1Port{NoValue} and FromAP2Port{NoValue}]-> NoInput;
+  SingleInput -[FromAP1Port{NoValue} and FromAP2Port{NoValue}]-> NoInput;
+propagations  
+  Failed-[]->Outport(NoValue);
+  Operational -[FromAP1Port{NoValue} and FromAP2Port{NoValue}]-> OutPort(NoValue);
   end component;
 	**};
 annex emv2 {**
