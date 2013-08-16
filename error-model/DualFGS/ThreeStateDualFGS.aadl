@@ -38,6 +38,7 @@ component error behavior
 	**};
 end AP;
 
+
 system AC
 features
 FromAP1Port: in data port;
@@ -47,53 +48,8 @@ requires modes
   Critical: mode;
   NonCritical: initial mode;
 annex emv2 {**
-	use types ErrorModelLibrary;
-  use behavior ErrorModelLibrary::ThreeStateAC; 
-	error propagations
-	FromAP1Port: in propagation {NoValue};
-	FromAP2Port: in propagation {NoValue};
-	OutPort: out propagation {NoValue};
-	end propagations;
-	
-component error behavior
-transitions
-  Operational -[FromAP1Port{NoValue} or FromAP2Port{NoValue}]-> SingleInput;
-  Operational -[FromAP1Port{NoValue} and FromAP2Port{NoValue}]-> NoInput;
-  SingleInput -[FromAP1Port{NoValue} and FromAP2Port{NoValue}]-> NoInput;
-propagations  
-  Failed-[]->Outport(NoValue);
-  Operational -[FromAP1Port{NoValue} and FromAP2Port{NoValue}]-> OutPort(NoValue);
-  end component;
-	**};
-annex emv2 {**
-	use types ErrorModelLibrary;
-  use behavior ErrorModelLibrary::Simple; 
-component error behavior
-    propagations  
-      Operational -[FromAP1Port{NoValue} and FromAP2Port{NoValue}]-> OutPort(NoValue);
-  end component;
-	**} in modes (noncritical);
-annex emv2 {**
-	use types ErrorModelLibrary;
-  use behavior ErrorModelLibrary::Simple; 
-component error behavior
-    propagations  
-      Operational -[FromAP1Port{NoValue} or FromAP2Port{NoValue}]-> OutPort(NoValue);
-  end component;
-	**} in modes (critical);
-end AC;
-
-system AC2
-features
-FromAP1Port: in data port;
-FromAP2Port: in data port;
-OutPort: out data port;
-requires modes
-  Critical: mode;
-  NonCritical: initial mode;
-annex emv2 {**
   use types ErrorModelLibrary;
-  use behavior ErrorModelLibrary::ThreeStateAC2; 
+  use behavior GPSErrorModelLibrary::ThreeStateAC; 
   error propagations
       FromAP1Port: in propagation {NoValue};
       FromAP2Port: in propagation {NoValue};
@@ -101,12 +57,6 @@ annex emv2 {**
    end propagations;
 	
 component error behavior
---transitions
---  OperationalNonCritical -[FromAP1Port{NoValue} or FromAP2Port{NoValue}]-> SingleInput;
---  OperationalNonCritical -[FromAP1Port{NoValue} and FromAP2Port{NoValue}]-> NoInput;
---  OperationalCritical -[FromAP1Port{NoValue} or FromAP2Port{NoValue}]-> SingleInput;
---  OperationalCritical -[FromAP1Port{NoValue} and FromAP2Port{NoValue}]-> NoInput;  
---  SingleInput -[FromAP1Port{NoValue} and FromAP2Port{NoValue}]-> NoInput;
 propagations  
   Failed-[]->Outport(NoValue);
   OperationalNonCritical -[FromAP1Port{NoValue} and FromAP2Port{NoValue}]-> OutPort(NoValue);
@@ -117,7 +67,7 @@ mode mappings
   OperationalCritical in modes (critical);
 end component;
 **};
-end AC2;
+end AC;
 
 system FGS
 features
@@ -160,28 +110,17 @@ ACtoFGS: port AC.outport -> outport;
 
 annex emv2 {**
   use types ErrorModelLibrary;        
-  use behavior ErrorModelLibrary::ThreeState;
+  use behavior GPSErrorModelLibrary::ThreeState;
 composite error behavior 
  states
     [AP1.Operational and AP2.Operational
- and FG1.Operational and FG2.Operational and AC.Operational]->Operational ;
-    [AC.Operational and 
-  1 ormore (FG1.Failed, AP1.Failed) and 
-     FG2.Operational and AP2.Operational
-  or 1 ormore (FG2.Failed, AP2.Failed) and 
-     FG1.Operational and AP1.Operational]-> NoncriticalModeFailure;
-    [AC.Failed or 
-    1 ormore (AP1.Failed, FG1.Failed) 
-    and 1 ormore (AP1.Failed, FG2.Failed)]->CriticalModefailure ;
+ and FG1.Operational and FG2.Operational and (AC.OperationalCritical or AC.OperationalNonCritical)]->Operational ;
+    [AC.Failed or 1 ormore (FG1.Failed, AP1.Failed) and 1 ormore (FG2.Failed, AP2.Failed) ]-> NoncriticalModeFailure;
+    [1 ormore (AC.Failed, AC.OperationalNonCritical, AP1.Failed, FG1.Failed, AP1.Failed, FG2.Failed)]->CriticalModefailure ;
 end composite;
 **};
 end FGS.threestate;
 
-
-system implementation FGS.threestate2 extends FGS.threestate
-subcomponents
-	AC: refined to system AC2;
-end FGS.threestate2;
 
 bus PowerSupply
 annex emv2 {**
