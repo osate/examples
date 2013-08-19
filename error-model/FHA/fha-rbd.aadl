@@ -10,10 +10,10 @@ with ErrorLibrary, ErrorModelLibrary;
       f1: flow source PositionReading {
         Latency => 2 ms .. 3 ms;
         }; 
-    annex EMV2 {**
-        use types ErrorLibrary;
-    	use behavior ErrorModelLibrary::Simple;
-    	error propagations 
+    annex EMV2 {** 
+        use types ErrorLibrary; 
+    	use behavior ErrorModelLibrary::Simple;  
+    	error propagations  
     		PositionReading: out propagation  {ServiceOmission,ValueError,ItemOmission};
     	flows
 		 	ef1:error source PositionReading {ServiceOmission,ValueError,ItemOmission} when Failed;
@@ -79,7 +79,7 @@ annex EMV2 {**
 			[Actuator1.Failed and Actuator2.Failed]-> Failed;
 			[PositionSensor.Failed]-> Failed;
 		end composite;  
-	properties 
+	properties  
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.1 ; Distribution => Fixed;] applies to Actuator2.Failed;
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.2 ; Distribution => Fixed;] applies to Actuator1.Failed;
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.5 ; Distribution => Fixed;] applies to PositionSensor.Failed;
