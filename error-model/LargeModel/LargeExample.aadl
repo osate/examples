@@ -1,6 +1,6 @@
 package LargeExample
 public
-with TripleErrorModel, TripleErrorTypes,EMV2, ErrorLibrary;
+with TripleErrorModel, TripleErrorTypes,EMV2;
 
 
 system Subsystem

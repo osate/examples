@@ -14,7 +14,7 @@ states
 transitions
           SelfFail: Operational -[Self_Checked_Fault]-> Fail_Stopped;
           UFailSFault: Fail_Unknown -[Self_Checked_Fault]-> Fail_Stopped;
-          SFailSFault: Fail_Stopped -[Self_Checked_Fault]-> Fail_Stopped; 
+          SFailSFault: Fail_Stopped -[Self_Checked_Fault]-> same state; 
           UncoveredFail: Operational -[Uncovered_Fault]-> Fail_Unknown;
           UFailUFault: Fail_Unknown -[Uncovered_Fault]-> Fail_Unknown; 
           SFailUFault: Fail_Stopped -[Uncovered_Fault]-> Fail_Stopped; 
