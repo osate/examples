@@ -1,0 +1,37 @@
+package GPSErrorModelLibrary
+public
+annex EMV2 {**
+	error types
+		NoValue : type;
+		BadValue : type;
+		LateValue : type;
+		NoService : type;
+	end types;
+
+error behavior ThreeState
+states
+  Operational: initial state; 
+  NonCriticalModeFailure: state; 
+  CriticalModeFailure: state; 
+end behavior;
+
+error behavior ThreeStateAC
+states
+  OperationalNonCritical: initial state; 
+  OperationalCritical: state; 
+  Failed: state; 
+end behavior;
+	
+		
+	error behavior Simple
+	events
+		Failure : error event ;
+	states
+		Operational : initial state ;
+		Failed : state ;
+	transitions
+		BadValueTransition : Operational -[ Failure ]-> Failed ;
+	end behavior ;
+	
+**};
+end GPSErrorModelLibrary;

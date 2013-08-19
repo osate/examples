@@ -109,10 +109,8 @@ annex EMV2 {**
 			[	crossreference => "AIR6110 page 37 figure 17";
 				failure => "Inadvertent wheel brake application";
 				phase => "Takeoff";
-				description => "Undetected inadvertent wheel brake on one wheel 
-				                without locking the wheel.";
-				comment => "Crew cannot detect the failure by the asymmetry which is very small. 
-				            Brake temperature can reach very high temperature.";
+				description => "Undetected inadvertent wheel brake on one wheel without locking the wheel.";
+				comment => "Crew cannot detect the failure by the asymmetry which is very small. Brake temperature can reach very high temperature.";
 			]
 			applies to InadvertentBrake;
 		

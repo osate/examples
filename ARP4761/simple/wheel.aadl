@@ -25,8 +25,8 @@ annex EMV2 {**
 	
 	error propagations
 		input : in propagation{NoService};
-	flows
-		ns1 : error sink input{NoService};
+--	flows
+--		ns1 : error sink input{NoService};
 	end propagations;
 	
 	component error behavior
@@ -57,9 +57,9 @@ annex EMV2 {**
 	error propagations
 		green_input : in propagation{NoService};
 		blue_input : in propagation{NoService};
-	flows
-		ns1 : error sink green_input{NoService};
-		ns2 : error sink blue_input{NoService};
+--	flows
+--		ns1 : error sink green_input{NoService};
+--		ns2 : error sink blue_input{NoService};
 	end propagations;
 	
 	component error behavior
