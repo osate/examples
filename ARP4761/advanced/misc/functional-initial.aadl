@@ -52,49 +52,49 @@ annex EMV2 {**
 	end composite;
 
 	properties
-	              EMV2::hazard => 
-              [      crossreference => "AIR6110 page 36";
+	              EMV2::hazards => 
+              ([      crossreference => "AIR6110 page 36";
               failure => "Total Loss of wheel braking - Unannunciated loss of wheel braking";
-              phase => "Landing or RTO";
+              phases => ("Landing" , "RTO");
               description => "Crew detects the failure when the brakes are operated. The crew uses spoilers and thrust reversers to the maximum extent possible. This may result in a runway overrun.";
               comment => "";
-              ]
+              ])
               applies to Failed.TotalWBLossAnunciated;
               ARP4761::Severity => Hazardous applies to Failed.TotalWBLossAnunciated;
               ARP4761::Likelihood => Remote applies to Failed.TotalWBLossAnunciated;
               
 
 
-              EMV2::hazard => 
-              [      crossreference => "AIR6110 page 36";
+              EMV2::hazards => 
+              ([      crossreference => "AIR6110 page 36";
               failure => "Total Loss of wheel braking - Annunciated loss of wheel braking";
-              phase => "Landing";
+              phases => ("Landing");
               description => "Crew selects a more suitable airport, notifies emergency ground support, and prepares occupants for runway overrun. The crew uses spoilers and thrust reversers to the maximum extent possible.";
               comment => "";
-              ]
+              ])
               applies to Failed.TotalWBLossUnanunciated;
               ARP4761::Severity => Hazardous applies to Failed.TotalWBLossUnanunciated;      
               ARP4761::Likelihood => Remote applies to Failed.TotalWBLossUnanunciated;      
               
-              EMV2::hazard => 
-              [      crossreference => "AIR6110 page 36";
+              EMV2::hazards => 
+              ([      crossreference => "AIR6110 page 36";
               failure => "Partial Symmetrical Loss of Wheel Braking - Unannunciated partial symmetrical loss of wheel braking";
-              phase => "Landing or RTO";
+              phases => ("Landing","RTO");
               description => "The crew detects the failure when the brakes are used. Crew uses available wheel braking, spoilers and thrust reversers available to maximum extent to decelerate the aircraft. The temperature on wheels of the loaded brakes increases and could reach point where wheel/fire failure occurs. Depending on number of brakes lost result could be an overrun.";
               comment => "Potentially catastrophic – to be confirmed by analysis";
-              ]
+              ])
               applies to Failed.PartialSymmetricalWBLossUnAnunciated;
               ARP4761::Severity => Hazardous applies to Failed.PartialSymmetricalWBLossUnAnunciated;      
               ARP4761::Likelihood => Remote applies to Failed.PartialSymmetricalWBLossUnAnunciated;      
               
               
-              EMV2::hazard => 
-              [      crossreference => "AIR6110 page 36";
+              EMV2::hazards => 
+              ([      crossreference => "AIR6110 page 36";
               failure => "Partial Symmetrical Loss of Wheel Braking - Annunciated partial symmetrical loss of wheel braking";
-              phase => "Landing";
+              phases => ("Landing");
               description => "The crew is aware that there is a partial loss of braking before landing. Crew uses wheel braking, spoilers and thrust reversers available to maximum extent to decelerate the aircraft. The temperature on wheels of the loaded brakes increases and could reach point where wheel/fire failure occurs. Depending on number of brakes lost result could be an overrun.";
               comment => "";
-              ]
+              ])
               applies to Failed.PartialSymmetricalWBLossanunciated;
               ARP4761::Severity => Major applies to Failed.PartialSymmetricalWBLossanunciated;   
               ARP4761::Likelihood => Remote applies to Failed.PartialSymmetricalWBLossanunciated;  

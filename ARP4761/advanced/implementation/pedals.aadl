@@ -35,13 +35,13 @@ annex EMV2 {**
 	end component;
 
 	properties
-			EMV2::hazard => 
-		[	crossreference => "TBD";
+			EMV2::hazards => 
+		([	crossreference => "TBD";
 			failure => "No signal for the pedals so that the BSCU cannot produce any results for the brakes.";
-			phase => "TBD";
+			phases => ("TBD");
 			description => "No signal from the pedals";
 			comment => "Would be critical if both power supplies are lost";
-		]
+		])
 		applies to signal1.NoService, signal2.NoService;
 **};
 end pedals;
