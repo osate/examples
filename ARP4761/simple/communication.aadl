@@ -49,13 +49,13 @@ annex EMV2 {**
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.00 ; Distribution => Fixed;] applies to LossAnnunciation;
 		ARP4761::severity => Catastrophic  applies to LossAnnunciation;
 		ARP4761::likelihood => ExtremelyImprobable applies to LossAnnunciation;
-		EMV2::hazard => 
-			[	crossreference => "AIR6110 and ARP4761 - see ARP4761 figure 3 page 199";
+		EMV2::hazards => 
+			([	crossreference => "AIR6110 and ARP4761 - see ARP4761 figure 3 page 199";
 				failure => "Loss of Annunciation";
-				phase => "all";
+				phases => ("all");
 				description => "The system cannot annunce an error";
 				comment => "";
-			]
+			])
 			applies to LossAnnunciation;
 **};
 end annunciation;
