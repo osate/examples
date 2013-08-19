@@ -73,18 +73,22 @@ system FGS
 features
 inport : in data port;
 outport: out data port;
+goCritical: in event port;
+goNonCritical: in event port;
 powersupply : requires bus access PowerSupply;
  modes
 Critical: mode;
 NonCritical: initial mode;
+transCritical: NonCritical -[goCritical]-> Critical;
+transNonCritical: Critical -[goNonCritical]-> NonCritical;
 annex emv2 {**
-	use types ErrorModelLibrary;
+  use types ErrorModelLibrary;
   use behavior ErrorModelLibrary::ThreeState;
-	error propagations
+  error propagations
 	inport: in propagation {NoValue};
 	outport : out propagation {NoValue};
 	powersupply: in propagation {NoService};
-	flows
+  flows
 	esource: error source outport{NoValue} when CriticalModefailure;
 	ePath: error path inport{NoValue} -> outport(NoValue);
 	epPower: error path powersupply{NoService} -> outport(NoValue);
@@ -113,8 +117,10 @@ annex emv2 {**
   use behavior GPSErrorModelLibrary::ThreeState;
 composite error behavior 
  states
-    [AP1.Operational and AP2.Operational
- and FG1.Operational and FG2.Operational and (AC.OperationalCritical or AC.OperationalNonCritical)]->Operational ;
+    [AP1.Operational and AP2.Operational and FG1.Operational and FG2.Operational 
+    	  and AC.OperationalCritical]->Operational ;
+    [((AP1.Operational and AP2.Operational) or (FG1.Operational and FG2.Operational)) 
+    	  and AC.OperationalNonCritical]->Operational ;
     [AC.Failed or 1 ormore (FG1.Failed, AP1.Failed) and 1 ormore (FG2.Failed, AP2.Failed) ]-> NoncriticalModeFailure;
     [1 ormore (AC.Failed, AC.OperationalNonCritical, AP1.Failed, FG1.Failed, AP1.Failed, FG2.Failed)]->CriticalModefailure ;
 end composite;
