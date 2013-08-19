@@ -117,6 +117,6 @@ annex EMV2 {**
 			])
 			applies to Actuator2.ef2.Failed;
 	
-	**};
+	**}; 
   end AircraftFMS.i;
 end FHAExample;

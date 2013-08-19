@@ -30,7 +30,7 @@ end subsys2;
 system implementation subsys2.i
 annex EMV2 {**
 	use types FHAErrorLib; 
-	use behavior FHAErrorLib::TwostateWBS;
+	use behavior FHAErrorLib::Twostate;
  
 
 
@@ -103,7 +103,7 @@ end subsys2.i;
 system subsys1
 annex EMV2 {**
 	use types FHAErrorLib;
-	use behavior FHAErrorLib::TwostateWBS;
+	use behavior FHAErrorLib::Twostate;
 
 
 

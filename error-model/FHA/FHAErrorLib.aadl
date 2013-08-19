@@ -3,7 +3,6 @@ public
 annex EMV2 {**
 	error types
 		AnyFunctionalError: type;
-		AliasAnyFunctionalError renames type WBSImplementationErrorLib::AnyImplementationError;
 		HydraulicLossBlue : type;
 		HydraulicLossGreen : type;
 		HydraulicLossComponents : type;
@@ -31,21 +30,11 @@ annex EMV2 {**
 		end types;
 	
 	error behavior Twostate
-	use types WBSFunctionalErrorLib;
 	states
 		Operational:initial state;
 		failed:state ;
 	end behavior;
 	
-	error behavior TwostateWBS 
-	use types WBSFunctionalErrorLib;
-	states
-		Operational:initial state;
---		failed : state WBErrorSet;
--- WORK
---		failed:state {TotalWBLoss,PartialSymmetricalWBLoss,AssymetricalWBLoss,InadvertentWB};
--- NOT WORKING
-		failed:state {TotalWBLossAnunciated,TotalWBLossUnanunciated,PartialSymmetricalWBLoss,AssymetricalWBLoss,InadvertentWB};
-	end behavior;
+	
 **};
 end FHAErrorLib;
