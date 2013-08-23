@@ -18,7 +18,7 @@ features
 	f1 : out data port mydata;
 	f2 : in data port mydata;
 	b1 : provides bus access genericbus;
-	b2 : provides bus access genericbus;	
+	b2 : requires bus access genericbus;	
 end fg;
 
 feature group subfg1
@@ -30,7 +30,7 @@ end subfg1;
 feature group subfg2
 features
 	b1 : provides bus access genericbus;
-	b2 : provides bus access genericbus;	
+	b2 : requires bus access genericbus;	
 end subfg2;
 
 system s1
@@ -42,6 +42,16 @@ system s1_reverse
 features
 	f : feature group inverse of fg;
 end s1_reverse;
+
+system s1_reverse_flat
+features
+	f1 : in data port mydata;
+	f2 : out data port mydata;
+	b1 : requires bus access genericbus;
+	b2 : provides bus access genericbus;
+end s1_reverse_flat;
+
+	
 
 system s2
 features
@@ -68,6 +78,8 @@ end s3_reverse;
 system main
 end main;
 
+--  First implementation, connect two systems 
+--  that have matching interfaces
 system implementation main.i1
 subcomponents
 	s1 : system s1;
@@ -77,6 +89,42 @@ connections
 -- So, no integration issues.
 	c1 : feature group s1.f <-> s1r.f;
 end main.i1;
+
+system wrapper_flat
+features
+	f  : feature group inverse of fg;
+	f1 : out data port mydata;
+	f2 : in data port mydata;
+	b1 : provides bus access genericbus;
+	b2 : requires bus access genericbus;
+end wrapper_flat;
+
+
+
+system implementation wrapper_flat.i
+connections
+	c1 : port f.f1 -> f1;
+	c2 : port f2 -> f.f2;
+	c3 : bus access f.b1 <-> b1;
+	c4 : bus access f.b2 <-> b2;
+end wrapper_flat.i;
+
+--  Implementation variation, the connected 
+--  component does not use feature groups
+--  but rather use a flat features. We use a
+--  wrapper to wraps connections and features.
+system implementation main.flat
+subcomponents
+	s1 : system s1;
+	s1r : system s1_reverse_flat;
+	wrapper : system wrapper_flat.i;
+connections
+	c1 : feature group s1.f <-> wrapper.f;
+	c2 : port wrapper.f1 -> s1r.f1;
+	c3 : port wrapper.f2 -> s1r.f2;
+	c4 : bus access wrapper.b1 <-> s1r.b1; 
+	c5 : bus access wrapper.b2 <-> s1r.b2;
+end main.flat;
 
 
 system wrapper
@@ -93,6 +141,7 @@ connections
 	c3 : bus access fs1.b1 <-> fs3.b1;
 	c4 : bus access fs1.b2 <-> fs3.b2;
 end wrapper.i;
+
 
 system implementation main.i2
 subcomponents
@@ -117,8 +166,13 @@ subcomponents
 	s2 : system s2_reverse;
 	s3 : system s3_reverse;
 connections
+-- Use fo the subset matching rule
+-- s2.f is a subset of s1.f so, the validation
+-- is validated as long as we have a subset that matches
 	feature group s1.f <-> s2.f {Classifier_Matching_Rule => subset;};
 end main.i3;
+
+
 
 
 end fg_wrapper1;

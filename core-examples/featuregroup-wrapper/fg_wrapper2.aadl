@@ -1,0 +1,146 @@
+package fg_wrapper2
+
+public
+
+data mydata
+end mydata;
+
+data mydata2
+end mydata2;
+
+bus genericbus
+end genericbus;
+
+feature group fgports
+features
+	f1 : out data port mydata;
+	f2 : in data port mydata;	
+end fgports;
+
+feature group fgbus
+features
+	b1 : provides bus access genericbus;
+	b2 : provides bus access genericbus;	
+end fgbus;
+
+
+-- Here, we have a feature group within a feature
+-- group. This is an example os nested featured
+-- group.
+feature group fgnested
+features
+	fg1 : feature group fgports;
+	fg2 : feature group fgbus;	
+end fgnested;
+
+
+-- Here, we have a mode where we flatten all
+-- the features within the same feature group.
+feature group fgfull
+features
+	f1 : out data port mydata;
+	f2 : in data port mydata;
+	b1 : provides bus access genericbus;
+	b2 : provides bus access genericbus;	
+end fgfull;
+
+
+--  s1 uses the flattened version of the feature group
+--  all the features are then expanded.
+system s1
+features
+	f : feature group fgfull;
+end s1;
+
+system s1_reverse 
+features
+	f : feature group inverse of fgfull;
+end s1_reverse;
+
+
+--  s2 uses the nested feature group
+--  so, to connect s2 with an instance of s1, we
+--  would need a wrapper.
+system s2
+features
+	f : feature group fgnested;
+end s2;
+
+system s2_reverse
+features
+	f : feature group inverse of fgnested;
+end s2_reverse;
+
+system main
+end main;
+
+
+--  First implementation: interfaces
+--  are compliant. We use the default rule.
+system implementation main.regular
+subcomponents
+	s1 	: system s1;
+	s1r : system s1_reverse;
+connections
+	feature group s1.f <-> s1r.f;
+end main.regular;
+
+
+-- Now, we define the wrapper to connect
+-- the flattened feature group with the
+-- nested version.
+
+-- There are two versions for the wrapper :
+--   1. wrapper_f2n (flattened to nested) that connects
+--      the flattened version with the nested
+--   2. wrapper_n2f (nested to flattened) that connects
+--      the nested version with the flattened
+
+system wrapper_f2n
+features
+	f1 : feature group inverse of fgfull;
+	f2 : feature group fgnested;
+end wrapper_f2n;
+
+system implementation wrapper_f2n.i
+connections
+	feature group f1 <-> f2.fg1 {Classifier_Matching_Rule => subset;};
+	feature group f1 <-> f2.fg2 {Classifier_Matching_Rule => subset;};
+end wrapper_f2n.i;
+
+system wrapper_n2f
+features
+	f1 : feature group inverse of fgnested;
+	f2 : feature group fgfull;
+end wrapper_n2f;
+
+system implementation wrapper_n2f.i
+connections
+	feature group f2 <-> f1.fg1 {Classifier_Matching_Rule => subset;};
+	feature group f2 <-> f1.fg2 {Classifier_Matching_Rule => subset;};
+end wrapper_n2f.i;
+
+
+system implementation main.full_to_nested
+subcomponents
+	s1 	: system s1;
+	s2r : system s2_reverse;
+	wrapper : system wrapper_f2n;
+connections
+	feature group s1.f <-> wrapper.f1;
+	feature group s2r.f <-> wrapper.f2;
+end main.full_to_nested;
+
+
+system implementation main.nested_to_full
+subcomponents
+	s2 	: system s2;
+	s1r : system s1_reverse;
+	wrapper : system wrapper_n2f;
+connections
+	feature group s2.f <-> wrapper.f1;
+	feature group s1r.f <-> wrapper.f2;
+end main.nested_to_full;
+
+
+end fg_wrapper2;
