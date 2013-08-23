@@ -1,0 +1,124 @@
+package fg_wrapper1
+
+public
+
+data mydata
+end mydata;
+
+data mydata2
+end mydata2;
+
+bus genericbus
+end genericbus;
+
+
+
+feature group fg
+features
+	f1 : out data port mydata;
+	f2 : in data port mydata;
+	b1 : provides bus access genericbus;
+	b2 : provides bus access genericbus;	
+end fg;
+
+feature group subfg1
+features
+	f1 : out data port mydata;
+	f2 : in data port mydata;	
+end subfg1;
+
+feature group subfg2
+features
+	b1 : provides bus access genericbus;
+	b2 : provides bus access genericbus;	
+end subfg2;
+
+system s1
+features
+	f : feature group fg;
+end s1;
+
+system s1_reverse
+features
+	f : feature group inverse of fg;
+end s1_reverse;
+
+system s2
+features
+	f : feature group subfg1;
+end s2;
+
+system s2_reverse
+features
+	f : feature group inverse of subfg1;
+end s2_reverse;
+
+
+system s3
+features
+	f : feature group subfg2;
+end s3;
+
+system s3_reverse
+features
+	f : feature group inverse of subfg2;
+end s3_reverse;
+
+
+system main
+end main;
+
+system implementation main.i1
+subcomponents
+	s1 : system s1;
+	s1r : system s1_reverse;
+connections
+-- Here, the two feature group matches.
+-- So, no integration issues.
+	c1 : feature group s1.f <-> s1r.f;
+end main.i1;
+
+
+system wrapper
+features
+	fs1 : feature group inverse of fg;
+	fs2 : feature group subfg1;
+	fs3 : feature group subfg2;
+end wrapper;
+
+system implementation wrapper.i
+connections
+	c1 : port fs1.f1 -> fs2.f1;
+	c2 : port fs2.f2 -> fs1.f2;
+	c3 : bus access fs1.b1 <-> fs3.b1;
+	c4 : bus access fs1.b2 <-> fs3.b2;
+end wrapper.i;
+
+system implementation main.i2
+subcomponents
+	s1 : system s1;
+-- Here, each contractor cares about
+-- a subpart of the interfaces. So,
+-- we have to connect the system using 
+-- a wrapper.
+	s2 : system s2_reverse;
+	s3 : system s3_reverse;
+-- There is the wrapper used.
+	wrapper : system wrapper;
+connections
+	feature group s1.f <-> wrapper.fs1;
+	feature group wrapper.fs2 <-> s2.f;
+	feature group wrapper.fs3 <-> s3.f;
+end main.i2;
+
+system implementation main.i3
+subcomponents
+	s1 : system s1;
+	s2 : system s2_reverse;
+	s3 : system s3_reverse;
+connections
+	feature group s1.f <-> s2.f {Classifier_Matching_Rule => subset;};
+end main.i3;
+
+
+end fg_wrapper1;
