@@ -37,13 +37,13 @@ annex EMV2 {**
 	properties
 		ARP4761::severity => Major applies to HydraulicError;
 		ARP4761::likelihood => Probable applies to HydraulicError;
-		EMV2::hazard => 
-			[	crossreference => "ARP4761 page 275 figure L9";
+		EMV2::hazards => 
+			([	crossreference => "ARP4761 page 275 figure L9";
 				failure => "Hydraulic Error on a pump";
-				phase => "TBD";
+				phases => ("TBD");
 				description => "Loss of one pump";
 				comment => "Major hazard if both pumps are lost";
-			]
+			])
 			applies to HydraulicError;
 		-- EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.20e-4 ; Distribution => Fixed;] applies to HydraulicError, pressure_output.NoService;
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 2.5e-5 ; Distribution => Poisson;] applies to HydraulicError, pressure_output.NoService;

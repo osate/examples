@@ -71,49 +71,47 @@ annex EMV2 {**
 	properties
 		ARP4761::severity => Hazardous applies to AnnunciatedBrakingLoss,UnannunciatedBrakingLoss;
 		ARP4761::likelihood => ExtremelyImprobable applies to AnnunciatedBrakingLoss,UnannunciatedBrakingLoss;
-		EMV2::hazard => 
-			[	crossreference => "AIR6110 page 35 figure 17";
+		EMV2::hazards => 
+			([	crossreference => "AIR6110 page 35 figure 17";
 				failure => "Crew detect the failure when the brakes are operated (unanunciated) or select an appropaite landing spot (annunciated)";
-				phase => "Landing or RTO";
+				phases => ("Landing","RTO");
 				description => "Total Loss of Wheel Braking";
 				comment => "Reference to crew procedures for loss of normal and reserve modes";
-			]
+			])
 			applies to AnnunciatedBrakingLoss,UnannunciatedBrakingLoss;
 			
 		ARP4761::severity => Hazardous applies to PartialBrakingLoss;
 		ARP4761::likelihood => ExtremelyImprobable applies to PartialBrakingLoss;
-		EMV2::hazard => 
-			[	crossreference => "AIR6110 page 35 figure 17";
+		EMV2::hazards => 
+			([	crossreference => "AIR6110 page 35 figure 17";
 				failure => "Crew detects the failure when brakes are used. Use available wheel braking, spoilers and thrust reverses to decelerate.";
-				phase => "Landing or RTO";
+				phases => ("Landing","RTO");
 				description => "Partial Symmetrical Loss of Wheel Braking";
 				comment => "Additional study required to determine classification";
-			]
+			])
 			applies to PartialBrakingLoss;
 
 		ARP4761::severity => Catastrophic applies to AsymmetricLoss;
 		ARP4761::likelihood => ExtremelyImprobable applies to AsymmetricLoss;
-		EMV2::hazard => 
-			[	crossreference => "AIR6110 page 36 figure 17";
+		EMV2::hazards => 
+			([	crossreference => "AIR6110 page 36 figure 17";
 				failure => "Partial Symmetrical Loss of Wheel Braking";
-				phase => "Landing or RTO";
+				phases => ("Landing","RTO");
 				description => "Asymmetrical Loss of Wheel Braking";
 				comment => "Decrease in braking performance. Tendency to veer off the runway.";
-			]
+			])
 			applies to AsymmetricLoss;
 			
 
 		ARP4761::severity => Catastrophic  applies to InadvertentBrake;
 		ARP4761::likelihood => ExtremelyImprobable applies to InadvertentBrake;
-		EMV2::hazard => 
-			[	crossreference => "AIR6110 page 37 figure 17";
+		EMV2::hazards => 
+			([	crossreference => "AIR6110 page 37 figure 17";
 				failure => "Inadvertent wheel brake application";
-				phase => "Takeoff";
-				description => "Undetected inadvertent wheel brake on one wheel 
-				                without locking the wheel.";
-				comment => "Crew cannot detect the failure by the asymmetry which is very small. 
-				            Brake temperature can reach very high temperature.";
-			]
+				phases => ("Takeoff");
+				description => "Undetected inadvertent wheel brake on one wheel without locking the wheel.";
+				comment => "Crew cannot detect the failure by the asymmetry which is very small. Brake temperature can reach very high temperature.";
+			])
 			applies to InadvertentBrake;
 		
 

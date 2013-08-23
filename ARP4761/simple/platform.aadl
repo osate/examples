@@ -35,13 +35,13 @@ annex EMV2 {**
 	properties
 		ARP4761::severity => Major applies to SoftwareFailure;
 		ARP4761::likelihood => Probable applies to SoftwareFailure;
-		EMV2::hazard => 
-			[	crossreference => "TBD";
+		EMV2::hazards => 
+			([	crossreference => "TBD";
 				failure => "";
-				phase => "all";
+				phases => ("all");
 				description => "Software failure from the platform (OS exception, etc.)";
 				comment => "Impact all components that are controlled by this software";
-			]
+			])
 			applies to SoftwareFailure;
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.35e-5 ; Distribution => Poisson;] applies to SoftwareFailure;
 --		EMV2::OccurrenceDistribution => [ ProbabilityValue => 6.75e-5 ; Distribution => Fixed;] applies to SoftwareFailure;
@@ -86,13 +86,13 @@ annex EMV2 {**
 	properties
 		ARP4761::severity => Major applies to InternalFailure;
 		ARP4761::likelihood => Probable applies to InternalFailure;
-		EMV2::hazard => 
-			[	crossreference => "TBD";
+		EMV2::hazards => 
+			([	crossreference => "TBD";
 				failure => "";
-				phase => "all";
+				phases => ("all");
 				description => "Hardware Failure (processor, device, etc.)";
 				comment => "Impact all software components associated to the hardware";
-			]
+			])
 			applies to InternalFailure;
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.35e-5 ; Distribution => Poisson;] applies to InternalFailure;
 --		EMV2::OccurrenceDistribution => [ ProbabilityValue => 6.75e-5 ; Distribution => Fixed;] applies to HardwareFailure;
@@ -140,13 +140,13 @@ annex EMV2 {**
 	properties
 		ARP4761::severity => Major applies to SoftwareFailure;
 		ARP4761::likelihood => Probable applies to SoftwareFailure;
-		EMV2::hazard => 
-			[	crossreference => "TBD";
+		EMV2::hazards => 
+			([	crossreference => "TBD";
 				failure => "";
-				phase => "all";
+				phases => ("all");
 				description => "Software failure from the platform (OS exception, etc.)";
 				comment => "Impact all components that are controlled by this software";
-			]
+			])
 			applies to SoftwareFailure;
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.35e-5 ; Distribution => Poisson;] applies to SoftwareFailure;
 --		EMV2::OccurrenceDistribution => [ ProbabilityValue => 6.75e-5 ; Distribution => Fixed;] applies to SoftwareFailure;

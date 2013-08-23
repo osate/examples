@@ -31,13 +31,13 @@ with ErrorLibrary, ErrorModelLibrary;
 	-- it uses the generic version of the Hazard property
 		EMV2::severity => 1 applies to ef1.Failed;
 		EMV2::likelihood => C applies to ef1.Failed;
-	EMV2::hazard => 
-	[	crossreference => "1.1.1";
+	EMV2::hazards => 
+	([	crossreference => "1.1.1";
 		failure => "Loss of sensor readings";
-		phase => "all";
+		phases => ("all");
 		description => "No position readings due to sensor failure";
 		comment => "Becomes major hazard, if no rdeundant sensor";
-			]
+			])
 			applies to ef1.Failed;
     **};
   end PositionSensor;
@@ -70,13 +70,13 @@ with ErrorLibrary, ErrorModelLibrary;
 	-- it uses the MILSTD882 specific variant of the hazard property, the severity and likelihood values are enumeration literals.
 		MILSTD882::severity => Catastrophic applies to operation.ServiceOmission;
 		MILSTD882::likelihood => Remote applies to operation.ServiceOmission;
-	EMV2::hazard => 
+	EMV2::hazards => (
 	[	crossreference => "1.1.2";
 		failure => "Loss of actuator functionality";
-		phase => "all";
+		phases => ("all");
 		description => "Failure to move actuator into desired position";
 		comment => "Is a major hazard. Pilot cannot control actuator due to sensor failure";
-			]
+			])
 			applies to operation.ServiceOmission;
     **};
   end Actuator;
@@ -108,15 +108,15 @@ annex EMV2 {**
 	-- It overrides the Hazard property assocaited in the component classifier of the subcomponent.
 		MILSTD882::severity => Critical applies to Actuator2.ef2.Failed;
 		MILSTD882::likelihood => Remote applies to Actuator2.ef2.Failed;
-		EMV2::hazard => 
-	[	crossreference => "1.1.3";
+		EMV2::hazards => 
+	([	crossreference => "1.1.3";
 		failure => "Loss of actuator action";
-		phase => "all";
+		phases => ("all");
 		description => "No action due to sensor failure";
 		comment => "Becomes major hazard, if no rdeundant sensor";
-			]
+			])
 			applies to Actuator2.ef2.Failed;
 	
-	**};
+	**}; 
   end AircraftFMS.i;
 end FHAExample;

@@ -118,13 +118,13 @@ annex EMV2 {**
 	properties
 		ARP4761::severity => Minor applies to InvalidReport;
 		ARP4761::likelihood => Probable applies to InvalidReport;
-		EMV2::hazard => 
-			[	crossreference => "TBD";
+		EMV2::hazards => 
+			([	crossreference => "TBD";
 				failure => "Invalid Report from BSCU Monitor";
-				phase => "TBD";
+				phases => ("TBD");
 				description => "Report from a Monitor that causes an invalid switch to the alternate mode";
 				comment => "Minor Hazard";
-			]
+			])
 			applies to InvalidReport;
 **};
 end monitor.i;
@@ -174,13 +174,13 @@ annex EMV2 {**
 		[mon.operational and cmd.operational]-> Operational;
 	end composite;
 	properties
-		EMV2::hazard => 
-		[	crossreference => "ARP4761 figure L4 page 215";
+		EMV2::hazards => 
+		([	crossreference => "ARP4761 figure L4 page 215";
 			failure => "Failure of the BSCU, either from the monitor, the command or both";
-			phase => "all";
+			phases => ("all");
 			description => "Failure of a BSCU";
 			comment => "Would be critical if two subsystem (primary and redundant) are deffective";
-		]
+		])
 		applies to Failed;
 		ARP4761::severity => Major applies to Failed;
 		ARP4761::likelihood => Probable applies to Failed;
@@ -237,13 +237,13 @@ annex EMV2 {**
 	
 		ARP4761::severity => Hazardous applies to InternalError;
 		ARP4761::likelihood => ExtremelyImprobable applies to InternalError;
-		EMV2::hazard => 
-			[	crossreference => "ARP4761 figure L4 page 215";
+		EMV2::hazards => 
+			([	crossreference => "ARP4761 figure L4 page 215";
 				failure => "";
-				phase => "all";
+				phases => ("all");
 				description => "BSCU validity monitor incorrectly report a Failure causing switch to alternate";
 				comment => "";
-			]
+			])
 			applies to InternalError;
 **};
 end select_alternate;
@@ -290,13 +290,13 @@ annex EMV2 {**
 	
 	
 	properties
-			EMV2::hazard => 
-		[	crossreference => "TBD";
+			EMV2::hazards => 
+		([	crossreference => "TBD";
 			failure => "No power line";
-			phase => "TBD";
+			phases => ("TBD");
 			description => "Permanent failure of power supply source";
 			comment => "Would be critical if both power supplies are lost";
-		]
+		])
 		applies to pwr1, pwr2;
 **};
 end bscu.basic;
@@ -337,13 +337,13 @@ annex EMV2 {**
 	end composite;
 	
 	properties
-			EMV2::hazard => 
-		[	crossreference => "TBD";
+			EMV2::hazards => 
+		([	crossreference => "TBD";
 			failure => "No power line";
-			phase => "TBD";
+			phases => ("TBD");
 			description => "Permanent failure of power supply source";
 			comment => "Would be critical if both power supplies are lost";
-		]
+		])
 		applies to pwr1, pwr2;
 **};
 end bscu.generic;
