@@ -69,8 +69,8 @@ annex EMV2 {**
 	end composite;
 	
 	properties
-		ARP4761::severity => Hazardous applies to AnnunciatedBrakingLoss,UnannunciatedBrakingLoss;
-		ARP4761::likelihood => ExtremelyImprobable applies to AnnunciatedBrakingLoss,UnannunciatedBrakingLoss;
+		EMV2::severity => ARP4761::Hazardous applies to AnnunciatedBrakingLoss,UnannunciatedBrakingLoss;
+		EMV2::likelihood => ARP4761::ExtremelyImprobable applies to AnnunciatedBrakingLoss,UnannunciatedBrakingLoss;
 		EMV2::hazards => 
 			([	crossreference => "AIR6110 page 35 figure 17";
 				failure => "Crew detect the failure when the brakes are operated (unanunciated) or select an appropaite landing spot (annunciated)";
@@ -80,8 +80,8 @@ annex EMV2 {**
 			])
 			applies to AnnunciatedBrakingLoss,UnannunciatedBrakingLoss;
 			
-		ARP4761::severity => Hazardous applies to PartialBrakingLoss;
-		ARP4761::likelihood => ExtremelyImprobable applies to PartialBrakingLoss;
+		EMV2::severity => ARP4761::Hazardous applies to PartialBrakingLoss;
+		EMV2::likelihood => ARP4761::ExtremelyImprobable applies to PartialBrakingLoss;
 		EMV2::hazards => 
 			([	crossreference => "AIR6110 page 35 figure 17";
 				failure => "Crew detects the failure when brakes are used. Use available wheel braking, spoilers and thrust reverses to decelerate.";
@@ -91,20 +91,22 @@ annex EMV2 {**
 			])
 			applies to PartialBrakingLoss;
 
-		ARP4761::severity => Catastrophic applies to AsymmetricLoss;
-		ARP4761::likelihood => ExtremelyImprobable applies to AsymmetricLoss;
+		EMV2::severity => ARP4761::Catastrophic applies to AsymmetricLoss;
+		EMV2::likelihood => ARP4761::ExtremelyImprobable applies to AsymmetricLoss;
 		EMV2::hazards => 
 			([	crossreference => "AIR6110 page 36 figure 17";
 				failure => "Partial Symmetrical Loss of Wheel Braking";
 				phases => ("Landing","RTO");
+				severity => ARP4761::Catastrophic;
+				likelihood => ARP4761::ExtremelyImprobable;
 				description => "Asymmetrical Loss of Wheel Braking";
 				comment => "Decrease in braking performance. Tendency to veer off the runway.";
 			])
 			applies to AsymmetricLoss;
 			
 
-		ARP4761::severity => Catastrophic  applies to InadvertentBrake;
-		ARP4761::likelihood => ExtremelyImprobable applies to InadvertentBrake;
+		EMV2::severity => ARP4761::Catastrophic  applies to InadvertentBrake;
+		EMV2::likelihood => ARP4761::ExtremelyImprobable applies to InadvertentBrake;
 		EMV2::hazards => 
 			([	crossreference => "AIR6110 page 37 figure 17";
 				failure => "Inadvertent wheel brake application";

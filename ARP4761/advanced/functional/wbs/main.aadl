@@ -170,8 +170,8 @@ annex EMV2 {**
               comment => "";
               ])
               applies to Failed.TotalWBLossAnunciated;
-	ARP4761::Severity => Hazardous applies to Failed.TotalWBLossAnunciated;
-	ARP4761::Likelihood => Remote applies to Failed.TotalWBLossAnunciated;
+	EMV2::Severity => ARP4761::Hazardous applies to Failed.TotalWBLossAnunciated;
+	EMV2::Likelihood => ARP4761::Remote applies to Failed.TotalWBLossAnunciated;
               
 
 
@@ -183,8 +183,8 @@ annex EMV2 {**
               comment => "";
               ])
 		applies to Failed.TotalWBLossUnanunciated;
-	ARP4761::Severity => Hazardous applies to Failed.TotalWBLossUnanunciated;      
-	ARP4761::Likelihood => Remote applies to Failed.TotalWBLossUnanunciated;
+	EMV2::Severity => ARP4761::Hazardous applies to Failed.TotalWBLossUnanunciated;      
+	EMV2::Likelihood => ARP4761::Remote applies to Failed.TotalWBLossUnanunciated;
 	-- Probability should be 5e-7 according to AIR6110, page 49
 	EMV2::OccurrenceDistribution => [ ProbabilityValue => 5.0e-7 ; Distribution => Poisson;] applies to Failed.TotalWBLossUnanunciated;
               
@@ -196,8 +196,8 @@ annex EMV2 {**
               comment => "Potentially catastrophic – to be confirmed by analysis";
               ])
               applies to Failed.PartialSymmetricalWBLossUnAnunciated;
-	ARP4761::Severity => Hazardous applies to Failed.PartialSymmetricalWBLossUnAnunciated;      
-	ARP4761::Likelihood => Remote applies to Failed.PartialSymmetricalWBLossUnAnunciated;      
+	EMV2::Severity => ARP4761::Hazardous applies to Failed.PartialSymmetricalWBLossUnAnunciated;      
+	EMV2::Likelihood => ARP4761::Remote applies to Failed.PartialSymmetricalWBLossUnAnunciated;      
               
               
 	EMV2::hazards => 
@@ -208,8 +208,8 @@ annex EMV2 {**
               comment => "";
               ])
               applies to Failed.PartialSymmetricalWBLossanunciated;
-	ARP4761::Severity => Major applies to Failed.PartialSymmetricalWBLossanunciated;   
-	ARP4761::Likelihood => Remote applies to Failed.PartialSymmetricalWBLossanunciated;             
+	EMV2::Severity => ARP4761::Major applies to Failed.PartialSymmetricalWBLossanunciated;   
+	EMV2::Likelihood => ARP4761::Remote applies to Failed.PartialSymmetricalWBLossanunciated;             
  **};
 end DecelerateWheels.basic;
 

@@ -35,8 +35,8 @@ annex EMV2 {**
 	end component;
 	
 	properties
-		ARP4761::severity => Major applies to HydraulicError;
-		ARP4761::likelihood => Probable applies to HydraulicError;
+		EMV2::severity => ARP4761::Major applies to HydraulicError;
+		EMV2::likelihood => ARP4761::Probable applies to HydraulicError;
 		EMV2::hazards => 
 			([	crossreference => "ARP4761 page 275 figure L9";
 				failure => "Hydraulic Error on a pump";

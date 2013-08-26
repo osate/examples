@@ -33,8 +33,8 @@ annex EMV2 {**
 		p2     : Failed -[]-> bindings(SoftwareFailure);
 	end component;
 	properties
-		ARP4761::severity => Major applies to SoftwareFailure;
-		ARP4761::likelihood => Probable applies to SoftwareFailure;
+		EMV2::severity => ARP4761::Major applies to SoftwareFailure;
+		EMV2::likelihood => ARP4761::Probable applies to SoftwareFailure;
 		EMV2::hazards => 
 			([	crossreference => "TBD";
 				failure => "";
@@ -84,8 +84,8 @@ annex EMV2 {**
 		pfail  : Failed -[]-> bindings(HardwareFailure);
 	end component;
 	properties
-		ARP4761::severity => Major applies to InternalFailure;
-		ARP4761::likelihood => Probable applies to InternalFailure;
+		EMV2::severity => ARP4761::Major applies to InternalFailure;
+		EMV2::likelihood => ARP4761::Probable applies to InternalFailure;
 		EMV2::hazards => 
 			([	crossreference => "TBD";
 				failure => "";
@@ -138,8 +138,8 @@ annex EMV2 {**
 		psoft  : Failed -[]-> processor(SoftwareFailure);
 	end component;
 	properties
-		ARP4761::severity => Major applies to SoftwareFailure;
-		ARP4761::likelihood => Probable applies to SoftwareFailure;
+		EMV2::severity => ARP4761::Major applies to SoftwareFailure;
+		EMV2::likelihood => ARP4761::Probable applies to SoftwareFailure;
 		EMV2::hazards => 
 			([	crossreference => "TBD";
 				failure => "";

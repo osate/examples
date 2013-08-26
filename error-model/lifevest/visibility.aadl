@@ -39,15 +39,15 @@ annex EMV2 {**
 		p1 : Failed -[]-> visibility(NotVisible);
 	end component;
 	properties
-		EMV2::severity => 1 applies to visibility.NotVisible;
-		EMV2::likelihood => C applies to visibility.NotVisible;
-		EMV2::hazard => 
-			[crossreference => "1.1.1";
+		EMV2::hazards => 
+		(	[crossreference => "1.1.1";
 			 failure => "Loss of sensor readings";
-			 phase => "all";
+			 phases => ("all");
+			 likelihood => 2;
+			 severity => 1;
 			 description => "No position readings due to sensor failure";
 			 comment => "Becomes major hazard, if no rdeundant sensor";
-		]
+		])
 		applies to visibility.NotVisible;	
 **};
 end visibility.impl;

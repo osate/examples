@@ -117,8 +117,8 @@ annex EMV2 {**
 		p1 : Failed -[]-> valid(NoValue);
 	end component;
 	properties
-		ARP4761::severity => Minor applies to InvalidReport;
-		ARP4761::likelihood => Probable applies to InvalidReport;
+		EMV2::severity => ARP4761::Minor applies to InvalidReport;
+		EMV2::likelihood => ARP4761::Probable applies to InvalidReport;
 		EMV2::hazards => 
 			([	crossreference => "TBD";
 				failure => "Invalid Report from BSCU Monitor";
@@ -183,8 +183,8 @@ annex EMV2 {**
 			comment => "Would be critical if two subsystem (primary and redundant) are deffective";
 		])
 		applies to Failed;
-		ARP4761::severity => Major applies to Failed;
-		ARP4761::likelihood => Probable applies to Failed;
+		EMV2::severity => ARP4761::Major applies to Failed;
+		EMV2::likelihood => ARP4761::Probable applies to Failed;
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 3.3e-5 ; Distribution => Fixed;] applies to Failed;
 **};
 end bscu_subsystem.generic;
@@ -236,8 +236,8 @@ annex EMV2 {**
 		-- EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.30e-5 ; Distribution => Fixed;] applies to InternalError;
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 3.6e-6 ; Distribution => Poisson;] applies to InternalError;
 	
-		ARP4761::severity => Hazardous applies to InternalError;
-		ARP4761::likelihood => ExtremelyImprobable applies to InternalError;
+		EMV2::severity => ARP4761::Hazardous applies to InternalError;
+		EMV2::likelihood => ARP4761::ExtremelyImprobable applies to InternalError;
 		EMV2::hazards => 
 			([	crossreference => "ARP4761 figure L4 page 215";
 				failure => "";

@@ -2,9 +2,9 @@ package FHAExample
 public
 with SEI, MILSTD882, EMV2;
 with ErrorLibrary, ErrorModelLibrary;
--- use of Hazard property both in generic form (EMV2) and in one of the standard forms (MILSTD882).
+-- use of Hazard property both in generic form (EMV2) and in one of the standard forms (EMV2::).
 -- Generic form uses enumeration A-E for severity levels, and integer 1-5 for likelihood
--- Standard specific variants (MILSTD882 and ARP4761) use enumerations for severity and likelihood.
+-- Standard specific variants (EMV2:: and ARP4761) use enumerations for severity and likelihood.
 -- illustrates use of symbolic constants in generic hazard form to map standard specific labels into base type.
 -- it also illustrates to use of the hazard property applied to the state as error source, a type as error source, or the error propagation as error source.
 -- finally, it illustrates associating the hazard property in the context of a component classifier and in the context of a subcomponent.
@@ -30,7 +30,7 @@ with ErrorLibrary, ErrorModelLibrary;
 	-- property is associated with the error behavior state as the source of an error source.
 	-- it uses the generic version of the Hazard property
 		EMV2::severity => 1 applies to ef1.Failed;
-		EMV2::likelihood => C applies to ef1.Failed;
+		EMV2::likelihood => 2 applies to ef1.Failed;
 	EMV2::hazards => 
 	([	crossreference => "1.1.1";
 		failure => "Loss of sensor readings";
@@ -67,9 +67,9 @@ with ErrorLibrary, ErrorModelLibrary;
  		end paths;
 	properties
 	-- the property is associated with an a specific error type of an outgoing observable propagation point
-	-- it uses the MILSTD882 specific variant of the hazard property, the severity and likelihood values are enumeration literals.
-		MILSTD882::severity => Catastrophic applies to operation.ServiceOmission;
-		MILSTD882::likelihood => Remote applies to operation.ServiceOmission;
+	-- it uses the EMV2:: specific variant of the hazard property, the severity and likelihood values are enumeration literals.
+		EMV2::severity => MILSTD882::Catastrophic applies to operation.ServiceOmission;
+		EMV2::likelihood => MILSTD882::Remote applies to operation.ServiceOmission;
 	EMV2::hazards => (
 	[	crossreference => "1.1.2";
 		failure => "Loss of actuator functionality";
@@ -106,8 +106,8 @@ annex EMV2 {**
 	-- here the hazard property is associated with the error behavior state in an error source of a subcomponent.
 	-- In this case the path starts out within the core model (subcomponent)
 	-- It overrides the Hazard property assocaited in the component classifier of the subcomponent.
-		MILSTD882::severity => Critical applies to Actuator2.ef2.Failed;
-		MILSTD882::likelihood => Remote applies to Actuator2.ef2.Failed;
+		EMV2::severity => MILSTD882::Critical applies to Actuator2.ef2.Failed;
+		EMV2::likelihood => MILSTD882::Remote applies to Actuator2.ef2.Failed;
 		EMV2::hazards => 
 	([	crossreference => "1.1.3";
 		failure => "Loss of actuator action";

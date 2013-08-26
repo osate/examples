@@ -29,8 +29,8 @@ annex EMV2 {**
 		normal : Operational -[]-> socket(NoError);
 	end component;
 	properties
-		ARP4761::severity => Major applies to socket.NoPower;
-		ARP4761::likelihood => Probable applies to socket.NoPower;
+		EMV2::severity => ARP4761::Major applies to socket.NoPower;
+		EMV2::likelihood => ARP4761::Probable applies to socket.NoPower;
 		EMV2::hazards => 
 			([	crossreference => "ARP4761 page 277 figure 9";
 				failure => "Loss of one power source, might be critical if both are lost (primary and redundant)";
@@ -42,8 +42,8 @@ annex EMV2 {**
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.35e-5 ; Distribution => Poisson;] applies to socket.NoPower;
 --		EMV2::OccurrenceDistribution => [ ProbabilityValue => 6.75e-5 ; Distribution => Fixed;] applies to socket.NoPower;
 
-		ARP4761::severity => Catastrophic applies to Explode;		
-		ARP4761::likelihood =>  ExtremelyImprobable applies to Explode;
+		EMV2::severity => ARP4761::Catastrophic applies to Explode;		
+		EMV2::likelihood =>  ARP4761::ExtremelyImprobable applies to Explode;
 		EMV2::hazards => 
 			([	crossreference => "TBD";
 				failure => "Battery Explode";
@@ -53,8 +53,8 @@ annex EMV2 {**
 			])
 			applies to Explode;
 			
-		ARP4761::severity => Major applies to Depleted;		
-		ARP4761::likelihood => Probable applies to Depleted;
+		EMV2::severity => ARP4761::Major applies to Depleted;		
+		EMV2::likelihood => ARP4761::Probable applies to Depleted;
 		EMV2::hazards => 
 			([	crossreference => "TBD";
 				failure => "Battery Depleted";
