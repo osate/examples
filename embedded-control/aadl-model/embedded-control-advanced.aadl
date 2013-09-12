@@ -11,7 +11,7 @@
 package embedded_control_advanced
 
 public
-with EMV2;
+with EMV2, ARP4761;
 
 data temperature
 end temperature;
@@ -42,25 +42,25 @@ annex EMV2 {**
 	    --  from the specifications, it corresponds to 1 fault per month
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 3.85e-7 ; Distribution => Poisson;] applies to Failure;
 		EMV2::severity => 1 applies to Failure;
-		EMV2::likelihood => C applies to Failure;
-		EMV2::hazard => 
-		[	crossreference => "X.X.X.X";
+		EMV2::likelihood => 3 applies to Failure;
+		EMV2::hazards => 
+		([	crossreference => "X.X.X.X";
 			failure => "Loss of sensor readings";
-			phase => "all";
+			phases => ("all");
 			description => "No position readings due to sensor failure";
 			comment => "Not critical as long as two sensors are operating";
-		]
+		])
 		applies to Failure;
 		
 		EMV2::severity => 1 applies to Failed;
-		EMV2::likelihood => C applies to Failed;
-		EMV2::hazard => 
-		[	crossreference => "A.A.A";
+		EMV2::likelihood => 3 applies to Failed;
+		EMV2::hazards => 
+		([	crossreference => "A.A.A";
 			failure => "Sensor in failure state";
-			phase => "all";
+			phases => ("all");
 			description => "Failure of sensor";
 			comment => "Likely happen once a month";
-		]
+		])
 		applies to Failed;
 **};
 end sensor;
@@ -82,29 +82,27 @@ annex EMV2 {**
 	    --  from the specifications, it corresponds to 1 fault per 2 months
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.92e-7 ; Distribution => Poisson;] applies to Failure;
 		EMV2::severity => 1 applies to Failure;
-		EMV2::likelihood => C applies to Failure;
-		EMV2::hazard => 
-		[	crossreference => "Y.Y.Y";
+		EMV2::likelihood => 3 applies to Failure;
+		EMV2::hazards => 
+		([	crossreference => "Y.Y.Y";
 			failure => "Cannot operate";
-			phase => "all";
+			phases => ("all");
 			description => "Cannot operate the device";
 			comment => "Major hazard if both are not operating";
-		]
+		])
 		applies to Failure;
 		
-				
-
-
+			
 		
 		EMV2::severity => 1 applies to Failed;
-		EMV2::likelihood => C applies to Failed;
-		EMV2::hazard => 
-		[	crossreference => "A.A.A";
+		EMV2::likelihood => 3 applies to Failed;
+		EMV2::hazards => 
+		([	crossreference => "A.A.A";
 			failure => "Actuator failed";
-			phase => "all";
+			phases => ("all");
 			description => "Failure of an actuator";
 			comment => "Should happen once every two months";
-		]
+		])
 		applies to Failed;
 **};
 end actuator;
@@ -147,14 +145,14 @@ annex EMV2 {**
 	    --  from the specifications, it corresponds to 1 fault per year
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 3.17e-8 ; Distribution => Poisson;] applies to Failure;
 		EMV2::severity => 1 applies to Failure;
-		EMV2::likelihood => C applies to Failure;
-		EMV2::hazard => 
-		[	crossreference => "Z.Z.Z";
+		EMV2::likelihood => 3 applies to Failure;
+		EMV2::hazards => 
+		([	crossreference => "Z.Z.Z";
 			failure => "Cannot process data";
-			phase => "all";
+			phases => ("all");
 			description => "Permanent failure from the processor";
 			comment => "Major issue, the processor is not operating";
-		]
+		])
 		applies to Failure;
 	 	--  The following properties are used to fill the PRISM model
 	    --  and the FHA report.
@@ -171,14 +169,14 @@ annex EMV2 {**
 	    --  from the specifications, it corresponds to 1 transient failure occurence each day
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.15e-5 ; Distribution => Poisson;] applies to FailureTransient;
 		EMV2::severity => 1 applies to FailureTransient;
-		EMV2::likelihood => C applies to FailureTransient;
-		EMV2::hazard => 
+		EMV2::likelihood => 3 applies to FailureTransient;
+		EMV2::hazards => (
 		[	crossreference => "A.A.A";
 			failure => "Temporary unavailable";
-			phase => "all";
+			phases => ("all");
 			description => "Temporary failure of the processor";
 			comment => "Happen once a day and likely recover quickly";
-		]
+		])
 		applies to FailureTransient;
 **};
 end generic_processor;
