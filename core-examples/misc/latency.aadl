@@ -1,0 +1,55 @@
+package fta_sample
+
+
+public
+
+with SEI;
+
+data mydata
+properties
+	Source_Data_Size => 320 bits ;
+end mydata;
+
+bus mybus
+properties
+ 		Transmission_Time => [Fixed => 10 us .. 10 us; PerByte => 80 us .. 80 us;];
+  		SEI::BandWidthCapacity => 70.0 Kbytesps; 
+  		Latency => 10 Ms .. 10 Ms;
+end mybus;
+
+system sender
+features
+	b    : requires bus access mybus; 
+	dout : out event data port mydata;
+flows
+   myflow_src: flow source dout {latency => 1 ns .. 2 ns; } ; 
+end sender;
+
+system receiver
+features
+   	b   : requires bus access mybus;
+	din : in event data port mydata;
+flows
+   myflow_dst: flow sink din {latency => 1 ns .. 2 ns; } ; 
+end receiver;
+
+
+system main
+end main;
+
+system implementation main.i
+subcomponents
+	s : system sender;
+	r : system receiver;
+	b : bus mybus;
+connections
+	c : port s.dout -> r.din {  
+				Actual_Connection_Binding => (reference(b));
+				SEI::BandWidthBudget => 50.0 Kbytesps;                             
+			}; 
+	a1: bus access b <-> s.b;
+	a2: bus access b <-> r.b;
+
+end main.i;
+
+end fta_sample;

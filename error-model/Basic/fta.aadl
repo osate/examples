@@ -1,0 +1,33 @@
+package fta_sample
+
+
+public
+
+system s
+annex EMV2 {**
+	use types ErrorModelLibrary;
+	use behavior ErrorModelLibrary::Simple;
+**};
+end s;
+
+system main
+end main;
+
+system implementation main.i
+subcomponents
+	s1 : system s;
+	s2 : system s;
+
+annex EMV2 {**
+	use types ErrorModelLibrary;
+	use behavior ErrorModelLibrary::Simple;
+	
+	composite error behavior
+		states
+			[s1.Failed and s2.Failed]-> Failed;
+		end composite;  
+	
+**};
+end main.i;
+
+end fta_sample;
