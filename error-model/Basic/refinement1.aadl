@@ -1,0 +1,197 @@
+package em_refinement1
+
+public
+
+with EMV2;
+
+system badcomp
+features
+	ein 	: in event port;
+	eout 	: out event port;
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior ErrorModelLibrary::Simple;
+	error propagations
+		ein : in propagation {ServiceOmission,ValueError};
+		eout : out propagation {ServiceOmission,ValueError};
+	flows
+		f1 : error sink ein {ServiceOmission, ValueError};
+		f2 : error path ein {ValueError} -> eout (ValueError);
+		f3 : error source eout{ServiceOmission};
+	end propagations;
+	
+	component error behavior
+	events
+		FailEvent: error event;
+		ResetEvent: recover event;
+	transitions
+		tfail: Operational -[Failure ]-> Failed;
+		treset: Failed -[ ResetEvent ]-> Operational;
+	end component;
+	
+	properties
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.9 ; Distribution => Fixed;] applies to ein;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.7 ; Distribution => Fixed;] applies to ein.ValueError;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.4 ; Distribution => Fixed;] applies to ein.ServiceOmission;
+		
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.56 ; Distribution => Fixed;] applies to Failure;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.1 ; Distribution => Fixed;] applies to ResetEvent;
+**};
+end badcomp;
+
+system badcomp_ext extends badcomp
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior ErrorModelLibrary::Simple;
+	error propagations
+		ein : in propagation {BadValue};
+		--  Here, what are the consequences for the flows defined before ? Are they still valid
+		--  or not ? Also, can we assume that the property that applied to ein still make sense ?
+		eout : out propagation {LateDelivery};
+	end propagations;
+**};
+end badcomp_ext;
+	  
+system implementation badcomp.i1
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior ErrorModelLibrary::Simple;
+
+	error propagations
+		ein : in propagation {ServiceOmission};
+		eout : out propagation {ServiceOmission,ValueError};
+	flows
+		f1 : error sink ein {ServiceOmission};
+		f2 : error source eout {ServiceOmission};
+	end propagations;	
+	
+	properties
+		-- The following should not work
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.1 ; Distribution => Fixed;] applies to ein.ValueError;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.4 ; Distribution => Fixed;] applies to ein.ServiceOmission;
+		
+	
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.5 ; Distribution => Fixed;] applies to Failure;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.6 ; Distribution => Fixed;] applies to ResetEvent;
+**};
+end badcomp.i1;
+
+
+system implementation badcomp.i2
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior ErrorModelLibrary::Simple;
+
+	error propagations
+	    --  Here, by limiting the error to ValueError, we remove the ServiceOmission. What is the
+	    --  consequences on the ServiceOmission property associated with the error type ?
+		ein : in propagation {ValueError};
+	flows
+	    --  I can override an error sink that is currently not related with the initial error
+	    --  Initially, f3 refer to eout
+		f3 : error sink ein {ValueError};
+		--  Can I be an error source and error path at the same time ?
+		--  In the component type, f2 put eout as an error path for ValueError.
+		--  Can I be an error source and error path for the same error type ?
+		f4 : error source eout {ValueError,ServiceOmission}; 
+	end propagations;	
+	
+	properties
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.5 ; Distribution => Fixed;] applies to ein.ValueError;
+		-- The following should not work
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.1 ; Distribution => Fixed;] applies to ein.ServiceOmission;
+		
+	
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.1 ; Distribution => Fixed;] applies to Failure;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.2 ; Distribution => Fixed;] applies to ResetEvent;
+**};
+end badcomp.i2;
+
+
+
+
+system goodcomp
+features
+	ein 	: in event port;
+	eout 	: out event port;
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior ErrorModelLibrary::Simple;
+	component error behavior
+	events
+		FailEvent: error event;
+		ResetEvent: recover event;
+	transitions
+		tfail: Operational -[Failure ]-> Failed;
+		treset: Failed -[ ResetEvent ]-> Operational;
+	end component;
+	
+	properties
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.56 ; Distribution => Fixed;] applies to Failure;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.1 ; Distribution => Fixed;] applies to ResetEvent;
+**};
+end goodcomp;
+
+
+system goodcomp_ext extends goodcomp
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior ErrorModelLibrary::Simple;
+	error propagations
+		ein : in propagation {BadValue};
+		--  Here, what are the consequences for the flows defined before ? Are they still valid
+		--  or not ? Also, can we assume that the property that applied to ein still make sense ?
+		eout : out propagation {LateDelivery};
+	flows
+		f1 : error sink 	ein {BadValue};
+		f2 : error source 	eout {LateDelivery};
+	end propagations;
+**};
+end goodcomp_ext;
+	  
+system implementation goodcomp.i1
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior ErrorModelLibrary::Simple;
+
+	error propagations
+		ein : in propagation {ServiceOmission};
+		eout : out propagation {ServiceOmission,ValueError};
+	flows
+		f1 : error sink ein {ServiceOmission};
+		f2 : error source eout {ServiceOmission};
+	end propagations;	
+	
+	properties
+		-- The following should not work
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.4 ; Distribution => Fixed;] applies to ein.ServiceOmission;
+		
+	
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.5 ; Distribution => Fixed;] applies to Failure;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.6 ; Distribution => Fixed;] applies to ResetEvent;
+**};
+end goodcomp.i1;
+
+
+system implementation goodcomp.i2
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior ErrorModelLibrary::Simple;
+
+	error propagations
+		ein : in propagation {ValueError};
+		eout : out propagation {ServiceOmission,ValueError};
+	flows
+		f1 : error sink ein {ValueError};
+		f3 : error source eout {ValueError,ServiceOmission}; --  Can I be an error source and error path at the same time ?
+	end propagations;	
+	
+	properties
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.5 ; Distribution => Fixed;] applies to ein.ValueError;
+	
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.1 ; Distribution => Fixed;] applies to Failure;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.2 ; Distribution => Fixed;] applies to ResetEvent;
+**};
+end goodcomp.i2;
+
+end em_refinement1;
