@@ -18,13 +18,13 @@ annex EMV2 {**
 
 	error propagations
 		fromElectrical : in propagation {AnyFunctionalError};
-		fromHydraulic  : in propagation HydraulicErrors;
+		fromHydraulic  : in propagation {HydraulicErrors};
 		fromAlert      : in propagation {AnyFunctionalError};
 		fromSteering   : in propagation {AnyFunctionalError};
 		fromStatus     : in propagation {AnyFunctionalError};
 	flows
 		f1 : error sink fromElectrical {AnyFunctionalError};
-		f2 : error sink fromHydraulic HydraulicErrors;
+		f2 : error sink fromHydraulic {HydraulicErrors};
 		f3 : error sink fromAlert {AnyFunctionalError};
 		f4 : error sink fromSteering {AnyFunctionalError};
 		f5 : error sink fromStatus {AnyFunctionalError};

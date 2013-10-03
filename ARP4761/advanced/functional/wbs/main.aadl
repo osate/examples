@@ -16,10 +16,10 @@ annex EMV2 {**
 	use behavior WBSFunctionalErrorLib::Twostate;
 
 	error propagations
-		fromHydraulic 	: in propagation HydraulicErrors;
+		fromHydraulic 	: in propagation {HydraulicErrors};
 		fromBSCU  		: in propagation {AnyFunctionalError};
 	flows
-		f1 : error sink fromHydraulic HydraulicErrors;
+		f1 : error sink fromHydraulic {HydraulicErrors};
 		f2 : error sink fromBSCU{AnyFunctionalError};	
 	end propagations;
 	
@@ -94,7 +94,7 @@ annex EMV2 {**
 
 	error propagations
 		fromElectrical : in propagation {AnyFunctionalError};
-		fromHydraulic  : in propagation HydraulicErrors;
+		fromHydraulic  : in propagation {HydraulicErrors};
 		fromAlert      : in propagation {AnyFunctionalError};
 		fromSteering   : in propagation {AnyFunctionalError};
 		fromStatus     : in propagation {AnyFunctionalError};

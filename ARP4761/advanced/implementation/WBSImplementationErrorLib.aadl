@@ -42,7 +42,7 @@ annex EMV2 {**
 	use types WBSFunctionalErrorLib;
 	states
 		Operational:initial state;
-		Failed : state HydraulicErrors;
+		Failed : state {HydraulicErrors};
 	end behavior;
 **};
 end WBSImplementationErrorLib;

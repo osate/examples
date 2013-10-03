@@ -34,7 +34,7 @@ annex EMV2 {**
 	use types WBSFunctionalErrorLib;
 	states
 		Operational:initial state;
-		failed:state ;
+		failed:state {WBErrorSet};
 	end behavior;
 	
 	error behavior TwostateWBS 

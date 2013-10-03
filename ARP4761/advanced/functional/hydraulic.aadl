@@ -11,9 +11,9 @@ annex EMV2 {**
 	use behavior WBSFunctionalErrorLib::Twostate;
 	error propagations
 		processor : in propagation {AnyFunctionalError};
-		isFailing : out propagation HydraulicErrors; 
+		isFailing : out propagation {HydraulicErrors}; 
 	flows
-		f1 : error source isFailing HydraulicErrors;
+		f1 : error source isFailing {HydraulicErrors};
 		f2 : error path processor{AnyFunctionalError} -> isFailing (HydraulicLossBlue);
 		f3 : error path processor{AnyFunctionalError} -> isFailing (HydraulicLossGreen);
 		f4 : error path processor{AnyFunctionalError} -> isFailing (HydraulicLossComponents);

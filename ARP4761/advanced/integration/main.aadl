@@ -26,7 +26,7 @@ properties
 
 annex EMV2 {**
 	use type equivalence WBSMappingErrorLib::FunctionToImplementation;
-	use behavior WBSMappingErrorLib::Basic;
+	use behavior WBSMappingErrorLib::Basic; 
 
 	composite error behavior
 	states
