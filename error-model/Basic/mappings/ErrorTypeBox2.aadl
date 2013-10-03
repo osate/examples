@@ -1,0 +1,22 @@
+package ErrorTypeLibBox2
+public
+
+annex EMV2{**
+	error types
+		DelayedInfo : type;
+		NoInfo		: type;
+		WrongInfo	: type;
+	end types;
+		
+	
+	error behavior Box2
+		states
+			Operational			: initial state;
+			Failed_Recovarable	: state;
+			Failed_UnRecovarable: state;
+				
+	end behavior;
+	
+**};
+
+end ErrorTypeLibBox2;

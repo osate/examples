@@ -1,0 +1,109 @@
+package ExampleFTA
+public
+	with EMV2;
+	with ErrorTypeLibBox1, ErrorTypeLibBox2;
+	
+system Box1
+	features
+		input1 : in event port;
+		input2 : in event port;
+		output1 : out event data port;
+		output2 : out event data port;
+		output3 : out event port;
+	modes
+		OFF: 			initial mode;
+		Operational:	mode;
+		OFF -[input1]-> Operational;
+		Operational -[input1]-> OFF;
+	
+	annex EMV2{**
+		use types ErrorTypeLibBox1;
+		use behavior ErrorTypeLibBox1::Box1;
+				
+		error propagations
+			output1 : out propagation {DelayedInfo,NoInfo,WrongInfo};
+			output2 : out propagation {NoInfo,WrongInfo};
+		flows
+			ErrorSrc1: error source output1{NoInfo,WrongInfo} when Failed_UnRecovarable; 
+			ErrorSrc2: error source output1{DelayedInfo} when Operational;
+		end propagations;
+		
+		component error behavior
+		events
+			ResetEvent: recover event;
+			UncoveredFault: error event;
+		transitions
+			tFailed	: Operational -[UncoveredFault]-> Failed_UnRecovarable;
+		end component;
+	**};
+	
+end Box1;
+
+system implementation box1.i
+end box1.i;
+system implementation box2.i
+end box2.i;
+
+system Box2
+	features 
+		input1 : in  event data port;
+		input2 : in  event data port;
+		input3 : in  event port;
+		output : out event data port;
+		
+	annex EMV2{**
+		use types ErrorTypeLibBox2;
+		use behavior ErrorTypeLibBox2::Box2;
+				
+		error propagations
+			input1 : in  propagation {DelayedInfo,NoInfo,WrongInfo};
+			input2 : in  propagation {NoInfo,WrongInfo}; 
+			output : out propagation {DelayedInfo,NoInfo,WrongInfo};
+		end propagations;
+		
+		component error behavior
+		events
+			ResetEvent: recover event;
+		transitions
+			tFailedRecovarable		: Operational	-[input1{NoInfo,DelayedInfo} or input2{NoInfo}]-> Failed_Recovarable;
+			tFailedUnrecovarable	: Operational -[input1{WrongInfo} or input2{WrongInfo}]-> Failed_UnRecovarable;
+			tOperational			: Failed_Recovarable -[ResetEvent]-> Operational;	
+			tFailedRevToOperatinal	: Failed_Recovarable -[input1{WrongInfo} or input2{WrongInfo}]-> Operational;				
+		end component; 
+		**};
+end Box2;
+
+system Example
+end Example;
+
+annex EMV2{**
+	type mappings ErrorMappings
+		{ErrorTypeLibBox1::DelayedInfo} -> (ErrorTypeLibBox2::DelayedInfo);
+		{ErrorTypeLibBox1::NoInfo} -> (ErrorTypeLibBox2::NoInfo);
+		{ErrorTypeLibBox1::WrongInfo} -> (ErrorTypeLibBox2::WrongInfo);
+	
+	end mappings;
+	
+
+	**};
+
+
+system implementation Example.imp
+	subcomponents
+		Box1 : system Box1.i;
+		Box2 : system Box2.i;
+	connections
+		c1: port Box1.output1 -> Box2.input1;
+		c2: port Box1.output1 -> Box2.input2;
+		c3: port Box1.output2 -> Box2.input2;
+		c4: port Box1.output3 -> Box2.input3;
+	properties
+		Actual_Processor_Binding => (reference (Box2)) applies to Box1;
+	annex EMV2{**
+		use type equivalence ExampleFTA::ErrorMappings;
+	**};
+		
+		
+end Example.imp;
+
+end ExampleFTA;
