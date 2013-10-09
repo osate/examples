@@ -43,7 +43,7 @@ with Data_Model;
 
   thread sender
   features
-    p: out event data port Integer;
+    p: out data port Integer;
   properties
     Dispatch_Protocol => Periodic;
     Compute_Execution_Time => 0 ms .. 1 ms;
@@ -66,15 +66,14 @@ with Data_Model;
   subprogram sender_spg
   features
     result : out parameter Integer;
-  properties
-    source_name => "Send";
-    source_language => (Java);
-    source_text => ("UserCode.java");
+  properties 
+    source_name => "PingPong.Send"; 
+    source_language => (c);
   end sender_spg;
 
   thread receiver
   features
-    p: in event data port Integer;
+    p: in data port Integer;
   properties
     Dispatch_Protocol => Periodic;
     Compute_Execution_Time => 0 ms .. 1 ms;
@@ -97,15 +96,15 @@ with Data_Model;
   subprogram receiver_spg
   features
     input : in parameter Integer;
-  properties
-    source_name => "Receive";
-    source_language => (Java);
-    source_text => ("UserCode.java");
+  properties 
+    source_name => "PingPong.Receive"; 
+    source_language => (c); 
   end receiver_spg;
 
   data Integer
   properties
-    Data_Model::Data_Representation => integer;
+    Source_Name => "usercode.PingPongType"; 
+    Data_Model::Initial_Value => ("new PingPongType()");
   end Integer;
 
 end ojr_pingpong;

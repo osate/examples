@@ -1,15 +1,17 @@
-public class PingPong
+package usercode;
+public class UserCode
 {
-	public static int count = 0;
-	public static void Send ()
+
+	
+	public static void spg1 ()
 	{
-		System.out.println ("[PING] " + count);
-		count = count + 1;
+
+		System.out.println ("[SPG1] Hello ...");
 	}
 	
 	
-	public static void Receiver (int r)
+	public static void spg2 ()
 	{
-		System.out.println ("[PONG] " + count);
+		System.out.println ("[SPG2] World !");
 	}
 }
