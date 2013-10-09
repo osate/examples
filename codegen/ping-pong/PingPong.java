@@ -8,11 +8,15 @@ public class PingPong
 		System.out.println ("[PING] " + count);
 		count = count + 1;
 		val.setValue (count);
+		
 	}
 	
 	
 	public static void Receive (PingPongType val)
 	{
-		System.out.println ("[PONG] " + val.getValue ());
+		if (val != null)
+		{
+			System.out.println ("[PONG] " + val.getValue ());
+		}
 	}
 }

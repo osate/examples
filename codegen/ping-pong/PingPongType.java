@@ -1,7 +1,16 @@
 package usercode;
 
-public class PingPongType
+import java.io.Serializable;
+
+import org.osate.runtime.types.OjrType;
+
+public class PingPongType implements Serializable, OjrType
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6061533309025619478L;
+	
 	private int value = 0;
 	public PingPongType ()
 	{
@@ -16,6 +25,18 @@ public class PingPongType
 	public int getValue ()
 	{
 		return this.value;
+	}
+
+
+	public void copy(Object dst)
+	{	
+		if( ! (dst instanceof PingPongType))
+		{
+			return;
+		}
+		
+		PingPongType myDestinationObject = (PingPongType) dst;
+		myDestinationObject.setValue(this.getValue());
 	}
 	
 }
