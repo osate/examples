@@ -55,7 +55,7 @@ features
 properties
     Dispatch_Protocol => Periodic;
     Compute_Execution_Time => 0 ms .. 1 ms;
-    Period => 2000 Ms;
+    Period => 100 Ms;
     Priority => 5;
     Source_Data_Size => 40000 bytes;
     Source_Stack_Size => 40000 bytes;
@@ -89,7 +89,7 @@ features
 properties
     Dispatch_Protocol => Periodic;
     Compute_Execution_Time => 0 ms .. 1 ms;
-    Period => 2000 Ms;
+    Period => 250 Ms;
     Priority => 5;
     Source_Data_Size => 40000 bytes;
     Source_Stack_Size => 40000 bytes;
@@ -124,9 +124,9 @@ features
 	step : out data port stepcmd;
 	commanded : in data port position;
 properties
-    Dispatch_Protocol => Periodic;
+    Dispatch_Protocol => Sporadic;
     Compute_Execution_Time => 0 ms .. 1 ms;
-    Period => 2000 Ms;
+    Period => 100 Ms;
     Priority => 5;
     Source_Data_Size => 40000 bytes;
     Source_Stack_Size => 40000 bytes;
@@ -160,9 +160,9 @@ thread motor
 features
 	step : in data port stepcmd;
 properties
-    Dispatch_Protocol => Periodic;
+    Dispatch_Protocol => Sporadic;
     Compute_Execution_Time => 0 ms .. 1 ms;
-    Period => 2000 Ms;
+    Period => 100 Ms;
     Priority => 5;
     Source_Data_Size => 40000 bytes;
     Source_Stack_Size => 40000 bytes;
