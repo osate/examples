@@ -1,0 +1,202 @@
+package ojr_steppermotor_cs
+public
+with Data_Model;
+  system root
+  end root;
+
+  system implementation root.impl
+  subcomponents
+    the_cpu: processor cpu.impl;
+    the_proc: process proc.impl;
+    the_mem: memory mem.impl;
+  properties
+    actual_memory_binding => (reference (the_mem)) applies to the_proc;  
+    actual_processor_binding => (reference (the_cpu)) applies to the_proc;
+  end root.impl;
+
+  processor cpu
+  end cpu;
+
+  processor implementation cpu.impl
+  end cpu.impl;
+
+
+
+  process proc
+  end proc;
+
+  process implementation proc.impl
+  subcomponents
+    uif : thread user_interface.i;
+    app : thread app.i;
+    act : thread actuator.i;
+    mot : thread motor.i;
+  connections
+    cnx1: port uif.pos -> app.user_pos;
+    cnx2: port app.commanded -> act.commanded;
+    cnx3 : port act.step -> mot.step;
+  end proc.impl;
+
+  memory mem
+  end mem;
+
+  memory implementation mem.impl
+  properties
+    Memory_Size => 200 KByte;
+  end mem.impl;
+
+
+---------------------------------
+-- user interface part/thread
+---------------------------------
+thread user_interface
+features 
+	pos : out data port position;
+properties
+    Dispatch_Protocol => Periodic;
+    Compute_Execution_Time => 0 ms .. 1 ms;
+    Period => 2000 Ms;
+    Priority => 5;
+    Source_Data_Size => 40000 bytes;
+    Source_Stack_Size => 40000 bytes;
+    Source_Code_Size => 40 bytes;
+end user_interface;
+
+thread implementation user_interface.i
+calls
+    call : { c : subprogram user_interface_spg;};
+connections
+    cnx: parameter c.pos -> pos;
+properties
+    Compute_Entrypoint_Call_Sequence => reference (call);
+end user_interface.i;
+
+subprogram user_interface_spg
+  features
+    pos : out parameter position;
+  properties 
+    source_name => "usercode.Interface.start"; 
+    source_language => (c);
+end user_interface_spg;
+
+---------------------------------
+-- app part/thread
+---------------------------------
+thread app
+features
+	user_pos : in data port position;
+	commanded : out data port position;
+properties
+    Dispatch_Protocol => Periodic;
+    Compute_Execution_Time => 0 ms .. 1 ms;
+    Period => 2000 Ms;
+    Priority => 5;
+    Source_Data_Size => 40000 bytes;
+    Source_Stack_Size => 40000 bytes;
+    Source_Code_Size => 40 bytes;
+end app;
+
+thread implementation app.i
+calls
+    call : { c : subprogram app_spg;};
+connections
+    cnx: parameter c.commanded -> commanded;
+    cnx2 : parameter user_pos -> c.user_pos;
+properties
+    Compute_Entrypoint_Call_Sequence => reference (call);
+end app.i;
+
+subprogram app_spg
+  features
+	user_pos : in parameter position;
+	commanded : out parameter position;
+  properties 
+    source_name => "usercode.App.exec"; 
+    source_language => (c);
+end app_spg;
+
+
+---------------------------------
+-- actuator part/thread
+---------------------------------
+thread actuator
+features
+	step : out data port stepcmd;
+	commanded : in data port position;
+properties
+    Dispatch_Protocol => Periodic;
+    Compute_Execution_Time => 0 ms .. 1 ms;
+    Period => 2000 Ms;
+    Priority => 5;
+    Source_Data_Size => 40000 bytes;
+    Source_Stack_Size => 40000 bytes;
+    Source_Code_Size => 40 bytes;
+end actuator;
+
+thread implementation actuator.i
+calls
+    call : { c : subprogram actuator_spg;};
+connections
+    cnx: parameter commanded -> c.commanded;
+    cnx2 : parameter c.step -> step;
+properties
+    Compute_Entrypoint_Call_Sequence => reference (call);
+end actuator.i;
+
+subprogram actuator_spg
+  features
+	step : out parameter stepcmd;
+	commanded : in parameter position;
+  properties 
+    source_name => "usercode.Actuator.exec"; 
+    source_language => (c);
+end actuator_spg;
+
+
+---------------------------------
+-- motor part/thread
+---------------------------------
+thread motor
+features
+	step : in data port stepcmd;
+properties
+    Dispatch_Protocol => Periodic;
+    Compute_Execution_Time => 0 ms .. 1 ms;
+    Period => 2000 Ms;
+    Priority => 5;
+    Source_Data_Size => 40000 bytes;
+    Source_Stack_Size => 40000 bytes;
+    Source_Code_Size => 40 bytes;
+end motor;
+
+thread implementation motor.i
+calls
+    call : { c : subprogram motor_spg;};
+connections
+    cnx : parameter step -> c.step;
+properties
+    Compute_Entrypoint_Call_Sequence => reference (call);
+end motor.i;
+
+subprogram motor_spg
+  features
+	step : in parameter stepcmd;
+  properties 
+    source_name => "usercode.Motor.exec"; 
+    source_language => (c);
+end motor_spg;
+
+
+  data position
+  properties
+    Source_Name => "usercode.Position"; 
+    Data_Model::Initial_Value => ("new usercode.Position()");
+  end position;
+
+  data stepcmd
+  properties
+    Source_Name => "usercode.StepCmd"; 
+    Data_Model::Initial_Value => ("new usercode.StepCmd()");
+  end stepcmd;
+
+end ojr_steppermotor_cs;
