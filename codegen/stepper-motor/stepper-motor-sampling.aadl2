@@ -1,0 +1,110 @@
+package ojr_steppermotor_sampling
+public
+with Data_Model;
+  system root
+  end root;
+
+  system implementation root.impl
+  subcomponents
+    the_cpu: processor cpu.impl;
+    the_proc: process proc.impl;
+    the_mem: memory mem.impl;
+  properties
+    actual_memory_binding => (reference (the_mem)) applies to the_proc;
+    actual_processor_binding => (reference (the_cpu)) applies to the_proc;
+  end root.impl;
+
+  processor cpu
+  end cpu;
+
+  processor implementation cpu.impl
+  end cpu.impl;
+
+
+
+  process proc
+  end proc;
+
+  process implementation proc.impl
+  subcomponents
+    the_sender: thread sender.impl;
+    the_receiver: thread receiver.impl;
+  connections
+    cnx: port the_sender.p -> the_receiver.p;
+  end proc.impl;
+
+  memory mem
+  end mem;
+
+  memory implementation mem.impl
+  properties
+    Memory_Size => 200 KByte;
+  end mem.impl;
+
+  thread sender
+  features
+    p: out data port Integer;
+  properties
+    Dispatch_Protocol => Periodic;
+    Compute_Execution_Time => 0 ms .. 1 ms;
+    Period => 2000 Ms;
+    Priority => 5;
+    Source_Data_Size => 40000 bytes;
+    Source_Stack_Size => 40000 bytes;
+    Source_Code_Size => 40 bytes;
+  end sender;
+
+  thread implementation sender.impl
+  calls
+    call : { c : subprogram sender_spg;};
+  connections
+    cnx: parameter c.result -> p;
+  properties
+    Compute_Entrypoint_Call_Sequence => reference (call);
+  end sender.impl;
+
+  subprogram sender_spg
+  features
+    result : out parameter Integer;
+  properties 
+    source_name => "usercode.StepperMotor.Send"; 
+    source_language => (c);
+  end sender_spg;
+
+  thread receiver
+  features
+    p: in data port Integer;
+  properties
+    Dispatch_Protocol => Periodic;
+    Compute_Execution_Time => 0 ms .. 1 ms;
+    Period => 5000 Ms;
+    Priority => 10;
+    Source_Data_Size => 40000 bytes;
+    Source_Stack_Size => 40000 bytes;
+    Source_Code_Size => 40 bytes;
+  end receiver;
+
+  thread implementation receiver.impl
+  calls
+    call : { c : subprogram receiver_spg;};
+  connections
+    cnx: parameter p -> c.input;
+  properties
+    Compute_Entrypoint_Call_Sequence => reference (call);
+  end receiver.impl;
+
+  subprogram receiver_spg
+  features
+    input : in parameter Integer;
+  properties 
+    source_name => "usercode.StepperMotor.Receive"; 
+    source_language => (c); 
+  end receiver_spg;
+
+  data Integer
+  properties
+    Source_Name => "usercode.ActionType"; 
+    Data_Model::Initial_Value => ("new usercode.ActionType()");
+  end Integer;
+
+end ojr_steppermotor_sampling;

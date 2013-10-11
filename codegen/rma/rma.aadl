@@ -1,0 +1,72 @@
+package rma
+public
+
+
+subprogram spg1
+properties
+  source_language => (c);
+  source_name => "UserCode.spg1";
+  source_text => ("Hello.java");
+end spg1;
+
+subprogram spg2 
+properties
+  source_language => (c);
+  source_name => "UserCode.spg2";
+  source_text => ("Hello.java");
+end spg2;
+
+
+thread task
+end task;
+
+thread implementation task.i1
+calls
+    call : { c : subprogram spg1;};
+properties
+   Dispatch_Protocol => periodic;
+   Period => 1000ms;
+   Compute_Execution_time => 0 ms .. 3 ms;
+   Deadline => 1000 ms;
+   Compute_Entrypoint_Call_Sequence => reference (call);
+end task.i1;
+
+thread implementation task.i2
+calls
+    call : { c : subprogram spg2;};
+properties
+   Dispatch_Protocol => periodic;
+   Period => 1000ms;
+   Compute_Execution_time => 0 ms .. 3 ms;
+   Deadline => 1000 ms;
+   Compute_Entrypoint_Call_Sequence => reference (call);
+end task.i2;
+
+processor cpurm
+end cpurm;
+
+processor implementation cpurm.impl
+end cpurm.impl;
+
+process node_a
+end node_a;
+
+process implementation node_a.impl
+subcomponents
+   Task1 : thread task.i1;
+   Task2 : thread task.i2;
+end node_a.impl;
+
+
+system rma
+end rma;
+
+system implementation rma.simple
+subcomponents
+   node_a : process node_a.impl;
+   cpu_rm : processor cpurm.impl;
+properties
+   Actual_Processor_Binding => ( reference (cpu_rm)) applies to node_a;
+end rma.simple;
+
+end rma;
