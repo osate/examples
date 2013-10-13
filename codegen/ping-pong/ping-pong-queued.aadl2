@@ -1,4 +1,4 @@
-package ojr_pingpong
+package ojr_pingpong_queued
 public
 with Data_Model;
   system root
@@ -43,7 +43,7 @@ with Data_Model;
 
   thread sender
   features
-    p: out data port Integer;
+    p: out event data port Integer;
   properties
     Dispatch_Protocol => Periodic;
     Compute_Execution_Time => 0 ms .. 1 ms;
@@ -73,7 +73,7 @@ with Data_Model;
 
   thread receiver
   features
-    p: in data port Integer;
+    p: in event data port Integer;
   properties
     Dispatch_Protocol => Periodic;
     Compute_Execution_Time => 0 ms .. 1 ms;
@@ -107,4 +107,4 @@ with Data_Model;
     Data_Model::Initial_Value => ("new PingPongType()");
   end Integer;
 
-end ojr_pingpong;
+end ojr_pingpong_queued;
