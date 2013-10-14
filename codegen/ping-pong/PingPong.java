@@ -14,7 +14,7 @@ public class PingPong
 	
 	public static void Receive (PingPongType val)
 	{
-		if (val != null)
+		if ((val != null) && val.isValid())
 		{
 			System.out.println ("[PONG] " + val.getValue ());
 		}

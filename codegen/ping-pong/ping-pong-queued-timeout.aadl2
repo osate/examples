@@ -73,7 +73,7 @@ with Data_Model;
 
   thread receiver
   features
-    p: in event data port Integer;
+    p: in event data port Integer {Compute_Deadline => 100 ms;};
   properties
     Dispatch_Protocol => Periodic;
     Compute_Execution_Time => 0 ms .. 1 ms;

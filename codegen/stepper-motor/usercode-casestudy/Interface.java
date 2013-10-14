@@ -37,19 +37,21 @@ public class Interface {
 			frame.setVisible(true);
 			initialized = true;
 		}
-		
+		pos.setNewValue(false);
+		pos.setValid(false);
 		if (newValue)
 		{
 			Output.output ("[INTERFACE] send new value " + count);
 
 			pos.setNewValue(newValue);
 			pos.setValue(count);
+			pos.setValid(true);
 			newValue = false;
 		}
 		else
 		{
-			pos.setNewValue(false);
-			Output.output ("[INTERFACE] does not send a new value");
+
+			//Output.output ("[INTERFACE] does not send a new value");
 		}
 	}
 

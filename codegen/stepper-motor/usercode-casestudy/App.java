@@ -38,14 +38,18 @@ public class App {
 			frame.setVisible(true);
 			initialized = true;
 		}
+		Output.output ("[APP] starts activation");
+		commanded.setValid(false);
 		
-		if (user.getNewValue())
+		if (user.isValid() && user.getNewValue())
 		{
 			Output.output ("[APP] receive new value from user " + user.getValue());
 			if (user.getValue() < NB_STEPS)
 			{
 				desiredPosition = user.getValue();
 			}
+			user.setValid(false);
+			user.setNewValue(false);
 		}
 		
 		if (desiredPosition != commandedPosition)
@@ -61,6 +65,7 @@ public class App {
 			{
 				delta = desiredPosition - commandedPosition; 
 			}
+			System.out.println ("delta=" + delta);
 			
 			if (delta > 15)
 			{
@@ -73,14 +78,12 @@ public class App {
 			commandedPosition = (commandedPosition + nbSteps) % NB_STEPS;
 			commanded.setNewValue(true);
 			commanded.setValue(nbSteps);
+			commanded.setValid(true);
 		}
-		else
-		{
-			commanded.setNewValue(false);
-		}
+
 		
-		desiredPositionLabel.setText  ("Desired Position    = " + desiredPosition);
-		commandedPositionLabel.setText("Commanded Position  = " + commandedPosition);
+		//desiredPositionLabel.setText  ("Desired Position    = " + desiredPosition);
+		//commandedPositionLabel.setText("Commanded Position  = " + commandedPosition);
 	}
 
 

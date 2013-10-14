@@ -6,9 +6,17 @@ import org.osate.runtime.types.OjrType;
 
 public class StepCmd implements Serializable, OjrType
 {
-	/**
-	 * 
-	 */
+	private boolean valid = true;
+	
+	public boolean isValid ()
+	{
+		return this.valid;
+	}
+	
+	public void setValid (boolean b)
+	{
+		this.valid = b;
+	}
 	private static final long serialVersionUID = -6061533309025619478L;
 	
 	private boolean 	shoudReact 	= false;

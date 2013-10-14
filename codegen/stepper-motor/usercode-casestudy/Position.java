@@ -6,6 +6,19 @@ import org.osate.runtime.types.OjrType;
 
 public class Position implements Serializable, OjrType
 {
+	
+	private boolean valid = true;
+	
+	public boolean isValid ()
+	{
+		return this.valid;
+	}
+	
+	public void setValid (boolean b)
+	{
+		this.valid = b;
+	}
+	
 	/**
 	 * 
 	 */

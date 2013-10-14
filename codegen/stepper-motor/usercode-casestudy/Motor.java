@@ -10,8 +10,9 @@ import org.osate.runtime.Output;
 public class Motor {
 	private static boolean initialized = false;
 	private static  WheelInterface demo;
-	public static void exec(StepCmd step) 
+	public static void exec(StepCmd step, Notification no) 
 	{
+		no.setValid(false);
 		if (! initialized)
 		{
 			demo = new WheelInterface();
@@ -25,14 +26,17 @@ public class Motor {
 		    frame.setVisible(true);
 		    initialized = true;
 		}
-		if (step.getReaction())
+		if ((step.isValid()) && (step.getReaction()))
 		{
-			Output.output ("[MOTOR] should react");
+			//Output.output ("[MOTOR] should react");
 			demo.addIncrement(1);
+			no.setReaction(true);
+			no.setValid(true);
+			step.setValid(false);
 		}
 		else
 		{
-			Output.output ("[MOTOR] should not react");
+			//Output.output ("[MOTOR] should not react");
 		}
 	}
 

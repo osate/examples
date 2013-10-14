@@ -34,7 +34,8 @@ with Data_Model;
   connections
     cnx1: port uif.pos -> app.user_pos;
     cnx2: port app.commanded -> act.commanded;
-    cnx3 : port act.step -> mot.step;
+    cnx3 : port act.step_order -> mot.step_order;
+    cnx4 : port mot.step_done -> act.step_completed;
   end proc.impl;
 
   memory mem
@@ -51,7 +52,7 @@ with Data_Model;
 ---------------------------------
 thread user_interface
 features 
-	pos : out data port position;
+	pos : out event data port position;
 properties
     Dispatch_Protocol => Periodic;
     Compute_Execution_Time => 0 ms .. 1 ms;
@@ -84,12 +85,12 @@ end user_interface_spg;
 ---------------------------------
 thread app
 features
-	user_pos : in data port position;
-	commanded : out data port position;
+	user_pos : in event data port position {Compute_Deadline => 1 ms;};
+	commanded : out event data port position;
 properties
     Dispatch_Protocol => Periodic;
     Compute_Execution_Time => 0 ms .. 1 ms;
-    Period => 250 Ms;
+    Period => 5000 Ms;
     Priority => 5;
     Source_Data_Size => 40000 bytes;
     Source_Stack_Size => 40000 bytes;
@@ -121,10 +122,11 @@ end app_spg;
 ---------------------------------
 thread actuator
 features
-	step : out data port stepcmd;
-	commanded : in data port position;
+	step_order     : out event data port stepcmd;
+	commanded      : in event data port position  {Compute_Deadline => 1 ms;};
+	step_completed : in event data port notification {Compute_Deadline => 1 ms;};
 properties
-    Dispatch_Protocol => Sporadic;
+    Dispatch_Protocol => Periodic;
     Compute_Execution_Time => 0 ms .. 1 ms;
     Period => 100 Ms;
     Priority => 5;
@@ -138,15 +140,17 @@ calls
     call : { c : subprogram actuator_spg;};
 connections
     cnx: parameter commanded -> c.commanded;
-    cnx2 : parameter c.step -> step;
+    cnx2 : parameter c.step_order -> step_order;
+    cnx3 : parameter step_completed -> c.step_completed;
 properties
     Compute_Entrypoint_Call_Sequence => reference (call);
 end actuator.i;
 
 subprogram actuator_spg
   features
-	step : out parameter stepcmd;
-	commanded : in parameter position;
+	step_order      : out parameter stepcmd;
+	step_completed  : in parameter  notification;
+	commanded       : in parameter  position;
   properties 
     source_name => "usercode.Actuator.exec"; 
     source_language => (c);
@@ -158,9 +162,10 @@ end actuator_spg;
 ---------------------------------
 thread motor
 features
-	step : in data port stepcmd;
+	step_order : in event data port stepcmd;
+	step_done  : out event data port notification;
 properties
-    Dispatch_Protocol => Sporadic;
+    Dispatch_Protocol => Periodic;
     Compute_Execution_Time => 0 ms .. 1 ms;
     Period => 100 Ms;
     Priority => 5;
@@ -173,14 +178,16 @@ thread implementation motor.i
 calls
     call : { c : subprogram motor_spg;};
 connections
-    cnx : parameter step -> c.step;
+    cnx1 : parameter step_order  -> c.step_order;
+    cnx2 : parameter c.step_done -> step_done;
 properties
     Compute_Entrypoint_Call_Sequence => reference (call);
 end motor.i;
 
 subprogram motor_spg
   features
-	step : in parameter stepcmd;
+	step_order : in parameter stepcmd;
+	step_done  : out parameter notification;
   properties 
     source_name => "usercode.Motor.exec"; 
     source_language => (c);
@@ -198,5 +205,11 @@ end motor_spg;
     Source_Name => "usercode.StepCmd"; 
     Data_Model::Initial_Value => ("new usercode.StepCmd()");
   end stepcmd;
+  
+  data notification
+  properties
+    Source_Name => "usercode.Notification"; 
+    Data_Model::Initial_Value => ("new usercode.Notification()");
+  end notification;
 
 end ojr_steppermotor_cs;
