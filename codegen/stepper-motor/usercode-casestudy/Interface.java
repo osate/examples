@@ -6,6 +6,8 @@ import java.awt.Container;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.JFrame;
 
@@ -27,6 +29,32 @@ public class Interface {
 					newValue = true;
 				}
 			});
+			
+			tf.addKeyListener(
+		            new KeyListener(){
+
+		                public void keyPressed(KeyEvent e){
+
+		                    if(e.getKeyChar() == KeyEvent.VK_ENTER){
+
+		    					count = Integer.parseInt(tf.getText());
+		    					newValue = true;
+		    					tf.setText("");
+		                    }       
+		                }
+
+						@Override
+						public void keyReleased(KeyEvent arg0) {
+							// TODO Auto-generated method stub
+							
+						}
+
+						@Override
+						public void keyTyped(KeyEvent arg0) {
+							
+						}
+		            }
+		        );
 
 			JFrame frame = new JFrame();
 			Container cp = frame.getContentPane();

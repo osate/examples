@@ -65,7 +65,7 @@ public class App {
 			{
 				delta = desiredPosition - commandedPosition; 
 			}
-			System.out.println ("delta=" + delta);
+		//	System.out.println ("delta=" + delta);
 			
 			if (delta > 15)
 			{
@@ -82,8 +82,8 @@ public class App {
 		}
 
 		
-		//desiredPositionLabel.setText  ("Desired Position    = " + desiredPosition);
-		//commandedPositionLabel.setText("Commanded Position  = " + commandedPosition);
+		desiredPositionLabel.setText  ("Desired Position    = " + desiredPosition);
+		commandedPositionLabel.setText("Commanded Position  = " + commandedPosition);
 	}
 
 
