@@ -51,10 +51,21 @@ protected void paintComponent(Graphics g) {
     Graphics2D g2d = (Graphics2D) g.create();
 
     rotatingTimer.stop();
-
     g2d.clearRect(0, 0, getWidth(), getHeight());
     g2d.setBackground(Color.white);
     g2d.setColor(Color.black);
+    g2d.drawChars("01".toCharArray(), 0, 2, 260, 100);
+    g2d.drawChars("05".toCharArray(), 0, 2, 330, 160);
+
+    g2d.drawChars("10".toCharArray(), 0, 2, 350, 260);
+
+    g2d.drawChars("15".toCharArray(), 0, 2, 290, 350);
+    g2d.drawChars("20".toCharArray(), 0, 2, 190, 350);
+    g2d.drawChars("25".toCharArray(), 0, 2, 120, 280);
+
+    g2d.drawChars("30".toCharArray(), 0, 2, 130, 170);
+
+    g2d.drawChars("35".toCharArray(), 0, 2, 210, 100);
     g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.3f));
     g2d.setStroke(new BasicStroke(10f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER));
