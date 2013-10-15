@@ -1,0 +1,133 @@
+package ojr_music_sampled
+public
+with Data_Model;
+  system root
+  end root;
+
+  system implementation root.impl
+  subcomponents
+    the_cpu: processor cpu.impl;
+    the_proc: process proc.impl;
+    the_mem: memory mem.impl;
+  properties
+    actual_memory_binding => (reference (the_mem)) applies to the_proc;
+    actual_processor_binding => (reference (the_cpu)) applies to the_proc;
+  end root.impl;
+
+  processor cpu
+  end cpu;
+
+  processor implementation cpu.impl
+  end cpu.impl;
+
+
+
+  process proc
+  end proc;
+
+  process implementation proc.impl
+  subcomponents
+    send_track1: thread sender.track1;
+    send_track2: thread sender.track2;
+    mixer      : thread receiver.impl;
+  connections
+    cnx1: port send_track1.track -> mixer.track1;
+    cnx2: port send_track2.track -> mixer.track2;
+  end proc.impl;
+
+  memory mem
+  end mem;
+
+  memory implementation mem.impl
+  properties
+    Memory_Size => 200 KByte;
+  end mem.impl;
+
+  thread sender
+  features
+    track: out data port SampleChunk;
+  properties
+    Dispatch_Protocol => Periodic;
+    Compute_Execution_Time => 0 ms .. 1 ms;
+    Period => 20 Ms;
+    Priority => 5;
+    Source_Data_Size => 40000 bytes;
+    Source_Stack_Size => 40000 bytes;
+    Source_Code_Size => 40 bytes;
+  end sender;
+
+  thread implementation sender.track1
+  calls
+    call : { c : subprogram sender_track1;};
+  connections
+    cnx: parameter c.track -> track;
+  properties
+    Compute_Entrypoint_Call_Sequence => reference (call);
+  end sender.track1;
+  
+  thread implementation sender.track2
+  calls
+    call : { c : subprogram sender_track2;};
+  connections
+    cnx: parameter c.track -> track;
+  properties
+    Compute_Entrypoint_Call_Sequence => reference (call);
+  end sender.track2;
+
+  subprogram sender_track1
+  features
+    track : out parameter SampleChunk;
+  properties 
+    source_name => "usercode.Music.SendFirstTrack"; 
+    source_language => (c);
+  end sender_track1;
+  
+  subprogram sender_track2
+  features
+    track : out parameter SampleChunk;
+  properties 
+    source_name => "usercode.Music.SendSecondTrack"; 
+    source_language => (c);
+  end sender_track2;
+
+  thread receiver
+  features
+    track1: in data port SampleChunk;
+    track2: in data port SampleChunk;
+  properties
+    Dispatch_Protocol => Periodic;
+    Compute_Execution_Time => 0 ms .. 1 ms;
+    Period => 20 Ms;
+    Priority => 10;
+    Source_Data_Size => 40000 bytes;
+    Source_Stack_Size => 40000 bytes;
+    Source_Code_Size => 40 bytes;
+  end receiver;
+
+  thread implementation receiver.impl
+  calls
+    call : { c : subprogram receiver_spg;};
+  connections
+    cnx_track1: parameter track1 -> c.track1;
+    cnx_track2: parameter track2 -> c.track2;
+  properties
+    Compute_Entrypoint_Call_Sequence => reference (call);
+  end receiver.impl;
+
+  subprogram receiver_spg
+  features
+    track1 : in parameter SampleChunk;
+    track2 : in parameter SampleChunk;
+
+  properties 
+    source_name => "usercode.Music.Play"; 
+    source_language => (c); 
+  end receiver_spg;
+
+  data SampleChunk
+  properties
+    Source_Name => "usercode.SampleChunk"; 
+    Data_Model::Initial_Value => ("new SampleChunk()");
+  end SampleChunk;
+
+end ojr_music_sampled;
