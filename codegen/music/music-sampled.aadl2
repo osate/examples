@@ -49,7 +49,7 @@ with Data_Model;
   properties
     Dispatch_Protocol => Periodic;
     Compute_Execution_Time => 0 ms .. 1 ms;
-    Period => 20 Ms;
+    Period => 400 Ms;
     Priority => 5;
     Source_Data_Size => 40000 bytes;
     Source_Stack_Size => 40000 bytes;
@@ -97,7 +97,7 @@ with Data_Model;
   properties
     Dispatch_Protocol => Periodic;
     Compute_Execution_Time => 0 ms .. 1 ms;
-    Period => 20 Ms;
+    Period => 0 Ms;
     Priority => 10;
     Source_Data_Size => 40000 bytes;
     Source_Stack_Size => 40000 bytes;

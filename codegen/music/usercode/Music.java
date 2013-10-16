@@ -32,6 +32,7 @@ public class Music {
 	private static byte[] secondTrackBuffer;
 	private static byte[] playerBuffer = new byte[BUFFER_SIZE];
 
+	public static String SOUND_FILE = "drum.wav";
 	public static SourceDataLine soundLine;
 	
 	public static void SendFirstTrack(SampleChunk track) 
@@ -40,10 +41,10 @@ public class Music {
 		{
 			AudioFormat audioFormat;
 			try {
-				audioFormat = AudioSystem.getAudioFileFormat(new File( "batman.wav" )).getFormat();
+				audioFormat = AudioSystem.getAudioFileFormat(new File( SOUND_FILE )).getFormat();
 
 	            DataLine.Info info=new DataLine.Info(TargetDataLine.class,audioFormat);
-	            firstTrackStream = AudioSystem.getAudioInputStream(new File ("batman.wav"));
+	            firstTrackStream = AudioSystem.getAudioInputStream(new File (SOUND_FILE));
 	            firstTrackBuffer = new byte[BUFFER_SIZE];
 	            firstTrackInitialized = true;
 			}
@@ -72,10 +73,10 @@ public class Music {
 		{
 			AudioFormat audioFormat;
 			try {
-				audioFormat = AudioSystem.getAudioFileFormat(new File( "batman.wav" )).getFormat();
+				audioFormat = AudioSystem.getAudioFileFormat(new File( SOUND_FILE )).getFormat();
 
 	            DataLine.Info info=new DataLine.Info(TargetDataLine.class,audioFormat);
-	           secondTrackStream = AudioSystem.getAudioInputStream(new File ("batman.wav"));
+	           secondTrackStream = AudioSystem.getAudioInputStream(new File (SOUND_FILE));
 	           secondTrackBuffer = new byte[BUFFER_SIZE];
 	            secondTrackInitialized = true;
 
@@ -105,7 +106,7 @@ public class Music {
 			AudioFormat audioFormat;
 			
 			try {
-				audioFormat = AudioSystem.getAudioFileFormat(new File( "batman.wav" )).getFormat();
+				audioFormat = AudioSystem.getAudioFileFormat(new File( SOUND_FILE )).getFormat();
 		        DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormat);
 		        soundLine = (SourceDataLine) AudioSystem.getLine(info);
 		        soundLine.open(audioFormat);
@@ -117,9 +118,9 @@ public class Music {
 			}
 		}
 		try {
-
 	        soundLine.write(track1.getBuffer(), 0, BUFFER_SIZE);
 	        soundLine.drain();
+	       // soundLine.drain();
 //	        soundLine.write(track2.getBuffer(), 0, BUFFER_SIZE);
 //	        soundLine.drain();
 		} catch (Exception e) {
