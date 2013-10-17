@@ -27,12 +27,15 @@ with Data_Model;
 
   process implementation proc.impl
   subcomponents
+  	uif        : thread user_interface.i;
     send_track1: thread sender.track1;
     send_track2: thread sender.track2;
     mixer      : thread receiver.impl;
   connections
     cnx1: port send_track1.track -> mixer.track1;
     cnx2: port send_track2.track -> mixer.track2;
+    cnx3: port uif.latency1 -> send_track1.latencyval;
+    cnx4: port uif.latency2 -> send_track2.latencyval;
   end proc.impl;
 
   memory mem
@@ -43,13 +46,51 @@ with Data_Model;
     Memory_Size => 200 KByte;
   end mem.impl;
 
+---------------------------------
+-- user interface part/thread
+---------------------------------
+thread user_interface
+features 
+	latency1 : out data port latency_value;
+	latency2 : out data port latency_value;
+properties
+    Dispatch_Protocol => Periodic;
+    Compute_Execution_Time => 0 ms .. 1 ms;
+    Period => 500 Ms;
+    Priority => 5;
+    Source_Data_Size => 40000 bytes;
+    Source_Stack_Size => 40000 bytes;
+    Source_Code_Size => 40 bytes;
+end user_interface;
+
+thread implementation user_interface.i
+calls
+    call : { c : subprogram user_interface_spg;};
+connections
+    cnx1: parameter c.latency1 -> latency1;
+    cnx2: parameter c.latency2 -> latency2;
+properties
+    Compute_Entrypoint_Call_Sequence => reference (call);
+end user_interface.i;
+
+subprogram user_interface_spg
+  features
+    latency1 : out parameter latency_value;
+    latency2 : out parameter latency_value;
+  properties 
+    source_name => "usercode.Interface.start"; 
+    source_language => (c);
+end user_interface_spg;
+
+
   thread sender
   features
+  	latencyval : in data port latency_value;
     track: out data port SampleChunk;
   properties
     Dispatch_Protocol => Periodic;
     Compute_Execution_Time => 0 ms .. 1 ms;
-    Period => 400 Ms;
+    Period => 20 Ms;
     Priority => 5;
     Source_Data_Size => 40000 bytes;
     Source_Stack_Size => 40000 bytes;
@@ -61,6 +102,8 @@ with Data_Model;
     call : { c : subprogram sender_track1;};
   connections
     cnx: parameter c.track -> track;
+    cnx2: parameter latencyval -> c.latencyval;
+    
   properties
     Compute_Entrypoint_Call_Sequence => reference (call);
   end sender.track1;
@@ -69,7 +112,8 @@ with Data_Model;
   calls
     call : { c : subprogram sender_track2;};
   connections
-    cnx: parameter c.track -> track;
+    cnx1: parameter c.track -> track;
+    cnx2: parameter latencyval -> c.latencyval;
   properties
     Compute_Entrypoint_Call_Sequence => reference (call);
   end sender.track2;
@@ -77,6 +121,7 @@ with Data_Model;
   subprogram sender_track1
   features
     track : out parameter SampleChunk;
+    latencyval : in parameter latency_value;
   properties 
     source_name => "usercode.Music.SendFirstTrack"; 
     source_language => (c);
@@ -85,6 +130,7 @@ with Data_Model;
   subprogram sender_track2
   features
     track : out parameter SampleChunk;
+    latencyval : in parameter latency_value;
   properties 
     source_name => "usercode.Music.SendSecondTrack"; 
     source_language => (c);
@@ -97,7 +143,7 @@ with Data_Model;
   properties
     Dispatch_Protocol => Periodic;
     Compute_Execution_Time => 0 ms .. 1 ms;
-    Period => 0 Ms;
+    Period => 20 Ms;
     Priority => 10;
     Source_Data_Size => 40000 bytes;
     Source_Stack_Size => 40000 bytes;
@@ -127,7 +173,12 @@ with Data_Model;
   data SampleChunk
   properties
     Source_Name => "usercode.SampleChunk"; 
-    Data_Model::Initial_Value => ("new SampleChunk()");
+    Data_Model::Initial_Value => ("new usercode.SampleChunk()");
   end SampleChunk;
 
+  data latency_value
+  properties
+    Source_Name => "usercode.LatencyValue"; 
+    Data_Model::Initial_Value => ("new usercode.LatencyValue()");
+  end latency_value;
 end ojr_music_sampled;
