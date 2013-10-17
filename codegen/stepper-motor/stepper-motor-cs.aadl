@@ -90,7 +90,7 @@ features
 properties
     Dispatch_Protocol => Periodic;
     Compute_Execution_Time => 0 ms .. 1 ms;
-    Period => 250 Ms;
+    Period => 450 Ms;
     Priority => 5;
     Source_Data_Size => 40000 bytes;
     Source_Stack_Size => 40000 bytes;
@@ -128,7 +128,7 @@ features
 properties
     Dispatch_Protocol => Periodic;
     Compute_Execution_Time => 0 ms .. 1 ms;
-    Period => 100 Ms;
+    Period => 0 Ms;
     Priority => 5;
     Source_Data_Size => 40000 bytes;
     Source_Stack_Size => 40000 bytes;
@@ -167,7 +167,7 @@ features
 properties
     Dispatch_Protocol => Periodic;
     Compute_Execution_Time => 0 ms .. 1 ms;
-    Period => 100 Ms;
+    Period => 0 Ms;
     Priority => 5;
     Source_Data_Size => 40000 bytes;
     Source_Stack_Size => 40000 bytes;

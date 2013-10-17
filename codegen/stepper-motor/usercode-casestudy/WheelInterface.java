@@ -33,6 +33,11 @@ public WheelInterface() {
         		angleInDegrees = angleInDegrees +1;
         		toTurn = toTurn - 1;
         	}
+        	if (toTurn < 0)
+        	{
+        		angleInDegrees = angleInDegrees - 1;
+        		toTurn = toTurn + 1;
+        	}
             if (angleInDegrees == 360) {
                 angleInDegrees = 0;
             }

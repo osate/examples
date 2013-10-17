@@ -29,10 +29,33 @@ public class Motor {
 		if ((step.isValid()) && (step.getReaction()))
 		{
 			//Output.output ("[MOTOR] should react");
-			demo.addIncrement(1);
+			//Output.outputWithTime ("[MOTOR] react starts");
+			if (step.goBackward())
+			{
+				demo.addIncrement(-1);
+			}
+			else
+			{
+				demo.addIncrement(1);
+			}
+//			try {
+//				Thread.sleep((int)(Math.random() * 100));
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+		try {
+			Thread.sleep(50); 
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 			no.setReaction(true);
 			no.setValid(true);
 			step.setValid(false);
+			//Output.outputWithTime ("[MOTOR] react complete");
+
 		}
 		else
 		{

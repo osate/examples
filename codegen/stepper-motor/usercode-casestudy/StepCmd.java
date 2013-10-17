@@ -7,10 +7,21 @@ import org.osate.runtime.types.OjrType;
 public class StepCmd implements Serializable, OjrType
 {
 	private boolean valid = true;
+	private boolean backWard = false;
 	
 	public boolean isValid ()
 	{
 		return this.valid;
+	}
+	
+	public boolean goBackward ()
+	{
+		return this.backWard;
+	}
+	
+	public void setBackward (boolean b)
+	{
+		this.backWard = b;
 	}
 	
 	public void setValid (boolean b)
@@ -56,7 +67,7 @@ public class StepCmd implements Serializable, OjrType
 		
 		StepCmd myDestinationObject = (StepCmd) dst;
 		myDestinationObject.setReaction(this.shoudReact);
-
+		myDestinationObject.setBackward(this.backWard);
 	}
 	
 }
