@@ -16,11 +16,22 @@ public class SampleChunk implements OjrType , Serializable
 	private static final long serialVersionUID = 5743129475022856715L;
 	public static final int SAMPLE_SIZE = 64*1024;
 	private boolean valid = false;
+	private boolean containData = false;
 	private byte[]  buffer = new byte[SAMPLE_SIZE] ;
 	
 	public SampleChunk ()
 	{
 
+	}
+	
+	public boolean getContainData ()
+	{
+		return this.containData;
+	}
+	
+	public void setContainData (boolean b)
+	{
+		this.containData = b;
 	}
 	 
 	
@@ -44,6 +55,7 @@ public class SampleChunk implements OjrType , Serializable
 		if (dst instanceof SampleChunk)
 		{
 			((SampleChunk)dst).setBuffer(this.buffer);
+			((SampleChunk)dst).setContainData(this.getContainData());;
 		}		
 	}
 

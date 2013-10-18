@@ -8,10 +8,21 @@ public class LatencyValue implements Serializable, OjrType
 {
 	
 	private boolean valid = true;
+	private boolean isEnable = false;
 	
 	public boolean isValid ()
 	{
 		return this.valid;
+	}
+	
+	public void setEnable (boolean b)
+	{
+		this.isEnable = b;
+	}
+	
+	public boolean isEnabled ()
+	{
+		return this.isEnable;
 	}
 	
 	public void setValid (boolean b)
@@ -30,6 +41,7 @@ public class LatencyValue implements Serializable, OjrType
 	public LatencyValue ()
 	{
 		value = 0;
+		isEnable = false;
 	}
 	
 	public void setValue (int i)
@@ -63,7 +75,7 @@ public class LatencyValue implements Serializable, OjrType
 		LatencyValue myDestinationObject = (LatencyValue) dst;
 		myDestinationObject.setValue(this.getValue());
 		myDestinationObject.setNewValue(this.getNewValue());
-
+		myDestinationObject.setEnable(this.isEnabled());
 	}
 	
 }

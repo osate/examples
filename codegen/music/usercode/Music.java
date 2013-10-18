@@ -56,15 +56,25 @@ public class Music {
 			}
 		}
 		
-		try {
-			firstTrackStream.read(firstTrackBuffer,0,BUFFER_SIZE);
-			track.setBuffer(firstTrackBuffer);
-			track.setValid(true);
-			Thread.sleep(lat.getValue());
-		} 
-		catch (Exception e) 
+		if (lat.isEnabled())
 		{
-			e.printStackTrace();
+			try {
+				firstTrackStream.read(firstTrackBuffer,0,BUFFER_SIZE);
+				track.setBuffer(firstTrackBuffer);
+				track.setValid(true);
+				track.setContainData(true);
+	
+				Thread.sleep(lat.getValue());
+			} 
+			catch (Exception e) 
+			{
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			track.setContainData(false);
+			track.setValid(true);
 		}
 		
 	}
@@ -88,15 +98,26 @@ public class Music {
 				e.printStackTrace();
 			}
 		}
-		try {
-			secondTrackStream.read(secondTrackBuffer,0,BUFFER_SIZE);
-			track.setBuffer(secondTrackBuffer);
-			track.setValid(true);
-			Thread.sleep(lat.getValue());
-		} 
-		catch (Exception e) 
+		
+		
+		if (lat.isEnabled())
 		{
-			e.printStackTrace();
+			try {
+				secondTrackStream.read(secondTrackBuffer,0,BUFFER_SIZE);
+				track.setBuffer(secondTrackBuffer);
+				track.setValid(true);
+				track.setContainData(true);
+				Thread.sleep(lat.getValue());
+			} 
+			catch (Exception e) 
+			{
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			track.setContainData(false);
+			track.setValid(true);
 		}
 
 		
@@ -127,14 +148,23 @@ public class Music {
 			}
 		}
 		try {
-			firstSoundLine.write(track1.getBuffer(), 0, BUFFER_SIZE);
-			firstSoundLine.drain();
+			if (track1.getContainData())
+			{
+				firstSoundLine.write(track1.getBuffer(), 0, BUFFER_SIZE);
+				firstSoundLine.drain();
+			}
+
 			
-			secondSoundLine.write(track2.getBuffer(), 0, BUFFER_SIZE);
-			secondSoundLine.drain();		
+			if (track2.getContainData())
+			{
+				secondSoundLine.write(track2.getBuffer(), 0, BUFFER_SIZE);
+				secondSoundLine.drain();	
+
+			}
+//			secondSoundLine.write(track2.getBuffer(), 0, BUFFER_SIZE);
+//			secondSoundLine.drain();		
 	       // soundLine.drain();
-//	        soundLine.write(track2.getBuffer(), 0, BUFFER_SIZE);
-//	        soundLine.drain();
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
