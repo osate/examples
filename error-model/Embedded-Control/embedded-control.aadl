@@ -94,7 +94,7 @@ end input_processor;
 processor main_processor extends generic_processor
 end main_processor;
 
-system main
+system main 
 end main;
 
 system implementation main.i
@@ -109,16 +109,16 @@ subcomponents
 	po : processor output_processor;
 	b  : bus generic_bus.i;
 connections
-	port s1.tempval -> pi.temperature1;
-	port s2.tempval -> pi.temperature2;
-	port s3.tempval -> pi.temperature3;
+	c1 : port s1.tempval -> pi.temperature1;
+	c2 : port s2.tempval -> pi.temperature2;
+	c3 : port s3.tempval -> pi.temperature3;
 	
-	port po.action_out -> a1.action;
-	port po.action_out -> a2.action;
+	c4 : port po.action_out -> a1.action;
+	c5 : port po.action_out -> a2.action;
 	
-	bus access b -> pi.ba;
-	bus access b -> pm.ba;
-	bus access b -> po.ba;
+	c6 : bus access b -> pi.ba;
+	c7 : bus access b -> pm.ba;
+	c8 : bus access b -> po.ba;
 properties
     Actual_Processor_Binding => (reference (pi)) applies to s1;
     Actual_Processor_Binding => (reference (pi)) applies to s2;
