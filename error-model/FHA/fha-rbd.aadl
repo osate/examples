@@ -20,7 +20,6 @@ with ErrorLibrary, ErrorModelLibrary;
 	end propagations;
 	properties
 		EMV2::severity => 1 applies to ef1.Failed;
-		EMV2::likelihood => 2 applies to ef1.Failed;
     **};
   end PositionSensor;
 
