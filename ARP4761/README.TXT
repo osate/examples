@@ -4,8 +4,8 @@ designed by the Software Engineering Institute (SEI) at
 Carnegie Mellon University (CMU) to demonstrate the following
 capabilities of OSATE:
 - Fault Hazard Assesment
+- Fault Impact (FMEA/FMES)
 - Fault Tree Analysis
-- Formal Verification using Models
 
 A complete description of the case-study is available on:
 https://wiki.sei.cmu.edu/aadl/index.php/ARP4761_-_Wheel_Brake_System_%28WBS%29_Example
@@ -13,5 +13,3 @@ https://wiki.sei.cmu.edu/aadl/index.php/ARP4761_-_Wheel_Brake_System_%28WBS%29_E
 TODO
 ====
 * Add bus bindings with error propagation within the platform elements
-
-UnannunciatedBrakingLoss
