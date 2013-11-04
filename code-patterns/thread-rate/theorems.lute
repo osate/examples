@@ -1,0 +1,9 @@
+In the following, we check that when two threads are connected,
+the source has a higher period than the other.
+
+theorem period_consistency
+foreach Conn in Connection_Set do
+   foreach thr_src in {x in Thread_Set | Owner (Source(Conn)) = x} do
+   foreach thr_dst in {y in Thread_Set | Owner (Destination(Conn)) = y} do
+         check ( (Property (thr_src , "Period")) >= (Property (thr_dst, "Period")));
+end;

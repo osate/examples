@@ -46,8 +46,8 @@ subcomponents
 	tw1 : thread writer;
 connections
 	c1 : data access shared_data -> tr1.da;
-	c2 : data access shared_data -> tr1.da;
-	c3 : data access shared_data -> tr1.da;
+	c2 : data access shared_data -> tr2.da;
+	c3 : data access shared_data -> tw1.da;
 end pr.defective1;
 
 --
@@ -58,12 +58,12 @@ end pr.defective1;
 process implementation pr.correct1 extends pr.i
 subcomponents
 	tr1 : thread reader;
-	tr2 : thread reader_writer;
+	tr2 : thread writer;
 	tw1 : thread writer;
 connections
 	c1 : data access shared_data -> tr1.da;
-	c2 : data access shared_data -> tr1.da;
-	c3 : data access shared_data -> tr1.da;
+	c2 : data access shared_data -> tr2.da;
+	c3 : data access shared_data -> tw1.da;
 properties
 	Concurrency_Control_Protocol => Protected_Access applies to shared_data;
 end pr.correct1;
@@ -81,8 +81,8 @@ subcomponents
 	tw1 : thread writer;
 connections
 	c1 : data access shared_data -> tr1.da;
-	c2 : data access shared_data -> tr1.da;
-	c3 : data access shared_data -> tr1.da;
+	c2 : data access shared_data -> tr2.da;
+	c3 : data access shared_data -> tw1.da;
 end pr.correct2;
 
 
@@ -98,8 +98,8 @@ subcomponents
 	tw1 : thread writer;
 connections
 	c1 : data access shared_data -> tr1.da;
-	c2 : data access shared_data -> tr1.da;
-	c3 : data access shared_data -> tr1.da;
+	c2 : data access shared_data -> tr2.da;
+	c3 : data access shared_data -> tw1.da;
 properties
 	Concurrency_Control_Protocol => Protected_Access applies to shared_data;
 end pr.defective2;
@@ -115,5 +115,9 @@ subcomponents
 	d2 : process pr.defective2;
 end main.i;
 
+system implementation main.i2
+subcomponents
+	d2 : process pr.defective2;
+end main.i2;
 
 end shared_variable;

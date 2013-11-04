@@ -1,0 +1,23 @@
+We check two rules:
+1. If a data has no concurrency protocol protection, then,
+   we have to make sure we have only one writer. Otherwise,
+   it might lead to data consistency issues.
+
+
+theorem shared_data1
+foreach d in Data_Set do
+   write_conns := {c in Connection_Set |  ((Source(c) = d) and  (Property (Destination(c), "Access_Right") = "write_only"))};
+   check ((Property  (d, "concurrency_control_protocol") = "") and (Cardinal (write_conns) <= 1));
+end;
+
+
+2. If a data has a concurrency protocol protection, then,
+   we have to make sure that we have several writers.
+   Otherwise, the concurrency mechanism is useless
+   and might uses useless resources. 
+
+theorem shared_data2
+foreach d in Data_Set do
+   write_conns := {c in Connection_Set |  ((Source(c) = d) and  (Property (Destination(c), "Access_Right") = "write_only"))};
+   check ((Property  (d, "concurrency_control_protocol") = "protected_access") and (Cardinal (write_conns) > 1));
+end;  
