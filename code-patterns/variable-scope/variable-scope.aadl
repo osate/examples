@@ -1,0 +1,73 @@
+package variable_scope
+
+public
+
+data whatever
+end whatever;
+
+
+thread tbad
+features
+	da : requires data access whatever; 
+end tbad;
+
+
+thread tgood
+end tgood;
+
+thread implementation tgood.i
+subcomponents
+	da : data whatever;
+end tgood.i;
+
+
+--
+--  Bad data scope : we have to declare the
+--  subcomponent at the process level and
+--  then connect to the thread interfaces.
+--
+process pbad
+end pbad;
+
+process implementation pbad.i
+subcomponents
+	d1 : data whatever;
+	d2 : data whatever;
+	t1 : thread tbad;
+	t2 : thread tbad;
+connections
+	c1 : data access d1 -> t1.da;
+	c2 : data access d2 -> t2.da;
+end pbad.i;
+
+
+--
+--  Good data scope: the data is included
+--  within the thread scope and we
+--  do not use global variables.
+--
+
+process pgood
+end pgood;
+
+process implementation pgood.i
+subcomponents
+	t1 : thread tgood.i;
+	t2 : thread tgood.i;
+end pgood.i;
+
+
+system main
+end main;
+
+system implementation main.correct
+subcomponents
+	p : process pgood.i;
+end main.correct;
+
+system implementation main.defective
+subcomponents
+	p : process pbad.i;
+end main.defective;
+
+end variable_scope;

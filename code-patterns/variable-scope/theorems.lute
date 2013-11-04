@@ -1,0 +1,6 @@
+
+theorem variable_scope
+foreach d in Data_Set do
+   conns := {c in Connection_Set |  (Source(c) = d)};
+   check (Cardinal (conns) != 1);
+end;
