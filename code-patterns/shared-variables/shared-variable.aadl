@@ -1,0 +1,119 @@
+package shared_variable
+
+public
+
+data shared
+end shared;
+
+thread generic
+features
+	da : requires data access shared;
+end generic;
+
+thread writer extends generic
+properties
+	Access_Right => write_only applies to da;
+end writer;
+
+thread reader_writer extends generic
+properties
+	Access_Right => read_write applies to da;
+end reader_writer;
+
+thread reader extends generic
+properties
+	Access_Right => read_only applies to da;
+end reader;
+
+process pr
+end pr;
+
+process implementation pr.i
+subcomponents
+	shared_data : data shared;
+end pr.i;
+
+--
+--  The following example is defective because
+--  there are several writers without a locking
+--  protocol which can then lead to race conditions
+--  and data inconsistencies issues.
+-- 
+process implementation pr.defective1 extends pr.i
+subcomponents
+	tr1 : thread reader;
+	tr2 : thread reader_writer;
+	tw1 : thread writer;
+connections
+	c1 : data access shared_data -> tr1.da;
+	c2 : data access shared_data -> tr1.da;
+	c3 : data access shared_data -> tr1.da;
+end pr.defective1;
+
+--
+--  The previous defective implementation is now
+--  correct because we make use of a concurrency
+--  protocol.
+--
+process implementation pr.correct1 extends pr.i
+subcomponents
+	tr1 : thread reader;
+	tr2 : thread reader_writer;
+	tw1 : thread writer;
+connections
+	c1 : data access shared_data -> tr1.da;
+	c2 : data access shared_data -> tr1.da;
+	c3 : data access shared_data -> tr1.da;
+properties
+	Concurrency_Control_Protocol => Protected_Access applies to shared_data;
+end pr.correct1;
+
+
+--
+--  In the following, the system is correct because
+--  we have only one writer so that we do not need
+--  concurrency protocol.
+--
+process implementation pr.correct2 extends pr.i
+subcomponents
+	tr1 : thread reader;
+	tr2 : thread reader;
+	tw1 : thread writer;
+connections
+	c1 : data access shared_data -> tr1.da;
+	c2 : data access shared_data -> tr1.da;
+	c3 : data access shared_data -> tr1.da;
+end pr.correct2;
+
+
+--
+--  In the following, the use of the concurrency
+--  protocol is too much: it is not needed and could
+--  then lead to unexpected resources usage overhead.
+--
+process implementation pr.defective2 extends pr.i
+subcomponents
+	tr1 : thread reader;
+	tr2 : thread reader;
+	tw1 : thread writer;
+connections
+	c1 : data access shared_data -> tr1.da;
+	c2 : data access shared_data -> tr1.da;
+	c3 : data access shared_data -> tr1.da;
+properties
+	Concurrency_Control_Protocol => Protected_Access applies to shared_data;
+end pr.defective2;
+
+system main
+end main;
+
+system implementation main.i
+subcomponents
+	c1 : process pr.correct1;
+	d1 : process pr.defective1;
+	c2 : process pr.correct2;
+	d2 : process pr.defective2;
+end main.i;
+
+
+end shared_variable;

@@ -1,0 +1,50 @@
+package thread_rate
+
+public
+
+
+thread sender
+features
+	fout : out event port;
+properties
+	Dispatch_Protocol => Periodic;
+end sender;
+
+thread receiver
+features
+	fin : in event port;
+properties
+	Dispatch_Protocol => Sporadic;
+end receiver;
+
+process pr
+end pr;
+
+process implementation pr.i
+subcomponents
+	snd : thread sender;
+	rcv : thread receiver;
+end pr.i;
+
+
+system main
+end main;
+
+system implementation main.i
+subcomponents
+	p : process pr.i;
+end main.i;
+
+system implementation main.defective extends main.i
+properties
+	Period => 1 ms applies to p.snd;
+	Period => 2 ms applies to p.rcv;
+end main.defective;
+
+system implementation main.correct extends main.i
+properties
+	Period => 2 ms applies to p.snd;
+	Period => 1 ms applies to p.rcv;
+end main.correct;
+
+end thread_rate;
