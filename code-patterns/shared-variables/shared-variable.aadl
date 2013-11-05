@@ -10,6 +10,18 @@ features
 	da : requires data access shared;
 end generic;
 
+thread generic_3vars
+features
+	da1 : requires data access shared;
+	da2 : requires data access shared;
+	da3 : requires data access shared;
+end generic_3vars;
+
+thread generic_3vars_array
+features
+	da : requires data access shared[3];
+end generic_3vars_array;
+
 thread writer extends generic
 properties
 	Access_Right => write_only applies to da;
@@ -50,6 +62,51 @@ connections
 	c3 : data access shared_data -> tw1.da;
 end pr.defective1;
 
+
+
+--
+--  In the following, the use of the concurrency
+--  protocol is too much: it is not needed and could
+--  then lead to unexpected resources usage overhead.
+--
+process implementation pr.defective2 extends pr.i
+subcomponents
+	tr1 : thread reader;
+	tr2 : thread reader;
+	tw1 : thread writer;
+connections
+	c1 : data access shared_data -> tr1.da;
+	c2 : data access shared_data -> tr2.da;
+	c3 : data access shared_data -> tw1.da;
+properties
+	Concurrency_Control_Protocol => Protected_Access applies to shared_data;
+end pr.defective2;
+
+--
+-- In this architecture, we share three variables
+-- that have the same types. On the other hand,
+-- this might be updated/changed by using an array.
+-- We might be careful because in that case,
+-- we would like to make sure we use the same types
+-- on all variables.
+--
+process implementation pr.defective3
+subcomponents
+	shared_data1 	: data shared;
+	shared_data2 	: data shared;
+	shared_data3 	: data shared;
+	tr 				: thread generic_3vars;
+	tw 				: thread generic_3vars;
+connections
+	c1r : data access shared_data1 -> tr.da1;
+	c1w : data access shared_data1 -> tw.da1;
+	c2r : data access shared_data2 -> tr.da2;
+	c2w : data access shared_data2 -> tw.da2;
+	c3r : data access shared_data3 -> tr.da3;
+	c3w : data access shared_data3 -> tw.da3;
+end pr.defective3;
+
+
 --
 --  The previous defective implementation is now
 --  correct because we make use of a concurrency
@@ -87,22 +144,19 @@ end pr.correct2;
 
 
 --
---  In the following, the use of the concurrency
---  protocol is too much: it is not needed and could
---  then lead to unexpected resources usage overhead.
+--  This is the correct implementation of the defective3
+--  process that uses an array.
 --
-process implementation pr.defective2 extends pr.i
+process implementation pr.correct3
 subcomponents
-	tr1 : thread reader;
-	tr2 : thread reader;
-	tw1 : thread writer;
+	shared_data 	: data shared[3];
+	tr 				: thread generic_3vars_array;
+	tw 				: thread generic_3vars_array;
 connections
-	c1 : data access shared_data -> tr1.da;
-	c2 : data access shared_data -> tr2.da;
-	c3 : data access shared_data -> tw1.da;
-properties
-	Concurrency_Control_Protocol => Protected_Access applies to shared_data;
-end pr.defective2;
+	cr : data access shared_data -> tr.da;
+	cw : data access shared_data -> tw.da;
+end pr.correct3;
+
 
 system main
 end main;
