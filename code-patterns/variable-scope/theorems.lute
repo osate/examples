@@ -1,6 +1,23 @@
+1. If a data is only accessed by one thread, it is
+   rather better to include the data in the component
+   itself.
 
 theorem variable_scope
 foreach d in Data_Set do
    conns := {c in Connection_Set |  (Source(c) = d)};
    check (Cardinal (conns) != 1);
+end;
+
+
+2. If a data is being written only by one thread
+   then, we should encapsulate it in the thread
+   so that the reader access the data through ports.
+   This is what we call a flow-based architecture.
+
+
+theorem variable_scope2
+foreach p in Process_Set do
+   foreach d in { x in Data_Set | Is_Direct_Subcomponent_Of (x,p)} do 
+     conns := {c in Connection_Set |  ((Source(c) = d) and  (Property (Destination(c), "Access_Right") = "write_only"))};
+     check (Cardinal (conns) != 1);
 end;

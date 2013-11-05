@@ -42,6 +42,30 @@ end pbad.i;
 
 
 --
+--  The same data is accessed by several threads
+--  but there is only one writer. So, the data
+--  could be in the writer thread instead of
+--  letting its scope process-wide. This is the
+--  flow-based architecture pattern.
+--
+process implementation pbad.i2
+subcomponents
+	d1 : data whatever;
+	t1 : thread tbad;
+	t2 : thread tbad;
+	t3 : thread tbad;
+connections
+	c1 : data access d1 -> t1.da;
+	c2 : data access d1 -> t2.da;
+	c3 : data access d1 -> t3.da;
+properties
+	Access_Right => write_only applies to t1.da;
+	Access_Right => read_only applies to t2.da;
+	Access_Right => read_only applies to t3.da;
+end pbad.i2;
+
+
+--
 --  Good data scope: the data is included
 --  within the thread scope and we
 --  do not use global variables.
@@ -56,18 +80,51 @@ subcomponents
 	t2 : thread tgood.i;
 end pgood.i;
 
+--
+--  The same data is accessed by several threads.
+--  As there as several writers, this might be a good
+--  idea to keep it at the process level. However,
+--  a concurrency protocol should be defined
+--  to avoid race condition and data/values inconsistencies.
+--  See the shared-variables patterns.
+--
+process implementation pgood.i2
+subcomponents
+	d1 : data whatever;
+	t1 : thread tbad;
+	t2 : thread tbad;
+	t3 : thread tbad;
+connections
+	c1 : data access d1 -> t1.da;
+	c2 : data access d1 -> t2.da;
+	c3 : data access d1 -> t3.da;
+properties
+	Access_Right => write_only applies to t1.da;
+	Access_Right => write_only applies to t2.da;
+	Access_Right => read_only applies to t3.da;
+end pgood.i2;
 
 system main
 end main;
 
-system implementation main.correct
+system implementation main.correct1
 subcomponents
 	p : process pgood.i;
-end main.correct;
+end main.correct1;
 
-system implementation main.defective
+system implementation main.correct2
+subcomponents
+	p : process pgood.i2;
+end main.correct2;
+
+system implementation main.defective1
 subcomponents
 	p : process pbad.i;
-end main.defective;
+end main.defective1;
+
+system implementation main.defective2
+subcomponents
+	p : process pbad.i2;
+end main.defective2;
 
 end variable_scope;
