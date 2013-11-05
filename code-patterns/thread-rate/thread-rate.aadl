@@ -24,6 +24,8 @@ process implementation pr.i
 subcomponents
 	snd : thread sender;
 	rcv : thread receiver;
+connections
+	c0 : port snd.fout -> rcv.fin;
 end pr.i;
 
 
