@@ -3,6 +3,9 @@
    itself.
 
 theorem variable_scope
+--  Data that are connected using data access 
+--  must have more than one connection. Otherwise,
+--  they must be located in the thread.
 foreach d in Data_Set do
    conns := {c in Connection_Set |  (Source(c) = d)};
    check (Cardinal (conns) != 1);
@@ -16,6 +19,10 @@ end;
 
 
 theorem variable_scope2
+-- Data at the Process Level must be accessed by more
+-- than one writer. Otherwise, we have to encapsulate
+-- the data in the writer thread and define [event] data
+-- port for the readers.
 foreach p in Process_Set do
    foreach d in { x in Data_Set | Is_Direct_Subcomponent_Of (x,p)} do 
      conns := {c in Connection_Set |  ((Source(c) = d) and  (Property (Destination(c), "Access_Right") = "write_only"))};
