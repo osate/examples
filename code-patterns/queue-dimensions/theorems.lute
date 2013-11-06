@@ -1,0 +1,17 @@
+theorem queue_dimension
+--
+--  This theorem checks the correct use
+--  of buffered communication. This is recommended
+--  and/or advised by the NASA report on Flight
+--  Software Complexity. This example show also
+--  how to check timing requirements when using buffer.
+
+--  For reference, see the document
+--  NASA Study on Flight Software Complexity
+--  Appendix B, Section 4 (page 6)
+--
+foreach Conn in {c in Connection_Set | Property_Exists (Destination (c), "Queue_Size")} do
+   foreach thr_src in {x in Thread_Set | Owner (Source(Conn)) = x} do
+   foreach thr_dst in {y in Thread_Set | Owner (Destination(Conn)) = y} do
+         check ( (Property (thr_src , "Period") * Property (Destination (Conn), "Queue_Size")) >= (Property (thr_dst, "Period")));
+end;

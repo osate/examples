@@ -1,5 +1,14 @@
 package shared_variable
+--
+--  This architecture pattern illustrates the use
+--  protection mechanism when using shared variables.
+--  This is recommended and/or advised by the NASA report on Flight
+--  Software Complexity.
 
+--  For reference, see the document
+--  NASA Study on Flight Software Complexity
+--  Appendix B, Section 5 (page 7)
+-- 
 public
 
 data shared

@@ -1,0 +1,80 @@
+package queue_dimensions
+
+--
+--  This architecture pattern illustrates the use
+--  of buffered communication. This is recommended
+--  and/or advised by the NASA report on Flight
+--  Software Complexity. This example show also
+--  how to check timing requirements when using buffer.
+
+--  For reference, see the document
+--  NASA Study on Flight Software Complexity
+--  Appendix B, Section 4 (page 6)
+--
+
+public
+
+data generic
+end generic;
+
+thread sender
+features
+	fout : out event data port generic;
+properties
+	Dispatch_Protocol => Periodic;
+end sender;
+
+thread receiver
+features
+	fin : in event data port generic {Queue_Size => 2;};
+properties
+	Dispatch_Protocol => Sporadic;
+end receiver;
+
+process pr
+end pr;
+
+process implementation pr.i
+subcomponents
+	snd : thread sender;
+	rcv : thread receiver;
+connections
+	c0 : port snd.fout -> rcv.fin;
+end pr.i;
+
+
+system main
+end main;
+
+system implementation main.i
+subcomponents
+	p : process pr.i;
+end main.i;
+
+--
+--  Here, the system is defective because the queue
+--  can contain at most two events and, as the sender
+--  is three times faster than the receiver, he might
+--  produce too many data.
+--
+system implementation main.defective extends main.i
+properties
+	Period => 1 ms applies to p.snd;
+	Period => 3 ms applies to p.rcv;
+end main.defective;
+
+
+
+--
+--  Here, the system is ok because all the data
+--  potentially sent by the sender would be queued
+--  in the communication buffer and then, processed
+--  by the receiver.
+--
+system implementation main.correct extends main.i
+properties
+	Period => 1 ms applies to p.snd;
+	Period => 2 ms applies to p.rcv;
+end main.correct;
+
+end queue_dimensions;
