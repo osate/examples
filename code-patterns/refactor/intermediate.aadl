@@ -1,0 +1,53 @@
+package intermediate
+
+--
+--  In this architecture, we might be able
+--  to refactor the relay component into a new component
+--  that contain the relay AND the receiver.
+--
+
+public
+
+
+thread sender
+features
+	fout : out event port;
+end sender;
+
+thread receiver
+features
+	fin : in event port;
+end receiver;
+
+thread relay
+features
+	fin  : in event port;
+	fout : out event port;
+end relay;
+
+process pr
+end pr;
+
+process implementation pr.i
+subcomponents
+	snd0 : thread sender;
+	rcv0 : thread receiver;
+	rcv1 : thread receiver;
+	rel0 : thread relay;
+connections
+	c0 : port snd0.fout -> rcv0.fin;
+	c1 : port snd0.fout -> rel0.fin;
+	c2 : port rel0.fout -> rcv1.fin;
+end pr.i;
+
+
+system main
+end main;
+
+system implementation main.i
+subcomponents
+	p : process pr.i;
+end main.i;
+
+
+end intermediate;

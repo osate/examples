@@ -1,0 +1,10 @@
+--
+--  The goal of this theorem is to show that
+--  if a thread has only one connection to another
+--  thread, we can refactor them in a single entity.
+--
+theorem refactor_thread
+foreach thr in {t in Thread_Set | has_out_ports (t)} do
+   conns := {c in Connection_Set |  Owner(Source(c)) = thr};
+   check (Cardinal (conns) > 1);
+end;
