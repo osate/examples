@@ -39,7 +39,7 @@ annex EMV2 {**
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 3.85e-7 ; Distribution => Poisson;] applies to Failure;
 		EMV2::severity => 1 applies to Failure;
 
-		EMV2::likelihood => 3 applies to Failure;
+		EMV2::likelihood => C applies to Failure;
 		EMV2::hazards => 
 		([	crossreference => "X.X.X.X";
 			failure => "Loss of sensor readings";
@@ -50,7 +50,7 @@ annex EMV2 {**
 		applies to Failure;
 		
 		EMV2::severity => 1 applies to Failed;
-		EMV2::likelihood => 3 applies to Failed;
+		EMV2::likelihood => C applies to Failed;
 		EMV2::hazards => 
 		([	crossreference => "A.A.A";
 			failure => "Sensor in failure state";
@@ -80,7 +80,7 @@ annex EMV2 {**
 	    --  from the specifications, it corresponds to 1 fault per 2 months
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.92e-7 ; Distribution => Poisson;] applies to Failure;
 		EMV2::severity => 1 applies to Failure;
-		EMV2::likelihood => 3 applies to Failure;
+		EMV2::likelihood => C applies to Failure;
 		EMV2::hazards => 
 		([	crossreference => "Y.Y.Y";
 			failure => "Cannot operate";
@@ -93,7 +93,7 @@ annex EMV2 {**
 			
 		
 		EMV2::severity => 1 applies to Failed;
-		EMV2::likelihood => 3 applies to Failed;
+		EMV2::likelihood => A applies to Failed;
 		EMV2::hazards => 
 		([	crossreference => "A.A.A";
 			failure => "Actuator failed";
@@ -129,7 +129,7 @@ annex EMV2 {**
 	    --  from the specifications, it corresponds to 1 fault per year
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 3.17e-8 ; Distribution => Poisson;] applies to Failure;
 		EMV2::severity => 1 applies to Failure;
-		EMV2::likelihood => 3 applies to Failure;
+		EMV2::likelihood => B applies to Failure;
 		EMV2::hazards => 
 		([	crossreference => "Z.Z.Z";
 			failure => "Cannot process data";
@@ -153,7 +153,7 @@ annex EMV2 {**
 	    --  from the specifications, it corresponds to 1 transient failure occurence each day
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.15e-5 ; Distribution => Poisson;] applies to FailureTransient;
 		EMV2::severity => 1 applies to FailureTransient;
-		EMV2::likelihood => 3 applies to FailureTransient;
+		EMV2::likelihood => A applies to FailureTransient;
 		EMV2::hazards => (
 		[	crossreference => "A.A.A";
 			failure => "Temporary unavailable";
@@ -196,16 +196,16 @@ subcomponents
 	po : processor output_processor;
 	b  : bus generic_bus.i;
 connections
-	bus access s1.tempval -> pi.temperature1;
-	bus access s2.tempval -> pi.temperature2;
-	bus access s3.tempval -> pi.temperature3;
+	c0 : bus access s1.tempval -> pi.temperature1;
+	c1 : bus access s2.tempval -> pi.temperature2;
+	c2 : bus access s3.tempval -> pi.temperature3;
 	
-	bus access po.action_data -> a1.action;
-	bus access po.action_data -> a2.action;
+	c3 : bus access po.action_data -> a1.action;
+	c4 : bus access po.action_data -> a2.action;
 	
-	bus access b -> pi.ba;
-	bus access b -> pm.ba;
-	bus access b -> po.ba;
+	c5 : bus access b -> pi.ba;
+	c6 : bus access b -> pm.ba;
+	c7 : bus access b -> po.ba;
 
 annex EMV2 {**
 	-- The composite error behavior is used to make the RBD evaluation.
