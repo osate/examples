@@ -36,7 +36,10 @@ with Data_Model;
     cnx2: port app.commanded -> act.commanded;
     cnx3 : port act.step_order -> mot.step_order;
     cnx4 : port mot.step_done -> act.step_completed;
-  end proc.impl;
+ annex resolute {**  
+	prove check_process(this)
+**};
+  end proc.impl; 
 
   memory mem
   end mem;
@@ -61,6 +64,7 @@ properties
     Source_Data_Size => 40000 bytes;
     Source_Stack_Size => 40000 bytes;
     Source_Code_Size => 40 bytes;
+
 end user_interface;
 
 thread implementation user_interface.i
@@ -70,6 +74,9 @@ connections
     cnx: parameter c.pos -> pos;
 properties
     Compute_Entrypoint_Call_Sequence => reference (call);
+annex resolute {**  
+	prove check_period(this)
+**};
 end user_interface.i;
 
 subprogram user_interface_spg
@@ -105,6 +112,9 @@ connections
     cnx2 : parameter user_pos -> c.user_pos;
 properties
     Compute_Entrypoint_Call_Sequence => reference (call);
+annex resolute {**  
+	prove check_rates(this)
+**};
 end app.i;
 
 subprogram app_spg
@@ -144,6 +154,9 @@ connections
     cnx3 : parameter step_completed -> c.step_completed;
 properties
     Compute_Entrypoint_Call_Sequence => reference (call);
+annex resolute {**  
+	prove check_interarrival_time(this, 550000000000)
+**};    
 end actuator.i;
 
 subprogram actuator_spg

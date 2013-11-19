@@ -1,0 +1,28 @@
+package Proofs
+public
+
+annex resolute 
+{**
+check_process(p : process) <= 
+ **  "My Process has a good period " ** 
+  true
+
+check_rates(x : thread) <=
+  ** "The thread " x " is connected to component that are executed at a smaller period than him" **
+  forall (y : thread) (c : connection).  
+    (connected(x, c, y) => check_rates_two_threads (x, y) )     
+        
+check_rates_two_threads (t1 : thread, t2 : thread) <=
+  **  "Thread " t1 " does not have a consistent period with thread " t2 **
+  property_lookup(t1, Timing_Properties::Period) >= property_lookup(t2, Timing_Properties::Period)
+
+check_interarrival_time(x : thread, t : int) <=
+  ** "The inter-arrival time for incoming data in thread " x " is less than " t **
+  forall (y : thread) (c : connection).  
+    (connected(y, c, x) => property_lookup(y, Timing_Properties::Period) <= t )
+
+check_period(t : thread) <= 
+ **  "My Thread has a good period " ** 
+  true
+**};
+end Proofs;
