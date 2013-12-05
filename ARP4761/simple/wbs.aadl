@@ -193,6 +193,11 @@ end wbs.federated;
 system implementation wbs.ima extends wbs.detailed
 subcomponents
 	bscu : refined to system bscu::bscu.ima;
+annex resolute {**  
+      	prove contain_two_power_supply()
+      	prove contain_two_selector_valve() 
+      	prove contain_two_bscu()
+**};
 end wbs.ima;
 
 end wbs;

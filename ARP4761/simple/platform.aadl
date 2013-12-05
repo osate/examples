@@ -95,7 +95,7 @@ annex EMV2 {**
 			])
 			applies to InternalFailure;
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.35e-5 ; Distribution => Poisson;] applies to InternalFailure;
---		EMV2::OccurrenceDistribution => [ ProbabilityValue => 6.75e-5 ; Distribution => Fixed;] applies to HardwareFailure;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 6.75e-5 ; Distribution => Fixed;] applies to HardwareFailure;
 
 **};
 end cpu;

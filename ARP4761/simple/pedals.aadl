@@ -43,6 +43,9 @@ annex EMV2 {**
 			comment => "Would be critical if both power supplies are lost";
 		])
 		applies to signal1.NoService, signal2.NoService;
+		
+				EMV2::OccurrenceDistribution => [ ProbabilityValue => 3.4e-5 ; Distribution => Fixed;] applies to Failed;
+		
 **};
 end pedals;
 
