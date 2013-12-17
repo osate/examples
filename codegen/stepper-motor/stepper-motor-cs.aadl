@@ -12,6 +12,9 @@ with Data_Model;
   properties
     actual_memory_binding => (reference (the_mem)) applies to the_proc;  
     actual_processor_binding => (reference (the_cpu)) applies to the_proc;
+ annex resolute {**  
+	prove accurate_position(this, 5) 
+**};
   end root.impl;
 
   processor cpu
@@ -195,6 +198,9 @@ connections
     cnx2 : parameter c.step_done -> step_done;
 properties
     Compute_Entrypoint_Call_Sequence => reference (call);
+annex resolute {**   
+	prove check_motor_execution_time(this, 1000000000)
+**}; 
 end motor.i;
 
 subprogram motor_spg
@@ -221,7 +227,7 @@ end motor_spg;
   
   data notification
   properties
-    Source_Name => "usercode.Notification"; 
+    Source_Name => "usercode.Notification";  
     Data_Model::Initial_Value => ("new usercode.Notification()");
   end notification;
 

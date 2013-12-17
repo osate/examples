@@ -3,9 +3,26 @@ public
 
 annex resolute 
 {**
+accurate_position (s : system, deadline : int) <=
+ ** "(C1.1) The system accurately positions the FVSM to the position requested by the ECS in " deadline " ms" **
+   (exists (t1 : thread) (t2 : thread). 
+        class_of (t1, ojr_steppermotor_cs::app.i)
+    and class_of (t2, ojr_steppermotor_cs::actuator.i)
+    and check_position (t1, t2)) or false
+
+
+check_position (app : thread, actuator : thread) <=
+ ** "(R2.3) The app and the actuator have the same value for the position" **
+true	
+	
 check_process(p : process) <= 
  **  "My Process has a good period " ** 
   true
+
+check_motor_execution_time (x : thread, t : int) <=
+  ** "The motor (component " x ") must have a execution time less than " t " ms" **
+  -- TODO: handle time range
+  property_lookup(x, Timing_Properties::Period) < t 
 
 check_rates(x : thread) <=
   ** "The thread " x " is connected to component that are executed at a smaller period than him" **

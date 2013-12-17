@@ -5,7 +5,7 @@ annex resolute
 {**
 	
 contain_two_bscu () <=
-  ** "Check that we have two BSCU" **
+  ** "Check that we have one BSCU" **
   contains_geometry("C:\\jjc.stp", "BSCU",1 )
 		
 		
