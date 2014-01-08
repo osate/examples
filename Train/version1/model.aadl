@@ -1,0 +1,67 @@
+package train_version1
+
+public
+
+with EMV2;
+
+data speed
+end speed;
+
+system controller
+end controller;
+
+system alarm
+features
+	alert   : out event port;
+	reset   : in event port;
+modes
+	monitoring  : initial mode;
+	yelling		: mode;
+end alarm;
+
+system door
+modes
+	open   : mode;
+	closed : initial mode;
+end door;
+
+system speed_sensor
+features
+	speed : out data port speed;
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior train_errors::simple;
+	
+	error propagations
+		speed : out propagation{ValueError,ServiceError};
+	flows
+		speed : error source speed{ValueError,ServiceError};
+	end propagations;
+	
+	component error behavior
+	events
+		Failure : error event;
+	transitions
+		t0 : Operational -[Failure]-> Failed;
+	propagations
+		p0 : Failed -[]-> speed{ValueError};
+		p1 : Failed -[]-> speed{ServiceError};
+	end component;
+**};
+end speed_sensor;
+
+
+system train
+end train;
+
+system implementation train.i1
+subcomponents
+	alarm : system alarm;
+	ss1   : system speed_sensor;
+	ss2   : system speed_sensor;
+	ss3   : system speed_sensor;
+	door  : system door;
+	ctrl  : system controller;
+end train.i1;
+
+end train_version1;

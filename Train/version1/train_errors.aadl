@@ -1,0 +1,11 @@
+package train_errors
+public
+annex EMV2 {**
+	error behavior Simple 
+	states
+	  Operational: initial state; 
+	  Failed     : state;
+	end behavior;
+	
+**};
+end train_errors;
