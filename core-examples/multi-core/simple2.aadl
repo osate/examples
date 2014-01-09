@@ -1,0 +1,78 @@
+package Multi_Core_Simple2
+public
+
+virtual processor runtime
+end runtime;
+
+processor core
+end core;
+
+processor implementation core.i
+subcomponents
+	runtime : virtual processor runtime;
+end core.i;
+
+system multi_core
+end multi_core;
+
+system implementation multi_core.dual
+subcomponents
+	core1 : processor core.i;
+	core2 : processor core.i;
+end multi_core.dual;
+
+
+
+thread task
+features
+	pin : in event port;
+	pout : out event port;
+properties
+	Period   => 100 ms;
+	Deadline => 50 ms;
+end task;
+
+
+thread implementation task.i
+
+end task.i;
+
+process partition
+features
+	pin : in event port;
+	pout : out event port;
+end partition;
+
+process implementation partition.i
+subcomponents
+	thr : thread task.i;
+connections
+	c0 : port pin -> thr.pin;
+	c1 : port thr.pout -> pout;
+modes
+	normal : initial mode;
+	redundant : mode;
+end partition.i;
+
+system main
+end main;
+
+system implementation main.normal
+subcomponents
+	partition1 : process partition.i;
+	partition2 : process partition.i;
+	cpu        : system multi_core.dual;
+connections
+	c0 : port partition1.pout -> partition2.pin; 
+	c1 : port partition2.pout -> partition1.pin; 
+properties
+	Allowed_Processor_Binding => (reference (cpu.core1.runtime)) 
+	 							  applies to partition1; 
+	Allowed_Processor_Binding => (reference (cpu.core2.runtime)) 
+								  applies to partition2; 
+end main.normal;
+
+
+
+
+end Multi_Core_Simple2;

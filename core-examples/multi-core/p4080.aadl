@@ -191,14 +191,14 @@ subcomponents
 	core7 				: refined to processor e500mc.error;
 	core8 				: refined to processor e500mc.error;
 connections
-	port temperature_sensor.alert -> core1.temp_alert;
-	port temperature_sensor.alert -> core2.temp_alert;
-	port temperature_sensor.alert -> core3.temp_alert;
-	port temperature_sensor.alert -> core4.temp_alert;
-	port temperature_sensor.alert -> core5.temp_alert;
-	port temperature_sensor.alert -> core6.temp_alert;
-	port temperature_sensor.alert -> core7.temp_alert;
-	port temperature_sensor.alert -> core8.temp_alert;
+	c0 : port temperature_sensor.alert -> core1.temp_alert;
+	c1 : port temperature_sensor.alert -> core2.temp_alert;
+	c2 : port temperature_sensor.alert -> core3.temp_alert;
+	c3 : port temperature_sensor.alert -> core4.temp_alert;
+	c4 : port temperature_sensor.alert -> core5.temp_alert;
+	c5 : port temperature_sensor.alert -> core6.temp_alert;
+	c6 : port temperature_sensor.alert -> core7.temp_alert;
+	c7 : port temperature_sensor.alert -> core8.temp_alert;
 end p4080.error;
 
 

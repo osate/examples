@@ -20,11 +20,29 @@ subcomponents
 	cores : processor core.i[4];
 end multi_core.quad;
 
+thread task
+features
+	pin : in event port;
+	pout : out event port;
+end task;
+
+
+thread implementation task.i
+
+end task.i;
 
 process partition
+features
+	pin : in event port;
+	pout : out event port;
 end partition;
 
 process implementation partition.i
+subcomponents
+	thr : thread task.i;
+connections
+	c0 : port pin -> thr.pin;
+	c1 : port thr.pout -> pout;
 modes
 	normal : initial mode;
 	redundant : mode;
@@ -37,6 +55,8 @@ system implementation main.normal
 subcomponents
 	partitions : process partition.i[2];
 	cpu        : system multi_core.dual;
+connections
+	c0 : port partitions.pout -> partitions.pin; 
 properties
 	Allowed_Processor_Binding => (reference (cpu.cores[0])) applies to partitions[0]; 
 	Allowed_Processor_Binding => (reference (cpu.cores[1])) applies to partitions[1]; 

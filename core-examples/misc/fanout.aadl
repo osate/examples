@@ -28,10 +28,10 @@ subcomponents
 	c2 : system consumer;
 	b : bus mybus;
 connections
-	port p1.f1 -> c1.f1 {Actual_Connection_Binding => (reference (b));};
-	port p1.f1 -> c1.f2 {Actual_Connection_Binding => (reference (b));};
-	port p1.f1 -> c2.f1 {Actual_Connection_Binding => (reference (b));};
-	port p1.f1 -> c2.f2 {Actual_Connection_Binding => (reference (b));};
+	conn0 : port p1.f1 -> c1.f1 {Actual_Connection_Binding => (reference (b));};
+	conn1 : port p1.f1 -> c1.f2 {Actual_Connection_Binding => (reference (b));};
+	conn2 : port p1.f1 -> c2.f1 {Actual_Connection_Binding => (reference (b));};
+	conn3 : port p1.f1 -> c2.f2 {Actual_Connection_Binding => (reference (b));};
 end main.i;
 
 end fanout;
