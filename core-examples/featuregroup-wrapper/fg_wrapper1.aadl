@@ -155,9 +155,9 @@ subcomponents
 -- There is the wrapper used.
 	wrapper : system wrapper;
 connections
-	feature group s1.f <-> wrapper.fs1;
-	feature group wrapper.fs2 <-> s2.f;
-	feature group wrapper.fs3 <-> s3.f;
+	c0 : feature group s1.f <-> wrapper.fs1;
+	c1 : feature group wrapper.fs2 <-> s2.f;
+	c2 : feature group wrapper.fs3 <-> s3.f;
 end main.i2;
 
 system implementation main.i3
@@ -169,7 +169,7 @@ connections
 -- Use fo the subset matching rule
 -- s2.f is a subset of s1.f so, the validation
 -- is validated as long as we have a subset that matches
-	feature group s1.f <-> s2.f {Classifier_Matching_Rule => subset;};
+	c0 : feature group s1.f <-> s2.f {Classifier_Matching_Rule => subset;};
 end main.i3;
 
 
