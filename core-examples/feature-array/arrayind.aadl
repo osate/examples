@@ -32,7 +32,7 @@ system implementation sensor_array.i1
 subcomponents
 	sensors : device sensor[100];
 connections
-	bus access sensors.bconn -> sensors_accesses {Connection_Pattern => ((One_To_One));};
+	b0 : bus access sensors.bconn -> sensors_accesses {Connection_Pattern => ((One_To_One));};
 end sensor_array.i1;
 
 
@@ -45,7 +45,7 @@ subcomponents
 	array : system sensor_array.i1;
 	mybus : bus mybus;
 connections
-	bus access array.sensors_accesses -> mybus {Connection_Pattern => ((All_To_One));};
+	b0 : bus access array.sensors_accesses -> mybus {Connection_Pattern => ((All_To_One));};
 end main.i1; 
 
 -- Second implementation: we connect each array connection to one bus
@@ -54,7 +54,7 @@ subcomponents
 	array : system sensor_array.i1;
 	mybus : bus mybus[100];
 connections
-	bus access array.sensors_accesses -> mybus {Connection_Pattern => ((One_To_One));};
+	b0 : bus access array.sensors_accesses -> mybus {Connection_Pattern => ((One_To_One));};
 -- equivalent to 
 --  bus access array.sensors_accessses[0 .. 99] -> mybus[0 .. 99];
 end main.i2; 
