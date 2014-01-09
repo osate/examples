@@ -3,12 +3,21 @@ package train_version1
 public
 
 with EMV2;
+with Data_Model;
 
 data speed
 end speed;
 
-system controller
-end controller;
+data boolean
+properties
+	Data_Model::Data_Representation => boolean;
+end boolean;
+
+ 
+
+system door_controller
+end door_controller;
+
 
 system alarm
 features
@@ -19,11 +28,18 @@ modes
 	yelling		: mode;
 end alarm;
 
-system door
+system door_system
+features
+	isopen : out data port boolean;
 modes
 	open   : mode;
 	closed : initial mode;
-end door;
+annex behavior_specification{**
+	states
+		open: initial complete state;
+		closed : complete state;
+**};
+end door_system;
 
 system speed_sensor
 features
@@ -52,16 +68,24 @@ end speed_sensor;
 
 
 system train
+
 end train;
 
 system implementation train.i1
 subcomponents
-	alarm : system alarm;
-	ss1   : system speed_sensor;
-	ss2   : system speed_sensor;
-	ss3   : system speed_sensor;
-	door  : system door;
-	ctrl  : system controller;
+	alarm 		: system alarm;
+	ss1   		: system speed_sensor;
+	ss2   		: system speed_sensor;
+	ss3   		: system speed_sensor;
+	door  		: system door_system;
+	door_ctrl  	: system door_controller;
+annex behavior_specification{**
+	states 
+		parked: initial complete state;
+		intransit : complete state;
+	transitions
+		t0 : parked -[ ss1.speed = 0 and ss2.speed = 0 and ss3.speed = 0]->intransit;
+**};
 end train.i1;
 
 end train_version1;
