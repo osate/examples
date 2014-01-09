@@ -80,9 +80,9 @@ end main;
 system implementation main.regular
 subcomponents
 	s1 	: system s1;
-	s1r : system s1_reverse;
+	s1r     : system s1_reverse;
 connections
-	feature group s1.f <-> s1r.f;
+	c0 : feature group s1.f <-> s1r.f;
 end main.regular;
 
 
@@ -104,8 +104,8 @@ end wrapper_f2n;
 
 system implementation wrapper_f2n.i
 connections
-	feature group f1 <-> f2.fg1 {Classifier_Matching_Rule => subset;};
-	feature group f1 <-> f2.fg2 {Classifier_Matching_Rule => subset;};
+	c0 : feature group f1 <-> f2.fg1 {Classifier_Matching_Rule => subset;};
+	c1 : feature group f1 <-> f2.fg2 {Classifier_Matching_Rule => subset;};
 end wrapper_f2n.i;
 
 system wrapper_n2f
@@ -116,8 +116,8 @@ end wrapper_n2f;
 
 system implementation wrapper_n2f.i
 connections
-	feature group f2 <-> f1.fg1 {Classifier_Matching_Rule => subset;};
-	feature group f2 <-> f1.fg2 {Classifier_Matching_Rule => subset;};
+	c0 : feature group f2 <-> f1.fg1 {Classifier_Matching_Rule => subset;};
+	c1 : feature group f2 <-> f1.fg2 {Classifier_Matching_Rule => subset;};
 end wrapper_n2f.i;
 
 
@@ -127,8 +127,8 @@ subcomponents
 	s2r : system s2_reverse;
 	wrapper : system wrapper_f2n;
 connections
-	feature group s1.f <-> wrapper.f1;
-	feature group s2r.f <-> wrapper.f2;
+	c0 : feature group s1.f <-> wrapper.f1;
+	c1 : feature group s2r.f <-> wrapper.f2;
 end main.full_to_nested;
 
 
@@ -138,8 +138,8 @@ subcomponents
 	s1r : system s1_reverse;
 	wrapper : system wrapper_n2f;
 connections
-	feature group s2.f <-> wrapper.f1;
-	feature group s1r.f <-> wrapper.f2;
+	c0 : feature group s2.f <-> wrapper.f1;
+	c1 : feature group s1r.f <-> wrapper.f2;
 end main.nested_to_full;
 
 
