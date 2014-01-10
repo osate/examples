@@ -14,7 +14,11 @@ properties
 end boolean;
 
  
-
+-- The door_controller is the main component (the heart of this example).
+-- The condition for a safe opening of the door is represented
+-- by the behavior annex transitions.
+-- Also, the component may handle the error propagated by the other
+-- components.
 system door_controller
 features
 	speed 		: in data port speed;
@@ -26,12 +30,49 @@ annex behavior_specification {**
 		Doors_Closed : initial state;
 		Doors_Opened : state;
 	transitions
-		t1 : Doors_Closed -[speed? = 0 and intransit? = false ]-> Doors_Opened;
+		t1 : Doors_Closed -[speed? = 0 and intransit? = false and self.safe ]-> Doors_Opened;
 		t2 : Doors_Closed -[alarm? = true]-> Doors_Opened;
-		t5 : Doors_Opened -[speed? = 0 and intransit? = false and door_sensor?= false and alarm? = false]-> Doors_Closed;
+		t5 : Doors_Opened -[self.safe and speed? = 0 and intransit? = false and door_sensor?= false and alarm? = false]-> Doors_Closed;
+**};
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior train_errors::simple;
+	
+	error propagations
+		speed 		: in propagation{ValueError,ServiceError};
+		intransit 	: in propagation{ValueError,ServiceError};
+		alarm 		: in propagation{ValueError};
+		door_sensor 	: in propagation{ValueError};
+	flows
+		f1 			: error sink speed{ValueError,ServiceError};
+		f2 			: error sink intransit{ValueError,ServiceError};
+		f3 			: error sink alarm{ValueError};
+		f4 			: error sink door_sensor{ValueError};
+	end propagations;
+	
+	component error behavior
+	events
+		Internal_Failure : error event;
+	transitions
+		t0 : Operational -[Internal_Failure]-> Failed;
+		t1 : Operational -[speed{ValueError} or speed{ServiceError}]-> Failed;
+		t2 : Operational -[intransit{ValueError} or intransit{ServiceError}]-> Failed;
+		t3 : Operational -[alarm{ValueError}]-> Failed;
+		t4 : Operational -[door_sensor{ValueError}]-> Failed;
+--	propagations
+--  TODO: add a propagation rules that will send the event self.safe to null
+--		p0 : Failed -[]-> self{ValueError};
+	end component;
 **};
 end door_controller;
 
+-- The alarm component is very simple: it sends a boolean
+-- (on/off) value in case the alarm was triggered and they
+-- was an emergency. Upon hazard detection, the alarm continues
+-- to be sent until a reset event has been received.
+-- Also, the alarm can send false alarm, that is captured
+-- by the ValueError being propagated using the Error-Model Annex
+-- description.
 
 device alarm
 features
@@ -46,7 +87,34 @@ annex behavior_specification {**
 		t2 : Active 	-[reset					]-> Inactive;
 		t3 : Active 	-[						]-> Active {alert := true};
 **};
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior train_errors::simple;
+	
+	error propagations
+		alert 		: out propagation{ValueError};
+	flows
+		f1 			: error source alert{ValueError};
+	end propagations;
+	
+	component error behavior
+	events
+		Failure : error event;
+	transitions
+		t0 : Operational -[Failure]-> Failed;
+	propagations
+		p10 : Failed -[]-> alert{ValueError};
+	end component;
+**};
 end alarm;
+
+
+-- The train controller has two interfaces
+-- in order to send the train speed (using a sensor) or
+-- to indicate is the train is parked inside a station
+-- or moving (intransit). This information is then reused
+-- by the door controller to estimate if this is safe or
+-- not to open the door.
 
 system train_controller
 features
@@ -57,9 +125,11 @@ annex EMV2 {**
 	use behavior train_errors::simple;
 	
 	error propagations
-		speed : out propagation{ValueError,ServiceError};
+		speed 		: out propagation{ValueError,ServiceError};
+		intransit 	: out propagation{ValueError,ServiceError};
 	flows
-		speed : error source speed{ValueError,ServiceError};
+		speed 		: error source speed{ValueError,ServiceError};
+		intransit 	: error source speed{ValueError,ServiceError};
 	end propagations;
 	
 	component error behavior
@@ -68,19 +138,53 @@ annex EMV2 {**
 	transitions
 		t0 : Operational -[Failure]-> Failed;
 	propagations
-		p0 : Failed -[]-> speed{ValueError};
-		p1 : Failed -[]-> speed{ServiceError};
+		p10 : Failed -[]-> speed{ValueError};
+		p11 : Failed -[]-> speed{ServiceError};
+		p20 : Failed -[]-> intransit{ValueError};
+		p21 : Failed -[]-> intransit{ServiceError};
 	end component;
 **};
 end train_controller;
 
+
+-- The door_sensor component is simple: it is a sensor
+-- that constantly send a boolean value (on/off). If
+-- somebody is behind the sensor, it is on. Otherwise,
+-- this is off. Then, this value is used by the controller
+-- to estimate if this is safe or not to open/close the door.
+--
+-- We also define the error propagates by the sensor
+-- (ValueError) that indicates a bad value has been
+-- sent through the component interfaces.
 device door_sensor
 features
 	value : out data port boolean;
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior train_errors::simple;
+	
+	error propagations
+		value 		: out propagation{ValueError};
+	flows
+		f1 			: error source value{ValueError};
+	end propagations;
+	
+	component error behavior
+	events
+		Failure : error event;
+	transitions
+		t0 : Operational -[Failure]-> Failed;
+	propagations
+		p10 : Failed -[]-> value{ValueError};
+	end component;
+**};
 end door_sensor;
 
-system train
 
+-- For us, a train is no more than the assembly of the
+-- previously defined components.
+
+system train
 end train;
 
 system implementation train.i1
