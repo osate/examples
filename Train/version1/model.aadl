@@ -16,34 +16,42 @@ end boolean;
  
 
 system door_controller
+features
+	speed 		: in data port speed;
+	intransit   : in data port boolean;
+	alarm       : in data port boolean;
+	door_sensor : in data port boolean;
+annex behavior_specification {**
+	states
+		Doors_Closed : initial state;
+		Doors_Opened : state;
+	transitions
+		t1 : Doors_Closed -[speed? = 0 and intransit? = false ]-> Doors_Opened;
+		t2 : Doors_Closed -[alarm? = true]-> Doors_Opened;
+		t5 : Doors_Opened -[speed? = 0 and intransit? = false and door_sensor?= false and alarm? = false]-> Doors_Closed;
+**};
 end door_controller;
 
 
-system alarm
+device alarm
 features
-	alert   : out event port;
+	alert   : out data port boolean;
 	reset   : in event port;
-modes
-	monitoring  : initial mode;
-	yelling		: mode;
+annex behavior_specification {**
+	states
+		Inactive : initial state;
+		Active   : state;
+	transitions
+		t1 : Inactive 	-[self.hazard_detected	]-> Active;
+		t2 : Active 	-[reset					]-> Inactive;
+		t3 : Active 	-[						]-> Active {alert := true};
+**};
 end alarm;
 
-system door_system
+system train_controller
 features
-	isopen : out data port boolean;
-modes
-	open   : mode;
-	closed : initial mode;
-annex behavior_specification{**
-	states
-		open: initial complete state;
-		closed : complete state;
-**};
-end door_system;
-
-system speed_sensor
-features
-	speed : out data port speed;
+	speed 		: out data port speed;
+	intransit 	: out data port boolean;
 annex EMV2 {**
 	use types ErrorLibrary;
 	use behavior train_errors::simple;
@@ -64,8 +72,12 @@ annex EMV2 {**
 		p1 : Failed -[]-> speed{ServiceError};
 	end component;
 **};
-end speed_sensor;
+end train_controller;
 
+device door_sensor
+features
+	value : out data port boolean;
+end door_sensor;
 
 system train
 
@@ -73,19 +85,15 @@ end train;
 
 system implementation train.i1
 subcomponents
-	alarm 		: system alarm;
-	ss1   		: system speed_sensor;
-	ss2   		: system speed_sensor;
-	ss3   		: system speed_sensor;
-	door  		: system door_system;
+	alarm 		: device alarm;
+	train_ctrl  : system train_controller;
 	door_ctrl  	: system door_controller;
-annex behavior_specification{**
-	states 
-		parked: initial complete state;
-		intransit : complete state;
-	transitions
-		t0 : parked -[ ss1.speed = 0 and ss2.speed = 0 and ss3.speed = 0]->intransit;
-**};
+	door_sensor : device door_sensor;
+connections
+	conn_sensor : port door_sensor.value 		-> door_ctrl.door_sensor;
+	conn_alarm  : port alarm.alert 				-> door_ctrl.alarm;
+	conn_speed  : port train_ctrl.speed 		-> door_ctrl.speed;
+	conn_transit: port train_ctrl.intransit 	-> door_ctrl.intransit;
 end train.i1;
 
 end train_version1;
