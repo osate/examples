@@ -13,6 +13,34 @@ properties
 	Data_Model::Data_Representation => boolean;
 end boolean;
 
+-- The door is the device itself that represent the device
+-- It is commanded by the controller
+system door
+features
+	open_cmd : in data port boolean;
+annex behavior_specification {**
+	states
+		Closed : initial state;
+		Opened : state;
+	transitions
+		t1 : Doors_Closed -[opem_cmd? = false]-> Doors_Closed;
+		t2 : Doors_Closed -[opem_cmd? = true]-> Doors_Open;
+		t3 : Doors_Open -[opem_cmd? = true]-> Doors_Open;
+		t4 : Doors_Open -[opem_cmd? = false]-> Doors_Close;
+**};	
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior train_errors::simple;
+
+	component error behavior
+	events
+		Internal_Failure : error event;
+	transitions
+		t0 : Operational -[Internal_Failure]-> Failed;
+	end component;
+**};
+end door;
+
  
 -- The door_controller is the main component (the heart of this example).
 -- The condition for a safe opening of the door is represented
@@ -21,27 +49,28 @@ end boolean;
 -- components.
 system door_controller
 features
-	speed 		: in data port speed;
-	intransit   : in data port boolean;
-	alarm       : in data port boolean;
-	door_sensor : in data port boolean;
+	speed 			: in data port speed;
+	intransit   	: in data port boolean;
+	alarm      	 	: in data port boolean;
+	door_sensor 	: in data port boolean;
+	door_open_cmd	: out data port boolean;
 annex behavior_specification {**
 	states
 		Doors_Closed : initial state;
 		Doors_Opened : state;
 	transitions
-		t1 : Doors_Closed -[speed? = 0 and intransit? = false and self.safe ]-> Doors_Opened;
-		t2 : Doors_Closed -[alarm? = true]-> Doors_Opened;
-		t5 : Doors_Opened -[self.safe and speed? = 0 and intransit? = false and door_sensor?= false and alarm? = false]-> Doors_Closed;
+		t1 : Doors_Closed -[speed? = 0 and intransit? = false and self.safe ]-> Doors_Opened {door_open_cmd := true;};
+		t2 : Doors_Closed -[alarm? = true]-> Doors_Opened {door_open_cmd := true;};
+		t5 : Doors_Opened -[self.safe and speed? = 0 and intransit? = false and door_sensor?= false and alarm? = false]-> Doors_Closed {door_open_cmd := false;};
 **};
 annex EMV2 {**
 	use types ErrorLibrary;
 	use behavior train_errors::simple;
 	
 	error propagations
-		speed 		: in propagation{ValueError,ServiceError};
-		intransit 	: in propagation{ValueError,ServiceError};
-		alarm 		: in propagation{ValueError};
+		speed 			: in propagation{ValueError,ServiceError};
+		intransit 		: in propagation{ValueError,ServiceError};
+		alarm 			: in propagation{ValueError};
 		door_sensor 	: in propagation{ValueError};
 	flows
 		f1 			: error sink speed{ValueError,ServiceError};
@@ -60,7 +89,10 @@ annex EMV2 {**
 		t3 : Operational -[alarm{ValueError}]-> Failed;
 		t4 : Operational -[door_sensor{ValueError}]-> Failed;
 --	propagations
+
 --  TODO: add a propagation rules that will send the event self.safe to null
+--        the idea here is to capture the fact that when we have an error, the self.safe
+--        is set to false so that we cannot trigger any transition.
 --		p0 : Failed -[]-> self{ValueError};
 	end component;
 **};
@@ -83,6 +115,12 @@ annex behavior_specification {**
 		Inactive : initial state;
 		Active   : state;
 	transitions
+	
+	-- TODO: we want to trigger the hazard_detected state
+	-- using the EMV annex. Basically, having
+	-- an error propagation that send the self event
+	-- when we are in a particular error state.
+	
 		t1 : Inactive 	-[self.hazard_detected	]-> Active;
 		t2 : Active 	-[reset					]-> Inactive;
 		t3 : Active 	-[						]-> Active {alert := true};
@@ -116,7 +154,7 @@ end alarm;
 -- by the door controller to estimate if this is safe or
 -- not to open the door.
 
-system train_controller
+system train_controller 
 features
 	speed 		: out data port speed;
 	intransit 	: out data port boolean;
