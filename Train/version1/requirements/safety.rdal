@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<core:Specification xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:core="http:///www.open-people.fr/rdal/core" id="__ogKoIU7EeOnk9kuab5reQ" constraintLanguagesSpecification="platform:/config/fr.openpeople.ide.settings/defaultConstraintsLanguages.constraints#20903345">
+  <actors xsi:type="core:StakeHolder" id="_CHDQsIU8EeOnk9kuab5reQ" name="passenger"/>
+  <actors xsi:type="core:StakeHolder" id="_J7-lkIU8EeOnk9kuab5reQ" name="operator"/>
+  <requirementGroups id="_LbJ5UIU8EeOnk9kuab5reQ" name="Door controller">
+    <requirements xsi:type="core:Requirement" id="_K_UccIU9EeOnk9kuab5reQ" name="CLOSE-WHEN-INTRANSIT"/>
+    <requirements xsi:type="core:Requirement" id="_P6NCEIU9EeOnk9kuab5reQ" name="NOT OPEN INTRANSIT"/>
+  </requirementGroups>
+  <requirementGroups id="_OgG4EIU8EeOnk9kuab5reQ" name="Door">
+    <requirements xsi:type="core:Requirement" id="_SNXM8IU8EeOnk9kuab5reQ" name="CLOSED-NORMAL" description="The door is closed when there is no emergency"/>
+    <requirements xsi:type="core:Requirement" id="_Xu5i4IU8EeOnk9kuab5reQ" name="OPEN-EMERGENCY" description="The door can be open during an emergency"/>
+    <requirements xsi:type="core:Requirement" id="_nxs4IIU8EeOnk9kuab5reQ" name="OPEN-NORMAL" description="The can open only when the train is parked when there is no emergency"/>
+  </requirementGroups>
+  <requirementGroups id="_yv65MIU8EeOnk9kuab5reQ" name="Door Sensor">
+    <requirements xsi:type="core:Requirement" id="_z5X0kIU8EeOnk9kuab5reQ" name="NORMAL-STATE" description="The door sensor is operating correctly"/>
+  </requirementGroups>
+  <requirementGroups id="_9D6RgIU8EeOnk9kuab5reQ" name="Speed Sensor">
+    <requirements xsi:type="core:Requirement" id="_FVS44IU9EeOnk9kuab5reQ" name="NORMAL STATE" description="The speed sensor does not have any error/issue"/>
+  </requirementGroups>
+  <requirementGroups id="_WCyw8IU9EeOnk9kuab5reQ" name="Emergency Detection">
+    <requirements xsi:type="core:Requirement" id="_XuA8oIU9EeOnk9kuab5reQ" name="DETECTION"/>
+    <requirements xsi:type="core:Requirement" id="_Yo2NMIU9EeOnk9kuab5reQ" name="SMOKE DETECTION"/>
+  </requirementGroups>
+</core:Specification>
