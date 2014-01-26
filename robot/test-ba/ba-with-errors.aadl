@@ -21,7 +21,7 @@ process implementation pr_producer.i
 subcomponents
 	thr : thread thr_producer.i;
 connections
-	port thr.number_out -> number_out;
+	c1:port thr.number_out -> number_out;
 end pr_producer.i;
 
 system sys_producer
@@ -33,7 +33,7 @@ system implementation sys_producer.i
 subcomponents
 	pr : process pr_producer.i;
 connections
-	port pr.number_out -> number_out;
+	c2:port pr.number_out -> number_out;
 end sys_producer.i; 
 
 
@@ -52,7 +52,7 @@ process implementation pr_consumer.i
 subcomponents
 	thr : thread thr_consumer.i;
 connections
-	port number_in -> thr.number_in;
+	c3:port number_in -> thr.number_in;
 end pr_consumer.i;
 
 system sys_consumer
@@ -64,7 +64,7 @@ system implementation sys_consumer.i
 subcomponents
 	pr : process pr_consumer.i;
 connections
-	port number_in -> pr.number_in;
+	c4:port number_in -> pr.number_in;
 end sys_consumer.i;
 
 system main
@@ -75,7 +75,7 @@ subcomponents
 	p : system sys_producer.i;
 	c : system sys_consumer.i;
 connections
-	port p.number_out -> c.number_in;
+	c5:port p.number_out -> c.number_in;
 annex EMV2 {**
 	
 **};

@@ -118,7 +118,7 @@ with EMV2;
 		prc : system processing;
 		rcv : system receiver;
 	connections
-		port snd.outp -> prc.inp;
-		port prc.outp -> rcv.inp;
+		c1:port snd.outp -> prc.inp;
+		c2:port prc.outp -> rcv.inp;
 	end main.i;
 end ConditionalFlows;

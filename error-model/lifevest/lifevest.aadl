@@ -27,7 +27,7 @@ subcomponents
 	vis   : system visibility::visibility.functional;
 	catch : system fault_catch;
 connections
-	port vis.visibility -> catch.visibility;
+	c1: port vis.visibility -> catch.visibility;
 end lifevest.functional;
 
 

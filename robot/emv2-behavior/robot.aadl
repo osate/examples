@@ -136,19 +136,19 @@ subcomponents
 	error  			: system robot_error.i;
 	behavior		: system robot_behavior.i;
 connections
-	port prob.p_d1 -> behavior.p_d1;
-	port prob.p_ed1 -> behavior.p_ed1;
-	port prob.p_d2 -> behavior.p_d2;
-	port prob.p_ed2 -> behavior.p_ed2;
-	port prob.p_d3 -> behavior.p_d3;
-	port prob.p_ed3 -> behavior.p_ed3;
-	port prob.p_false_neg -> behavior.p_false_neg;
-	port prob.see_mine -> behavior.see_mine;
-	port prob.explode -> behavior.explode;
+	c1:port prob.p_d1 -> behavior.p_d1;
+	c2:port prob.p_ed1 -> behavior.p_ed1;
+	c3:port prob.p_d2 -> behavior.p_d2;
+	c4:port prob.p_ed2 -> behavior.p_ed2;
+	c5:port prob.p_d3 -> behavior.p_d3;
+	c6:port prob.p_ed3 -> behavior.p_ed3;
+	c7:port prob.p_false_neg -> behavior.p_false_neg;
+	c8:port prob.see_mine -> behavior.see_mine;
+	c9:port prob.explode -> behavior.explode;
 	
 	
-	port behavior.timeout_keyword_ba 	-> error.timeout;
-	port behavior.blown 	-> error.defuse_fail;
+	cb1:port behavior.timeout_keyword_ba 	-> error.timeout;
+	cb2:port behavior.blown 	-> error.defuse_fail;
 	
 	
 end robot.i;
