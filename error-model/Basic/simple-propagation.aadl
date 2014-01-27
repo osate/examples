@@ -71,6 +71,6 @@ with EMV2;
 		snd : system sender.i;
 		rcv : system receiver.i;
 	connections
-		port snd.outp -> rcv.inp;
+		c1:port snd.outp -> rcv.inp;
 	end main.i;
 end em2_simple_propagation;
