@@ -4,6 +4,7 @@ public
 
 with EMV2;
 with Data_Model;
+with train_errors;
 
 data speed
 end speed;
@@ -66,7 +67,7 @@ annex behavior_specification {**
 annex EMV2 {**
 	use types ErrorLibrary;
 	use behavior train_errors::simple;
-	
+	 
 	error propagations
 		speed 			: in propagation{ValueError,ServiceError};
 		intransit 		: in propagation{ValueError,ServiceError};
