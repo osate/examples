@@ -1,0 +1,402 @@
+package Regulate
+public
+with KSU_Isolette, Iso_Variables, BLESS, Base_Types, EMV2, ARP4761;
+
+--annex BLESS
+--{**
+--**};
+
+--@description process that holds threads that regulate air temperature
+--A.5.1 REGULATE TEMPERATURE FUNCTION
+process regulate_temperature
+features
+  lower_desired_temperature : in data port Iso_Variables::lower_desired_temperature
+    {BLESS::Assertion => "<<:=LOWER_DESIRED_TEMP>>";};
+  upper_desired_temperature : in data port Iso_Variables::upper_desired_temperature
+    {BLESS::Assertion => "<<:=UPPER_DESIRED_TEMP>>";};
+  regulator_status : out data port Iso_Variables::status
+    {BLESS::Assertion => "<<+=>REGULATOR_STATUS(x)>>";};
+  displayed_temp : out data port Iso_Variables::measured_temperature_range
+    {BLESS::Assertion => "<<:=CURRENT_TEMP>>";};
+  current_temperature : in data port Iso_Variables::current_temperature
+    {BLESS::Assertion => "<<:=CURRENT_TEMP>>";};
+  heat_control : out data port Iso_Variables::on_off
+    {BLESS::Assertion => "<<+=>HEAT_CONTROL(x)>>";};
+annex EMV2 
+  {** 
+  use types ErrorLibrary, KSU_Isolette;
+  error propagations
+    current_temperature: in propagation
+      {OutOfRange,UndetectableValueError};
+    displayed_temp: out propagation {UndetectableValueError};
+    regulator_status: out propagation {RegulatorStatusError};
+    heat_control: out propagation {HeatControlError};
+    --desired temps assumed value error free
+    upper_desired_temperature: not in propagation {ValueError};
+    lower_desired_temperature: not in propagation {ValueError};
+  end propagations;
+  **};
+end regulate_temperature;
+ 
+--@description process implementation that holds threads that regulate air temperature
+process implementation regulate_temperature.impl
+subcomponents
+--magnage regulator infor for operator interface 
+  manage_regulator_interface : thread manage_regulator_interface_mri.impl;
+--control heat source  
+  manage_heat_source : thread manage_heat_source_mhs.impl;
+--determine regulator "mode"  
+  manage_regulator_mode : thread manage_regulator_mode_mrm.impl;
+connections
+--desired temperature range
+  rudt : port upper_desired_temperature -> manage_regulator_interface.upper_desired_temp;
+  rldt : port lower_desired_temperature -> manage_regulator_interface.lower_desired_temp;
+  mudt : port upper_desired_temperature -> manage_heat_source.upper_desired_temperature;
+  mldt : port lower_desired_temperature -> manage_heat_source.lower_desired_temperature;
+--status to operator interface  
+  rrs : port manage_regulator_interface.regulator_status -> regulator_status;
+--temperature to show
+  rdt : port manage_regulator_interface.displayed_temp -> displayed_temp;
+--temperature from sensor
+  rcti : port current_temperature -> manage_regulator_interface.current_temperature;
+  rcth : port current_temperature -> manage_heat_source.current_temperature;
+--heat control  
+  rhc : port manage_heat_source.heat_control -> heat_control;
+  rrmh : port manage_regulator_mode.regulator_mode -> manage_heat_source.regulator_mode;
+  rrmi : port manage_regulator_mode.regulator_mode -> manage_regulator_interface.regulator_mode;
+  rctm : port current_temperature -> manage_regulator_mode.current_temperature;
+  rif : port manage_regulator_interface.interface_failure -> manage_regulator_mode.interface_failure;
+annex EMV2
+  {**
+  use types ErrorLibrary, KSU_Isolette;
+  use behavior KSU_Isolette::CompositeFailure;
+  composite error behavior
+  states 
+  [manage_regulator_interface.Failed or manage_heat_source.Failed 
+    or manage_regulator_mode.Failed 	
+  ]->ReportedFailure;
+--  [heat_source.Failed]->MissedFailure;
+  end composite;
+  **};
+end regulate_temperature.impl;
+
+--A.5.1.1 Manage Regulator Interface Function
+thread manage_regulator_interface_mri
+features
+  regulator_status : out data port Iso_Variables::status
+    {BLESS::Assertion => "<<+=>REGULATOR_STATUS(x)>>";};
+  lower_desired_temp : in data port Iso_Variables::lower_desired_temperature
+    {BLESS::Assertion => "<<:=LOWER_DESIRED_TEMP>>";};
+  upper_desired_temp : in data port Iso_Variables::upper_desired_temperature
+    {BLESS::Assertion => "<<:=UPPER_DESIRED_TEMP>>";};
+  current_temperature : in data port Iso_Variables::current_temperature
+    {BLESS::Assertion => "<<:=CURRENT_TEMP>>";};
+  displayed_temp : out data port Iso_Variables::measured_temperature_range
+    {BLESS::Assertion => "<<:=CURRENT_TEMP>>";};
+  regulator_mode : in data port Iso_Variables::regulator_mode
+  	{BLESS::Assertion => "<<+=>REGULATOR_MODE(x)>>";};
+  interface_failure : out data port Base_Types::Boolean
+    {BLESS::Assertion => "<<REGULATOR_INTERFACE_FAILURE()>>";};
+properties
+	Dispatch_Protocol => Periodic;
+	Period => Iso_Properties::ThreadPeriod;
+annex EMV2 
+  {** 
+  use types ErrorLibrary,KSU_Isolette;
+  use behavior KSU_Isolette::FailStop;
+  error propagations
+  regulator_status: out propagation {RegulatorStatusError,ItemOmission};
+  current_temperature: in propagation
+    {OutOfRange,UndetectableValueError};
+  displayed_temp: out propagation {UndetectableValueError,ItemOmission};
+  regulator_mode: in propagation {RegulatorModeError};
+  interface_failure: out propagation {ItemOmission};
+  flows  --model error in detection and reporting
+    idt: error source displayed_temp{ItemOmission} when Failed;
+    ifso: error source interface_failure{ItemOmission};
+    irs: error source regulator_status{ItemOmission} when Failed;
+    ekoor: error sink current_temperature{OutOfRange};  --detects out-of-range
+    epsve: error path current_temperature{UndetectableValueError} 
+      -> displayed_temp(UndetectableValueError);
+    rmrs: error path regulator_mode{RegulatorModeError} 
+      -> regulator_status(RegulatorStatusError);
+    uvers: error path current_temperature{UndetectableValueError}
+      -> regulator_status(RegulatorStatusError);
+  end propagations;
+  component error behavior
+    detections  --in "failed" state put value on port interface_failure
+      failed -[ ]-> interface_failure!;
+  end component;
+  properties  --set occurrence
+    --"fail" is the internal event that cause
+    EMV2::OccurrenceDistribution => Iso_Properties::InterfaceFailureRate 
+      applies to fail;      
+    EMV2::hazards => (
+	    [	crossreference => "REMH A.3.4";
+		  failure => "stops updating display";
+		  phases => ("all");
+		  environment => "infant intensive care";
+		  description => "interface manager stopped";
+		  comment => "issues event on interface_failure";
+			] )applies to fail;
+	  EMV2::Severity =>  ARP4761::Minor applies to fail;
+	  EMV2::Likelihood =>  ARP4761::Remote applies to fail;  
+    EMV2::hazards => (
+	    [	crossreference => "REMH A.3.4";
+		  failure => "interface_failure omission";
+		  phases => ("all");
+		  environment => "infant intensive care";
+		  description => "no event on interface_failure when Failed";
+		  comment => "represents failure without detection/announcement";
+			]) applies to ifso;
+	  EMV2::Severity =>  ARP4761::Minor applies to ifso;
+	  EMV2::Likelihood =>  ARP4761::Remote applies to ifso;  
+  **};
+end manage_regulator_interface_mri;
+
+thread implementation manage_regulator_interface_mri.impl
+end manage_regulator_interface_mri.impl;
+
+--A.5.1.2 Manage Regulator Mode Function
+thread manage_regulator_mode_mrm
+features
+  regulator_mode : out data port Iso_Variables::regulator_mode
+    {BLESS::Assertion => "<<+=>REGULATOR_MODE(x)>>";};  --enumeration assertion
+  current_temperature : in data port Iso_Variables::current_temperature
+    {BLESS::Assertion => "<<:=CURRENT_TEMP>>";};
+  interface_failure : in data port Base_Types::Boolean
+    {BLESS::Assertion => "<<REGULATOR_INTERFACE_FAILURE()>>";};
+  internal_failure : in data port Base_Types::Boolean
+    {BLESS::Assertion => "<<INTERNAL_FAILURE()>>";};
+properties
+	Dispatch_Protocol => Periodic;
+	Period => Iso_Properties::ThreadPeriod;
+annex EMV2 
+  {** 
+  use types ErrorLibrary,KSU_Isolette;
+  use behavior KSU_Isolette::FailStop;
+  error propagations
+  regulator_mode: out propagation {RegulatorModeError};
+  current_temperature: in propagation {UndetectableValueError,OutOfRange};
+  interface_failure: in propagation {ItemOmission,ItemComission};
+  internal_failure: in propagation {ItemOmission,ItemComission};
+  flows  --model error in detection and reporting
+    mrmoor: error sink current_temperature{OutOfRange};
+    mrmsve: error path current_temperature{UndetectableValueError} 
+      -> regulator_mode (RegulatorModeError);  --bad temp causes bad mode
+    mrmif: error path interface_failure{ItemOmission,ItemComission} 
+      -> regulator_mode (RegulatorModeError);  --missing interface failure signal causes bad mode
+    mrmin: error path internal_failure{ItemOmission,ItemComission} 
+      -> regulator_mode (RegulatorModeError);  --missing internal failure signal causes bad mode
+   end propagations;
+  component error behavior
+    detections  --in "failed" state put value on port interface_failure
+      failed -[ ]-> interface_failure!;  
+  end component;
+  properties  --set failure rate for manage_regulator_mode_mrm
+    EMV2::OccurrenceDistribution => Iso_Properties::MRMFailureRate 
+      applies to fail;      
+  **};
+end manage_regulator_mode_mrm;
+
+thread implementation manage_regulator_mode_mrm.impl
+  annex BLESS
+  {**
+  invariant <<true>>
+  variables
+    start_time : Timing_Properties::Time;  --record time stamp of power-on
+    temperature : Iso_Variables::current_temperature;  --get struct from port 
+    current_temperature_status : Iso_Variables::status;  --get status from struct
+  states
+    start : initial state;     --power up state  
+    init : complete state;     --wait for valid regulator status
+    check_init : state         --execute state determining whether initialization is complete
+      <<current_temperature_status=temperature.status>>;  
+    normal : complete state;   --normal operation
+    check_normal : state       --execute state determining post-init regulator_mode
+      <<current_temperature_status=temperature.status>>;
+    failed : final state;      --regulator failure detected
+    darnit : final state;			 --internal error
+  transitions
+    mrm1:  --power on
+      start-[ ]->init
+          {start_time:=now 
+          <<start_time=now and AXIOM_TOGT0()>>
+          ;
+    --puts out "Init" as third enumeration label
+           regulator_mode!(Init) 
+           };  --end of mrm1
+    wait_init: --check temperature status
+      init-[on dispatch]->check_init
+          {  
+          current_temperature?(temperature) 
+          ; 
+          current_temperature_status := temperature.status
+          };  --end of wait_init
+    mrm: --timeout on initialization
+      check_init-[((now-start_time) >= 
+            Iso_Properties::Initialization_Timeout)
+            and (interface_failure? or internal_failure?
+              or not (current_temperature_status = Valid))]->failed
+          { <<not (REGULATOR_OK() or (now-start_time) < Iso_Properties::Initialization_Timeout)>>
+          regulator_mode!(FAILED)
+          };  --end of mrm
+    mrm2: --transition to normal operation
+      check_init-[((now-start_time) >= 
+            Iso_Properties::Initialization_Timeout) and
+        not (interface_failure? or internal_failure?)
+        and (current_temperature_status = Valid)]->normal
+          { <<REGULATOR_OK() and RUN()>>
+          regulator_mode!(NORMAL)
+          };  --end of mrm2
+    mrm2x:  --too soon, back to init
+      check_init-[(now-start_time) < 
+            Iso_Properties::Initialization_Timeout]->init{};  
+    wait_normal: --check temperature status
+      normal-[on dispatch]->check_normal
+          {
+          current_temperature?(temperature) 
+          ; <<temperature=CURRENT_TEMP>>
+          current_temperature_status := temperature.status
+          <<current_temperature_status=temperature.status and 
+            temperature=CURRENT_TEMP>>
+          };  --end of wait_normal
+    mrm3:  --no failures and valid temp 
+      check_normal-[((now-start_time) >= Iso_Properties::Initialization_Timeout) 
+      	and not (interface_failure? or internal_failure?)
+        and (current_temperature_status = Valid)]->normal
+          {<<REGULATOR_OK() and RUN()>> 
+          regulator_mode!(NORMAL)
+          };  --end of mrm3
+    mrm3x:  --failure or invalid temp after initialization
+      check_normal-[((now-start_time) >= Iso_Properties::Initialization_Timeout)
+      	and (interface_failure? or internal_failure? or
+        not (current_temperature_status = Valid))]->failed
+          {<<(not REGULATOR_OK() or
+             not (current_temperature_status = Valid))
+          	and (now-start_time) >= Iso_Properties::Initialization_Timeout>> 
+          regulator_mode!(FAILED)};
+    mrm3err:  --internal error
+      check_normal-[(now-start_time) < Iso_Properties::Initialization_Timeout]->
+      darnit{};
+  **};
+end manage_regulator_mode_mrm.impl;
+
+--A.5.1.3 Manage Heat Source Function
+thread manage_heat_source_mhs
+features
+  heat_control : out data port Iso_Variables::on_off
+    {BLESS::Assertion => "<<+=>HEAT_CONTROL(x)>>";};
+  current_temperature : in data port Iso_Variables::current_temperature
+    {BLESS::Assertion => "<<:=CURRENT_TEMP>>";};
+  lower_desired_temperature : in data port Iso_Variables::lower_desired_temperature
+    {BLESS::Assertion => "<<:=LOWER_DESIRED_TEMP>>";};
+  upper_desired_temperature : in data port Iso_Variables::upper_desired_temperature
+    {BLESS::Assertion => "<<:=UPPER_DESIRED_TEMP>>";};
+  regulator_mode : in data port Iso_Variables::regulator_mode
+    {BLESS::Assertion => "<<+=>REGULATOR_MODE(x)>>";};
+properties
+	Dispatch_Protocol => Periodic;
+	Period => Iso_Properties::ThreadPeriod;
+annex EMV2 
+  {** 
+    use types ErrorLibrary,KSU_Isolette;
+    use behavior KSU_Isolette::FailStop;
+  error propagations
+  heat_control: out propagation {HeatControlError};
+  current_temperature: in propagation {UndetectableValueError,OutOfRange};
+  regulator_mode: in propagation {RegulatorModeError};
+  --no errors from desired_range
+  flows  --model error in detection and reporting
+    mrmoor: error sink current_temperature{OutOfRange};
+    mrmsve: error path current_temperature{UndetectableValueError} 
+      -> heat_control(HeatControlError);  --bad temp causes bad heat control
+    mrmif: error path regulator_mode{RegulatorModeError} 
+      -> heat_control(HeatControlError);  --bad mode causes bad heat control
+  end propagations;
+  properties  --set failure rate for manage_heat_source_mhs
+    EMV2::OccurrenceDistribution => Iso_Properties::MHSFailureRate 
+      applies to fail;      
+  **};
+end manage_heat_source_mhs;
+
+thread implementation manage_heat_source_mhs.impl
+annex BLESS {**
+	assert
+	  <<AXIOM_HEAT: :(heat_previous_period = On) or (heat_previous_period = Off)>> 
+	  <<TEMP_IN_DESIRED_RANGE: :CURRENT_TEMP > LOWER_DESIRED_TEMP
+    	  and CURRENT_TEMP < UPPER_DESIRED_TEMP>>    
+    <<AXIOM_TOGT0: :0 < Iso_Properties::Initialization_Timeout>>
+	invariant <<INVMHS: :heat_previous_period = heat_control^-1>>
+	variables
+	  heat_previous_period : Iso_Variables::on_off := Off;  --hysteresis in desired range
+	states
+	  poweron : initial state <<(heat_previous_period = Off) and (INVMHS())^1>>;
+	  run : complete state <<INVMHS()>>;
+	  check_mode : state <<INVMHS()>>;  --check heat mode 
+	  check_temp : state <<INVMHS() and REGULATOR_MODE(NORMAL) and AXIOM_HEAT()>>;
+	  check_hyst : state <<TEMP_IN_DESIRED_RANGE() and REGULATOR_MODE(NORMAL) and INVMHS() and AXIOM_HEAT()>>;
+	  halt : final state; 
+  transitions
+    mhsPo: poweron -[ ]-> run{};  --start running at power on
+    mhsRun: run -[on dispatch]-> check_mode{};  --check heat mode upon dispatch
+    mhsFailed: --REQ-MHS-5 regulator mode is failed
+    check_mode -[regulator_mode? = FAILED]-> run 
+    	{ <<REQMHS5()>>
+      heat_control!(Off)  
+      ;  <<heat_control=Off>>
+      heat_previous_period' := Off
+        <<heat_previous_period' = heat_control>>
+      };  --end of mhsFailed
+    mhsInit: --REQ-MHS-1 regulator mode is init
+    check_mode -[regulator_mode? = Init]-> run  
+      { <<REQMHS1()>>
+      heat_control!(Off)  --no heat
+      ;  <<heat_control = Off>> 
+      heat_previous_period' := Off
+        <<heat_previous_period' = heat_control>>
+      };  --end of mhsInit
+    mhsNormal: --regulator mode is normal, check temperature
+    check_mode -[regulator_mode? = NORMAL]-> check_temp {};
+    mhsBelow:  --REQ-MHS-2  temp below desired range
+    check_temp -[current_temperature? <= lower_desired_temperature?]-> run  
+      { <<REQMHS2() and not REQMHS1()>>
+      heat_control!(On)  --temp below desired range
+      ; <<heat_control=On>>
+      heat_previous_period' := On
+        <<heat_previous_period' = heat_control>>
+      };  --end of mhsOor 
+    mhsAbove:  --REQ-MHS-3  temp above desired range
+    check_temp -[current_temperature? >= upper_desired_temperature?]-> run
+      { <<REQMHS3() and not REQMHS1()>>
+      heat_control!(Off)  --no heat
+      ; <<REQMHS3() and not REQMHS1() and heat_control=Off>>
+      heat_previous_period' := Off
+        <<heat_previous_period' = heat_control>>
+      };  --end of mhsIr
+    mhsHys:  --REQ-MHS-4 hysteresis within desired temp range
+    check_temp -[(current_temperature? > lower_desired_temperature?) 
+    	  and (current_temperature? < upper_desired_temperature?)]-> check_hyst{};
+    mhsHysOn:	--REQ-MHS-4  with heat on
+    check_hyst -[heat_previous_period=On]-> run
+      { <<TEMP_IN_DESIRED_RANGE() and REGULATOR_MODE(NORMAL) and heat_previous_period=On and INVMHS()>>
+      heat_control!(On)  
+      ;  <<heat_control=On>>
+      heat_previous_period' := On
+        <<heat_previous_period' = heat_control>>      
+      };  --end of mhsHysOn
+    mhsHysOff:	--REQ-MHS-4  with heat off
+    check_hyst -[heat_previous_period=Off]-> run
+      { <<TEMP_IN_DESIRED_RANGE() and REGULATOR_MODE(NORMAL) and heat_previous_period=Off and INVMHS()>>
+      heat_control!(Off)  
+      ;  <<heat_control=Off>>
+      heat_previous_period' := Off
+        <<heat_previous_period' = heat_control>>      
+      };  --end of mhsHysOn
+    mhsStop: run -[on dispatch stop]-> halt{};
+**};
+end manage_heat_source_mhs.impl;
+
+
+
+end Regulate;

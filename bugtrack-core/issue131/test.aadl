@@ -1,0 +1,45 @@
+
+package etef
+public
+device sensor
+features
+fg: feature group;
+flows
+src: flow source fg;
+dst: flow sink fg;
+end sensor ;
+
+device actuator
+features
+fgs: feature group;
+fgp: feature group;
+flows
+pass: flow path fgs->fgp;
+end actuator ;
+
+system processing
+features
+fgss: feature group;
+fgpp: feature group;
+flows
+pass: flow path fgss -> fgpp;
+end processing ;
+
+system top
+end top;
+
+system implementation top.i
+subcomponents
+sens: device sensor;
+act: device actuator;
+proc: system processing;
+connections
+c1: feature group sens.fg <-> proc.fgss;
+c2: feature group proc.fgpp <-> act.fgs;
+c3: feature group act.fgp <-> sens.fg;
+flows
+myflow: end to end flow sens.src -> c1 -> proc.pass
+-> c2 -> act.pass
+-> c3 -> sens.dst;
+end top.i ;
+end etef ;

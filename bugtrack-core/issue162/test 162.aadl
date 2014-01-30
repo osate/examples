@@ -1,0 +1,18 @@
+package issue162
+public
+
+feature group fg_a
+end fg_a;
+
+feature group fg_b extends fg_a
+end fg_b;
+
+system A
+features
+    f1 : feature group fg_b;
+end A;
+
+system implementation A.impl
+end A.impl;
+
+end issue162;

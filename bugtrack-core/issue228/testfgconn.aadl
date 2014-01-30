@@ -1,0 +1,42 @@
+package test
+public
+Feature group fg_in
+Features
+    D1 : in data port ;
+    D2 : in data port ;
+    D3: in data port ;
+    D4 : in data port ;
+End fg_in;  
+-- the dest System 
+system dest
+features
+Inputs : feature group fg_in;
+
+end dest;
+system implementation dest.base
+end dest.base;
+
+   -- the source System 
+system init
+  features
+    Outputs : feature group inverse of fg_in;  
+end init;
+
+system implementation init.base
+end init.base;
+system test
+end test;
+-- connections
+-- properties
+system implementation test.base
+subcomponents
+-- 
+-- The components
+--
+Send: system init.base;
+Receive: system dest.base;
+connections
+-- FG connections 
+test:     feature group Send.Outputs <-> Receive.Inputs;
+end test.base;
+end test;

@@ -1,0 +1,12 @@
+property set PulseOx_Properties is
+with Timing_Properties;
+with PO;
+--time between SpO2 measurments by pulse oximeter, default 1 second
+SpO2_Sampling_Period : Timing_Properties::Time => 1 sec applies to (all);
+--how long must bad SpO2 measuements persist before alaming
+Motion_Artifact_Duration_Limit : Timing_Properties::Time => 10 sec applies to (all);
+--number of trending samples displayed to clinician, default 30
+Num_Trending_Samples : aadlinteger => 30 applies to (all);
+--time between trending samples, default 1 minute
+Time_Between_Trending_Samples : Timing_Properties::Time => 1 min applies to (PO::SpO2TrendThread, PO::HeartRateTrendThread);
+end PulseOx_Properties;

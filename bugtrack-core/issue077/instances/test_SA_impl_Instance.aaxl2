@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="ASCII"?>
+<instance:SystemInstance xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aadl2="http://aadl.info/AADL/2.0" xmlns:instance="http://aadl.info/AADL/2.0/instance" xmi:id="_mrjJYIUxEeOUMukSkifo3A" name="SA_impl_Instance" category="system">
+  <componentInstance xmi:id="_mr1dQIUxEeOUMukSkifo3A" name="ba1" srcConnectionInstance="_msK0cIUxEeOUMukSkifo3A" category="bus">
+    <subcomponent xsi:type="aadl2:BusSubcomponent" href="../test.aadl#issue77::SA.impl.ba1"/>
+    <index>0</index>
+  </componentInstance>
+  <componentInstance xmi:id="_mr6VwIUxEeOUMukSkifo3A" name="sb2" category="system">
+    <featureInstance xmi:id="_mr8K8IUxEeOUMukSkifo3A" name="req1" dstConnectionInstance="_msK0cIUxEeOUMukSkifo3A" category="busAccess" direction="in out">
+      <feature xsi:type="aadl2:BusAccess" href="../test.aadl#issue77::SB.req1"/>
+    </featureInstance>
+    <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../test.aadl#issue77::SA.impl.sb2"/>
+    <index>0</index>
+  </componentInstance>
+  <connectionInstance xmi:id="_msK0cIUxEeOUMukSkifo3A" name="ba1 -> sb2.req1" complete="true" kind="accessConnection" destination="_mr8K8IUxEeOUMukSkifo3A" source="_mr1dQIUxEeOUMukSkifo3A">
+    <connectionReference xmi:id="_msK0cYUxEeOUMukSkifo3A" context="_mrjJYIUxEeOUMukSkifo3A" source="_mr1dQIUxEeOUMukSkifo3A" destination="_mr8K8IUxEeOUMukSkifo3A">
+      <connection xsi:type="aadl2:AccessConnection" href="../test.aadl#issue77::SA.impl.c1"/>
+    </connectionReference>
+  </connectionInstance>
+  <systemOperationMode xmi:id="_msDfsIUxEeOUMukSkifo3A" name="No Modes"/>
+  <systemImplementation href="../test.aadl#issue77::SA.impl"/>
+</instance:SystemInstance>

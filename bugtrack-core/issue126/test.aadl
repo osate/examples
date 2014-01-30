@@ -1,0 +1,31 @@
+package example
+public
+
+system root2
+end root2;
+
+system implementation root2.impl
+subcomponents
+the_cpu: processor cpu.impl;
+end root2.impl;
+
+processor cpu
+end cpu;
+
+processor implementation cpu.impl
+subcomponents
+the_part: virtual processor part.impl;
+properties
+Scheduling_Protocol => (RMS);
+end cpu.impl;
+
+virtual processor part
+
+end part;
+
+virtual processor implementation part.impl
+properties
+Scheduling_Protocol => (RMS);
+end part.impl;
+
+end example;

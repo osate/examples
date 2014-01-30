@@ -1,0 +1,15 @@
+package bug155conc
+public
+
+bus BusCon
+end BusCon;
+
+bus ABusCon extends BusCon
+end ABusCon;
+
+abstract SysCon 
+features
+    p : requires bus access ABusCon;
+end SysCon;
+ 
+end bug155conc; 

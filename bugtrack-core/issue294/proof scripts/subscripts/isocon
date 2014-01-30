@@ -1,0 +1,147 @@
+#isolette connections
+#[serial 1062] Composition of Subcomponents via Directional Connection Isolette::isolette.single_sensor.ct:
+axioms
+#[serial 1063] Composition of Subcomponents via Directional Connection Isolette::isolette.single_sensor.hc:
+axioms
+#[serial 1064] Composition of Subcomponents via Directional Connection Isolette::isolette.single_sensor.rs:
+axioms
+#[serial 1065] Composition of Subcomponents via Directional Connection Isolette::isolette.single_sensor.ms:
+axioms
+#[serial 1066] Composition of Subcomponents via Directional Connection Isolette::isolette.single_sensor.al:
+axioms
+#[serial 1067] Composition of Subcomponents via Directional Connection Isolette::isolette.dual_sensor.cont:
+axioms
+#[serial 1068] Composition of Subcomponents via Directional Connection Isolette::isolette.dual_sensor.ct:
+axioms
+#[serial 1069] Composition of Subcomponents via Directional Connection Isolette::isolette.dual_sensor.hc:
+axioms
+#[serial 1070] Composition of Subcomponents via Directional Connection Isolette::isolette.dual_sensor.rs:
+axioms
+#[serial 1071] Composition of Subcomponents via Directional Connection Isolette::isolette.dual_sensor.ms:
+axioms
+#[serial 1072] Composition of Subcomponents via Directional Connection Isolette::isolette.dual_sensor.al:
+axioms
+#[serial 1073] Composition of Subcomponents via Directional Connection Isolette::thermostat_single_sensor.impl.tctm:
+axioms
+#[serial 1074] Composition of Subcomponents via Directional Connection Isolette::thermostat_single_sensor.impl.tctr:
+axioms
+#[serial 1075] Composition of Subcomponents via Directional Connection Isolette::thermostat_single_sensor.impl.thc:
+axioms
+#[serial 1076] Composition of Subcomponents via Directional Connection Isolette::thermostat_single_sensor.impl.trs:
+axioms
+#[serial 1077] Composition of Subcomponents via Directional Connection Isolette::thermostat_single_sensor.impl.tms:
+axioms
+#[serial 1078] Composition of Subcomponents via Directional Connection Isolette::thermostat_single_sensor.impl.ta:
+axioms
+#[serial 1079] Composition of Subcomponents via Directional Connection Isolette::thermostat_single_sensor.impl.tf:
+axioms
+#[serial 1080] Composition of Subcomponents via Directional Connection Isolette::thermostat_dual_sensor.impl.tctm:
+axioms
+#[serial 1081] Composition of Subcomponents via Directional Connection Isolette::thermostat_dual_sensor.impl.tctr:
+axioms
+#[serial 1082] Composition of Subcomponents via Directional Connection Isolette::thermostat_dual_sensor.impl.thc:
+axioms
+#[serial 1083] Composition of Subcomponents via Directional Connection Isolette::thermostat_dual_sensor.impl.trs:
+axioms
+#[serial 1084] Composition of Subcomponents via Directional Connection Isolette::thermostat_dual_sensor.impl.tms:
+axioms
+#[serial 1085] Composition of Subcomponents via Directional Connection Isolette::thermostat_dual_sensor.impl.ta:
+axioms
+#[serial 1086] Composition of Subcomponents via Directional Connection Isolette::thermostat_dual_sensor.impl.tf:
+axioms
+#[serial 1087] Composition of Subcomponents via Directional Connection Regulate::regulate_temperature_rt.impl.rrs:
+axioms
+#[serial 1088] Composition of Subcomponents via Directional Connection Regulate::regulate_temperature_rt.impl.rcti:
+axioms
+#[serial 1089] Composition of Subcomponents via Directional Connection Regulate::regulate_temperature_rt.impl.rcth:
+axioms
+#[serial 1090] Composition of Subcomponents via Directional Connection Regulate::regulate_temperature_rt.impl.rhc:
+axioms
+#[serial 1091] Composition of Subcomponents via Directional Connection Regulate::regulate_temperature_rt.impl.rrmh:
+axioms
+#[serial 1092] Composition of Subcomponents via Directional Connection Regulate::regulate_temperature_rt.impl.rrmi:
+axioms
+axioms
+#[serial 1093] Composition of Subcomponents via Directional Connection Regulate::regulate_temperature_rt.impl.rctm:
+axioms
+#[serial 1094] Composition of Subcomponents via Directional Connection Regulate::regulate_temperature_rt.impl.rif:
+axioms
+#[serial 1095] Composition of Subcomponents via Directional Connection Monitor::monitor_temperature.impl.mcti:
+axioms
+#[serial 1096] Composition of Subcomponents via Directional Connection Monitor::monitor_temperature.impl.mcta:
+axioms
+#[serial 1097] Composition of Subcomponents via Directional Connection Monitor::monitor_temperature.impl.mctm:
+axioms
+#[serial 1098] Composition of Subcomponents via Directional Connection Monitor::monitor_temperature.impl.malrm:
+axioms
+#[serial 1099] Composition of Subcomponents via Directional Connection Monitor::monitor_temperature.impl.mmma:
+axioms
+#[serial 1100] Composition of Subcomponents via Directional Connection Monitor::monitor_temperature.impl.mms:
+axioms
+#[serial 1101] Composition of Subcomponents via Directional Connection Monitor::monitor_temperature.impl.mmmi:
+axioms
+#[serial 1102] Composition of Subcomponents via Directional Connection Monitor::monitor_temperature.impl.intff:
+axioms
+#[serial 1103] Composition of Subcomponents via Directional Connection Monitor::monitor_temperature.impl.mf:
+axioms
+#[serial 1103] Composition of Subcomponents via Directional Connection KSU_Isolette::thermostat_single_sensor.impl.tlat:
+axioms
+#[serial 1104] Composition of Subcomponents via Directional Connection KSU_Isolette::thermostat_single_sensor.impl.trs:
+axioms
+axioms
+#[serial 1105] Composition of Subcomponents via Directional Connection KSU_Isolette::thermostat_single_sensor.impl.tdt:
+axioms
+#[serial 1106] Composition of Subcomponents via Directional Connection KSU_Isolette::thermostat_single_sensor.impl.tms:
+axioms
+#[serial 1107] Composition of Subcomponents via Directional Connection KSU_Isolette::thermostat_single_sensor.impl.ta:
+axioms
+#[serial 1108] Composition of Subcomponents via Directional Connection KSU_Isolette::thermostat_single_sensor.impl.tf:
+axioms
+#[serial 1109] Composition of Subcomponents via Directional Connection KSU_Isolette::thermostat_dual_sensor.impl.tctm:
+axioms
+#[serial 1110] Composition of Subcomponents via Directional Connection KSU_Isolette::thermostat_dual_sensor.impl.tctr:
+axioms
+#[serial 1111] Composition of Subcomponents via Directional Connection KSU_Isolette::thermostat_dual_sensor.impl.thc:
+axioms
+#[serial 1112] Composition of Subcomponents via Directional Connection KSU_Isolette::thermostat_dual_sensor.impl.tudt:
+axioms
+#[serial 1113] Composition of Subcomponents via Directional Connection KSU_Isolette::thermostat_dual_sensor.impl.tldt:
+axioms
+#[serial 1114] Composition of Subcomponents via Directional Connection KSU_Isolette::thermostat_dual_sensor.impl.tuat:
+axioms
+#[serial 1115] Composition of Subcomponents via Directional Connection KSU_Isolette::thermostat_dual_sensor.impl.tlat:
+axioms
+#[serial 1116] Composition of Subcomponents via Directional Connection KSU_Isolette::thermostat_dual_sensor.impl.trs:
+axioms
+#[serial 1117] Composition of Subcomponents via Directional Connection KSU_Isolette::thermostat_dual_sensor.impl.tdt:
+axioms
+#[serial 1118] Composition of Subcomponents via Directional Connection KSU_Isolette::thermostat_dual_sensor.impl.tms:
+axioms
+#[serial 1119] Composition of Subcomponents via Directional Connection KSU_Isolette::thermostat_dual_sensor.impl.ta:
+axioms
+#[serial 1120] Composition of Subcomponents via Directional Connection KSU_Isolette::thermostat_dual_sensor.impl.tf:
+axioms
+#[serial 1121] Composition of Subcomponents via Directional Connection Monitor::monitor_temperature.impl.mcti:
+axioms
+#[serial 1122] Composition of Subcomponents via Directional Connection Monitor::monitor_temperature.impl.mcta:
+axioms
+#[serial 1123] Composition of Subcomponents via Directional Connection Monitor::monitor_temperature.impl.mctm:
+axioms
+#[serial 1124] Composition of Subcomponents via Directional Connection Monitor::monitor_temperature.impl.maul:
+axioms
+#[serial 1125] Composition of Subcomponents via Directional Connection Monitor::monitor_temperature.impl.mall:
+axioms
+#[serial 1126] Composition of Subcomponents via Directional Connection Monitor::monitor_temperature.impl.malrm:
+axioms
+#[serial 1127] Composition of Subcomponents via Directional Connection Monitor::monitor_temperature.impl.mms:
+axioms
+#[serial 1128] Composition of Subcomponents via Directional Connection Monitor::monitor_temperature.impl.intff:
+axioms
+#[serial 1129] Composition of Subcomponents via Directional Connection Monitor::monitor_temperature.impl.mf:
+axioms
+#[serial 1130] Composition of Subcomponents via Directional Connection Monitor::monitor_temperature.impl.mmmi:
+axioms
+#[serial 1131] Composition of Subcomponents via Directional Connection Monitor::monitor_temperature.impl.mmma:
+axioms
+#[serial 1132] Composition of Subcomponents via Directional Connection Nursery::Room.Normal_Operation.tmp:
+axioms

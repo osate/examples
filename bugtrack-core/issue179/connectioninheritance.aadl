@@ -1,0 +1,45 @@
+package connectioninheritance
+public
+system s
+features
+pin: in data port;
+pout: out data port;
+end s;
+
+data d
+end d;
+
+system se extends s
+features
+pin: refined to in data port d;
+pout: refined to out data port d;
+end se;
+
+system implementation s.i
+end s.i;
+
+system implementation se.i extends s.i
+end se.i;
+
+system top
+features
+tin: in data port;
+end top;
+
+system implementation top.i
+subcomponents
+sys1: system s.i;
+sys2: system s.i;
+connections 
+-- pin needs to resolve to pin in se not pin in s
+c1: port sys1.pout -> sys2.pin; 
+end top.i;
+
+system implementation top.iext extends top.i
+subcomponents
+sys1: refined to system se.i;
+sys2: refined to system se.i;
+properties
+Classifier_Substitution_Rule => Type_Extension;
+end top.iext;
+end connectioninheritance ;

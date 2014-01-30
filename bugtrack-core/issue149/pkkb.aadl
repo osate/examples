@@ -1,0 +1,9 @@
+
+
+package bug149B
+public
+with bug149A;
+feature group Bentity extends bug149A::Aentity
+end Bentity;
+end bug149B;
+

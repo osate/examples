@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="ASCII"?>
+<instance:SystemInstance xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aadl2="http://aadl.info/AADL/2.0" xmlns:instance="http://aadl.info/AADL/2.0/instance" xmi:id="_saur0MQoEeKXy_aT-D_FjQ" name="test_base_Instance" category="system">
+  <componentInstance xmi:id="_sbxNoMQoEeKXy_aT-D_FjQ" name="Send" category="system">
+    <featureInstance xmi:id="_sbxNocQoEeKXy_aT-D_FjQ" name="Outputs" category="featureGroup" direction="in out">
+      <featureInstance xmi:id="_sbxNosQoEeKXy_aT-D_FjQ" name="D1" srcConnectionInstance="_scXDgMQoEeKXy_aT-D_FjQ" direction="out">
+        <feature xsi:type="aadl2:DataPort" href="../testfgconn.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.0"/>
+      </featureInstance>
+      <featureInstance xmi:id="_sbxNo8QoEeKXy_aT-D_FjQ" name="D2" srcConnectionInstance="_scXDgsQoEeKXy_aT-D_FjQ" direction="out">
+        <feature xsi:type="aadl2:DataPort" href="../testfgconn.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.1"/>
+      </featureInstance>
+      <featureInstance xmi:id="_sbxNpMQoEeKXy_aT-D_FjQ" name="D3" srcConnectionInstance="_scXDhMQoEeKXy_aT-D_FjQ" direction="out">
+        <feature xsi:type="aadl2:DataPort" href="../testfgconn.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.2"/>
+      </featureInstance>
+      <featureInstance xmi:id="_sbxNpcQoEeKXy_aT-D_FjQ" name="D4" srcConnectionInstance="_scXDhsQoEeKXy_aT-D_FjQ" direction="out">
+        <feature xsi:type="aadl2:DataPort" href="../testfgconn.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.3"/>
+      </featureInstance>
+      <feature xsi:type="aadl2:FeatureGroup" href="../testfgconn.aadl#//@ownedPublicSection/@ownedClassifier.3/@ownedFeatureGroup.0"/>
+    </featureInstance>
+    <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../testfgconn.aadl#//@ownedPublicSection/@ownedClassifier.6/@ownedSystemSubcomponent.0"/>
+    <index>0</index>
+  </componentInstance>
+  <componentInstance xmi:id="_sbxNpsQoEeKXy_aT-D_FjQ" name="Receive" category="system">
+    <featureInstance xmi:id="_sbxNp8QoEeKXy_aT-D_FjQ" name="Inputs" category="featureGroup" direction="in out">
+      <featureInstance xmi:id="_sbxNqMQoEeKXy_aT-D_FjQ" name="D1" dstConnectionInstance="_scXDgMQoEeKXy_aT-D_FjQ">
+        <feature xsi:type="aadl2:DataPort" href="../testfgconn.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.0"/>
+      </featureInstance>
+      <featureInstance xmi:id="_sbxNqcQoEeKXy_aT-D_FjQ" name="D2" dstConnectionInstance="_scXDgsQoEeKXy_aT-D_FjQ">
+        <feature xsi:type="aadl2:DataPort" href="../testfgconn.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.1"/>
+      </featureInstance>
+      <featureInstance xmi:id="_sbxNqsQoEeKXy_aT-D_FjQ" name="D3" dstConnectionInstance="_scXDhMQoEeKXy_aT-D_FjQ">
+        <feature xsi:type="aadl2:DataPort" href="../testfgconn.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.2"/>
+      </featureInstance>
+      <featureInstance xmi:id="_sbxNq8QoEeKXy_aT-D_FjQ" name="D4" dstConnectionInstance="_scXDhsQoEeKXy_aT-D_FjQ">
+        <feature xsi:type="aadl2:DataPort" href="../testfgconn.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.3"/>
+      </featureInstance>
+      <feature xsi:type="aadl2:FeatureGroup" href="../testfgconn.aadl#//@ownedPublicSection/@ownedClassifier.1/@ownedFeatureGroup.0"/>
+    </featureInstance>
+    <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../testfgconn.aadl#//@ownedPublicSection/@ownedClassifier.6/@ownedSystemSubcomponent.1"/>
+    <index>0</index>
+  </componentInstance>
+  <connectionInstance xmi:id="_scXDgMQoEeKXy_aT-D_FjQ" name="Send.Outputs.D1 -> Receive.Inputs.D1" kind="portConnection" destination="_sbxNqMQoEeKXy_aT-D_FjQ" source="_sbxNosQoEeKXy_aT-D_FjQ">
+    <connectionReference xmi:id="_scXDgcQoEeKXy_aT-D_FjQ" context="_saur0MQoEeKXy_aT-D_FjQ" source="_sbxNocQoEeKXy_aT-D_FjQ" destination="_sbxNp8QoEeKXy_aT-D_FjQ">
+      <connection xsi:type="aadl2:FeatureGroupConnection" href="../testfgconn.aadl#//@ownedPublicSection/@ownedClassifier.6/@ownedFeatureGroupConnection.0"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance xmi:id="_scXDgsQoEeKXy_aT-D_FjQ" name="Send.Outputs.D2 -> Receive.Inputs.D2" kind="portConnection" destination="_sbxNqcQoEeKXy_aT-D_FjQ" source="_sbxNo8QoEeKXy_aT-D_FjQ">
+    <connectionReference xmi:id="_scXDg8QoEeKXy_aT-D_FjQ" context="_saur0MQoEeKXy_aT-D_FjQ" source="_sbxNocQoEeKXy_aT-D_FjQ" destination="_sbxNp8QoEeKXy_aT-D_FjQ">
+      <connection xsi:type="aadl2:FeatureGroupConnection" href="../testfgconn.aadl#//@ownedPublicSection/@ownedClassifier.6/@ownedFeatureGroupConnection.0"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance xmi:id="_scXDhMQoEeKXy_aT-D_FjQ" name="Send.Outputs.D3 -> Receive.Inputs.D3" kind="portConnection" destination="_sbxNqsQoEeKXy_aT-D_FjQ" source="_sbxNpMQoEeKXy_aT-D_FjQ">
+    <connectionReference xmi:id="_scXDhcQoEeKXy_aT-D_FjQ" context="_saur0MQoEeKXy_aT-D_FjQ" source="_sbxNocQoEeKXy_aT-D_FjQ" destination="_sbxNp8QoEeKXy_aT-D_FjQ">
+      <connection xsi:type="aadl2:FeatureGroupConnection" href="../testfgconn.aadl#//@ownedPublicSection/@ownedClassifier.6/@ownedFeatureGroupConnection.0"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance xmi:id="_scXDhsQoEeKXy_aT-D_FjQ" name="Send.Outputs.D4 -> Receive.Inputs.D4" kind="portConnection" destination="_sbxNq8QoEeKXy_aT-D_FjQ" source="_sbxNpcQoEeKXy_aT-D_FjQ">
+    <connectionReference xmi:id="_scXDh8QoEeKXy_aT-D_FjQ" context="_saur0MQoEeKXy_aT-D_FjQ" source="_sbxNocQoEeKXy_aT-D_FjQ" destination="_sbxNp8QoEeKXy_aT-D_FjQ">
+      <connection xsi:type="aadl2:FeatureGroupConnection" href="../testfgconn.aadl#//@ownedPublicSection/@ownedClassifier.6/@ownedFeatureGroupConnection.0"/>
+    </connectionReference>
+  </connectionInstance>
+  <systemOperationMode xmi:id="_sb6-oMQoEeKXy_aT-D_FjQ" name="No Modes"/>
+  <systemImplementation href="../testfgconn.aadl#//@ownedPublicSection/@ownedClassifier.6"/>
+</instance:SystemInstance>

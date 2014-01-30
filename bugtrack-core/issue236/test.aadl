@@ -1,0 +1,63 @@
+package issue236
+public
+
+with Data_Model;
+system root
+end root;
+
+system implementation root.impl
+subcomponents
+the_proc: process proc.impl;
+end root.impl;
+
+process proc
+end proc;
+
+process implementation proc.impl
+subcomponents
+the_sender: thread sender.impl;
+the_receiver: thread receiver.impl;
+connections
+cnx: port the_sender.p -> the_receiver.p;
+end proc.impl;
+
+thread sender
+features
+p: out event port;
+end sender;
+
+thread implementation sender.impl
+calls
+call : { c : subprogram sender_spg;};
+connections
+cnx: port c.signal -> p;
+properties
+Compute_Entrypoint_Call_Sequence => reference (call);
+end sender.impl;
+
+thread receiver
+features
+p: in event port;
+end receiver;
+
+thread implementation receiver.impl
+calls
+call_nothing : { c_nothing : subprogram nothing_received_spg;};
+call : { c : subprogram receiver_spg;};
+properties
+Compute_Entrypoint_Call_Sequence => reference (call_nothing);
+Compute_Entrypoint_Call_Sequence => reference (call) applies to p; 
+end receiver.impl;
+
+subprogram nothing_received_spg
+end nothing_received_spg;
+
+subprogram receiver_spg
+end receiver_spg;
+
+subprogram sender_spg
+features
+signal : out event port;
+end sender_spg;
+
+end issue236;

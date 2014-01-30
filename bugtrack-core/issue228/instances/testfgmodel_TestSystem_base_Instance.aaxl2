@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="ASCII"?>
+<instance:SystemInstance xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aadl2="http://aadl.info/AADL/2.0" xmlns:instance="http://aadl.info/AADL/2.0/instance" xmi:id="_2I6mwMb5EeKZdOr3i9HhLg" name="TestSystem_base_Instance" category="system">
+  <componentInstance xmi:id="_2JDwsMb5EeKZdOr3i9HhLg" name="CoreOne" category="processor">
+    <featureInstance xmi:id="_2JDwscb5EeKZdOr3i9HhLg" name="Core1Ports" category="featureGroup" direction="in out">
+      <featureInstance xmi:id="_2JDwssb5EeKZdOr3i9HhLg" name="Port1" dstConnectionInstance="_2JDwx8b5EeKZdOr3i9HhLg">
+        <feature xsi:type="aadl2:DataPort" href="../testfgmodel.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.0"/>
+      </featureInstance>
+      <featureInstance xmi:id="_2JDws8b5EeKZdOr3i9HhLg" name="Port2" srcConnectionInstance="_2JDwwcb5EeKZdOr3i9HhLg" direction="out">
+        <feature xsi:type="aadl2:DataPort" href="../testfgmodel.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.1"/>
+      </featureInstance>
+      <featureInstance xmi:id="_2JDwtMb5EeKZdOr3i9HhLg" name="Port3" dstConnectionInstance="_2JDwycb5EeKZdOr3i9HhLg">
+        <feature xsi:type="aadl2:DataPort" href="../testfgmodel.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.2"/>
+      </featureInstance>
+      <featureInstance xmi:id="_2JDwtcb5EeKZdOr3i9HhLg" name="Port4" srcConnectionInstance="_2JDww8b5EeKZdOr3i9HhLg" direction="out">
+        <feature xsi:type="aadl2:DataPort" href="../testfgmodel.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.3"/>
+      </featureInstance>
+      <featureInstance xmi:id="_2JDwtsb5EeKZdOr3i9HhLg" name="Port5" dstConnectionInstance="_2JDwy8b5EeKZdOr3i9HhLg">
+        <feature xsi:type="aadl2:DataPort" href="../testfgmodel.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.4"/>
+      </featureInstance>
+      <featureInstance xmi:id="_2JDwt8b5EeKZdOr3i9HhLg" name="Port6" srcConnectionInstance="_2JDwxcb5EeKZdOr3i9HhLg" direction="out">
+        <feature xsi:type="aadl2:DataPort" href="../testfgmodel.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.5"/>
+      </featureInstance>
+      <feature xsi:type="aadl2:FeatureGroup" href="../testfgmodel.aadl#//@ownedPublicSection/@ownedClassifier.1/@ownedFeatureGroup.0"/>
+    </featureInstance>
+    <subcomponent xsi:type="aadl2:ProcessorSubcomponent" href="../testfgmodel.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedProcessorSubcomponent.0"/>
+    <index>0</index>
+  </componentInstance>
+  <componentInstance xmi:id="_2JDwuMb5EeKZdOr3i9HhLg" name="CoreTwo" category="processor">
+    <featureInstance xmi:id="_2JDwucb5EeKZdOr3i9HhLg" name="Core2Ports" category="featureGroup" direction="in out">
+      <featureInstance xmi:id="_2JDwusb5EeKZdOr3i9HhLg" name="Port1" srcConnectionInstance="_2JDwx8b5EeKZdOr3i9HhLg" direction="out">
+        <feature xsi:type="aadl2:DataPort" href="../testfgmodel.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.0"/>
+      </featureInstance>
+      <featureInstance xmi:id="_2JDwu8b5EeKZdOr3i9HhLg" name="Port2" dstConnectionInstance="_2JDwwcb5EeKZdOr3i9HhLg">
+        <feature xsi:type="aadl2:DataPort" href="../testfgmodel.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.1"/>
+      </featureInstance>
+      <featureInstance xmi:id="_2JDwvMb5EeKZdOr3i9HhLg" name="Port3" srcConnectionInstance="_2JDwycb5EeKZdOr3i9HhLg" direction="out">
+        <feature xsi:type="aadl2:DataPort" href="../testfgmodel.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.2"/>
+      </featureInstance>
+      <featureInstance xmi:id="_2JDwvcb5EeKZdOr3i9HhLg" name="Port4" dstConnectionInstance="_2JDww8b5EeKZdOr3i9HhLg">
+        <feature xsi:type="aadl2:DataPort" href="../testfgmodel.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.3"/>
+      </featureInstance>
+      <featureInstance xmi:id="_2JDwvsb5EeKZdOr3i9HhLg" name="Port5" srcConnectionInstance="_2JDwy8b5EeKZdOr3i9HhLg" direction="out">
+        <feature xsi:type="aadl2:DataPort" href="../testfgmodel.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.4"/>
+      </featureInstance>
+      <featureInstance xmi:id="_2JDwv8b5EeKZdOr3i9HhLg" name="Port6" dstConnectionInstance="_2JDwxcb5EeKZdOr3i9HhLg">
+        <feature xsi:type="aadl2:DataPort" href="../testfgmodel.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.5"/>
+      </featureInstance>
+      <feature xsi:type="aadl2:FeatureGroup" href="../testfgmodel.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedFeatureGroup.0"/>
+    </featureInstance>
+    <subcomponent xsi:type="aadl2:ProcessorSubcomponent" href="../testfgmodel.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedProcessorSubcomponent.1"/>
+    <index>0</index>
+  </componentInstance>
+  <connectionInstance xmi:id="_2JDwwcb5EeKZdOr3i9HhLg" name="CoreOne.Core1Ports.Port2 -> CoreTwo.Core2Ports.Port2" kind="portConnection" destination="_2JDwu8b5EeKZdOr3i9HhLg" source="_2JDws8b5EeKZdOr3i9HhLg">
+    <connectionReference xmi:id="_2JDwwsb5EeKZdOr3i9HhLg" context="_2I6mwMb5EeKZdOr3i9HhLg" source="_2JDwscb5EeKZdOr3i9HhLg" destination="_2JDwucb5EeKZdOr3i9HhLg">
+      <connection xsi:type="aadl2:FeatureGroupConnection" href="../testfgmodel.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedFeatureGroupConnection.0"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance xmi:id="_2JDww8b5EeKZdOr3i9HhLg" name="CoreOne.Core1Ports.Port4 -> CoreTwo.Core2Ports.Port4" kind="portConnection" destination="_2JDwvcb5EeKZdOr3i9HhLg" source="_2JDwtcb5EeKZdOr3i9HhLg">
+    <connectionReference xmi:id="_2JDwxMb5EeKZdOr3i9HhLg" context="_2I6mwMb5EeKZdOr3i9HhLg" source="_2JDwscb5EeKZdOr3i9HhLg" destination="_2JDwucb5EeKZdOr3i9HhLg">
+      <connection xsi:type="aadl2:FeatureGroupConnection" href="../testfgmodel.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedFeatureGroupConnection.0"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance xmi:id="_2JDwxcb5EeKZdOr3i9HhLg" name="CoreOne.Core1Ports.Port6 -> CoreTwo.Core2Ports.Port6" kind="portConnection" destination="_2JDwv8b5EeKZdOr3i9HhLg" source="_2JDwt8b5EeKZdOr3i9HhLg">
+    <connectionReference xmi:id="_2JDwxsb5EeKZdOr3i9HhLg" context="_2I6mwMb5EeKZdOr3i9HhLg" source="_2JDwscb5EeKZdOr3i9HhLg" destination="_2JDwucb5EeKZdOr3i9HhLg">
+      <connection xsi:type="aadl2:FeatureGroupConnection" href="../testfgmodel.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedFeatureGroupConnection.0"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance xmi:id="_2JDwx8b5EeKZdOr3i9HhLg" name="CoreTwo.Core2Ports.Port1 -> CoreOne.Core1Ports.Port1" kind="portConnection" destination="_2JDwssb5EeKZdOr3i9HhLg" source="_2JDwusb5EeKZdOr3i9HhLg">
+    <connectionReference xmi:id="_2JDwyMb5EeKZdOr3i9HhLg" context="_2I6mwMb5EeKZdOr3i9HhLg" source="_2JDwucb5EeKZdOr3i9HhLg" destination="_2JDwscb5EeKZdOr3i9HhLg">
+      <connection xsi:type="aadl2:FeatureGroupConnection" href="../testfgmodel.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedFeatureGroupConnection.0"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance xmi:id="_2JDwycb5EeKZdOr3i9HhLg" name="CoreTwo.Core2Ports.Port3 -> CoreOne.Core1Ports.Port3" kind="portConnection" destination="_2JDwtMb5EeKZdOr3i9HhLg" source="_2JDwvMb5EeKZdOr3i9HhLg">
+    <connectionReference xmi:id="_2JDwysb5EeKZdOr3i9HhLg" context="_2I6mwMb5EeKZdOr3i9HhLg" source="_2JDwucb5EeKZdOr3i9HhLg" destination="_2JDwscb5EeKZdOr3i9HhLg">
+      <connection xsi:type="aadl2:FeatureGroupConnection" href="../testfgmodel.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedFeatureGroupConnection.0"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance xmi:id="_2JDwy8b5EeKZdOr3i9HhLg" name="CoreTwo.Core2Ports.Port5 -> CoreOne.Core1Ports.Port5" kind="portConnection" destination="_2JDwtsb5EeKZdOr3i9HhLg" source="_2JDwvsb5EeKZdOr3i9HhLg">
+    <connectionReference xmi:id="_2JDwzMb5EeKZdOr3i9HhLg" context="_2I6mwMb5EeKZdOr3i9HhLg" source="_2JDwucb5EeKZdOr3i9HhLg" destination="_2JDwscb5EeKZdOr3i9HhLg">
+      <connection xsi:type="aadl2:FeatureGroupConnection" href="../testfgmodel.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedFeatureGroupConnection.0"/>
+    </connectionReference>
+  </connectionInstance>
+  <systemOperationMode xmi:id="_2JDwwMb5EeKZdOr3i9HhLg" name="No Modes"/>
+  <systemImplementation href="../testfgmodel.aadl#//@ownedPublicSection/@ownedClassifier.4"/>
+</instance:SystemInstance>

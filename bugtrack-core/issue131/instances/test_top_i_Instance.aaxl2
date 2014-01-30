@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="ASCII"?>
+<instance:SystemInstance xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aadl2="http://aadl.info/AADL/2.0" xmlns:instance="http://aadl.info/AADL/2.0/instance" xmi:id="_aHjegFkAEeKl38zC48cr-Q" name="top_i_Instance" category="system">
+  <componentInstance xmi:id="_aH1yYFkAEeKl38zC48cr-Q" name="sens" category="device">
+    <featureInstance xmi:id="_aH1yYVkAEeKl38zC48cr-Q" name="fg" srcConnectionInstance="_aH1ybVkAEeKl38zC48cr-Q _aH1yb1kAEeKl38zC48cr-Q" dstConnectionInstance="_aH1yb1kAEeKl38zC48cr-Q" category="featureGroup" direction="in out">
+      <feature xsi:type="aadl2:FeatureGroup" href="../test.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedFeatureGroup.0"/>
+    </featureInstance>
+    <flowSpecification xmi:id="_aH1yYlkAEeKl38zC48cr-Q" name="src">
+      <flowSpecification href="../test.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedFlowSpecification.0"/>
+    </flowSpecification>
+    <flowSpecification xmi:id="_aH1yY1kAEeKl38zC48cr-Q" name="dst">
+      <flowSpecification href="../test.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedFlowSpecification.1"/>
+    </flowSpecification>
+    <subcomponent xsi:type="aadl2:DeviceSubcomponent" href="../test.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedDeviceSubcomponent.0"/>
+    <index>0</index>
+  </componentInstance>
+  <componentInstance xmi:id="_aH1yZFkAEeKl38zC48cr-Q" name="act" category="device">
+    <featureInstance xmi:id="_aH1yZVkAEeKl38zC48cr-Q" name="fgs" srcConnectionInstance="_aH1ycVkAEeKl38zC48cr-Q" dstConnectionInstance="_aH1ycVkAEeKl38zC48cr-Q" category="featureGroup" direction="in out">
+      <feature xsi:type="aadl2:FeatureGroup" href="../test.aadl#//@ownedPublicSection/@ownedClassifier.1/@ownedFeatureGroup.0"/>
+    </featureInstance>
+    <featureInstance xmi:id="_aH1yZlkAEeKl38zC48cr-Q" name="fgp" category="featureGroup" direction="in out">
+      <feature xsi:type="aadl2:FeatureGroup" href="../test.aadl#//@ownedPublicSection/@ownedClassifier.1/@ownedFeatureGroup.1"/>
+    </featureInstance>
+    <flowSpecification xmi:id="_aH1yZ1kAEeKl38zC48cr-Q" name="pass">
+      <flowSpecification href="../test.aadl#//@ownedPublicSection/@ownedClassifier.1/@ownedFlowSpecification.0"/>
+    </flowSpecification>
+    <subcomponent xsi:type="aadl2:DeviceSubcomponent" href="../test.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedDeviceSubcomponent.1"/>
+    <index>0</index>
+  </componentInstance>
+  <componentInstance xmi:id="_aH1yaFkAEeKl38zC48cr-Q" name="proc" category="system">
+    <featureInstance xmi:id="_aH1yaVkAEeKl38zC48cr-Q" name="fgss" dstConnectionInstance="_aH1ybVkAEeKl38zC48cr-Q" category="featureGroup" direction="in out">
+      <feature xsi:type="aadl2:FeatureGroup" href="../test.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedFeatureGroup.0"/>
+    </featureInstance>
+    <featureInstance xmi:id="_aH1yalkAEeKl38zC48cr-Q" name="fgpp" category="featureGroup" direction="in out">
+      <feature xsi:type="aadl2:FeatureGroup" href="../test.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedFeatureGroup.1"/>
+    </featureInstance>
+    <flowSpecification xmi:id="_aH1ya1kAEeKl38zC48cr-Q" name="pass">
+      <flowSpecification href="../test.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedFlowSpecification.0"/>
+    </flowSpecification>
+    <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../test.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedSystemSubcomponent.0"/>
+    <index>0</index>
+  </componentInstance>
+  <endToEndFlow xmi:id="_aH75AFkAEeKl38zC48cr-Q" name="myflow" flowElement="_aH1yYlkAEeKl38zC48cr-Q _aH1ybVkAEeKl38zC48cr-Q _aH1ya1kAEeKl38zC48cr-Q">
+    <endToEndFlow href="../test.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedEndToEndFlow.0"/>
+  </endToEndFlow>
+  <connectionInstance xmi:id="_aH1ybVkAEeKl38zC48cr-Q" name="sens.fg -> proc.fgss" kind="featureGroupConnection" destination="_aH1yaVkAEeKl38zC48cr-Q" source="_aH1yYVkAEeKl38zC48cr-Q">
+    <connectionReference xmi:id="_aH1yblkAEeKl38zC48cr-Q" context="_aHjegFkAEeKl38zC48cr-Q" source="_aH1yYVkAEeKl38zC48cr-Q" destination="_aH1yaVkAEeKl38zC48cr-Q">
+      <connection xsi:type="aadl2:FeatureGroupConnection" href="../test.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedFeatureGroupConnection.0"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance xmi:id="_aH1yb1kAEeKl38zC48cr-Q" name="sens.fg -> sens.fg" complete="true" kind="featureGroupConnection" destination="_aH1yYVkAEeKl38zC48cr-Q" source="_aH1yYVkAEeKl38zC48cr-Q">
+    <connectionReference xmi:id="_aH1ycFkAEeKl38zC48cr-Q" context="_aHjegFkAEeKl38zC48cr-Q" source="_aH1yYVkAEeKl38zC48cr-Q" destination="_aH1yYVkAEeKl38zC48cr-Q">
+      <connection xsi:type="aadl2:FeatureGroupConnection" href="../test.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedFeatureGroupConnection.2"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance xmi:id="_aH1ycVkAEeKl38zC48cr-Q" name="act.fgs -> act.fgs" complete="true" kind="featureGroupConnection" destination="_aH1yZVkAEeKl38zC48cr-Q" source="_aH1yZVkAEeKl38zC48cr-Q">
+    <connectionReference xmi:id="_aH1yclkAEeKl38zC48cr-Q" context="_aHjegFkAEeKl38zC48cr-Q" source="_aH1yZVkAEeKl38zC48cr-Q" destination="_aH1yZVkAEeKl38zC48cr-Q">
+      <connection xsi:type="aadl2:FeatureGroupConnection" href="../test.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedFeatureGroupConnection.1"/>
+    </connectionReference>
+  </connectionInstance>
+  <systemOperationMode xmi:id="_aH1ybFkAEeKl38zC48cr-Q" name="No Modes"/>
+  <systemImplementation href="../test.aadl#//@ownedPublicSection/@ownedClassifier.4"/>
+</instance:SystemInstance>

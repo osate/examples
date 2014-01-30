@@ -1,0 +1,321 @@
+
+package ravenscar_runtime
+public
+with Data_Model, Base_Types;
+--- Data ---------
+
+data Port_Type
+properties
+Programming_Properties::Source_Name => "Port_Type";
+Programming_Properties::Source_Text => ("ravenscar/types.ads");
+end Port_Type;
+
+data Error_Kind
+properties
+Programming_Properties::Source_Name => "Error_Kind";
+Programming_Properties::Source_Text => ("ravenscar/types.ads");
+end Error_Kind;
+
+data Thread_Interface_Type
+properties
+Programming_Properties::Source_Name => "Thread_Interface_Type";
+Programming_Properties::Source_Text => ("ravenscar/types.ads");
+end Thread_Interface_Type;
+
+data Entity_Type
+properties
+Programming_Properties::Source_Name => "Entity_Type";
+Programming_Properties::Source_Text => ("ravenscar/types.ads");
+end Entity_Type;
+
+data Time_Stamp
+properties
+Programming_Properties::Source_Name => "Time";
+Programming_Properties::Source_Text => ("ravenscar/types.ads");
+end Time_Stamp;
+
+data Port_Stream_Entry
+properties
+Programming_Properties::Source_Name => "Port_Stream_Entry";
+Programming_Properties::Source_Text => ("ravenscar/types.ads");
+end Port_Stream_Entry;
+
+data Global_Queue
+features
+Wait_Event : provides subprogram access Wait_Event;
+Read_Event : provides subprogram access Read_Event;
+Dequeue : provides subprogram access Dequeue;
+Read_In : provides subprogram access Read_In;
+Read_Out : provides subprogram access Read_Out;
+Is_Invalid : provides subprogram access Is_Invalid;
+Set_Invalid : provides subprogram access Set_Invalid;
+Store_In : provides subprogram access Store_In;
+Store_Out : provides subprogram access Store_Out;
+Count : provides subprogram access Count;
+Get_Time_Stamp : provides subprogram access Get_Time_Stamp;
+properties
+programming_properties::source_name => "Global_Queue";
+programming_properties::source_text => ("ravenscar/raven.adb");
+end Global_Queue;
+
+data implementation Global_Queue.Impl
+subcomponents
+Port_Type : data Port_Type;
+P : data Port_Stream_Entry;
+
+properties
+Data_Model::Data_Representation => Struct;
+Concurrency_Control_Protocol => Priority_Ceiling;
+end Global_Queue.Impl;
+--- Subprogram ---
+
+subprogram Periodic_Wait
+features
+Port_Type: out parameter Port_Type ;
+properties
+Programming_Properties::Source_Name => "PERIODIC_WAIT";
+Programming_Properties::Source_Text => ("ravenscar/raven.ads");
+end Periodic_Wait;
+
+subprogram Sporadic_Wait
+features
+Port_Type: out parameter Port_Type ;
+properties
+Programming_Properties::Source_Name => "SPORADIC_WAIT";
+Programming_Properties::Source_Text => ("ravenscar/raven.ads");
+end Sporadic_Wait;
+
+subprogram Send_Output
+features
+Port_Type : in out parameter Port_Type;
+--Error : out parameter Error_Kind;
+properties
+programming_properties::source_name => "Send_Output";
+programming_properties::source_text => ("ravenscar/raven.ads");
+end Send_Output;
+
+subprogram Put_Value
+features
+Thread_Interface : in parameter Thread_Interface_Type;
+properties
+programming_properties::source_name => "Put_Value";
+programming_properties::source_text => ("ravenscar/raven.ads");
+end Put_Value;
+
+subprogram Receive_Input
+features
+Port_Type : in parameter Port_Type;
+properties
+programming_properties::source_name => "Receive_Input";
+programming_properties::source_text => ("ravenscar/raven.ads");
+end Receive_Input;
+
+subprogram Get_Value
+features
+Port_Type : in parameter Port_Type;
+T_Port : out parameter Thread_Interface_Type;
+properties
+programming_properties::source_name => "Get_Value";
+programming_properties::source_text => ("ravenscar/raven.ads");
+end Get_Value;
+
+subprogram Get_Sender
+features
+Port_Type : in parameter Port_Type;
+Sender : out parameter Entity_Type;
+properties
+programming_properties::source_name => "Get_Sender";
+programming_properties::source_text => ("ravenscar/raven.ads");
+end Get_Sender;
+
+subprogram Get_Count
+features
+Port_Type : in parameter Port_Type;
+Counter : out parameter Base_Types::Integer;
+properties
+programming_properties::source_name => "Get_Count";
+programming_properties::source_text => ("ravenscar/raven.ads");
+end Get_Count;
+
+subprogram Next_Value
+features
+Port_Type : in parameter Port_Type;
+properties
+programming_properties::source_name => "Next_Value";
+programming_properties::source_text => ("ravenscar/raven.ads");
+end Next_Value;
+
+subprogram Wait_For_Incoming_Events
+features
+Port_Type : out parameter Port_Type;
+properties
+programming_properties::source_name => "Wait_For_Incoming_Events";
+programming_properties::source_text => ("ravenscar/raven.ads");
+end Wait_For_Incoming_Events;
+
+subprogram Get_Next_Event
+features
+Port_Type : out parameter Port_Type;
+Valid : out parameter Base_Types::Boolean;
+properties
+programming_properties::source_name => "Get_Next_Event";
+programming_properties::source_text => ("ravenscar/raven.ads");
+end Get_Next_Event;
+
+subprogram Store_Received_Message
+features
+Thread_Interface : in parameter Thread_Interface_Type;
+From : in parameter Entity_Type;
+Time_Stamp : in parameter Time_Stamp;
+properties
+programming_properties::source_name => "Store_Received_Message";
+programming_properties::source_text => ("ravenscar/raven.ads");
+end Store_Received_Message;
+
+subprogram H_Increment_First
+features
+F : in out parameter Base_Types::Integer;
+properties
+programming_properties::source_name => "H_Increment_First";
+programming_properties::source_text => ("ravenscar/raven.ads");
+end H_Increment_First;
+
+subprogram H_Increment_Last
+features
+L : in out parameter Base_Types::Integer;
+properties
+programming_properties::source_name => "H_Increment_Last";
+programming_properties::source_text => ("ravenscar/raven.ads");
+end H_Increment_Last;
+
+subprogram CE
+properties
+programming_properties::source_name => "CE";
+programming_properties::source_text => ("ravenscar/raven.ads");
+end CE;
+
+--- Global Queue procedure
+
+subprogram Wait_Event
+prototypes
+data_type: data;
+features
+this : requires data access Global_Queue.Impl;
+Port_Type : in parameter data_type;
+properties
+programming_properties::source_name => "Wait_Event";
+programming_properties::source_text => ("ravenscar/raven.adb");
+end Wait_Event;
+
+subprogram Read_Event
+prototypes
+data_type: data;
+features
+this : requires data access Global_Queue.Impl;
+Port_Type : out parameter data_type;
+properties
+programming_properties::source_name => "Read_Event";
+programming_properties::source_text => ("ravenscar/raven.adb");
+end Read_Event;
+
+subprogram Dequeue
+prototypes
+data_type: data;
+features
+this : requires data access Global_Queue.Impl;
+Port_Type : requires data access data_type;
+Port_Stream_Entry : out parameter Port_Stream_Entry;
+properties
+programming_properties::source_name => "Dequeue";
+programming_properties::source_text => ("ravenscar/raven.adb");
+end Dequeue;
+
+subprogram Read_In
+prototypes
+data_type: data;
+features
+this : requires data access Global_Queue.Impl;
+Port_Type : requires data access data_type;
+properties
+programming_properties::source_name => "Read_In";
+programming_properties::source_text => ("ravenscar/raven.adb");
+end Read_In;
+
+subprogram Read_Out
+prototypes
+data_type: data;
+features
+this : requires data access Global_Queue.Impl;
+Port_Type : requires data access data_type;
+properties
+programming_properties::source_name => "Read_Out";
+programming_properties::source_text => ("ravenscar/raven.adb");
+end Read_Out;
+
+subprogram Is_Invalid
+prototypes
+data_type: data;
+features
+this : requires data access Global_Queue.Impl;
+properties
+programming_properties::source_name => "Is_Invalid";
+programming_properties::source_text => ("ravenscar/raven.adb");
+end Is_Invalid;
+
+subprogram Set_Invalid
+prototypes
+data_type: data;
+features
+this : requires data access Global_Queue.Impl;
+properties
+programming_properties::source_name => "Set_Invalid";
+programming_properties::source_text => ("ravenscar/raven.adb");
+end Set_Invalid;
+
+subprogram Store_In
+prototypes
+data_type: data;
+features
+this : requires data access Global_Queue.Impl;
+Port_Type : requires data access data_type;
+Time_Stamp : in parameter Time_Stamp;
+properties
+programming_properties::source_name => "Store_In";
+programming_properties::source_text => ("ravenscar/raven.adb");
+end Store_In;
+
+subprogram Store_Out
+prototypes
+data_type: data;
+features
+this : requires data access Global_Queue.Impl;
+Port_Type : requires data access data_type;
+Time_Stamp : in parameter Time_Stamp;
+properties
+programming_properties::source_name => "Store_Out";
+programming_properties::source_text => ("ravenscar/raven.adb");
+end Store_Out;
+
+subprogram Count
+prototypes
+data_type: data;
+features
+Port_Type : requires data access data_type;
+this : requires data access Global_Queue.Impl;
+properties
+programming_properties::source_name => "Count";
+programming_properties::source_text => ("ravenscar/raven.adb");
+end Count;
+
+subprogram Get_Time_Stamp
+prototypes
+data_type: data;
+features
+this : requires data access Global_Queue.Impl;
+Port_Type : requires data access data_type;
+properties
+programming_properties::source_name => "Get_Time_Stamp";
+programming_properties::source_text => ("ravenscar/raven.adb");
+end Get_Time_Stamp;
+
+end ravenscar_runtime;

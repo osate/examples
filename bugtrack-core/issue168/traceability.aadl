@@ -1,0 +1,3 @@
+property set traceability is
+RenamesAndId: list of aadlstring applies to (system, port, connection);
+end traceability;

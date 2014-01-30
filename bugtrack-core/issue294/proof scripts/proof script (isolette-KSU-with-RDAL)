@@ -1,0 +1,13 @@
+#proof script for isolette.aadl
+load
+make-an
+# manage_heat_source_mhs.impl
+subscript[subscripts/mhs]
+# manage_regulator_mode_mrm.impl
+subscript[subscripts/mrm]
+#manage_monitor_mode_mmm.impl
+subscript[subscripts/mmm]
+# manage_alarm_ma.impl
+subscript[subscripts/ma]
+#isolette connections
+subscript[subscripts/isocon]

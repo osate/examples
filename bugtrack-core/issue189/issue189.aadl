@@ -1,0 +1,15 @@
+package issue189
+public 
+--device steppermotorcontrol
+--features
+--DoStep: requires subprogram access DoStep;
+--end steppermotorcontrol;
+device implementation StepperMotorControl.rpc
+features
+DoStep: requires subprogram access DoStep;
+properties
+Dispatch_Protocol => Aperiodic;
+Queue_Size => 0 applies to PCC;
+Overflow_Handling_Protocol => Error applies to PCC;
+end StepperMotorControl.rpc;
+end issue189 ;

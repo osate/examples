@@ -1,0 +1,49 @@
+package issue208
+public
+system top
+end top;
+
+device gps
+features
+oute: out event port;
+end gps;
+
+system gpses
+features
+oute: out event port;
+end gpses;
+
+system implementation gpses.i
+subcomponents 
+gps1: device gps;
+gps2: device gps;
+r : system receiver.i;
+connections
+econn: port gps2.oute -> r.ine;
+modes
+s1: initial mode;
+s2: mode;
+t1: s1 -[gps1.oute]-> s2;
+end gpses.i;
+
+system receiver
+features
+	ine : in event port;
+end receiver;
+
+system implementation receiver.i
+end receiver.i;
+
+
+
+system implementation top.i
+subcomponents
+g: system gpses.i;
+modes
+m1: initial mode;
+m2: mode;
+t22: m1 -[g.oute]-> m2;
+end top.i;
+
+
+end issue208 ;

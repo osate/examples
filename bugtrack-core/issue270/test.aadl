@@ -1,0 +1,11 @@
+package issue270
+public
+    system A
+    features
+        test2: feature;      
+    end A;
+
+    system implementation A.test
+    end A.test;
+
+end issue270;

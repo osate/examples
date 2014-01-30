@@ -1,0 +1,111 @@
+#proof script for manage_regulator_mode_mrm.impl
+axioms
+axioms
+#[serial 1021] Serban's Theorem:  disjunction of execute conditions leaving execution state check_normal, <<M(check_normal)>> -> <<e1 or e2 or . . . en>>
+axioms
+DeMorgan
+normalize
+cnf
+laws
+normalize
+replace<=
+laws
+normalize
+axioms
+#[serial 1022] Serban's Theorem:  disjunction of execute conditions leaving execution state check_init, <<M(check_init)>> -> <<e1 or e2 or . . . en>>
+normalize
+replace<=
+cnf
+laws
+normalize
+laws
+normalize
+cnf
+normalize
+laws
+normalize
+axioms
+#[serial 1023]  <<M(start)>> A <<M(init)>> for mrm1:start-[ ]->init{A};
+normalize
+reduce
+atomic
+laws
+remove-axioms-post
+normalize
+axioms
+substitute-both
+sub-all-eq
+normalize
+axioms
+#[serial 1024]  <<M(init) and x>> A <<M(check_init)>> for wait_init:init-[x]->check_init{A};
+normalize
+reduce
+atomic
+normalize
+laws
+axioms
+#[serial 1025]  <<M(check_init) and x>> A <<M(failed)>> for mrm:check_init-[x]->failed{A};
+reduce
+atomic
+axioms
+substitute-both
+normalize
+replace<=
+laws
+DeMorgan
+normalize
+laws
+DeMorgan
+normalize
+dist^
+axioms
+laws
+axioms
+#[serial 1026]  <<M(check_init) and x>> A <<M(normal)>> for mrm2:check_init-[x]->normal{A};
+reduce
+atomic
+dist^
+normalize
+axioms
+substitute-post
+normalize
+laws
+axioms
+#[serial 1027]  <<M(check_init) and x>> -> <<M(init)>> for mrm2x:check_init-[x]->init{};
+normalize
+axioms
+#[serial 1028]  <<M(normal) and x>> A <<M(check_normal)>> for wait_normal:normal-[x]->check_normal{A};
+axioms
+reduce
+atomic
+normalize
+axioms
+laws
+normalize
+#[serial 1029]  <<M(check_normal) and x>> A <<M(normal)>> for mrm3:check_normal-[x]->normal{A};
+axioms
+reduce
+atomic
+normalize
+axioms
+substitute-post
+dist^
+normalize
+laws
+axioms
+#[serial 1030]  <<M(check_normal) and x>> A <<M(failed)>> for mrm3x:check_normal-[x]->failed{A};
+reduce
+atomic
+axioms
+dist^
+laws
+substitute-both
+normalize
+split-post
+axioms
+DeMorgan
+normalize
+DeMorgan
+normalize
+laws
+axioms

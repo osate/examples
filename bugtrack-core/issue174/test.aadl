@@ -1,0 +1,54 @@
+package connectiontiming
+public
+thread t
+features
+outp: out event port;
+end t;
+
+thread tt
+features
+inp: in event port;
+end tt;
+
+process p
+features
+outp: out event port;
+end p;
+
+process implementation p.i
+subcomponents
+t1: THREAD T;
+
+connections
+c1: port t1.outp -> outp;
+properties
+timing => immediate applies to c1;
+end p.i;
+
+process implementation pp.i
+subcomponents
+t2: THREAD tt;
+
+connections
+c2: port inp -> t2.inp;
+end pp.i;
+
+process pp
+features
+inp: in event port;
+end pp;
+
+system s
+end s;
+
+system implementation s.i
+subcomponents
+p1: process p.i;
+p2: process pp.i;
+connections
+cc: port p1.outp -> p2.inp { timing => immediate;};
+properties
+Dispatch_Protocol => Periodic applies to p1.t1;
+end s.i;
+
+end connectiontiming ;

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="ASCII"?>
+<instance:SystemInstance xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aadl2="http://aadl.info/AADL/2.0" xmlns:instance="http://aadl.info/AADL/2.0/instance" xmi:id="_CG5mQGo1EeKmbZpu2e0jOQ" name="A_impl_Instance" category="system">
+  <featureInstance xmi:id="_CHifcGo1EeKmbZpu2e0jOQ" name="f1" category="featureGroup" direction="in out">
+    <feature xsi:type="aadl2:FeatureGroup" href="../test%20162.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedFeatureGroup.0"/>
+  </featureInstance>
+  <systemOperationMode xmi:id="_CH8vIGo1EeKmbZpu2e0jOQ" name="No Modes"/>
+  <systemImplementation href="../test%20162.aadl#//@ownedPublicSection/@ownedClassifier.3"/>
+</instance:SystemInstance>

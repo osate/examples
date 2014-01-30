@@ -1,0 +1,14 @@
+
+
+property set Physical_Properties is
+  Power_Units: type units
+  (W,
+   KW  => W * 1000,
+   MW  => KW * 1000,
+   GW  => MW * 1000,
+   TW  => GW * 1000);
+	Power: type aadlinteger 0 W .. Max_Time units Physical_Properties::Power_Units;
+	
+	Max_Power: constant Physical_Properties::Power => 1000 W;
+
+end Physical_Properties;

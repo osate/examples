@@ -1,0 +1,21 @@
+package issue77
+public
+    system SA
+    end SA;
+
+    bus BA
+    end BA;
+
+    system SB
+    features
+        req1 : requires bus access BA;
+    end SB;
+
+    system implementation SA.impl
+    subcomponents
+        ba1 : bus BA;
+        sb2 : system SB;
+    connections
+        c1 : bus access ba1 -> sb2.req1;
+    end SA.impl;
+end issue77;

@@ -1,0 +1,3 @@
+property set ps167 is
+myname : aadlstring applies to (bus, data);
+end ps167;

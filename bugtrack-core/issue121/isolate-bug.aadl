@@ -1,0 +1,46 @@
+package test_package_refined_isolated
+public
+bus Test_Bus
+end Test_Bus;
+
+    bus implementation Test_Bus.impl
+    end Test_Bus.impl;
+
+    processor Test_Proc
+        features
+            bus_access: requires bus access Test_Bus;
+    end Test_Proc;
+
+    processor implementation Test_Proc.impl
+    end Test_Proc.impl;
+
+    bus Test_Bus2 extends Test_Bus
+    end Test_Bus2;
+
+    bus implementation Test_Bus2.impl extends Test_Bus.impl
+    end Test_Bus2.impl;
+
+    processor Test_Proc2 extends Test_Proc 
+        features
+            bus_access: refined to requires bus access Test_Bus2;
+    end Test_Proc2;
+
+    processor implementation Test_Proc2.impl extends Test_Proc.impl 
+    end Test_Proc2.impl;
+ 
+    system Test_System
+    end Test_System;
+
+ 
+    system implementation Test_System.impl2
+        subcomponents 
+            -- Implementation declared for the type of the processsor subcomponent only.
+            bus_comp: bus Test_Bus2;
+            proc: processor Test_Proc2.impl;
+        connections 
+            -- Error message generated saying the classifiers are incompatibles
+            conn1: bus access bus_comp -> proc.bus_access;            	   
+    end Test_System.impl2; 
+   
+
+end test_package_refined_isolated;

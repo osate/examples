@@ -1,0 +1,19 @@
+package  issue214
+public
+system top
+end top;
+
+
+
+system implementation top.impl
+
+modes
+	slow: initial mode;
+	medium: mode;
+	fast: mode;
+properties
+Source_Code_Size => 2 Bytes in modes (fast, slow);
+Source_Code_Size => 4 Bytes in modes (medium);
+end top.impl;
+
+end  issue214;

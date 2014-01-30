@@ -1,0 +1,19 @@
+property set Physical_Properties is
+with AADL_Project, Physical_Properties;
+
+  Voltage_Units : type units (nV, uV=>nV*1000, mV=>uV*1000, V=>mV*1000, kV=>V*1000);
+  Voltage : type aadlinteger -10000 kV .. 10000 kV units Physical_Properties::Voltage_Units;
+  
+  Fluid_Volume_Units : type units (pl, ml=>pl*1000, liter=>ml*1000);
+  Fluid_Volume : type aadlinteger 0 liter .. 10000 liter units Physical_Properties::Fluid_Volume_Units; 
+  
+  Fluid_Flow_Rate_Units: type units (plPerMinute, mlPerMinute=>plPerMinute*1000, mlPerHour=>mlPerMinute*60, 
+      literPerHour=>mlPerHour*1000, literPerDay=>literPerHour*24);
+  Fluid_Flow_Rate : type aadlinteger 0 mlPerHour .. 10000 mlPerHour units Physical_Properties::Fluid_Flow_Rate_Units; 
+  
+  Temperature_Units : type units (r,F=>r*5,C=>r*9);
+  Fahrenheit : type aadlreal units Physical_Properties::Temperature_Units;
+  
+  
+end Physical_Properties;
+ 

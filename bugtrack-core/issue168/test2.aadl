@@ -1,0 +1,33 @@
+package test2
+
+
+public
+
+with SEI;
+
+system s1
+features
+ f : out event port;
+ properties
+ SEI::SecurityLevel => 1;
+end s1;
+
+system s2
+features
+ f : in event port;
+end s2;
+
+system s
+end s;
+
+system implementation s.i
+subcomponents
+	s1 : system s1;
+	s2 : system s2;
+connections
+--	port s1.f -> s2.f;
+myconn:	port s1.f -> s2.f {Actual_Latency => 100 ms .. 200 ms;};
+end s.i;
+
+
+end test2;

@@ -1,0 +1,37 @@
+package issue222
+public
+with Base_Types;
+with Data_Model;
+
+subprogram job
+features
+param : requires data access Base_Types::Integer;
+end job;
+
+thread th end th;
+thread implementation th.impl
+subcomponents
+constantValue: data Base_Types::Integer
+{
+Data_Model::Initial_Value => ("3");
+};
+calls
+seq: { call1: subprogram job; };
+connections
+data access constantValue -> call1.param;
+end th.impl;
+
+process proc end proc;
+
+process implementation proc.impl
+subcomponents
+th: thread th.impl;
+end proc.impl;
+
+system root end root;
+system implementation root.impl
+subcomponents
+proc: process proc.impl;
+end root.impl;
+
+end issue222;

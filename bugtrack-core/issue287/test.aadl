@@ -1,0 +1,9 @@
+package issue287
+public
+with issue287ps;
+bus foobar
+properties
+	issue287ps::bla => 100 bitsps;
+end foobar;
+
+end issue287;

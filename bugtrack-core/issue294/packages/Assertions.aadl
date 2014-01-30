@@ -1,0 +1,131 @@
+--Assertions.aadl
+--collected Assertions for isolette example
+
+package Assertions
+  public
+  
+annex Assertion  -- define labels for Assertions used elsewhere 
+{**
+<< --define monitored and controlled variables
+  def CURRENT_TEMP --current temperature of air in isolette
+  and def LOWER_DESIRED_TEMP  --desired temperature, lower-bound
+  and def UPPER_DESIRED_TEMP  --desired temperature, upper-bound
+  and def LOWER_ALARM_TEMP  --alarm temperature, lower-bound
+  and def UPPER_ALARM_TEMP  --alarm temperature, upper-bound
+  and def ALARM_CONTROL  --alarm signal to operator interface (On Off)
+  >>
+
+--essential safety property  
+--alarm when out of alarm range
+--SR-2: The Isolette shall include an independent monitor function that 
+-- activates an Alarm within a maximum of 5 seconds whenever:
+-- the Current Temperature falls below or rises above the Alarm Temperature Range,
+-- the Current Temperature or the Alarm Temperature Range is flagged as invalid, 
+-- or an internal failure has been detected in the monitor function.
+
+--temp out of alarm range, produced by thread manage_alaem_ma
+<<TEMP_OUT_OF_RANGE:x+=>
+  On ->  REQMA2() or --out of range
+         REQMA5() or  --monitor failed
+         (REQMA3() and alarm_control^-1=On),  --hysteresis, previously alarm
+  Off -> REQMA1() or --initialization
+         REQMA4() or --in range
+         (REQMA3() and alarm_control^-1=Off)  --hysteresis, previously no alarm
+	 >> 		
+--REQ-MA-1: If the Monitor Mode is INIT, the Alarm Control shall be set to Off.
+  <<REQMA1: :MONITOR_MODE(INIT)>>
+--REQ-MA-2: If the Monitor Mode is NORMAL and the Current Temperature is less 
+-- than the Lower Alarm Temperature or greater than the Upper Alarm Temperature, 
+-- the Alarm Control shall be set to On.
+  <<REQMA2: :MONITOR_MODE(NORMAL) and 
+    ((CURRENT_TEMP < LOWER_ALARM_TEMP) or (CURRENT_TEMP > UPPER_ALARM_TEMP))>>
+--REQ-MA-3: If the Monitor Mode is NORMAL and the Current Temperature is greater 
+--  than or equal to the Lower Alarm Temperature and less than the Lower Alarm 
+--  Temperature +0.5°, or the Current Temperature is greater than the Upper 
+--  Alarm Temperature -0.5° and less than or equal to the Upper Alarm Temperature, 
+--  the value of the Alarm Control shall not be changed.
+  <<REQMA3: :MONITOR_MODE(NORMAL) and 
+    ((CURRENT_TEMP in LOWER_ALARM_TEMP ., LOWER_ALARM_TEMP+0.5) or 
+    	(CURRENT_TEMP in UPPER_ALARM_TEMP-0.5 ,. UPPER_ALARM_TEMP))>>
+--REQ-MA-4: If the Monitor Mode is NORMAL and the value of the Current 
+--  Temperature is greater than or equal to the Lower Alarm Temperature +0.5° 
+--  and less than or equal to the Upper Alarm Temperature -0.5°, the Alarm 
+--  Control shall be set to Off.
+  <<REQMA4: :MONITOR_MODE(NORMAL) and 
+    (CURRENT_TEMP in LOWER_ALARM_TEMP+0.5 .. UPPER_ALARM_TEMP-0.5)>>
+--REQ-MA-5: If the Monitor Mode is FAILED, the Alarm Control shall be set to On.
+  <<REQMA5: :MONITOR_MODE(FAILED)>>
+
+--monitor status Table A-15
+<<MONITOR_STATUS: :=(MONITOR_OK() ??On:Failed)>>  --return type of Iso_Variables::status
+<<MONITOR_OK: : not(MONITOR_INTERFACE_FAILURE() or INTERNAL_FAILURE())
+  and current_temperature_status=Valid >>
+
+--monitor mode
+--Assertion-function returning monitor_mode enumeration type IDs
+--  INIT -> sooner than 1.0 second since start_time
+--  NORMAL -> all okay, and later than 1.0 second since start_time
+--  FAILED -> not all okay, and later than 1.0 second since start_time)
+<<MONITOR_MODE:x+=>  --return type of Iso_Variables::monitor_mode
+  INIT   -> INI(),
+  NORMAL -> MONITOR_OK() and RUN(),  
+  FAILED -> not MONITOR_OK() and RUN() >>
+
+--before timeout, initializing
+<<INI: :(now-start_time) < Iso_Properties::Initialization_Timeout>>
+--after timeout, running
+<<RUN: :(now-start_time) >= Iso_Properties::Initialization_Timeout>>
+
+--essential efficacy property
+--heat control is On when temp is at most Lower Desired Temperature
+--  and temp is less than Upper Desired Temperature and it was On previously; Off o.w.
+-- SR-1: The Isolette shall include an independent regulator function that 
+--   maintains the Current Temperature inside the Isolette within the
+--   Desired Temperature Range.
+
+--A.5.1.3 Manage Heat Source Function
+<<HEAT_CONTROL:x+=>
+  On ->  REQMHS2() or --below desired range
+         (REQMHS4() and heat_control^-1=On),  --hysteresis, previously alarm
+  Off -> REQMHS1() or --initialization
+         REQMHS3() or --above desired range
+         REQMHS5() or --failed
+         (REQMHS4() and heat_control^-1=Off)  --hysteresis, previously no alarm
+	 >> 		
+--• REQ-MHS-1: If the Regulator Mode is INIT, the Heat Control shall be set to Off. 
+<<REQMHS1: :REGULATOR_MODE(Init)>>
+--• REQ-MHS-2: If the Regulator Mode is NORMAL and the Current Temperature is 
+--  *at most* the Lower Desired Temperature, the Heat Control shall be set to On.
+--this is different from flawed original requirements that forced the temperature out-or-range to turn On or Off the heat source
+<<REQMHS2: :CURRENT_TEMP <= LOWER_DESIRED_TEMP>>
+--• REQ-MHS-3: If the Regulator Mode is NORMAL and the Current Temperature is 
+--  *at least* the Upper Desired Temperature, the Heat Control shall be set to Off.
+--this is different from flawed original requirements that forced the temperature out-or-range to turn On or Off the heat source
+<<REQMHS3: :CURRENT_TEMP >= UPPER_DESIRED_TEMP>>
+--• REQ-MHS-4: If the Regulator Mode is NORMAL and the Current Temperature is 
+--  greater than the Lower Desired Temperature and less than the Upper Desired Temperature, 
+--  the value of the Heat Control shall not be changed. 
+--this is different from flawed original requirements that forced the temperature out-or-range to turn On or Off the heat source
+<<REQMHS4: :CURRENT_TEMP in LOWER_DESIRED_TEMP ,, UPPER_DESIRED_TEMP>> --note open interval ,,
+--• REQ-MHS-5: If the Regulator Mode is FAILED, the Heat Control shall be set to Off.
+<<REQMHS5: :REGULATOR_MODE(FAILED)>>  
+
+			
+--regulator status Table A-10
+<<REGULATOR_STATUS:x+=>  --enumeration value
+  Init   -> INI(), 
+  On     -> (REGULATOR_OK() and RUN()),
+  Failed -> (not REGULATOR_OK() and RUN())>>  --return type of Iso_Variables::status
+<<REGULATOR_OK: : not(REGULATOR_INTERFACE_FAILURE() or INTERNAL_FAILURE())
+  and current_temperature_status=Valid >>
+  
+--regulator mode Figure A-4. Regulate Temperature Mode Transition Diagram
+<<REGULATOR_MODE:x+=>
+  Init   -> INI(),
+  NORMAL -> REGULATOR_OK() and RUN(),  
+  FAILED -> not REGULATOR_OK() and RUN() >>
+
+**};  --end of Assertion annex library
+
+
+end Assertions;

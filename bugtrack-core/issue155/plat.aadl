@@ -1,0 +1,34 @@
+
+package bug155Plat
+public
+with bug155Logi;
+
+bus BBusPlat extends bug155Logi::BBusLog
+end BBusPlat;
+
+bus implementation BBusPlat.Imp
+end BBusPlat.Imp;
+
+system SysComp
+features
+    p : requires bus access BBusPlat.Imp;   
+end SysComp;
+
+system implementation SysComp.Imp
+end SysComp.Imp;
+ 
+system SysPlat extends bug155Logi::SysLog
+features
+    p : refined to requires bus access BBusPlat.Imp; 
+    q : requires bus access BBusPlat.Imp;       
+end SysPlat;
+  
+system implementation SysPlat.Imp extends bug155Logi::SysLog.Imp
+subcomponents
+    c : system SysComp.Imp;
+connections   
+    bus access p <-> c.p;                -- Both p and c.p have classifier BBusPlat.Imp
+end SysPlat.Imp;  
+
+end bug155Plat;
+

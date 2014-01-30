@@ -1,0 +1,84 @@
+package test_package_refined
+public
+bus Test_Bus
+end Test_Bus;
+
+    bus implementation Test_Bus.impl
+    end Test_Bus.impl;
+
+    processor Test_Proc
+        features
+            bus_access: requires bus access Test_Bus;
+    end Test_Proc;
+ 
+    processor implementation Test_Proc.impl
+    end Test_Proc.impl;
+
+    bus Test_Bus2 extends Test_Bus
+    end Test_Bus2;
+
+    bus implementation Test_Bus2.impl extends Test_Bus.impl
+    end Test_Bus2.impl;
+
+    processor Test_Proc2 extends Test_Proc 
+        features
+            bus_access: refined to requires bus access Test_Bus2;
+    end Test_Proc2;
+
+    processor implementation Test_Proc2.impl extends Test_Proc.impl 
+    end Test_Proc2.impl;
+ 
+    system Test_System
+    end Test_System;
+
+    system implementation Test_System.impl1
+        subcomponents
+            -- Implementations declared for the type of both the bus and the processsor subcomponents.
+            bus_comp: bus Test_Bus2.impl;
+            proc: processor Test_Proc2.impl;
+        connections
+            -- A warning message is generated saying the types do not match
+            conn1: bus access bus_comp -> proc.bus_access;
+    end Test_System.impl1; 
+
+    system implementation Test_System.impl2
+        subcomponents
+            -- Implementation declared for the type of the processsor subcomponent only.
+            bus_comp: bus Test_Bus2;
+            proc: processor Test_Proc2.impl;
+        connections 
+            -- Error message generated saying the classifiers are incompatibles
+            conn1: bus access bus_comp -> proc.bus_access;  
+    end Test_System.impl2; 
+   
+    system implementation Test_System.impl3
+        subcomponents
+            -- Implementation declared for the type of the bus subcomponent only.
+            bus_comp: bus Test_Bus2.impl;
+            proc: processor Test_Proc2;
+        connections
+            -- No error
+            conn1: bus access bus_comp -> proc.bus_access;
+    end Test_System.impl3;
+
+    system implementation Test_System.impl4
+        subcomponents
+            -- No implementation declared for the type of the bus and processor subcomponents.
+            bus_comp: bus Test_Bus2;
+            proc: processor Test_Proc2;
+        connections 
+            -- No error
+            conn1: bus access bus_comp -> proc.bus_access;
+    end Test_System.impl4;
+
+    system implementation Test_System.impl5
+        subcomponents
+            -- Not extended subcomponents.
+            bus_comp: bus Test_Bus.impl;
+            proc: processor Test_Proc.impl;
+        connections
+            -- No error
+            conn1: bus access bus_comp -> proc.bus_access;
+    end Test_System.impl5;
+
+end test_package_refined;

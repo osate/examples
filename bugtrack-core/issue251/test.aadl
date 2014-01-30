@@ -1,0 +1,359 @@
+package test_ravenscar_refined
+
+public
+with Data_Model,Base_Types,ravenscar_runtime;
+-- Data -------
+
+data Global_Queue_proc_the_receiver extends ravenscar_runtime::Global_Queue
+end Global_Queue_proc_the_receiver;
+
+data implementation Global_Queue_proc_the_receiver.impl
+subcomponents
+p1_queue: data base_types::Integer;
+end Global_Queue_proc_the_receiver.impl;
+
+data Global_Queue_proc_the_receiver_2 extends ravenscar_runtime::Global_Queue
+end Global_Queue_proc_the_receiver_2;
+
+data implementation Global_Queue_proc_the_receiver_2.impl
+subcomponents
+p2_queue: data base_types::Integer;
+end Global_Queue_proc_the_receiver_2.impl;
+-- Processor --
+
+processor cpurm
+end cpurm;
+
+processor implementation cpurm.impl
+end cpurm.impl;
+-- Processes --
+
+process proc
+end proc;
+
+process implementation proc.impl
+subcomponents
+globalQueue_the_receiver : data Global_Queue_proc_the_receiver.impl;
+globalQueue_the_receiver_2 : data Global_Queue_proc_the_receiver_2;
+e_globalVariable: data Base_Types::Integer;
+e_globalVariable_2: data Base_Types::Integer;
+
+the_sender: thread proc_the_sender.impl {
+Compute_Entrypoint_Call_Sequence => reference(call_sequence_sender);
+Dispatch_Protocol => Periodic;
+Compute_Execution_time => 0 ms .. 1 Ms;
+Priority => 5;
+Period => 100 Ms;
+Deadline => 100 Ms;
+Source_Data_Size => 40000 Bytes;
+Source_Stack_Size => 40000 Bytes;
+Source_Code_Size => 40 Bytes;
+};
+
+the_sender_2: thread proc_the_sender_2.impl {
+Compute_Entrypoint_Call_Sequence => reference(call_sequence_sender_2);
+
+Dispatch_Protocol => Periodic;
+Compute_Execution_time => 0 ms .. 1 Ms;
+Priority => 7;
+Period => 300 Ms;
+Deadline => 300 Ms;
+Source_Data_Size => 40000 Bytes;
+Source_Stack_Size => 40000 Bytes;
+Source_Code_Size => 40 Bytes;
+};
+
+the_receiver: thread proc_the_receiver.impl {
+Compute_Entrypoint_Call_Sequence => reference(call_sequence_receiver);
+Dispatch_Protocol => Sporadic;
+
+Compute_Execution_time => 0 ms .. 1 Ms;
+Priority => 10;
+Period => 200 Ms;
+Deadline => 200 Ms;
+Source_Data_Size => 40000 Bytes;
+Source_Stack_Size => 40000 Bytes;
+Source_Code_Size => 40 Bytes;
+};
+
+the_receiver_2: thread proc_the_receiver_2.impl {
+Compute_Entrypoint_Call_Sequence => reference(call_sequence_receiver_2);
+Dispatch_Protocol => Sporadic;
+
+Compute_Execution_time => 0 ms .. 1 Ms;
+Priority => 15;
+Period => 400 Ms;
+Deadline => 400 Ms;
+Source_Data_Size => 40000 Bytes;
+Source_Stack_Size => 40000 Bytes;
+Source_Code_Size => 40 Bytes;
+};
+
+connections
+-- First global Queue
+
+	Id_instance_to_the_sender_p1 : data access the_sender.p1 -> globalQueue_the_receiver.p1_queue;
+	Id_instance_to_the_sender2_p2_3 : data access the_sender_2.p2_3 -> globalQueue_the_receiver.p1_queue;
+	Id_instance_to_the_receiver_p3 : data access the_receiver.P3 -> globalQueue_the_receiver.p1_queue;
+	-- second global Queue
+	Id_instance_to_the_sender2_p2_4 : data access the_sender_2.p2_4 -> globalQueue_the_receiver_2.p2_queue;
+	Id_instance_to_the_receiver_p3_2 : data access the_receiver_2.P4 -> globalQueue_the_receiver_2.p2_queue;
+-- Event Receiver
+--Id_instance_to_the_sender_event_E1 : access the_sender.E1 -> e_globalVariable;
+--Id_instance_to_the_sender_2_event_E2_3 : access the_sender_2.E2_3 -> e_globalVariable;
+--Id_instance_to_the_receiver_event_E3 : access the_receiver.E3 -> e_globalVariable;
+-- Event Receiver 2
+--Id_instance_to_the_sender_2_event_E2_4 : access the_sender_2.E2_4 -> e_globalVariable_2;
+--Id_instance_to_the_receiver_2_event_E4 : access the_receiver_2.E4 -> e_globalVariable_2;
+
+end proc.impl;
+
+memory mem
+end mem;
+
+memory implementation mem.impl
+end mem.impl;
+-- System ---------
+
+system rma
+end rma;
+
+system implementation rma.impl
+subcomponents
+mem: memory mem.impl {
+Byte_Count => 80000;
+};
+proc_a : process proc.impl;
+cpu_rm : processor cpurm.impl;
+properties
+Actual_Processor_Binding => (reference (cpu_rm)) applies to proc_a;
+Actual_memory_binding => (reference (mem)) applies to proc_a;
+Actual_Processor_Binding => (reference (cpu_rm)) applies to proc_a.the_sender;
+Actual_memory_binding => (reference (mem)) applies to proc_a.the_sender;
+Actual_Processor_Binding => (reference (cpu_rm)) applies to proc_a.the_sender_2;
+Actual_memory_binding => (reference (mem)) applies to proc_a.the_sender_2;
+Actual_Processor_Binding => (reference (cpu_rm)) applies to proc_a.the_receiver;
+Actual_memory_binding => (reference (mem)) applies to proc_a.the_receiver;
+Actual_Processor_Binding => (reference (cpu_rm)) applies to proc_a.the_receiver_2;
+Actual_memory_binding => (reference (mem)) applies to proc_a.the_receiver_2;
+end rma.impl;
+-- Subprograms --
+
+subprogram proc_the_sendercall_seq
+
+features
+p1: requires data access Base_Types::Integer;
+globalQueue : requires data access ravenscar_runtime::Global_Queue;
+end proc_the_sendercall_seq;
+
+-- subprogram Send_Output_P1
+-- extends ravenscar_runtime::Send_Output
+-- features
+-- Port_Type: refined to in out parameter ravenscar_runtime::Port_Type;
+-- end Send_Output_P1;
+-- Port_Type : requires data access data_type;
+-- Time_Stamp : in parameter Time_Stamp;
+
+subprogram Store_Out_p1 extends ravenscar_runtime::Store_Out
+features
+Port_Type : refined to requires data access Base_Types::Integer;
+-- Time_Stamp : refined to in parameter ravenscar_runtime::Time_Stamp;
+
+end Store_Out_p1;
+
+subprogram implementation proc_the_sendercall_seq.impl
+subcomponents
+Time_Stamp : data ravenscar_runtime::Time_Stamp;
+Entity_Type : data ravenscar_runtime::Entity_Type;
+annex behavior_specification {**
+-- states
+BA_entrypoint_call_seq : initial final state ;
+transitions
+BA_entrypoint_call_seq -[]-> BA_entrypoint_call_seq
+{
+rma::sender_spg ! (p1);
+globalQueue.Store_Out(p1,Time_Stamp);
+Send_Output_P1 ! (p1);
+Periodic_Wait_P ! (p1);
+
+};
+
+**};
+end proc_the_sendercall_seq.impl;
+
+subprogram proc_the_sender_2_call_seq
+features
+p2_3: requires data access Base_Types::Integer;
+p2_4: requires data access Base_Types::Integer;
+end proc_the_sender_2_call_seq;
+
+subprogram implementation proc_the_sender_2_call_seq.impl
+subcomponents
+Time_Stamp : data ravenscar_runtime::Time_Stamp;
+Entity_Type : data ravenscar_runtime::Entity_Type;
+annex behavior_specification {**
+-- states
+BA_entrypoint_call_seq : initial final state ;
+transitions
+
+BA_entrypoint_call_seq -[]-> BA_entrypoint_call_seq
+{
+rma::sender_spg_2 ! (p2_3);
+rma::sender_spg_2 ! (p2_4);
+
+globalQueue.Store_Out(p2_3,Time_Stamp); --mettre la valeur du port p2 dans le tableau Global_q
+Send_Output_P2_3 ! (p2_3); -- envoie de la valeur en sortie 'OUT'
+Periodic_Wait_P ! (p2_3);    
+
+globalQueue.Store_Out_P1(p2_4,Time_Stamp); --mettre la valeur du port p2 dans le tableau Global_q
+Send_Output_P2_4 ! (p2_4); -- envoie de la valeur en sortie 'OUT'
+Periodic_Wait_P ! (p2_4);
+
+};
+**};
+
+end proc_the_sender_2_call_seq.impl;
+
+subprogram proc_the_receivercall
+features
+p3: requires data access Base_Types::Integer;
+end proc_the_receivercall;
+
+subprogram implementation proc_the_receivercall.impl
+-- subcomponents
+annex behavior_specification {**
+-- states
+BA_entrypoint_call : initial final state ;
+transitions
+
+BA_entrypoint_call -[]-> BA_entrypoint_call {
+globalQueue.Wait_Event(p3); -- Lecture d'un évenement,
+globalQueue.Next_Value(p3) ; -- dequeue + passer a la prochaine valeur
+rma::receiver_spg ! (globalQueue.Read_Out(p3);)} ;
+Send_Output_P2_3 ! (p2_3); -- envoie de la valeur en sortie 'OUT'
+Sporadic_Wait_P ! (p2_3);
+**};
+end proc_the_receivercall.impl;
+
+subprogram proc_the_receiver_2_call
+features
+p4: requires data access Base_Types::Integer;
+end proc_the_receiver_2_call;
+
+subprogram implementation proc_the_receiver_2_call.impl
+-- subcomponents
+annex behavior_specification {**
+-- states
+BA_entrypoint_call : initial final state ;
+transitions
+
+BA_entrypoint_call -[]-> BA_entrypoint_call {
+globalQueue_2.Wait_Event(p4); -- Lecture d'un évenement,
+globalQueue_2.Next_Value(p4) ; -- Dequeue one value from the IN port queue.
+rma::receiver_spg ! (globalQueue_2.Read_Out(p4);)} ;
+Send_Output_P2_4 ! (p2_4); -- envoie de la valeur en sortie 'OUT'
+Sporadic_Wait_P ! (p2_4);
+**};
+end proc_the_receiver_2_call.impl;
+----- subprograms ------
+
+subprogram Send_Output_P1
+extends ravenscar_runtime::Send_Output
+features
+Port_Type: refined to in out parameter ravenscar_runtime::Port_Type;
+end Send_Output_P1;
+
+subprogram Send_Output_P2_3
+extends ravenscar_runtime::Send_Output
+features
+Port_Type: refined to in out parameter ravenscar_runtime::Port_Type;
+end Send_Output_P2_3;
+
+subprogram Send_Output_P2_4
+extends ravenscar_runtime::Send_Output
+features
+Port_Type: refined to in out parameter ravenscar_runtime::Port_Type;
+end Send_Output_P2_4;
+
+subprogram Periodic_Wait_P
+extends ravenscar_runtime::Periodic_Wait
+features
+Port_Type: refined to out parameter ravenscar_runtime::Port_Type;
+end Periodic_Wait_P;
+
+subprogram Sporadic_Wait_P
+extends ravenscar_runtime::Sporadic_Wait
+features
+Port_Type: refined to out parameter ravenscar_runtime::Port_Type;
+end Sporadic_Wait_P;
+-- Threads --
+
+thread proc_the_sender
+features
+p1 : requires data access Base_Types::Integer;
+E1 : out event port {Queue_Size => 1;};
+end proc_the_sender;
+
+thread proc_the_sender_2
+features
+p2_3 : requires data access Base_Types::Integer;
+p2_4 : requires data access Base_Types::Integer;
+E2_3 : out event port {Queue_Size => 1;};
+E2_4 : out event port {Queue_Size => 1;};
+end proc_the_sender_2;
+
+thread proc_the_receiver
+features
+p3 : requires data access Base_Types::Integer;
+E3 : in event port {Queue_Size => 1;};
+end proc_the_receiver;
+
+thread proc_the_receiver_2
+features
+p4 : requires data access Base_Types::Integer;
+E4 : in event port {Queue_Size => 1;};
+end proc_the_receiver_2;
+-- Threads Impl--
+
+thread implementation proc_the_sender.impl
+calls
+call_sequence_sender: {
+call_entrypoint: subprogram proc_the_sendercall_seq.impl;
+}
+;
+connections
+p1_accessCnx_call_seq: data access p1 -> call_entrypoint.p1;
+end proc_the_sender.impl;
+
+thread implementation proc_the_sender_2.impl
+calls
+call_sequence_sender_2: {
+call_entrypoint: subprogram proc_the_sender_2_call_seq.impl;
+}
+; 
+connections
+p2_3_accessCnx_call_seq: data access p2_3 -> call_entrypoint.p2_3;
+p2_4_accessCnx_call_seq: data access p2_4 -> call_entrypoint.p2_4;
+end proc_the_sender_2.impl;
+
+thread implementation proc_the_receiver.impl
+calls
+call_sequence_receiver: {
+call_entrypoint: subprogram proc_the_receivercall.impl;
+}
+;
+connections
+p3_accessCnx_call: data access p3 -> call_entrypoint.p3;
+end proc_the_receiver.impl;
+
+thread implementation proc_the_receiver_2.impl
+calls
+call_sequence_receiver_2: {
+call_entrypoint: subprogram proc_the_receiver_2_call.impl;
+}
+;
+connections
+p4_accessCnx_call: data access p4 -> call_entrypoint.p4;
+end proc_the_receiver_2.impl;
+
+end test_ravenscar_refined;

@@ -1,0 +1,27 @@
+package issue185
+public
+-- Comment out the declarations marked "not allowed"
+-- to get an error-free specification.
+
+feature group Wrap_Port
+features
+   p : out data port;
+end Wrap_Port;
+
+subprogram group SubGroup
+features
+    pg : feature group Wrap_Port; -- allowed 
+--    p : out data port; -- not allowed
+end SubGroup;
+
+feature group Wrap_Array
+features
+   b : requires bus access [];
+end Wrap_Array;
+
+system Sys
+features
+    bg : feature group Wrap_Array; -- allowed
+--        b : requires bus access []; -- not allowed
+end Sys;
+end issue185 ;

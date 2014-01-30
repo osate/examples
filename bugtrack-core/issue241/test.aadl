@@ -1,0 +1,3 @@
+property set test_ps is
+    Test : aadlInteger applies to (package);
+end test_ps;

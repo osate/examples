@@ -1,0 +1,29 @@
+package issue166
+public
+
+-- access feature is paramterized by subprogram classifier
+feature group FG 
+prototypes sub : subprogram; 
+features mysub : requires subprogram access sub; 
+end FG; 
+
+-- prototype is bound to an actual subprogram classifier
+feature group FGext extends FG(sub => subprogram fcn)
+end FGext;
+
+subprogram fcn
+end fcn;
+
+-- feature group that takes a feature as prototype
+feature group FGfeature
+prototypes
+	fea : feature;
+features
+	pin: feature fea;
+end FGfeature;
+
+-- binding of prototype to an actual port
+feature group FGfeatureext extends FGfeature(fea =>  in event port)
+end FGfeatureext;
+
+end issue166 ;

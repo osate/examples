@@ -1,0 +1,102 @@
+package issue168
+public
+with traceability;
+system topSystem
+end topSystem;
+
+system implementation topSystem.impl
+subcomponents
+software: system SWsystem.impl;
+end topSystem.impl;
+
+system SWsystem
+end SWsystem;
+
+system implementation SWsystem.impl 
+subcomponents
+application1 : system App1.impl;
+application2 : system App2.impl {
+traceability::RenamesAndId => ("111", "111"); };
+connections
+
+conn1: port application1.port1 -> application2.port2 { 
+	Actual_Latency => 100 ms .. 200 ms;
+	traceability::RenamesAndId => ("222", "222");
+};
+
+properties
+traceability::RenamesAndId => ("333", "333");
+end SWsystem.impl;
+
+system App1
+features
+port1: in out event data port datatypeA {traceability::RenamesAndId => ("222", "222");};
+end App1;
+
+system implementation App1.impl
+subcomponents
+main_process: process App1_process.impl;
+connections
+c15: port main_process.port1 -> port1;
+c16: port port1 -> main_process.port1;
+end App1.impl;
+
+process App1_process
+features
+port1: in out event data port datatypeA;
+end App1_process;
+
+process implementation App1_process.impl
+subcomponents
+subThread: thread App1_thread.impl;
+connections
+c15: port subThread.port1 -> port1;
+c16: port port1 -> subThread.port1;
+end App1_process.impl;
+
+thread App1_thread
+features
+port1: in out event data port datatypeA;
+end App1_thread;
+
+thread implementation App1_thread.impl
+end App1_thread.impl;
+
+system App2
+features
+port2: in out event data port datatypeA;
+end App2;
+
+system implementation App2.impl
+subcomponents
+main_process: process App2_process.impl;
+connections
+c126: port main_process.port2 -> port2;
+c127: port port2 -> main_process.port2;
+end App2.impl;
+
+process App2_process
+features
+port2: in out event data port datatypeA;
+end App2_process;
+
+process implementation App2_process.impl
+subcomponents
+subThread: thread App2_thread.impl;
+connections
+c126: port subThread.port2 -> port2;
+c127: port port2 -> subThread.port2;
+end App2_process.impl;
+
+thread App2_thread
+features
+port2: in out event data port datatypeA;
+end App2_thread;
+
+thread implementation App2_thread.impl
+end App2_thread.impl;
+
+data datatypeA
+end datatypeA;
+
+end issue168;

@@ -1,0 +1,60 @@
+package issue316
+public
+
+bus MemoryFabric
+end MemoryFabric;
+
+bus implementation MemoryFabric.Nonblocking
+end MemoryFabric.Nonblocking;
+
+bus Cable
+end Cable;
+
+bus implementation Cable.MBS100
+properties
+    Transmission_Type => push;
+    -- 100 mbps = 1 bit per 10 ns
+    -- Fixed is 84 octets frame plus gap, 84 * 8 * 10ns = 6720 ns
+    Transmission_Time => [Fixed => 6720 ns .. 6720 ns; PerByte => 80 ns .. 80 ns;];     
+end Cable.MBS100;
+
+bus Controller
+prototypes
+    cableType: bus Cable;
+    busType: bus MemoryFabric;
+features
+    p0: requires bus access cableType;
+    p1: requires bus access cableType;  
+    memBus: requires bus access busType;    
+end Controller;
+
+bus implementation Controller.Imp
+end Controller.Imp;
+
+bus implementation Controller.MBS100 
+extends Controller.Imp (cableType => bus Cable.MBS100, busType => bus MemoryFabric.Nonblocking)
+properties
+    Transmission_Type => push;
+    -- Assumes a fixed upper bound on the time required to place an incoming
+    -- message from a processor onto the appropriate outgoing port queue.
+    Transmission_Time => [Fixed => 672 ns .. 672 ns; PerByte => 0 ns .. 0 ns;];     
+end Controller.MBS100;
+
+system FACE653
+features
+    p0: requires bus access Cable.MBS100;
+    p1: requires bus access Cable.MBS100;       
+end FACE653;
+
+system implementation FACE653.DualCore
+subcomponents
+    controller: bus Controller.MBS100;      
+    fabric: bus MemoryFabric.Nonblocking;
+connections
+    -- Why do these give warnings that the classifiers are missing?
+    eb0: bus access controller.p0 <-> p0;
+    eb1: bus access controller.p1 <-> p1;       
+    mb5: bus access fabric <-> controller.memBus;               
+end FACE653.DualCore;   
+
+end issue316;

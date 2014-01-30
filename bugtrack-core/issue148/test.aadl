@@ -1,0 +1,6 @@
+property set bug148props is
+
+
+   Base_Types: list of classifier(data) applies to (all);
+
+end bug148props;

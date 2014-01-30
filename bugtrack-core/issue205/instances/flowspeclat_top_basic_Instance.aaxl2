@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ASCII"?>
+<instance:SystemInstance xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aadl2="http://aadl.info/AADL/2.0" xmlns:instance="http://aadl.info/AADL/2.0/instance" xmi:id="_NlF1oItXEeKpLf3PyL9zvw" name="top_basic_Instance" category="system">
+  <componentInstance xmi:id="_NlO_kItXEeKpLf3PyL9zvw" name="mysrc" category="system">
+    <featureInstance xmi:id="_NlO_kYtXEeKpLf3PyL9zvw" name="outp" srcConnectionInstance="_NlO_l4tXEeKpLf3PyL9zvw" dstFlowSpec="_NlO_kotXEeKpLf3PyL9zvw" direction="out">
+      <feature xsi:type="aadl2:DataPort" href="../flowspeclat.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedDataPort.0"/>
+    </featureInstance>
+    <flowSpecification xmi:id="_NlO_kotXEeKpLf3PyL9zvw" name="fs1" destination="_NlO_kYtXEeKpLf3PyL9zvw">
+      <ownedPropertyAssociation xmi:id="_Nlh6gItXEeKpLf3PyL9zvw">
+        <property href="../../../Plugin_Resources/Communication_Properties.aadl#//@ownedProperty.16"/>
+        <ownedValue xmi:id="_Nlh6gYtXEeKpLf3PyL9zvw">
+          <ownedValue xsi:type="aadl2:RangeValue" xmi:id="_Nlh6gotXEeKpLf3PyL9zvw">
+            <minimum xsi:type="aadl2:IntegerLiteral" xmi:id="_Nlh6g4tXEeKpLf3PyL9zvw" value="5">
+              <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.13/@ownedLiteral.3"/>
+            </minimum>
+            <maximum xsi:type="aadl2:IntegerLiteral" xmi:id="_Nlh6hItXEeKpLf3PyL9zvw" value="5">
+              <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.13/@ownedLiteral.3"/>
+            </maximum>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <flowSpecification href="../flowspeclat.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedFlowSpecification.0"/>
+    </flowSpecification>
+    <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../flowspeclat.aadl#//@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.0"/>
+    <index>0</index>
+  </componentInstance>
+  <componentInstance xmi:id="_NlO_k4tXEeKpLf3PyL9zvw" name="mysink" category="system">
+    <featureInstance xmi:id="_NlO_lItXEeKpLf3PyL9zvw" name="inp" dstConnectionInstance="_NlO_l4tXEeKpLf3PyL9zvw" srcFlowSpec="_NlO_lYtXEeKpLf3PyL9zvw">
+      <feature xsi:type="aadl2:DataPort" href="../flowspeclat.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedDataPort.0"/>
+    </featureInstance>
+    <flowSpecification xmi:id="_NlO_lYtXEeKpLf3PyL9zvw" name="fs1" source="_NlO_lItXEeKpLf3PyL9zvw">
+      <flowSpecification href="../flowspeclat.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedFlowSpecification.0"/>
+    </flowSpecification>
+    <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../flowspeclat.aadl#//@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.1"/>
+    <index>0</index>
+  </componentInstance>
+  <connectionInstance xmi:id="_NlO_l4tXEeKpLf3PyL9zvw" name="mysrc.outp -> mysink.inp" kind="portConnection" destination="_NlO_lItXEeKpLf3PyL9zvw" source="_NlO_kYtXEeKpLf3PyL9zvw">
+    <connectionReference xmi:id="_NlO_mItXEeKpLf3PyL9zvw" context="_NlF1oItXEeKpLf3PyL9zvw" source="_NlO_kYtXEeKpLf3PyL9zvw" destination="_NlO_lItXEeKpLf3PyL9zvw">
+      <connection xsi:type="aadl2:PortConnection" href="../flowspeclat.aadl#//@ownedPublicSection/@ownedClassifier.1/@ownedPortConnection.0"/>
+    </connectionReference>
+  </connectionInstance>
+  <systemOperationMode xmi:id="_NlO_lotXEeKpLf3PyL9zvw" name="No Modes"/>
+  <systemImplementation href="../flowspeclat.aadl#//@ownedPublicSection/@ownedClassifier.1"/>
+</instance:SystemInstance>

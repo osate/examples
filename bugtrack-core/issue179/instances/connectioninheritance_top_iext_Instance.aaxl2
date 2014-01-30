@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="ASCII"?>
+<instance:SystemInstance xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aadl2="http://aadl.info/AADL/2.0" xmlns:instance="http://aadl.info/AADL/2.0/instance" xmi:id="_GtomgHUaEeKvZPpkrPtJ6A" name="top_iext_Instance" category="system">
+  <featureInstance xmi:id="_GuYNYnUaEeKvZPpkrPtJ6A" name="tin">
+    <ownedPropertyAssociation xmi:id="_GvRlQHUaEeKvZPpkrPtJ6A">
+      <property href="../../../Plugin_Resources/Modeling_Properties.aadl#//@ownedProperty.2"/>
+      <ownedValue xmi:id="_GvRlQXUaEeKvZPpkrPtJ6A">
+        <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_GvRlQnUaEeKvZPpkrPtJ6A">
+          <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/Modeling_Properties.aadl#//@ownedProperty.2/@ownedPropertyType/@ownedLiteral.1"/>
+        </ownedValue>
+      </ownedValue>
+    </ownedPropertyAssociation>
+    <feature xsi:type="aadl2:DataPort" href="../connectioninheritance.aadl#//@ownedPublicSection/@ownedClassifier.5/@ownedDataPort.0"/>
+  </featureInstance>
+  <componentInstance xmi:id="_GuPDcHUaEeKvZPpkrPtJ6A" name="sys1" category="system">
+    <featureInstance xmi:id="_GuPDcXUaEeKvZPpkrPtJ6A" name="pin">
+      <ownedPropertyAssociation xmi:id="_GvRlQ3UaEeKvZPpkrPtJ6A">
+        <property href="../../../Plugin_Resources/Modeling_Properties.aadl#//@ownedProperty.2"/>
+        <ownedValue xmi:id="_GvRlRHUaEeKvZPpkrPtJ6A">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_GvRlRXUaEeKvZPpkrPtJ6A">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/Modeling_Properties.aadl#//@ownedProperty.2/@ownedPropertyType/@ownedLiteral.1"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <feature xsi:type="aadl2:DataPort" href="../connectioninheritance.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedDataPort.0"/>
+    </featureInstance>
+    <featureInstance xmi:id="_GuPDcnUaEeKvZPpkrPtJ6A" name="pout" srcConnectionInstance="_Gu-qUHUaEeKvZPpkrPtJ6A" direction="out">
+      <ownedPropertyAssociation xmi:id="_GvRlRnUaEeKvZPpkrPtJ6A">
+        <property href="../../../Plugin_Resources/Modeling_Properties.aadl#//@ownedProperty.2"/>
+        <ownedValue xmi:id="_GvRlR3UaEeKvZPpkrPtJ6A">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_GvRlSHUaEeKvZPpkrPtJ6A">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/Modeling_Properties.aadl#//@ownedProperty.2/@ownedPropertyType/@ownedLiteral.1"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <feature xsi:type="aadl2:DataPort" href="../connectioninheritance.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedDataPort.1"/>
+    </featureInstance>
+    <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../connectioninheritance.aadl#//@ownedPublicSection/@ownedClassifier.7/@ownedSystemSubcomponent.0"/>
+    <index>0</index>
+  </componentInstance>
+  <componentInstance xmi:id="_GuPDc3UaEeKvZPpkrPtJ6A" name="sys2" category="system">
+    <featureInstance xmi:id="_GuYNYHUaEeKvZPpkrPtJ6A" name="pin" dstConnectionInstance="_Gu-qUHUaEeKvZPpkrPtJ6A">
+      <ownedPropertyAssociation xmi:id="_GvRlSXUaEeKvZPpkrPtJ6A">
+        <property href="../../../Plugin_Resources/Modeling_Properties.aadl#//@ownedProperty.2"/>
+        <ownedValue xmi:id="_GvRlSnUaEeKvZPpkrPtJ6A">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_GvRlS3UaEeKvZPpkrPtJ6A">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/Modeling_Properties.aadl#//@ownedProperty.2/@ownedPropertyType/@ownedLiteral.1"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <feature xsi:type="aadl2:DataPort" href="../connectioninheritance.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedDataPort.0"/>
+    </featureInstance>
+    <featureInstance xmi:id="_GuYNYXUaEeKvZPpkrPtJ6A" name="pout" direction="out">
+      <ownedPropertyAssociation xmi:id="_GvavMHUaEeKvZPpkrPtJ6A">
+        <property href="../../../Plugin_Resources/Modeling_Properties.aadl#//@ownedProperty.2"/>
+        <ownedValue xmi:id="_GvavMXUaEeKvZPpkrPtJ6A">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_GvavMnUaEeKvZPpkrPtJ6A">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/Modeling_Properties.aadl#//@ownedProperty.2/@ownedPropertyType/@ownedLiteral.1"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <feature xsi:type="aadl2:DataPort" href="../connectioninheritance.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedDataPort.1"/>
+    </featureInstance>
+    <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../connectioninheritance.aadl#//@ownedPublicSection/@ownedClassifier.7/@ownedSystemSubcomponent.1"/>
+    <index>0</index>
+  </componentInstance>
+  <connectionInstance xmi:id="_Gu-qUHUaEeKvZPpkrPtJ6A" name="sys1.pout -> sys2.pin" kind="portConnection" destination="_GuYNYHUaEeKvZPpkrPtJ6A" source="_GuPDcnUaEeKvZPpkrPtJ6A">
+    <connectionReference xmi:id="_Gu-qUXUaEeKvZPpkrPtJ6A" context="_GtomgHUaEeKvZPpkrPtJ6A" source="_GuPDcnUaEeKvZPpkrPtJ6A" destination="_GuYNYHUaEeKvZPpkrPtJ6A">
+      <connection xsi:type="aadl2:PortConnection" href="../connectioninheritance.aadl#//@ownedPublicSection/@ownedClassifier.6/@ownedPortConnection.0"/>
+    </connectionReference>
+  </connectionInstance>
+  <systemOperationMode xmi:id="_Guh-YHUaEeKvZPpkrPtJ6A" name="No Modes"/>
+  <systemImplementation href="../connectioninheritance.aadl#//@ownedPublicSection/@ownedClassifier.7"/>
+</instance:SystemInstance>

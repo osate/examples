@@ -1,0 +1,45 @@
+package issue291
+public
+
+system A
+features
+    f: feature;
+end A;
+
+system A2 extends A
+features
+    f: refined to out event port;
+end A2;
+
+system A3 extends A
+features
+    f: refined to in event port;
+end A3;
+
+system B
+
+end B;
+
+system implementation B.impl
+subcomponents
+    sc1: system A;
+    sc2: system A;
+connections
+    c1: feature sc1.f -> sc2.f;
+end B.impl;
+
+system implementation B.impl2 extends B.impl
+connections
+    c1: refined to port;
+end B.impl2;
+
+
+system implementation B.impl3 extends B.impl
+subcomponents
+    sc1: refined to system A2;
+    sc2: refined to system A3;
+connections
+    c1: refined to port;
+end B.impl3;
+
+end issue291;

@@ -1,0 +1,33 @@
+package issue315
+public
+
+bus Cable
+end Cable;
+
+bus implementation Cable.MBS100
+end Cable.MBS100;
+
+bus implementation Cable.MBS1000
+end Cable.MBS1000;
+
+device Controller
+prototypes
+    cableType: bus Cable;
+features
+    p0: requires bus access cableType;
+    p1: requires bus access cableType;      
+end Controller;
+
+device implementation Controller.Imp
+end Controller.Imp;
+
+system foo
+end foo;
+
+system implementation foo.bar
+subcomponents
+    c1: device Controller.Imp;  
+    c2: device Controller.Imp (cableType => bus Cable.MBS100);
+end foo.bar;
+
+end issue315;

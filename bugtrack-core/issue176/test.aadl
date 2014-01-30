@@ -1,0 +1,46 @@
+package issue176
+public
+
+data ParentType
+end ParentType;
+
+data ChildType extends ParentType
+end ChildType;
+
+process ParentComp
+features
+    p : in data port ParentType;
+    q : out data port ParentType;       
+end ParentComp;
+
+process ChildComp extends ParentComp
+features
+    p : refined to in data port ChildType;
+    q : refined to out data port ChildType;     
+end ChildComp;
+
+system SysParent
+end SysParent;
+
+
+system implementation SysParent.Imp
+subcomponents
+    c1 : process ParentComp;
+    c2 : process ParentComp;
+connections
+    port c1.q -> c2.p {Classifier_Matching_Rule => Classifier_Match;};
+end SysParent.Imp;
+
+system SysChild extends SysParent
+end SysChild;
+
+system implementation SysChild.Imp extends SysParent.Imp
+subcomponents
+    c1 : refined to process ChildComp;
+    --c2 : refined to process ChildComp;        
+-- Inherited connection is type-incorrect here?
+properties
+    Classifier_Substitution_Rule => Type_Extension;     
+end SysChild.Imp;   
+
+end issue176;

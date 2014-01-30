@@ -1,0 +1,51 @@
+package issue158
+public
+
+-- in this example we assign two different property values to connection declarations
+-- that are part of the same connection instance. So it is ambiguous which value holds.
+thread t
+features
+outp: out event port;
+end t;
+
+thread tt
+features
+inp: in event port;
+end tt;
+ 
+process p
+features
+outp: out event port;
+end p;
+
+process implementation p.i
+subcomponents
+	t1: THREAD T;		
+connections
+	c1: port t1.outp -> outp { timing => immediate;};
+end p.i;
+
+process implementation pp.i
+subcomponents
+	t2: THREAD tt;		
+connections
+	c2: port inp -> t2.inp { timing => immediate;};
+end pp.i;
+
+process pp
+features
+inp: in event port;
+end pp;
+
+system s
+end s;
+
+system implementation s.i
+subcomponents
+	p1: process p.i;
+	p2: process pp.i;
+connections
+	cc: port p1.outp -> p2.inp ;
+end s.i;
+
+end issue158 ;

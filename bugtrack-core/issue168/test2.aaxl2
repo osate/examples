@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aadl2:Package xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aadl2="http://aadl.info/AADL/2.0" xmi:id="_E_9j4G6wEeKZzu--eFsfvw" name="test2" publicSection="#_E_9j4W6wEeKZzu--eFsfvw">
+  <ownedPublicSection xmi:id="_E_9j4W6wEeKZzu--eFsfvw" importedUnit="aadl2:PropertySet ../../Plugin_Resources/SEI.aadl#/">
+    <ownedClassifier xsi:type="aadl2:SystemType" xmi:id="_E_9j4m6wEeKZzu--eFsfvw" name="s1">
+      <ownedPropertyAssociation xmi:id="_E_9j426wEeKZzu--eFsfvw" property="../../Plugin_Resources/SEI.aadl#//@ownedProperty.0">
+        <ownedValue xmi:id="_E_9j5G6wEeKZzu--eFsfvw">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_E_9j5W6wEeKZzu--eFsfvw" value="1"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedEventPort xmi:id="_E_9j5m6wEeKZzu--eFsfvw" name="f" direction="out"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:SystemType" xmi:id="_E_9j526wEeKZzu--eFsfvw" name="s2">
+      <ownedEventPort xmi:id="_E_9j6G6wEeKZzu--eFsfvw" name="f" direction="in"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:SystemType" xmi:id="_E_9j6W6wEeKZzu--eFsfvw" name="s"/>
+    <ownedClassifier xsi:type="aadl2:SystemImplementation" xmi:id="_E_9j6m6wEeKZzu--eFsfvw" name="s.i">
+      <ownedRealization xmi:id="_E_9j626wEeKZzu--eFsfvw" implemented="#_E_9j6W6wEeKZzu--eFsfvw"/>
+      <ownedPortConnection xmi:id="_E_9j7G6wEeKZzu--eFsfvw" name="myconn">
+        <ownedComment xmi:id="_E_9j7W6wEeKZzu--eFsfvw" body="--&#x9;port s1.f -> s2.f;"/>
+        <ownedPropertyAssociation xmi:id="_E_9j7m6wEeKZzu--eFsfvw" property="../../Plugin_Resources/Communication_Properties.aadl#//@ownedProperty.15">
+          <ownedValue xmi:id="_E_9j726wEeKZzu--eFsfvw">
+            <ownedValue xsi:type="aadl2:RangeValue" xmi:id="_E_9j8G6wEeKZzu--eFsfvw">
+              <minimum xsi:type="aadl2:IntegerLiteral" xmi:id="_E_9j8W6wEeKZzu--eFsfvw" unit="../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.13/@ownedLiteral.3" value="100"/>
+              <maximum xsi:type="aadl2:IntegerLiteral" xmi:id="_E_9j8m6wEeKZzu--eFsfvw" unit="../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.13/@ownedLiteral.3" value="200"/>
+            </ownedValue>
+          </ownedValue>
+        </ownedPropertyAssociation>
+        <destination xsi:type="aadl2:ConnectedElement" xmi:id="_E_9j826wEeKZzu--eFsfvw" context="#_E_9j9m6wEeKZzu--eFsfvw" connectionEnd="#_E_9j6G6wEeKZzu--eFsfvw"/>
+        <source xsi:type="aadl2:ConnectedElement" xmi:id="_E_9j9G6wEeKZzu--eFsfvw" context="#_E_9j9W6wEeKZzu--eFsfvw" connectionEnd="#_E_9j5m6wEeKZzu--eFsfvw"/>
+      </ownedPortConnection>
+      <ownedSystemSubcomponent xmi:id="_E_9j9W6wEeKZzu--eFsfvw" name="s1" systemSubcomponentType="#_E_9j4m6wEeKZzu--eFsfvw"/>
+      <ownedSystemSubcomponent xmi:id="_E_9j9m6wEeKZzu--eFsfvw" name="s2" systemSubcomponentType="#_E_9j526wEeKZzu--eFsfvw"/>
+    </ownedClassifier>
+  </ownedPublicSection>
+</aadl2:Package>

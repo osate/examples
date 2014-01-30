@@ -1,0 +1,5 @@
+property set issue287ps is
+
+bla : Data_Volume applies to (bus);
+
+end issue287ps;

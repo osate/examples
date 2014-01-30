@@ -1,0 +1,60 @@
+package With_Abstract
+public
+
+-- Related to issue 118 on github
+
+with Base_Types;
+
+abstract C
+features
+  input: in data port Base_Types::boolean;
+  output: out data port Base_Types::boolean;  
+end C;
+
+abstract D
+features
+  input: in data port Base_Types::boolean;
+  output: out data port Base_Types::boolean;  
+end D;
+
+thread T extends C
+end T;
+
+thread group TG extends D
+end TG;
+
+process P extends C
+end P;
+
+thread implementation T.impl
+end T.impl;
+
+thread group implementation TG.impl
+subcomponents
+	t: thread T.impl;
+connections 
+    C1: port input -> t.input;
+    C2: port t.output -> output; 
+end TG.impl;
+
+process implementation P.impl
+subcomponents
+	tg: thread group TG.impl;
+connections 
+    C1: port input -> tg.input;
+    C2: port tg.output -> output; 
+end P.impl;
+
+system S
+end S;
+
+system implementation S.impl
+subcomponents 
+	p1: process P.impl;
+	p2: process P.impl;
+connections
+	port p1.output -> p2.input;
+	port p2.output -> p1.input;
+end S.impl;
+
+end With_Abstract;

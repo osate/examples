@@ -1,0 +1,7 @@
+package PO
+public
+thread SpO2TrendThread
+end SpO2TrendThread;
+thread HeartRateTrendThread
+end HeartRateTrendThread;
+end PO;

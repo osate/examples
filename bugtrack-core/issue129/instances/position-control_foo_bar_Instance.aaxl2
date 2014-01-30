@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ASCII"?>
+<instance:SystemInstance xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aadl2="http://aadl.info/AADL/2.0" xmlns:instance="http://aadl.info/AADL/2.0/instance" xmi:id="_swR7cGqLEeKCTJ8MDYDJgQ" name="foo_bar_Instance" category="system">
+  <componentInstance xmi:id="_swYCEGqLEeKCTJ8MDYDJgQ" name="p" category="data">
+    <ownedPropertyAssociation xmi:id="_swf94GqLEeKCTJ8MDYDJgQ">
+      <property href="../../../../../Plugin_Resources/Data_Model.aadl#//@ownedProperty.4"/>
+      <ownedValue xmi:id="_swf94WqLEeKCTJ8MDYDJgQ">
+        <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_swf94mqLEeKCTJ8MDYDJgQ">
+          <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../../../Plugin_Resources/Data_Model.aadl#//@ownedProperty.4/@ownedPropertyType/@ownedLiteral.6"/>
+        </ownedValue>
+      </ownedValue>
+    </ownedPropertyAssociation>
+    <ownedPropertyAssociation xmi:id="_swgk8GqLEeKCTJ8MDYDJgQ">
+      <property href="../../../../../Plugin_Resources/Data_Model.aadl#//@ownedProperty.12"/>
+      <ownedValue xmi:id="_swgk8WqLEeKCTJ8MDYDJgQ">
+        <ownedValue xsi:type="aadl2:StringLiteral" xmi:id="_r9OG0mqLEeKCTJ8MDYDJgQ" value="SMS"/>
+      </ownedValue>
+    </ownedPropertyAssociation>
+    <subcomponent xsi:type="aadl2:DataSubcomponent" href="../position-control.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedDataSubcomponent.0"/>
+    <index>0</index>
+  </componentInstance>
+  <systemOperationMode xmi:id="_swbFYGqLEeKCTJ8MDYDJgQ" name="No Modes"/>
+  <systemImplementation href="../position-control.aadl#//@ownedPublicSection/@ownedClassifier.2"/>
+</instance:SystemInstance>

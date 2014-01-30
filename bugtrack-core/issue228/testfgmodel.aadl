@@ -1,0 +1,35 @@
+package TestModel
+public
+
+feature group CorePorts
+features
+Port1: in data port;
+Port2: out data port;
+Port3: in data port;
+Port4: out data port;
+Port5: in data port;
+Port6: out data port;
+end CorePorts;
+
+processor Core1
+features
+Core1Ports: feature group CorePorts;
+end Core1;
+
+processor Core2
+features
+Core2Ports: feature group inverse of CorePorts;
+end Core2;
+
+system TestSystem
+end TestSystem;
+
+system implementation TestSystem.base
+subcomponents
+CoreOne: processor Core1;
+CoreTwo: processor Core2;
+connections
+TestConn: feature group CoreOne.Core1Ports <-> CoreTwo.Core2Ports;
+end TestSystem.base;
+
+end TestModel;

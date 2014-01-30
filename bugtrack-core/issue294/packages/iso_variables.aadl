@@ -1,0 +1,212 @@
+--iso_variables.aadl
+
+--data components used to type data connections in isolette model
+
+--refactored with fixed-point instead of integer 11/4/2012 brl
+
+package iso_variables
+  public
+  with Base_Types, Data_Model, BLESS, BLESS_Types;
+
+--Table A-3 Thermostat Monitored Variables for Temperature  Sensor
+
+--range of Monitored Temperature  
+data measured_temperature_range
+  properties
+  Data_Model::Base_Type => (classifier(BLESS_Types::Fixed_Point));  
+  Data_Model::Real_Range => 68.0 .. 105.0;
+  Data_Model::Measurement_Unit => "Fahrenheit";
+  BLESS::Typed => "real 68.0 .. 105.0 units Fahrenheit";
+end measured_temperature_range;  
+
+--Valid/Invalid enumerated type
+data valid_flag
+  properties
+  Data_Model::Data_Representation => Enum;
+  Data_Model::Enumerators => ("Invalid","Valid");
+  BLESS::Typed => "enumeration (Invalid, Valid)";
+end valid_flag;
+
+--Current Temperature "t" is temp, "status" is valid/invalid flag 
+data current_temperature 
+  properties
+  Data_Model::Data_Representation => Struct;
+  Data_Model::Element_Names => ("t","status");
+  Data_Model::Base_Type => (classifier (iso_variables::measured_temperature_range), 
+  	classifier (iso_variables::valid_flag));
+  BLESS::Typed => "record (t:measured_temperature_range; status:valid_flag;)";
+end current_temperature; 
+
+
+--Table A-4. Thermostat Controlled Variables for Heat Source
+
+--heat control and alarm value
+data on_off
+  properties
+  Data_Model::Data_Representation => Enum;
+  Data_Model::Enumerators => ("Off","On");
+  BLESS::Typed => "enumeration (Off, On)";
+end on_off;
+
+--Table A-5
+
+
+--range of Lower Desired Temperature  
+data lower_desired_range
+  properties  -- fixed-point representation of 1/10ths of a degree
+  Data_Model::Base_Type => (classifier(BLESS_Types::Fixed_Point));  
+  Data_Model::Real_Range => 97.0 .. 99.0;
+  Data_Model::Measurement_Unit => "Fahrenheit";
+  BLESS::Typed => "real 97.0 .. 99.0 units Fahrenheit";
+end lower_desired_range;  
+
+--record for Lower Desired Temperature, "t" is temp range, "v" is valid flag  
+data lower_desired_temperature 
+  properties
+  Data_Model::Data_Representation => Struct;
+  Data_Model::Element_Names => ("t","v");
+  Data_Model::Base_Type => (classifier (iso_variables::lower_desired_range), classifier (iso_variables::valid_flag));
+  BLESS::Typed => "record (t:lower_desired_range; v:valid_flag;)";
+end lower_desired_temperature; 
+
+--range of Upper Desired Temperature  
+data upper_desired_range
+  properties
+  Data_Model::Base_Type => (classifier(BLESS_Types::Fixed_Point));  
+  Data_Model::Real_Range => 98.0 .. 100.0;
+  Data_Model::Measurement_Unit => "Fahrenheit";
+  BLESS::Typed => "real 98.0 .. 100.0 units Fahrenheit";
+end upper_desired_range;  
+
+--record for Upper Desired Temperature, "t" is temp range, "v" is valid flag  
+data upper_desired_temperature 
+  properties
+  Data_Model::Data_Representation => Struct;
+  Data_Model::Element_Names => ("t","v");
+  Data_Model::Base_Type => (classifier (iso_variables::upper_desired_range), classifier (iso_variables::valid_flag));
+  BLESS::Typed => "record (t:upper_desired_range; v:valid_flag;)";
+end upper_desired_temperature; 
+
+--range of Lower alarm Temperature  
+data lower_alarm_range
+  properties
+  Data_Model::Base_Type => (classifier(BLESS_Types::Fixed_Point));  
+  Data_Model::Real_Range => 93.0 .. 98.0;
+  Data_Model::Measurement_Unit => "Fahrenheit";
+  BLESS::Typed => "real 93.0 .. 98.0 units Fahrenheit";
+end lower_alarm_range;  
+
+--record for Lower alarm Temperature, "t" is temp range, "v" is valid flag  
+data lower_alarm_temperature 
+  properties
+  Data_Model::Data_Representation => Struct;
+  Data_Model::Element_Names => ("t","v");
+  Data_Model::Base_Type => (classifier (iso_variables::lower_alarm_range), classifier (iso_variables::valid_flag));
+  BLESS::Typed => "record (t:lower_alarm_range; v:valid_flag;)";
+end lower_alarm_temperature; 
+
+--range of Upper alarm Temperature  
+data upper_alarm_range
+  properties
+  Data_Model::Base_Type => (classifier(BLESS_Types::Fixed_Point));  
+  Data_Model::Real_Range => 99.0 .. 103.0;
+  Data_Model::Measurement_Unit => "Fahrenheit";
+  BLESS::Typed => "real 99.0 .. 103.0 units Fahrenheit";
+end upper_alarm_range;  
+
+--record for Upper alarm Temperature, "t" is temp range, "v" is valid flag  
+data upper_alarm_temperature 
+  properties
+  Data_Model::Data_Representation => Struct;
+  Data_Model::Element_Names => ("t","v");
+  Data_Model::Base_Type => (classifier (iso_variables::upper_alarm_range), classifier (iso_variables::valid_flag));
+  BLESS::Typed => "record (t:upper_alarm_range; v:valid_flag;)";
+end upper_alarm_temperature; 
+
+--Table A-6
+
+--Regulator and Monitor Status
+data status
+  properties
+  Data_Model::Data_Representation => Enum;
+  Data_Model::Enumerators => ("Init","On","Failed");
+  BLESS::Typed => "enumeration (Init, On, Failed)";
+end status;
+ 
+
+--Table A-7. The Regulate Temperature Internal Variables 
+
+--Lower Desired Temp 
+data lower_desired_temp
+  properties
+  Data_Model::Base_Type => (classifier(BLESS_Types::Fixed_Point));  
+  Data_Model::Real_Range => 96.0 .. 101.0;
+  Data_Model::Measurement_Unit => "Fahrenheit";
+  BLESS::Typed => "real 96.0 .. 101.0 units Fahrenheit";
+end lower_desired_temp;  
+  
+--Upper Desired Temp 
+data upper_desired_temp
+  properties
+  Data_Model::Base_Type => (classifier(BLESS_Types::Fixed_Point));  
+  Data_Model::Real_Range => 97.0 .. 102.0;
+  Data_Model::Measurement_Unit => "Fahrenheit";
+  BLESS::Typed => "real 97.0 .. 102.0 units Fahrenheit";
+end upper_desired_temp;  
+  
+--Desired Range "l" is lower bound, "u" is upper bound
+data desired_range
+  properties
+  Data_Model::Data_Representation => Struct;
+  Data_Model::Element_Names => ("l","u");
+  Data_Model::Base_Type => (classifier (iso_variables::lower_desired_temp), classifier (iso_variables::upper_desired_temp));
+  BLESS::Typed => "record (l:lower_desired_temp; u:upper_desired_temp;)";
+end desired_range;  
+
+--Regulator Mode
+data regulator_mode
+  properties
+  Data_Model::Data_Representation => Enum;
+  Data_Model::Enumerators => ("Init","NORMAL","FAILED");
+  BLESS::Typed => "enumeration (Init, NORMAL, FAILED)";
+end regulator_mode;
+
+--Table A-12. Monitor Temperature Internal Variables
+
+--Lower alarm Temp 
+data lower_alarm_temp
+  properties
+  Data_Model::Base_Type => (classifier(BLESS_Types::Fixed_Point));  
+  Data_Model::Real_Range => 96.0 .. 101.0;
+  Data_Model::Measurement_Unit => "Fahrenheit";
+  BLESS::Typed => "real 96.0 .. 101.0 units Fahrenheit";
+end lower_alarm_temp;  
+  
+--Upper alarm Temp 
+data upper_alarm_temp
+  properties
+  Data_Model::Base_Type => (classifier(BLESS_Types::Fixed_Point));  
+  Data_Model::Real_Range => 97.0 .. 102.0;
+  Data_Model::Measurement_Unit => "Fahrenheit";
+  BLESS::Typed => "real 97.0 .. 102.0 units Fahrenheit";
+end upper_alarm_temp;  
+  
+--alarm Range "l" is lower bound, "u" is upper bound
+data alarm_range
+  properties
+  Data_Model::Data_Representation => Struct;
+  Data_Model::Element_Names => ("l","u");
+  Data_Model::Base_Type => (classifier (iso_variables::lower_alarm_temp), classifier (iso_variables::upper_alarm_temp));
+  BLESS::Typed => "record (l:lower_alarm_temp; u:upper_alarm_temp;)";
+end alarm_range;  
+
+--monitor Mode
+data monitor_mode
+  properties
+  Data_Model::Data_Representation => Enum;
+  Data_Model::Enumerators => ("INIT","NORMAL","FAILED");
+  BLESS::Typed => "enumeration (INIT, NORMAL, FAILED)";
+end monitor_mode;
+
+  
+end iso_variables;  

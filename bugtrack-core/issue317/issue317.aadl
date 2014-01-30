@@ -1,0 +1,38 @@
+package issue317
+public
+
+bus Cable
+end Cable;
+
+bus implementation Cable.Imp
+end Cable.Imp;
+
+bus Controller
+features
+    cabl: requires bus access Cable.Imp;
+end Controller;
+
+bus implementation Controller.Imp
+end Controller.Imp;
+
+system test
+features
+    cabl: requires bus access Cable.Imp;
+end test;
+
+
+system Network
+features
+    cont: requires bus access Controller.Imp;
+end Network;
+
+system implementation Network.Imp
+subcomponents
+    cab: bus Cable.Imp;
+    s 
+connections
+    -- Why an error that cont.cabl can't be resolved?
+    c: bus access  cont.cabl -> cab ;
+end Network.Imp;
+
+end issue317;

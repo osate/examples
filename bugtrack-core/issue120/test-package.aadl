@@ -1,0 +1,18 @@
+package test_package
+
+
+public
+with test_properties;
+processor Test_Proc
+properties
+	test_properties::test_prop_def => 1;
+	test_properties::test_prop_def_restricted => 1;
+end Test_Proc;
+ 
+processor Test_Proc2
+properties 
+	test_properties::test_prop_def => 1;
+    test_properties::test_prop_def_restricted => 1;  
+end Test_Proc2;
+ 
+end test_package;

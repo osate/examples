@@ -1,0 +1,13 @@
+package Device_Driver
+public
+
+abstract dd end dd;
+
+abstract implementation dd.i end dd.i;
+
+device d
+properties
+Device_Driver => classifier (dd.i); -- bug ?      
+end d; 
+
+end Device_Driver;

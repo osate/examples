@@ -1,0 +1,5 @@
+property set PSC is
+	MaxPosition: constant aadlinteger => 250;
+	MinPosition: constant aadlinteger => 240;
+	
+end PSC ; 

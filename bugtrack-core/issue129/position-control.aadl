@@ -1,0 +1,24 @@
+package PositionControl
+
+public
+
+with Data_Model;
+
+data Position
+properties 
+	Data_Model::Data_Representation => Integer;
+	Data_Model::Measurement_Unit => "SMS";
+	Data_Model::Integer_Range => PSC::MinPosition .. PSC::MaxPosition;
+end Position;
+
+system foo     
+end foo;
+
+ 
+system implementation foo.bar
+subcomponents
+	p : data Position;
+end foo.bar;
+
+end PositionControl;
+

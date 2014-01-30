@@ -1,0 +1,60 @@
+package issue220_1
+public
+with Base_Types;
+with Data_Model;
+
+subprogram job
+features
+param : in parameter Base_Types::Integer;
+	properties
+		Source_Language => (C);
+	end job;
+
+	thread thin
+features
+   inp : in data port Base_Types::Integer;
+	properties
+		Priority => 4;
+	end thin;
+	thread thout
+features
+   outp : out data port Base_Types::Integer;
+end thout;
+
+thread implementation thin.impl1
+subcomponents
+constantValue: data Base_Types::Integer
+{
+Data_Model::Initial_Value => ("3");
+};
+calls
+seq: { call1: subprogram job; };
+connections
+parameter constantValue -> call1.param;
+end thin.impl1;
+
+
+thread implementation thin.impl2
+calls
+seq: { call1: subprogram job; };
+connections
+parameter inp -> call1.param;
+end thin.impl2;
+
+process proc end proc;
+
+process implementation proc.impl
+subcomponents
+	th_out : thread thout;
+	th_in: thread thin.impl2;
+connections
+	port th_out.outp -> th_in.inp;
+end proc.impl;
+
+system root end root;
+system implementation root.impl
+subcomponents
+proc: process proc.impl;
+end root.impl;
+
+end issue220_1;

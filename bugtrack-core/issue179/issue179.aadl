@@ -1,0 +1,59 @@
+package FGFlow
+public
+
+feature group FGout
+features
+    p : out data port;
+end FGout;
+
+feature group FGin
+features
+    p : in data port;
+end FGin;   
+
+system SrcSys
+features
+    fop : feature group FGout;
+flows
+    src : flow source fop.p;
+end SrcSys;
+
+system DstSys
+features
+    foi : feature group inverse of FGout;
+    fi : feature group FGin;
+flows
+    snki : flow sink fi.p; -- It's an in data port with no error message (OK)       
+    snkoi : flow sink foi.p; -- It's an in data port but gets an error message (not OK)
+end DstSys;
+
+system Sys
+end Sys;
+
+
+system implementation Sys.Imp
+subcomponents
+    src : system SrcSys;
+    dst : system DstSys;
+connections
+    conMatch : feature group src.fop <-> dst.foi;
+    conSubsetA : feature group src.fop <-> dst.fi {Classifier_Matching_Rule => Subset;};    
+    conSubsetB : feature group src.fop <-> dst.foi {Classifier_Matching_Rule => Subset;};               
+flows
+    -- Errors occur for the following.  The standard says sources and
+    -- destinations of the connections must be the same as those of the preceding
+    -- and following flows, but what is the exact definition of "source"
+    -- and "destination" for a feature group connection with a subset
+    -- matching rule?  How does one specify various flows between various elements
+    -- of connected feature groups?  The syntax does not allow them to be
+    -- named in a connection at this level of the design hierarchy.  A convenient
+    -- interpretation might be that the flow is legal if the flow group
+    -- connection is identical to or includes the preceding/following flow sink/source.
+    -- A flow through a feature  group may in general be a set of primitive 
+    -- (e.g. port-to-port) flows having mixed directions  -- food for thought.
+    e2eA : end to end flow src.src -> conSubsetA -> dst.snki; -- {Classifier_Matching_Rule => Subset;};
+    e2eB : end to end flow src.src -> conSubsetB -> dst.snkoi; -- {Classifier_Matching_Rule => Subset;};    
+  
+end Sys.Imp;
+
+end FGFlow;

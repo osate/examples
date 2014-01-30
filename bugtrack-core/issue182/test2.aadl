@@ -1,0 +1,37 @@
+package issue182_test2
+public
+system Test
+end Test;
+
+system implementation Test.impl
+    subcomponents
+        test: system Test_Subcompo.impl;
+end test.impl;
+
+system Test_Subcompo
+end Test_Subcompo;
+
+system implementation Test_Subcompo.impl
+end Test_Subcompo.impl;
+
+system Test2 extends Test
+end Test2;
+
+system implementation Test2.impl extends Test.impl
+    subcomponents
+        -- Error on subcomponent refinement when the refining classifier 
+        -- has extra features
+        test: refined to system  Test_Subcompo2.impl;
+end Test2.impl;
+
+system Test_Subcompo2 extends Test_Subcompo
+    features
+        -- If this feature is added, then there is classifier matching error on the 
+        -- refined subcomponent
+        test_port: in event port;
+end Test_Subcompo2;
+
+system implementation Test_Subcompo2.impl extends Test_Subcompo.impl
+end Test_Subcompo2.impl;
+
+end issue182_test2;

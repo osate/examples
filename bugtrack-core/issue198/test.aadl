@@ -1,0 +1,35 @@
+package Feature_Directions
+public
+
+subprogram bar_spg
+features
+spg_port : out event port;
+end bar_spg;
+
+thread foo
+features
+thread_port : out event port;
+end foo;
+
+thread implementation foo.i
+calls
+cs : {
+job : subprogram bar_spg;
+};
+connections
+c1 : port job.spg_port -> thread_port;
+end foo.i;
+
+process baz
+features
+process_port : out event port;
+end baz;
+
+process implementation baz.i
+subcomponents
+foo_thread : thread foo.i;
+connections
+c2 : port foo_thread.thread_port -> process_port;
+end baz.i;
+
+end Feature_Directions;

@@ -1,0 +1,6 @@
+property set test_properties is
+with test_package;
+
+	test_prop_def : aadlinteger applies to (processor);
+	test_prop_def_restricted : aadlinteger applies to (test_package::Test_Proc);
+end test_properties;   

@@ -1,0 +1,34 @@
+package nameresolution
+public
+system s
+features
+pin: in data port;
+end s;
+
+data d
+end d;
+
+system se extends s
+features
+pin: refined to in data port d;
+end se;
+
+system implementation s.i
+end s.i;
+
+system implementation se.i extends s.i
+end se.i;
+
+system top
+features
+tin: in data port;
+end top;
+
+system implementation top.i
+subcomponents
+sys: system se.i;
+connections 
+-- pin needs to resolve to pin in se not pin in s
+c1: port tin -> sys.pin; 
+end top.i;
+end nameresolution ;

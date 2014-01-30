@@ -1,0 +1,367 @@
+package Monitor
+public
+with KSU_Isolette, Iso_Variables, BLESS, Base_Types, EMV2;
+
+annex BLESS
+{**
+  
+  
+**};
+
+--A.5.2 Monitor Temperature Function
+process monitor_temperature
+features
+  current_temperature : in data port Iso_Variables::current_temperature
+    {BLESS::Assertion => "<<:=CURRENT_TEMP>>";};
+  lower_alarm_temperature : in data port Iso_Variables::lower_alarm_temperature
+    {BLESS::Assertion => "<<:=LOWER_ALARM_TEMP>>";};
+  upper_alarm_temperature : in data port Iso_Variables::upper_alarm_temperature
+    {BLESS::Assertion => "<<:=UPPER_ALARM_TEMP>>";};
+  alarm : out data port Iso_Variables::on_off
+    {BLESS::Assertion => "<<+=>TEMP_OUT_OF_RANGE(x)>>";};
+  monitor_status : out data port Iso_Variables::status
+    {BLESS::Assertion => "<<:=MONITOR_STATUS()>>";};
+  regulator_failure : in data port Base_Types::Boolean
+    {BLESS::Assertion => "<<INTERNAL_FAILURE()>>";};
+  monitor_failure : in data port Base_Types::Boolean
+    {BLESS::Assertion => "<<INTERNAL_FAILURE()>>";};
+annex EMV2 
+  {** 
+  use types ErrorLibrary, KSU_Isolette;
+  error propagations
+  current_temperature: in propagation
+    {OutOfRange,UndetectableValueError};
+  alarm: out propagation {AlarmError};
+  monitor_status: out propagation {MonitorStatusError};
+  regulator_failure: in propagation {ItemOmission,ItemComission};
+  end propagations;
+  **};
+end monitor_temperature;
+
+process implementation monitor_temperature.impl
+subcomponents
+  manage_alarm : thread manage_alarm.impl;
+  manage_monitor_interface : thread manage_monitor_interface.impl;
+  manage_monitor_mode : thread manage_monitor_mode.impl;
+connections
+  --temperature
+  mcti : port current_temperature -> manage_monitor_interface.current_temperature;
+  mcta : port current_temperature -> manage_alarm.current_temperature;
+  mctm : port current_temperature -> manage_monitor_mode.current_temperature;
+  --alarm range
+  muat : port upper_alarm_temperature -> manage_monitor_interface.upper_alarm_temperature;
+  mlat : port lower_alarm_temperature -> manage_monitor_interface.lower_alarm_temperature;
+  maul : port upper_alarm_temperature -> manage_alarm.upper_alarm_temperature;
+  mall : port lower_alarm_temperature -> manage_alarm.lower_alarm_temperature;
+  --alarm out
+  malrm : port manage_alarm.alarm_control -> alarm;
+  --monitor interface
+  mms : port manage_monitor_interface.monitor_status -> monitor_status;
+  intff : port manage_monitor_interface.interface_failure -> manage_monitor_mode.interface_failure;
+  --monitor mode
+  mf : port regulator_failure -> manage_monitor_mode.internal_failure;
+  mmmi : port manage_monitor_mode.monitor_mode -> manage_monitor_interface.monitor_mode;
+  mmma : port manage_monitor_mode.monitor_mode -> manage_alarm.monitor_mode;
+annex EMV2
+  {**
+  use types ErrorLibrary, KSU_Isolette;
+  use behavior KSU_Isolette::CompositeFailure;
+  composite error behavior
+  states 
+  [manage_monitor_interface.Failed  or manage_monitor_mode.Failed	
+  ]->ReportedFailure;
+  [manage_alarm.Failed]->MissedFailure;
+  end composite;
+  **};
+end monitor_temperature.impl;
+
+--A.5.2.1 Manage Monitor Interface Function
+thread manage_monitor_interface
+features
+  alarm_range : out data port Iso_Variables::alarm_range;
+  current_temperature : in data port Iso_Variables::current_temperature
+    {BLESS::Assertion => "<<:=CURRENT_TEMP>>";};
+  monitor_mode : in data port Iso_Variables::monitor_mode
+    {BLESS::Assertion => "<<+=>MONITOR_MODE(x)>>";};
+  upper_alarm_temperature : in data port Iso_Variables::upper_alarm_temperature;
+  lower_alarm_temperature : in data port Iso_Variables::lower_alarm_temperature;
+  monitor_status : out data port Iso_Variables::status
+    {BLESS::Assertion => "<<:=MONITOR_STATUS()>>";};
+  interface_failure : out data port Base_Types::Boolean
+    {BLESS::Assertion => "<<MONITOR_INTERFACE_FAILURE()>>";};
+properties
+	Dispatch_Protocol => Periodic;
+	Period => Iso_Properties::ThreadPeriod;
+annex EMV2 
+  {** 
+    use types ErrorLibrary,KSU_Isolette;
+    use behavior KSU_Isolette::FailStop;
+  error propagations
+    monitor_mode: in propagation {MonitorModeError};
+    interface_failure: out propagation {ItemOmission};
+    monitor_status: out propagation {MonitorStatusError};
+  flows  
+    fl0: error path monitor_mode {MonitorModeError} -> monitor_status(MonitorStatusError);
+    ifif: error source interface_failure{ItemOmission} when failed;
+  end propagations;
+  properties  --"fail" is the internal event that cause
+    EMV2::OccurrenceDistribution => Iso_Properties::MMMFailureRate 
+      applies to fail;      
+  **};
+end manage_monitor_interface;
+
+thread implementation manage_monitor_interface.impl
+end manage_monitor_interface.impl;
+
+--A.5.2.2 Manage Monitor Mode Function
+--this detects that the thermostat monitor is working properly
+--who guards the guards?
+--if the monitor watches the operational system for unsafe conditions,
+--what makes sure the monitor is operating properly?  -> this thread
+thread manage_monitor_mode
+features
+  monitor_mode : out data port Iso_Variables::monitor_mode
+    {BLESS::Assertion => "<<+=>MONITOR_MODE(x)>>";};
+  interface_failure : in data port Base_Types::Boolean
+    {BLESS::Assertion => "<<MONITOR_INTERFACE_FAILURE()>>";};
+  internal_failure : in data port Base_Types::Boolean
+    {BLESS::Assertion => "<<INTERNAL_FAILURE()>>";};
+  current_temperature : in data port Iso_Variables::current_temperature
+    {BLESS::Assertion => "<<:=CURRENT_TEMP>>";};
+properties
+	Dispatch_Protocol => Periodic;
+	Period => Iso_Properties::ThreadPeriod;
+annex EMV2 
+  {** 
+    use types ErrorLibrary,KSU_Isolette;
+    use behavior KSU_Isolette::FailStop;
+  error propagations
+  monitor_mode: out propagation {MonitorModeError};
+  interface_failure: in propagation {ItemOmission,ItemComission};
+  internal_failure: in propagation {ItemOmission,ItemComission};
+  current_temperature: in propagation
+    {OutOfRange,UndetectableValueError};
+  flows  --model error in detection and reporting
+    mmmiff: error path interface_failure{ItemOmission,ItemComission} 
+      -> monitor_mode(MonitorModeError);
+    mmminf: error path internal_failure{ItemOmission,ItemComission} 
+      -> monitor_mode(MonitorModeError);
+    mmmct: error path current_temperature{UndetectableValueError} 
+      -> monitor_mode(MonitorModeError);
+    mmmoor: error sink current_temperature{OutOfRange};  
+  end propagations;
+  properties  --"fail" is the internal event that cause
+    EMV2::OccurrenceDistribution => Iso_Properties::MMMFailureRate 
+      applies to fail;      
+  **};
+end manage_monitor_mode;
+
+thread implementation manage_monitor_mode.impl
+  annex BLESS
+  {**
+  invariant <<true>>
+  variables
+    start_time : Timing_Properties::Time;  --record time stamp of power-on
+    temperature : Iso_Variables::current_temperature;  --get struct from port 
+    current_temperature_status : Iso_Variables::status;  --get status from struct
+  states
+    start : initial state;     --power up state
+    init : complete state;     --wait for valid monitor status
+    check_init : state <<current_temperature_status=temperature.status>>;  
+    normal : complete state;   --normal operation
+    check_normal : state <<current_temperature_status=temperature.status>>;
+    failed : final state;      --failure detected
+    darnit : final state;			 --internal error    
+  transitions
+    mmm1:  --power on
+      start-[ ]->init
+          {start_time:=now 
+          <<start_time=now and AXIOM_TOGT0()>>
+          ;
+           monitor_mode!(INIT) 
+           };  --end of mmm1
+    wait_init: --check temperature status
+      init-[on dispatch]->check_init
+          {  
+          current_temperature?(temperature) 
+          ; 
+          current_temperature_status := temperature.status
+          <<current_temperature_status=temperature.status>>
+          };  --end of wait_init
+    mmm: --timeout on initialization
+      check_init-[((now-start_time) >= 
+            Iso_Properties::Initialization_Timeout)
+            and (interface_failure? or internal_failure?
+              or not (current_temperature_status = Valid))]->failed
+          { <<not (MONITOR_OK() or ((now-start_time) < Iso_Properties::Initialization_Timeout))>>
+          monitor_mode!(FAILED)
+          };  --end of mmm
+    mmm2: --transition to normal operation
+      check_init-[((now-start_time) >= 
+            Iso_Properties::Initialization_Timeout) and
+        not (interface_failure? or internal_failure?)
+        and (current_temperature_status = Valid)]->normal
+          { <<MONITOR_OK() and RUN()>>
+          monitor_mode!(NORMAL)
+          <<RUN()>>
+          };  --end of mmm2
+    mmm2x:  --too soon, back to init
+      check_init-[(now-start_time) < 
+            Iso_Properties::Initialization_Timeout]->init{};  
+    wait_normal: --check temperature status
+      normal-[on dispatch]->check_normal
+          {
+          current_temperature?(temperature) 
+          ; <<temperature=CURRENT_TEMP>>
+          current_temperature_status := temperature.status
+          <<current_temperature_status=temperature.status>>
+          };  --end of wait_normal
+    mmm3:  --no failures and valid temp 
+      check_normal-[((now-start_time) >= Iso_Properties::Initialization_Timeout) 
+      	and not (interface_failure? or internal_failure?)
+        and (current_temperature_status = Valid)]->normal
+          {<<MONITOR_OK() and RUN()>> 
+          monitor_mode!(NORMAL)
+          };  --end of mmm3
+    mmm3x:  --failure or invalid temp after initialization
+      check_normal-[((now-start_time) >= Iso_Properties::Initialization_Timeout) 
+      	and (interface_failure? or internal_failure? or
+        not (current_temperature_status = Valid))]->failed
+          {<<not (MONITOR_OK() or (now-start_time) < Iso_Properties::Initialization_Timeout)>> 
+          monitor_mode!(FAILED)};
+    mmm3z:  --shouldn't ever be selected; needed for Serban's theorem
+      check_normal-[((now-start_time) < Iso_Properties::Initialization_Timeout)]->
+        darnit{};
+  **};
+end manage_monitor_mode.impl;
+
+--A.5.2.3 Manage Alarm Function
+--The Manage Alarm Function turns the Alarm Control on when the Current 
+--Temperature of the Isolette falls below or rises above the Alarm Temperature Range.
+thread manage_alarm
+features
+  alarm_control : out data port Iso_Variables::on_off
+    {BLESS::Assertion=>"<<+=>TEMP_OUT_OF_RANGE(x)>>";};
+  monitor_mode : in data port Iso_Variables::monitor_mode  --enumeration type
+    {BLESS::Assertion=>"<<+=>MONITOR_MODE(x)>>";};  --Assertion-enumeration +=>
+  lower_alarm_temperature : in data port Iso_Variables::lower_alarm_temperature
+    {BLESS::Assertion => "<<:=LOWER_ALARM_TEMP>>";};
+  upper_alarm_temperature : in data port Iso_Variables::upper_alarm_temperature
+    {BLESS::Assertion => "<<:=UPPER_ALARM_TEMP>>";};
+  current_temperature : in data port Iso_Variables::current_temperature
+    {BLESS::Assertion => "<<:=CURRENT_TEMP>>";};
+properties
+	Dispatch_Protocol => Periodic;
+	Period => Iso_Properties::ThreadPeriod;
+annex EMV2 
+  {** 
+  use types ErrorLibrary,KSU_Isolette;
+  use behavior KSU_Isolette::FailStop;
+  error propagations
+  alarm_control: out propagation {AlarmError};
+  monitor_mode: in propagation {MonitorModeError};
+  --alarm_range is error-free
+  current_temperature: in propagation
+    {OutOfRange,UndetectableValueError};
+  flows  --model error in detection and reporting
+    mame: error path monitor_mode{MonitorModeError} 
+      -> alarm_control(AlarmError);
+    mact: error path current_temperature{UndetectableValueError} 
+      -> alarm_control(AlarmError);
+  end propagations;
+  properties  --"fail" is the internal event that cause
+      EMV2::OccurrenceDistribution => Iso_Properties::MAFailureRate 
+      applies to fail;      
+  **};
+end manage_alarm;
+
+--the "0.5" should be replaced by Iso_Properties::HysteresisTemperatureOffset
+--but the expressions are getting too long as it is
+thread implementation manage_alarm.impl
+annex BLESS {**
+	assert
+	  <<AXIOM_AR: : LOWER_ALARM_TEMP<=(0.5+LOWER_ALARM_TEMP)
+	      and (UPPER_ALARM_TEMP-0.5)<=UPPER_ALARM_TEMP >>
+	  <<AXIOM_OFFON: :(alarm_previous_period = On) or (alarm_previous_period = Off)>>     
+	  <<EDGE_TEMP: :(CURRENT_TEMP in LOWER_ALARM_TEMP ., LOWER_ALARM_TEMP+0.5) or 
+    	(CURRENT_TEMP in UPPER_ALARM_TEMP-0.5 ,. UPPER_ALARM_TEMP)>>
+	invariant <<INVMA: :alarm_previous_period = alarm_control^-1>>
+	variables
+    start_time : Timing_Properties::Time;  --record time stamp of power-on
+	  alarm_previous_period : Iso_Variables::on_off := Off;  --hysteresis when 
+	     --within 0.5 degrees of alarm bounds
+	states
+	  poweron : initial state <<not alarm_previous_period and (INVMA())^1>>;
+	  run : complete state <<INVMA()>>;
+	  check_mode : state <<INVMA()>>;  --check alarm mode 
+	  check_temp : state <<INVMA() and MONITOR_MODE(NORMAL) and AXIOM_OFFON()>>;
+	  check_hyst : state <<EDGE_TEMP() and MONITOR_MODE(NORMAL) and INVMA() and AXIOM_OFFON()>>;
+	  halt : final state; 
+  transitions
+    maPo: poweron -[ ]-> run{};  --start running at power on
+    maRun: run -[on dispatch]-> check_mode{};  --check alarm mode upon dispatch
+    maFailed: --REQ-MA-5 monitor mode is failed
+    check_mode -[monitor_mode? = FAILED]-> run 
+    	{ <<REQMA5()>>
+      alarm_control!(On)  --temp out of range alarm
+      ;  <<alarm_control=On>>
+      alarm_previous_period' := On
+        <<alarm_previous_period' = alarm_control>>
+      };  --end of maFailed
+    maInit: --REQ-MA-1 monitor mode is init
+    check_mode -[monitor_mode? = INIT]-> run  
+      { <<REQMA1()>>
+      alarm_control!(Off)  --no alarm
+      ;  <<alarm_control = Off>> 
+      alarm_previous_period' := Off
+        <<alarm_previous_period' = alarm_control>>
+      };  --end of maInit
+    maNormal: --monitor mode is normal, check temperature
+    check_mode -[monitor_mode? = NORMAL]-> check_temp {};
+    maOor:  --REQ-MA-2  temp out of range
+    check_temp -[(current_temperature? < lower_alarm_temperature?) or 
+    	  (current_temperature? > upper_alarm_temperature?)]-> run  
+      { <<REQMA2() and not REQMA1()>>
+      alarm_control!(On)  --temp out of range alarm
+      ; <<alarm_control=On>>
+      alarm_previous_period' := On
+        <<alarm_previous_period' = alarm_control>>
+      };  --end of maOor 
+    maIr:  --REQ-MA-4  temp in range
+    check_temp -[(current_temperature? >= (lower_alarm_temperature?+0.5)) and 
+    	    (current_temperature? <= (upper_alarm_temperature?-0.5))]-> run
+      { <<REQMA4() and not REQMA1() and AXIOM_AR()>>
+      alarm_control!(Off)  --no alarm
+      ; <<REQMA4() and not REQMA1() and AXIOM_AR() and alarm_control=Off>>
+      alarm_previous_period' := Off
+        <<alarm_previous_period' = alarm_control>>
+      };  --end of maIr
+    maHys:  --REQ-MA-3 hysteresis at edge of temp range
+    check_temp -[((current_temperature? >= lower_alarm_temperature?) 
+    	  and (current_temperature? < (lower_alarm_temperature?+0.5))) or 
+    	  ((current_temperature? > (upper_alarm_temperature?-0.5)) 
+    	  	and (current_temperature? <= upper_alarm_temperature?))]-> check_hyst{};
+    maHysOn:	--REQ-MA-3  with alarm on
+    check_hyst -[alarm_previous_period=On]-> run
+      { <<EDGE_TEMP() and MONITOR_MODE(NORMAL) and alarm_previous_period=On and INVMA()>>
+      alarm_control!(On)  
+      ;  <<alarm_control=On>>
+      alarm_previous_period' := On
+        <<alarm_previous_period' = alarm_control>>      
+      };  --end of maHysOn
+    maHysOff:	--REQ-MA-3  with alarm off
+    check_hyst -[alarm_previous_period=Off]-> run
+      { <<EDGE_TEMP() and MONITOR_MODE(NORMAL) and alarm_previous_period=Off and INVMA()>>
+      alarm_control!(Off)  
+      ;  <<alarm_control=Off>>
+      alarm_previous_period' := Off
+        <<alarm_previous_period' = alarm_control>>      
+      };  --end of maHysOn
+    maStop: run -[on dispatch stop]-> halt{};
+**};
+end manage_alarm.impl;
+
+
+
+
+end Monitor;

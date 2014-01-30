@@ -1,0 +1,23 @@
+package Physical_Types
+public
+  with BLESS_Types,Data_Model;
+
+--electrical potential measurement 
+data Voltage extends BLESS_Types::Real
+  properties
+    Data_Model::Measurement_Unit=>"Volts";
+end Voltage;
+
+--electrical current measurement  
+data Current extends BLESS_Types::Real
+  properties
+    Data_Model::Measurement_Unit=>"Amps";
+end Current;
+
+--physical liquid flow
+data Fluid_Flow
+  properties
+    Data_Model::Measurement_Unit=>"ml_per_hr";
+end Fluid_Flow;
+  
+end Physical_Types;

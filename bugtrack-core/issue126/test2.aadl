@@ -1,0 +1,49 @@
+package example2
+public
+
+system root
+end root;
+
+system implementation root.impl
+subcomponents
+	the_cpu: processor cpu.impl;
+	the_process : process p.i;
+end root.impl;
+
+processor cpu
+end cpu;
+
+processor implementation cpu.impl
+subcomponents
+the_part: virtual processor part.impl;
+properties
+Scheduling_Protocol => (RMS);
+end cpu.impl;
+
+virtual processor part
+end part;
+
+virtual processor implementation part.impl
+properties
+Scheduling_Protocol => (RMS);
+end part.impl;
+
+thread t
+properties
+	Period => 100ms;
+end t;
+
+thread implementation t.i
+properties
+	Deadline => 200ms;
+end t.i;
+
+process p
+end p;
+
+process implementation p.i
+subcomponents
+	t1 : thread t.i;
+end p.i;
+
+end example2;

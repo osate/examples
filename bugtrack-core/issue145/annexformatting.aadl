@@ -1,0 +1,32 @@
+package annexformatting
+public
+with ErrorLibrary;
+	system s
+	features
+		p1 : in event port;
+		annex me {**
+		hello
+	**};
+		annex emv2 {**
+		error propagations
+		use types ErrorLibrary;
+		p1: in propagation {ServiceOmission};
+		end propagations;
+	**};
+	end s;
+
+	system s1
+	features
+		p1 : in event port;
+	end s1;
+
+annex me {**
+	hello
+**};
+annex emv2 {**
+	error types
+	mine: type;
+	end types;
+**};
+
+end annexformatting;

@@ -1,0 +1,35 @@
+package flowspeclat
+public
+
+system top
+end top;
+
+system implementation top.basic
+subcomponents
+mysrc : system src.i;
+mysink: system snk;
+connections
+conn1: port mysrc.outp -> mysink.inp;
+end top.basic;
+
+system src
+features outp: out data port;
+flows
+fs1: flow source outp ;
+-- this property gets created in the instance model
+properties
+latency => 5 ms .. 5 ms applies to fs1;
+end src;
+
+system implementation src.i
+--properties
+---- this property association does not get created in the instance model
+--latency => 5 ms .. 5 ms applies to fs1;
+end src.i;
+
+system snk
+features inp: in data port;
+flows
+fs1: flow sink inp;
+end snk;
+end flowspeclat ;

@@ -1,0 +1,11 @@
+package bug142
+public
+    -- commented out: the next renames as it will produce a cyclic reference resolution  error
+    -- the message is: java.lang.AssertionError: Cyclic resolution of lazy links : FeatureGroupTypeRename.renamedFeatureGroupType->FeatureGroupTypeRename.renamedFeatureGroupType
+ renames feature group fgt;
+
+feature group fgt
+features
+p1: out event port;
+end fgt;
+end bug142 ;

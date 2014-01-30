@@ -1,0 +1,7 @@
+-- I think the following should detect an error that it does not.
+
+package bug149A
+public
+feature group Aentity
+end Aentity;
+end bug149A;

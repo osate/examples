@@ -1,0 +1,15 @@
+
+package issue167
+public
+with ps167;
+
+data foo
+end foo;
+
+system s
+features
+  p1 : in event data port foo {ps167::myname => "retep";};
+  ba: requires bus access {ps167::myname => "retep";};
+end s;
+ 
+end issue167;

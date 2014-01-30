@@ -1,0 +1,142 @@
+--Nursery.aadl
+--room containing an isolette
+
+package Nursery
+public
+  with KSU_Isolette,Iso_Variables,BLESS,EMV2,ARP4761;
+
+--@description air inside isolette
+	system Air
+		features
+--warming of air by heat source		
+			heat_in : in data port Heat;
+--heat-loss of incubator air to room
+			heat_out : out data port Heat;
+--air contect with infant			
+			infant_interaction : in out data port Air_Interaction;
+--actual air temperature that the sensor measures			
+			air_temperature : out data port Iso_Variables::current_temperature
+        {BLESS::Assertion => "<<:=CURRENT_TEMP>>";};
+		flows
+			heat_flow_sink: flow sink heat_in;
+			temp_source: flow source air_temperature;
+  annex EMV2 
+  {** 
+  use types ErrorLibrary, KSU_Isolette;
+  use behavior KSU_Isolette::FailStop;
+  error propagations
+--air is receiver of heat control errors  
+    heat_in: in propagation {HeatControlError};
+  flows
+    stp: error sink heat_in{HeatControlError};
+  end propagations; 			
+  **};
+	end Air;
+
+--@description nurse controlling isolette	
+	abstract Nurse
+		features
+--interation with isolette operator interface
+			control_monitor_alarm : in out data port Interface_Interaction;
+		flows
+--nurse is sink for alarms and current temp reading
+			flow_sink: flow sink control_monitor_alarm;
+--nurse is source for control
+      flow_source : flow source control_monitor_alarm;
+  annex EMV2 
+  {** 
+  use types ErrorLibrary, KSU_Isolette;
+  use behavior KSU_Isolette::FailStop;
+  error propagations
+--nurse is source of operator error  
+    control_monitor_alarm: out propagation {OperatorError};
+  flows
+    stp: error source control_monitor_alarm{OperatorError} when failed;
+  end propagations; 
+  properties
+    EMV2::OccurrenceDistribution => Iso_Properties::OperatorErrorRate 
+      applies to fail;
+    EMV2::hazards => (
+	    [	crossreference => "Nancy Leveson";
+		  failure => "inevitable human error";
+		  phases =>( "all");
+		  environment => "infant intensive care";
+		  description => "nurse enters wrong values for desired or alarm temperature ranges";
+		  comment => "mitigated somewhat by allowed ranges for parameters -> desired ranges must be reasonable and nested within alarm ranges";
+			] )applies to fail;
+	  EMV2::Severity =>  ARP4761::Minor applies to fail;
+	  EMV2::Likelihood =>  ARP4761::Remote applies to fail;
+  **};
+	end Nurse;
+
+--@description infant in isolette
+	abstract Infant
+		features
+			air_interaction : in out data port Air_Interaction;
+  annex EMV2 
+  {** 
+  use types ErrorLibrary, KSU_Isolette;
+  error propagations
+--infant suffers from heat-control error  
+--rate that infant suffers heat control errors is principal safety concern, heat control errors hurt babies
+    air_interaction: in propagation {HeatControlError,OperatorError};
+  flows
+    hce: error sink air_interaction{HeatControlError,OperatorError};  
+  end propagations; 
+  **};
+	end Infant;
+
+--@description heat emitted by source to warm air	
+	data Heat
+	end Heat;
+
+--@description data that flows between operator and control panel
+	data Interface_Interaction
+	end Interface_Interaction;
+
+--@descritption warming of air by heat source, or of infant by air	
+	data Air_Interaction
+	end Air_Interaction;
+
+--@description nursery room that contains isolette, infant, nurse, and air
+  system Room
+		features
+--models heat-loss of incubator to (presumably) cooler room		
+			heat_loss : out data port Heat;
+  end Room;
+
+--@description implementation of Room that contains incubator, infant, nurse, and air  
+	system implementation Room.Normal_Operation
+		subcomponents
+--incubator that keeps air within prescribed range		
+			anIncubator : system KSU_Isolette::isolette.single_sensor;
+--air warmed by heat source, breathed by infant			
+			theAir : system Air;
+--new-born human child often premature			
+			anInfant : abstract Infant;
+--human attendant and operator of incubator			
+			aNurse : abstract Nurse;
+	 connections
+--air with infant interaction	 
+	   a2i: port theAir.infant_interaction <-> anInfant.air_interaction;	
+--heating source warming air interaction
+     hs2a: port anIncubator.heat_out -> theAir.heat_in;
+     tmp: port theAir.air_temperature -> anIncubator.air_temperature;
+--heat-loss
+     hl: port theAir.heat_out -> heat_loss;
+--nurse with control-panel interaction
+     n2cp: port aNurse.control_monitor_alarm <-> anIncubator.control_monitor_alarm;
+--		flows
+----flows from air (temp) to air (heat-in)		
+--			temp_sensor_to_heat_source_flow : end to end flow 	
+--			  theAir.temp_source ->  tmp -> anIncubator.air_temp_to_heat_out
+----get error "Incomplete end-to-end flow instance temp_sensor_to_heat_source_flow_1: Missing connection to heat_flow_sink
+----but hs2a is exactly that connection 			  
+--				-> hs2a -> theAir.heat_flow_sink;
+----flows from air to nurse				
+--			temp_sensor_to_nurse : end to end flow 	
+--			  theAir.temp_source ->  tmp -> anIncubator.air_temp_to_alarm
+--				-> n2cp -> aNurse.flow_sink;
+	end Room.Normal_Operation;
+  	
+end Nursery;	

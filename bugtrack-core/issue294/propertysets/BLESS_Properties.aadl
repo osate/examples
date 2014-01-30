@@ -1,0 +1,11 @@
+--BLESS_Properties.aadl
+
+property set BLESS_Properties is
+  with AADL_Project;
+  Supported_Operators : list of aadlstring applies to ( data );
+    --used to define arithmetic operator symbols supported by a type
+  Supported_Relations : list of aadlstring applies to ( data );
+    --used to define relation symbols supported by a type
+  Radix : AADL_Project::Size_Units applies to ( data );
+    --location of the radix point for fixed-point representation counting from most significant bit  
+end BLESS_Properties;

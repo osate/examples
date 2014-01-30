@@ -1,0 +1,27 @@
+package issue59
+
+public
+
+thread t
+end t;
+
+process processType
+end processType;
+
+process implementation processType.i
+subcomponents
+threadName : thread t;
+end processType.i;
+
+system a
+end a;
+
+
+system implementation A.impl
+subcomponents
+	p1: process processType.i;
+properties
+	Compute_Execution_Time => 2 ms .. 3 ms applies to p1.threadName; --want to create this in code.
+end A.impl;
+
+end issue59;

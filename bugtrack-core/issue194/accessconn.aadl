@@ -1,0 +1,47 @@
+package accessconn
+public
+system top
+end top;
+
+bus b
+end b;
+
+device gps
+features
+ba : requires bus access b;
+oute: out event port;
+end gps;
+
+system gpses
+features
+ba : requires bus access b;
+oute: out event port;
+end gpses;
+
+system implementation gpses.i
+subcomponents 
+gps1: device gps;
+gps2: device gps;
+connections
+baconn1: bus access ba -> gps1.ba;
+baconn2: bus access ba -> gps2.ba;
+econn: port gps2.oute -> oute;
+modes
+s1: initial mode;
+s2: mode;
+t1: s1 -[gps1.oute]-> s2;
+end gpses.i;
+
+system implementation top.i
+subcomponents
+b1: bus b;
+g: system gpses.i;
+connections
+baconn: bus access b1 -> g.ba;
+modes
+m1: initial mode;
+m2: mode;
+t22: m1 -[g.oute]-> m2;
+end top.i;
+
+end accessconn ;

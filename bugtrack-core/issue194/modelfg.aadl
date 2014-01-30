@@ -1,0 +1,106 @@
+package issue194
+public
+with Timing_Properties,Deployment_Properties,Memory_Properties;
+system topsystem
+end topsystem;
+
+system implementation topsystem.impl
+subcomponents
+processname1: process ProcessTypeWithFeatureGroup.impl;
+processname2: process ProcessTypeWithFeatureGroupInv.impl;
+connections
+genconnectionTop: feature group processname1.origFG1 <-> processname2.invFG1;
+end topsystem.impl;
+
+process ProcessTypeWithFeatureGroup
+features
+origFG1: feature group FeatureGroupType1;
+end ProcessTypeWithFeatureGroup;
+
+process implementation ProcessTypeWithFeatureGroup.impl
+subcomponents
+subcomponentThreadName1: thread ThreadTypeWithFeatureGroup.impl;
+connections
+genconnectionProcess1: feature group subcomponentThreadName1.origFG1 <-> origFG1;
+end ProcessTypeWithFeatureGroup.impl;
+
+thread ThreadTypeWithFeatureGroup
+features
+origFG1: feature group FeatureGroupType1;
+end ThreadTypeWithFeatureGroup;
+
+thread implementation ThreadTypeWithFeatureGroup.impl
+end ThreadTypeWithFeatureGroup.impl;
+
+process ProcessTypeWithFeatureGroupInv
+features
+invFG1: feature group FeatureGroupType1InverseA;
+end ProcessTypeWithFeatureGroupInv;
+
+process implementation ProcessTypeWithFeatureGroupInv.impl
+subcomponents
+subcomponentThreadName2: thread ThreadTypeWithFeatureGroupInv.impl;
+connections
+genconnectionProcess2: feature group subcomponentThreadName2.invFG1 <-> invFG1;
+end ProcessTypeWithFeatureGroupInv.impl;
+
+thread ThreadTypeWithFeatureGroupInv
+features
+invFG1: feature group FeatureGroupType1InverseA;
+end ThreadTypeWithFeatureGroupInv;
+
+thread implementation ThreadTypeWithFeatureGroupInv.impl
+end ThreadTypeWithFeatureGroupInv.impl;
+
+feature group FeatureGroupType1
+features
+inEventData: in event data port DatatypeIn;
+outData: out data port DatatypeOut;
+end FeatureGroupType1;
+
+feature group FeatureGroupType1InverseA
+features
+outEventData: out event data port DatatypeIn;
+inData: in data port DatatypeOut;
+inverse of FeatureGroupType1
+end FeatureGroupType1InverseA;
+
+feature group FeatureGroupType1InverseB
+inverse of FeatureGroupType1
+end FeatureGroupType1InverseB;
+
+feature group FeatureGroupType2
+features
+inEventData: in event data port DatatypeIn;
+outData: out data port DatatypeOut;
+end FeatureGroupType2;
+data Datatype3
+end Datatype3;
+
+data implementation Datatype3.impl3
+properties
+Source_Data_Size => 0 Bytes;
+end Datatype3.impl3;
+
+data implementation Datatype3.impl33
+properties
+Source_Data_Size => 0 Bytes;
+end Datatype3.impl33;
+
+data DatatypeOut
+end DatatypeOut;
+
+data implementation DatatypeOut.impl
+properties
+Source_Data_Size => 1 Bytes;
+end DatatypeOut.impl;
+
+data DatatypeIn
+end DatatypeIn;
+
+data implementation DatatypeIn.impl
+properties
+Source_Data_Size => 2 Bytes;
+end DatatypeIn.impl;
+
+end issue194;

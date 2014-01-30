@@ -1,0 +1,49 @@
+package issue177
+public
+
+feature group PFG
+features
+    pin : in data port;
+end PFG;
+
+feature group NestedPFG
+features
+    pout : out data port;
+    nestPFG : feature group PFG;        
+    invPFG : feature group inverse of PFG;
+end NestedPFG;
+
+system SysPFG
+features
+    pin : in data port; 
+    nestPFG : feature group PFG;
+    invPFG : feature group inverse of PFG;
+end SysPFG;
+
+system SysInverse2OfPFG
+features
+    flip : feature group inverse of NestedPFG;
+end SysInverse2ofPFG;
+
+system implementation SysInverse2ofPFG.Imp
+subcomponents
+    sp : system SysPFG;
+connections
+    -- Inverse of "out data port" becomes "in data port"
+    -- This passes semantic checks.  Seems reasonable.
+    port flip.pout -> sp.pin;
+
+    -- Inverse of "PFG" does NOT become "inverse of PFG"
+    -- This generates an error containing "cannot be inverses of each other"        
+    feature group flip.nestPFG  <-> sp.invPFG;           
+
+    -- Inverse of "inverse of PFG" does NOT become "PFG"
+    -- This generates an error containing "cannot be inverses of each other"
+    feature group flip.invPFG  <-> sp.nestPFG;
+
+    -- Inverse of "PFG" is the same as "PFG"
+    -- This passes semantic checks, thought it seems like it shouldn't.
+    feature group flip.nestPFG  <-> sp.nestPFG;     
+end SysInverse2ofPFG.Imp;   
+
+end issue177;

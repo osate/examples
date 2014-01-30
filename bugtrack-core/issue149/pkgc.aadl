@@ -1,0 +1,13 @@
+
+package bug149C
+public
+with bug149B;
+feature group Centity
+features
+a: feature group bug149A::Aentity;      -- Should not be visible, but it is?
+b: feature group bug149B::Bentity;    
+
+end Centity; 
+   
+   
+end bug149C; 

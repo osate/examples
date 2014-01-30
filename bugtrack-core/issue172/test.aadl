@@ -1,0 +1,127 @@
+package test_blackboard
+public
+with POK,Data_Model;
+system root
+end root;
+
+system implementation root.impl
+subcomponents
+the_cpu: processor cpu.impl;
+the_proc: process proc.impl;
+the_mem: memory mem.impl;
+properties
+actual_processor_binding => (reference (the_cpu.the_part)) applies to the_proc;
+actual_memory_binding => (reference (the_mem)) applies to the_proc;
+end root.impl;
+
+processor cpu
+properties
+POK::Architecture => x86;
+POK::BSP => x86_qemu;
+end cpu;
+
+processor implementation cpu.impl
+subcomponents
+the_part: virtual processor part.impl;
+properties
+POK::Module_Major_Frame => 1000 ms;
+POK::Scheduler => static;
+POK::Partition_Slots => (1000 ms);
+POK::Slots_Allocation => (reference (the_part));
+end cpu.impl;
+
+virtual processor part
+properties
+POK::Additional_Features => (libc_stdio, console);
+end part;
+
+virtual processor implementation part.impl
+properties
+POK::Scheduler => RR;
+end part.impl;
+
+process proc
+end proc;
+
+process implementation proc.impl
+subcomponents
+the_sender: thread sender.impl;
+the_receiver: thread receiver.impl;
+connections
+cnx: port the_sender.p -> the_receiver.p;
+end proc.impl;
+
+memory mem
+end mem;
+
+memory implementation mem.impl
+properties
+Byte_Count => 80000;
+end mem.impl;
+
+thread sender
+features
+p: out data port Integer;
+properties
+Dispatch_Protocol => Periodic;
+Compute_Execution_Time => 0 ms .. 1 ms;
+Period => 1000 Ms;
+Priority => 5;
+Source_Data_Size => 40000 bytes;
+Source_Stack_Size => 40000 bytes;
+Source_Code_Size => 40 bytes;
+end sender;
+
+thread implementation sender.impl
+calls
+call : { c : subprogram sender_spg;};
+connections
+cnx: parameter c.result -> p;
+end sender.impl;
+
+subprogram sender_spg
+features
+result : out parameter Integer;
+properties
+source_name => "send";
+source_language => (C);
+source_text => ("../../../user_code.h");
+POK::source_location => "../../../user_code.o";
+end sender_spg;
+
+thread receiver
+features
+p: in data port Integer;
+properties
+Dispatch_Protocol => Periodic;
+Compute_Execution_Time => 0 ms .. 1 ms;
+Period => 200 Ms;
+Priority => 10;
+Source_Data_Size => 40000 bytes;
+Source_Stack_Size => 40000 bytes;
+Source_Code_Size => 40 bytes;
+end receiver;
+
+thread implementation receiver.impl
+calls
+call : { c : subprogram receiver_spg;};
+connections
+cnx: parameter p -> c.input;
+end receiver.impl;
+
+subprogram receiver_spg
+features
+input : in parameter Integer;
+properties
+source_name => "receive";
+source_language => (C);
+source_text => ("../../../user_code.h");
+POK::source_location => "../../../user_code.o";
+end receiver_spg;
+
+data Integer
+properties
+Data_Model::Data_Representation => integer;
+end Integer;
+
+end test_blackboard;

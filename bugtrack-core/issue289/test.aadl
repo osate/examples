@@ -1,0 +1,26 @@
+package issue289
+public
+
+system NavSubsystem
+features
+    enable_nav2: in event port;
+    interface: feature group NavInterface;
+end NavSubsystem;
+
+system implementation NavSubsystem.Impl
+modes
+    waiting: initial mode;
+    running: mode;
+    activated_good1: waiting -[interface.enable_nav]-> running; -- Should work but doesn't
+    activated_good2: waiting -[enable_nav2]-> running; -- Should work and does
+    activated_bad: waiting -[interface.enable_nav2]-> running; -- Shouldn't work bus does
+end NavSubsystem.Impl;
+
+feature group NavInterface
+features
+    enable_nav: in event port;
+    disable_nav: in event port;
+    status: out event data port;
+end NavInterface;
+
+end issue289;

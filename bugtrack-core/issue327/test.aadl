@@ -1,0 +1,70 @@
+-- In order to be able to use this example, users should update
+-- the definition of the ARINC653 properties. The updated property
+-- definition should include the following (see below).
+
+--HM_Error_ID_Levels: list of ARINC653::HM_Error_ID_Level_Type applies to (processor);
+--
+--HM_Error_ID_Level_Type: type record (
+--ErrorIdentifier:aadlinteger;
+--Description: aadlstring;
+--ErrorLevel: ARINC653::Error_Level_Type;
+--ErrorCode: ARINC653::Supported_Error_Code;
+--);
+--HM_Error_ID_Actions: list of ARINC653::HM_Error_ID_Action_Type applies to (processor, virtual processor);
+--
+--Error_Level_Type: type enumeration (Module_Level,Partition_Level,Process_Level);
+--
+--System_State_Description: aadlstring applies to (mode);
+--
+--System_State_Identifier: aadlinteger applies to (mode);
+--
+--HM_Error_ID_Action_Type: type record (
+--ErrorIdentifier:aadlinteger;
+--Description: aadlstring;
+--Action: aadlstring;
+--); 
+
+package issue327
+public
+with ARINC653;
+system root
+end root;
+
+system implementation root.impl
+subcomponents
+the_cpu: processor cpu.impl;
+end root.impl;
+
+processor cpu
+end cpu;
+
+processor implementation cpu.impl
+subcomponents
+the_part1: virtual processor part.impl {ARINC653::Partition_Identifier => "1";};
+the_part2: virtual processor part.impl {ARINC653::Partition_Identifier => "2";
+ARINC653::HM_Error_ID_Actions => ([ErrorIdentifier => 5; Description=>"Segmentation Error"; Action=>"IDLE";],
+[ErrorIdentifier => 6; Description=>"Time Duration Exceeded"; Action=>"IGNORE";])
+in modes (Process_Execution);
+};
+modes
+Module_Init: initial mode {ARINC653::System_State_Description=>"Module Init";};
+System_Function_Execution: mode {ARINC653::System_State_Description=>"Module Init";};
+Process_Execution: mode {ARINC653::System_State_Description=>"Process Execution";};
+properties
+ARINC653::Module_Major_Frame => 2000 ms;
+ARINC653::Partition_Slots => (1000 ms, 1000 ms);
+ARINC653::Slots_Allocation => (reference (the_part1), reference (the_part2));
+ARINC653::HM_Error_ID_Levels => ([ErrorIdentifier => 1; Description=>"Configuration Error"; ErrorLevel=>Module_Level;],
+[ErrorIdentifier => 2; Description=>"Module Configuration Error"; ErrorLevel=>Module_Level;]) in modes (Module_Init);
+ARINC653::HM_Error_ID_Levels => ([ErrorIdentifier => 5; Description=>"Segmentation violation"; ErrorLevel=>Module_Level;],
+[ErrorIdentifier => 6; Description=>"Time duration exceeded"; ErrorLevel=>Module_Level;]) in modes (System_Function_Execution);
+
+end cpu.impl;
+ 
+virtual processor part
+end part;
+
+virtual processor implementation part.impl
+end part.impl;
+
+end issue327;

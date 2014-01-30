@@ -1,0 +1,18 @@
+package bug148
+public
+with bug148props;
+
+data Pitch_Cmd
+end Pitch_Cmd;
+
+data implementation Pitch_Cmd.impl
+end Pitch_Cmd.impl;
+
+
+data d
+properties  
+	bug148props::Base_Types => (classifier(Pitch_Cmd.impl)); 
+end d;
+
+
+end bug148;

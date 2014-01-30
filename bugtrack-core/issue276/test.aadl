@@ -1,0 +1,37 @@
+package issue276
+public
+
+system TestSys
+features
+    fg1: feature group TestFeatureGroup;
+    fg2: feature group TestInvFeatureGroup;
+end TestSys;
+
+system TestSubSys
+features
+    in1: in feature;
+    out1: out feature;
+end TestSubSys;
+
+system implementation TestSys.Impl
+subcomponents
+    ss1: system TestSubSys;
+connections
+    c1: feature fg1.in1 -> ss1.in1;
+    c2: feature ss1.out1 -> fg2.in1; -- BUG? I don't believe this is allowed.
+    c3: feature ss1.out1 -> fg2.out1;
+end TestSys.Impl;
+
+feature group TestFeatureGroup
+features
+    in1: in feature;
+end TestFeatureGroup;
+
+
+feature group TestInvFeatureGroup
+features
+    out1: out feature;
+inverse  of TestFeatureGroup
+end TestInvFeatureGroup;
+
+end issue276;

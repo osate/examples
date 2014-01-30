@@ -1,0 +1,32 @@
+package issue170
+
+public
+
+data Integer
+end Integer;
+
+subprogram sender_spg
+features
+result : out parameter Integer;
+end sender_spg;
+
+thread sender
+features
+p: out data port Integer;
+properties
+Dispatch_Protocol => Periodic;
+Compute_Execution_Time => 0 ms .. 1 ms;
+Period => 1000 Ms;
+Source_Data_Size => 40000 bytes;
+Source_Stack_Size => 40000 bytes;
+Source_Code_Size => 40 bytes;
+end sender;
+
+thread implementation sender.impl
+calls
+call : { c : subprogram sender_spg;};
+connections
+cnx: parameter c.result -> p;   
+end sender.impl;
+
+end issue170;

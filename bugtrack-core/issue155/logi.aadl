@@ -1,0 +1,17 @@
+package bug155Logi
+public
+
+with bug155Conc;
+
+bus BBusLog extends bug155Conc::ABusCon
+end BBusLog;
+
+system SysLog extends bug155Conc::SysCon
+features 
+    p : refined to requires bus access BBusLog;
+end SysLog;
+
+system implementation SysLog.Imp
+end SysLog.Imp;
+ 
+end bug155Logi;

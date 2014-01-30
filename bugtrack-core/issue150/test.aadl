@@ -1,0 +1,29 @@
+-- A classifier is refined to a peer of the inherited
+-- classifier rather than a descendant of it. Section 4.5
+-- paragraph L4 suggests this is doubly-illegal: the default
+-- rule is that the type must be identical, and it's still
+-- wrong for Type_Extension.
+
+package Ext
+public
+
+data Root
+end Root;
+
+data A extends Root
+end A;
+
+data B extends Root
+end B;
+
+thread TA
+features
+    p: in data port A; 
+end TA;
+
+thread TB extends TA
+features
+    p: refined to in data port A;               -- Should not be legal?
+end TB; 
+ 
+end Ext;

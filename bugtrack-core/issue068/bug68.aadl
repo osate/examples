@@ -1,0 +1,11 @@
+package bug68
+public
+with Data_model;
+data d
+properties
+Data_model::Base_Type => (classifier(t));
+end d;
+
+thread t
+end t;
+end bug68;

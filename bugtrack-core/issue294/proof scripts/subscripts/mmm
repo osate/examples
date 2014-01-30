@@ -1,0 +1,123 @@
+#manage_monitor_mode_mmm.impl
+#[serial 1031]  <<M(check_normal) and x>> -> <<M(darnit)>> for mrm3err:check_normal-[x]->darnit{};
+axioms
+#[serial 1033] <<M(normal)>> -> <<I>> from invariant I when complete state normal has Assertion <<M(normal)>> in its definition.
+axioms
+#[serial 1034] <<M(init)>> -> <<I>> from invariant I when complete state init has Assertion <<M(init)>> in its definition.
+axioms
+#[serial 1035] Serban's Theorem:  disjunction of execute conditions leaving execution state check_normal, <<M(check_normal)>> -> <<e1 or e2 or . . . en>>
+axioms
+DeMorgan
+normalize
+cnf
+laws
+normalize
+replace<=
+laws
+normalize
+#[serial 1036] Serban's Theorem:  disjunction of execute conditions leaving execution state check_init, <<M(check_init)>> -> <<e1 or e2 or . . . en>>
+axioms
+normalize
+replace<=
+cnf
+laws
+normalize
+laws
+normalize
+cnf
+normalize
+laws
+normalize
+#[serial 1037]  <<M(start)>> A <<M(init)>> for mmm1:start-[ ]->init{A};
+axioms
+normalize
+reduce
+atomic
+laws
+remove-axioms-post
+normalize
+axioms
+substitute-both
+sub-all-eq
+normalize
+#[serial 1038]  <<M(init) and x>> A <<M(check_init)>> for wait_init:init-[x]->check_init{A};
+axioms
+normalize
+reduce
+atomic
+normalize
+laws
+#[serial 1039]  <<M(check_init) and x>> A <<M(failed)>> for mmm:check_init-[x]->failed{A};
+axioms
+reduce
+atomic
+axioms
+substitute-both
+normalize
+replace<=
+laws
+DeMorgan
+normalize
+laws
+DeMorgan
+normalize
+dist^
+axioms
+laws
+#[serial 1040]  <<M(check_init) and x>> A <<M(normal)>> for mmm2:check_init-[x]->normal{A};
+axioms
+reduce
+atomic
+dist^
+normalize
+axioms
+substitute-post
+normalize
+laws
+axioms
+substitute-both
+normalize
+axioms
+#[serial 1041]  <<M(check_init) and x>> -> <<M(init)>> for mmm2x:check_init-[x]->init{};
+normalize
+axioms
+#[serial 1042]  <<M(normal) and x>> A <<M(check_normal)>> for wait_normal:normal-[x]->check_normal{A};
+reduce
+atomic
+normalize
+laws
+normalize
+axioms
+#[serial 1043]  <<M(check_normal) and x>> A <<M(normal)>> for mmm3:check_normal-[x]->normal{A};
+reduce
+normalize
+atomic
+axioms
+substitute-both
+normalize
+dist^
+laws
+axioms
+#[serial 1044]  <<M(check_normal) and x>> A <<M(failed)>> for mmm3x:check_normal-[x]->failed{A};
+reduce
+atomic
+dist^
+normalize
+laws
+axioms
+substitute-both
+normalize
+DeMorgan
+normalize
+DeMorgan
+normalize
+laws
+DeMorgan
+normalize
+laws
+replace<=
+normalize
+axioms
+substitute-both
+normalize
+axioms

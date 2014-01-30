@@ -1,0 +1,48 @@
+package issue182_test1
+public
+system Test
+end Test;
+
+system implementation Test.impl
+    subcomponents
+        test: system Test_Subcompo.impl;
+end test.impl;
+
+system Test_Subcompo
+end Test_Subcompo;
+
+system implementation Test_Subcompo.impl
+end Test_Subcompo.impl;
+
+system Test2 extends Test
+end Test2;
+
+system implementation Test2.impl extends Test.impl
+
+-- If this is uncommented, the classifier match error disappear
+--subcomponents
+-- test: refined to system Test_Subcompo2.impl;
+end Test2.impl;
+
+system Test_Subcompo2 extends Test_Subcompo
+end Test_Subcompo2;
+
+system implementation Test_Subcompo2.impl extends Test_Subcompo.impl
+end Test_Subcompo2.impl;
+
+system Test3 extends Test2
+end Test3;
+
+system implementation Test3.impl extends Test2.impl
+    subcomponents
+        -- There is a classifier match error for subcompo3 but not for subcompo2
+        test: refined to system Test_Subcompo3.impl;
+end Test3.impl;
+
+system Test_Subcompo3 extends Test_Subcompo2
+end Test_Subcompo3;
+
+system implementation Test_Subcompo3.impl extends Test_Subcompo2.impl
+end Test_Subcompo3.impl;
+
+end issue182_test1;
