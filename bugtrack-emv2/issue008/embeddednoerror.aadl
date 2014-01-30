@@ -1,0 +1,251 @@
+package emv2_issue8
+
+public
+with EMV2;
+
+data temperature
+end temperature;
+
+data action
+end action;
+
+bus pwm
+end pwm;
+
+bus serial
+end serial;
+
+bus generic
+end generic;
+
+device sensor
+features
+tempval : requires bus access pwm;
+annex EMV2 {**
+use types ErrorLibrary;
+use behavior emv2_issue8_errlib::Simple;
+properties
+-- The following properties are used to fill the PRISM model
+-- and the FHA report.
+-- The value here corresponds to lambda_s in the PRISM model
+-- lamba_s = 1/(30*24*60*60)
+-- from the specifications, it corresponds to 1 fault per month
+EMV2::OccurrenceDistribution => [ ProbabilityValue => 3.85e-7 ; Distribution => Poisson;] applies to Failure;
+EMV2::severity => 1 applies to Failure;
+EMV2::likelihood => C applies to Failure;
+
+
+    EMV2::severity => 1 applies to Failed;
+    EMV2::likelihood => C applies to Failed;
+
+
+**};
+end sensor;
+
+device implementation sensor.i
+end sensor.i;
+
+device actuator
+features
+action : requires bus access pwm;
+annex EMV2 {**
+use types ErrorLibrary;
+use behavior emv2_issue8_errlib::Simple;
+properties
+-- The following properties are used to fill the PRISM model
+-- and the FHA report.
+-- The value here corresponds to lambda_a in the PRISM model
+-- lamba_a = 1/(2*30*24*60*60)
+-- from the specifications, it corresponds to 1 fault per 2 months
+EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.92e-7 ; Distribution => Poisson;] applies to Failure;
+EMV2::severity => 1 applies to Failure;
+EMV2::likelihood => C applies to Failure;
+
+
+    EMV2::severity => 1 applies to Failed;
+    EMV2::likelihood => C applies to Failed;
+
+
+**};
+end actuator;
+
+device implementation actuator.i
+end actuator.i;
+
+bus generic_bus
+end generic_bus;
+
+bus implementation generic_bus.i
+end generic_bus.i;
+
+processor generic_processor
+features
+ba : requires bus access generic_bus.i;
+annex EMV2 {**
+use types emv2_issue8_errlib;
+use behavior emv2_issue8_errlib::SimpleAndTransient;
+
+error propagations
+    ba: out propagation {NoService};
+    ba: in propagation {NoService};
+flows
+    baout : error source ba{NoService};
+end propagations;
+
+component error behavior
+transitions
+    Operational -[ba{NoService}]-> Failed;
+propagations
+   pp1 : TransientFailure -[]->ba(NoService);
+   pp2 : Failed -[]->ba(NoService);
+end component; 
+properties
+    --  The following properties are used to fill the PRISM model
+    --  and the FHA report.
+    --  The value corresponds to lambda_s in the PRISM model
+    --  lamba_p = 1/(365*24*60*60)
+    --  from the specifications, it corresponds to 1 fault per year
+    EMV2::OccurrenceDistribution => [ ProbabilityValue => 3.17e-8 ; Distribution => Poisson;] applies to Failure;
+    EMV2::severity => 1 applies to Failure;
+    EMV2::likelihood => C applies to Failure;
+
+    --  The following properties are used to fill the PRISM model
+    --  and the FHA report.
+    --  The value corresponds to delta_r in the PRISM model
+    --  delta_r = 1/(1/30)
+    --  from the specifications, it corresponds to 1 recovery occurence each 30 seconds
+    EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.03 ; Distribution => Poisson;] applies to ResetEvent;
+
+
+    --  The following properties are used to fill the PRISM model
+    --  and the FHA report.
+    --  The value corresponds to delta_f in the PRISM model
+    --  delta_f = 1/(1/24*60*60)
+    --  from the specifications, it corresponds to 1 transient failure occurence each day
+    EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.15e-5 ; Distribution => Poisson;] applies to FailureTransient;
+    EMV2::severity => 1 applies to FailureTransient;
+    EMV2::likelihood => C applies to FailureTransient;
+
+
+**};
+end generic_processor;
+
+processor output_processor extends generic_processor
+features
+action_data : provides bus access pwm;
+end output_processor;
+
+processor input_processor extends generic_processor
+features
+temperature1 : provides bus access pwm;
+temperature2 : provides bus access pwm;
+temperature3 : provides bus access pwm;
+end input_processor;
+
+processor main_processor extends generic_processor
+
+end main_processor;
+
+system bus_subsystem
+features
+bpin : provides bus access generic_bus.i;
+bpm : provides bus access generic_bus.i;
+bpout : provides bus access generic_bus.i;
+end bus_subsystem;
+
+system implementation bus_subsystem.i
+subcomponents
+b : bus generic_bus.i;
+connections
+c0 : bus access bpin <-> b;
+c1 : bus access bpout <-> b;
+c2 : bus access bpm <-> b;
+annex emv2 {**
+use types emv2_issue8_errlib;
+use behavior emv2_issue8_errlib::Simple;
+
+error propagations
+    bpout: out propagation {NoService};
+    bpout: in propagation {NoService};
+    bpin: in propagation {NoService};
+    bpin: out propagation {NoService};
+    bpm: out propagation {NoService};
+    bpm: in propagation {NoService};
+flows
+    esource_in  : error source bpin{NoService};
+    esink_in    : error sink bpin{NoService};
+    esource_m   : error source bpm{NoService};
+    esink_m     : error sink bpm{NoService};
+    esource_out : error source bpout{NoService};
+    esink_out   : error sink bpout{NoService};
+end propagations;
+
+component error behavior
+transitions
+    t1 : Operational -[bpin{NoService}]->   Failed;
+    t2 : Operational -[bpout{NoService}]->  Failed;
+    t3 : Operational -[bpm{NoService}]->    Failed;
+    t4 : Failed      -[bpm{NoError} and bpout{NoError} and bpin{NoError}]-> Operational;
+propagations
+    bp1: Failed -[]->bpout(NoService);
+    bp2: Failed -[]->bpin(NoService);
+    bp3: Failed -[]->bpm(NoService);
+end component;
+
+**};
+end bus_subsystem.i;
+
+system main
+end main;
+
+system implementation main.i
+subcomponents
+s1 : device sensor.i;
+s2 : device sensor.i;
+s3 : device sensor.i;
+a1 : device actuator.i;
+a2 : device actuator.i;
+pi : processor input_processor;
+pm : processor main_processor;
+po : processor output_processor;
+b : system bus_subsystem.i;
+connections
+c0 : bus access s1.tempval <-> pi.temperature1;
+c1 : bus access s2.tempval <-> pi.temperature2;
+c2 : bus access s3.tempval <-> pi.temperature3;
+
+c3 : bus access po.action_data <-> a1.action;
+c4 : bus access po.action_data <-> a2.action;
+
+c5 : bus access pi.ba <-> b.bpin;
+c6 : bus access pm.ba <-> b.bpm;
+c7 : bus access po.ba <-> b.bpout;
+
+annex EMV2 {**
+use behavior emv2_issue8_errlib::Simple;
+-- The composite error behavior is used to make the RBD evaluation.
+-- It uses the conditions of the states section below
+-- and uses the properties declared in the same section (the fixed values)
+
+composite error behavior
+states
+    [((s1.Operational and s2.Operational ) or (s1.Operational and s3.Operational ) or (s3.Operational and s2.Operational ) ) or (a1.Operational or a2.Operational)]-> Operational;
+    [a1.Failed or a2.Failed]-> Failed;
+    [s1.Failed and s2.Failed ]-> Failed;
+    [s1.Failed and s3.Failed ]-> Failed;
+    [s3.Failed and s2.Failed ]-> Failed;
+end composite;
+    properties 
+
+    --  The following values are used rather for the RDB
+    --  They are not used by PRISM itself 
+    EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.00003 ; Distribution => Fixed;] applies to s1.Failed;
+    EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.00003 ; Distribution => Fixed;] applies to s2.Failed;
+    EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.00003 ; Distribution => Fixed;] applies to s3.Failed;
+    EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.0001 ; Distribution => Fixed;] applies to a1.Failed;
+    EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.0001 ; Distribution => Fixed;] applies to a2.Failed;
+
+**};
+end main.i;
+
+end emv2_issue8;

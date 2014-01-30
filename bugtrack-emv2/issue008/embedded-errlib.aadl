@@ -1,0 +1,60 @@
+package emv2_issue8_errlib
+public
+annex EMV2 {**
+	error types
+		NoValue : type;
+		BadValue : type;
+		LateValue : type;
+		NoService : type;
+	end types;
+
+error behavior ThreeState
+states
+  Operational: initial state; 
+  NonCriticalModeFailure: state; 
+  CriticalModeFailure: state; 
+end behavior;
+	
+	error behavior ThreeErrorStates
+		events
+			BadValueEvent: error event;
+			NoValueEvent: error event;
+			LateValueEvent: error event;
+		states
+			Operational: initial state;
+			BadValueState: state;
+			NoValueState : state;
+			LateValueState: state;
+		transitions 
+			BadValueTransition : Operational -[BadValueEvent]-> BadValueState;
+			NoValueTransition : Operational -[NoValueEvent]-> NoValueState;
+			LateTransition : Operational-[LateValueEvent]->LateValueState;
+	end behavior;
+		
+	error behavior Simple
+	events
+		Failure : error event ;
+	states
+		Operational : initial state ;
+		Failed : state ;
+	transitions
+		BadValueTransition : Operational -[ Failure ]-> Failed ;
+	end behavior ;
+	
+	error behavior SimpleAndTransient
+	events
+		Failure 			: error event;
+		FailureTransient 	: error event;
+		ResetEvent			: recover event;		
+	states
+		Operational 		: initial state;
+		Failed 				: state;
+		TransientFailure 	: state;
+	transitions
+		transerr: Operational 		-[ Failure ]-> Failed;
+	
+		transerr1: Operational 		-[ FailureTransient ]-> TransientFailure;
+		treset  : TransientFailure 	-[ ResetEvent ]-> Operational;
+	end behavior;	
+**};
+end emv2_issue8_errlib;
