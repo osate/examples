@@ -81,7 +81,7 @@ with EMV2;
 			failstop: error source outp {ServiceOmission} when Failed;
 		-- the processing unit passes through incoming error propagations 
 		-- detailed logic for the pass through conditions are found in the component error behavior specification
-			passthru: error path inp -> outp;
+			passthru: error path inp{ValueError} -> outp{ServiceOmission};
 			
 			-- POSSIBLE EMV2 improvement: allow when clause with error path.
 			-- note that when in error soruce indicates the origin of the error source, i.e., the error state that causes this propagation
