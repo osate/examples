@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<core:Specification xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:core="http:///www.open-people.fr/rdal/core" id="_jKUV8IewEeOoRKagkMqmQA" constraintLanguagesSpecification="platform:/config/fr.openpeople.ide.settings/defaultConstraintsLanguages.constraints#20903345">
+  <actors xsi:type="core:StakeHolder" id="_zusuQIewEeOoRKagkMqmQA" name="passenger" contractualElements="#_uZEQ4IexEeOoRKagkMqmQA #_zqjYoIexEeOoRKagkMqmQA"/>
+  <verificationActivities id="_04L6UIe6EeOoRKagkMqmQA" name="Source code review" requirement="#_BjvWAIeyEeOoRKagkMqmQA"/>
+  <verificationActivities id="__BynkIe6EeOoRKagkMqmQA" name="Check for false alarm" requirement="#__b58QIewEeOoRKagkMqmQA"/>
+  <verificationActivities id="_9_VPkIe7EeOoRKagkMqmQA" name="Formal analysis method"/>
+  <verificationActivities id="_A2oz4Ie8EeOoRKagkMqmQA" name="Check for sensor error" requirement="#_NdU5gIe6EeOoRKagkMqmQA"/>
+  <requirementGroups id="_wMSXcIewEeOoRKagkMqmQA" name="door control">
+    <requirements xsi:type="core:Requirement" id="_5XmQcIewEeOoRKagkMqmQA" name="door-closed when moving or non parked" containedRequirements="#_NdU5gIe6EeOoRKagkMqmQA"/>
+    <requirements xsi:type="core:Requirement" id="_7xk_kIewEeOoRKagkMqmQA" name="door open when parked" containedRequirements="#_NdU5gIe6EeOoRKagkMqmQA"/>
+    <requirements xsi:type="core:Requirement" id="_BjvWAIeyEeOoRKagkMqmQA" name="open the door upon emergency" containedRequirements="#__b58QIewEeOoRKagkMqmQA" verifiedBy="#_04L6UIe6EeOoRKagkMqmQA"/>
+  </requirementGroups>
+  <requirementGroups id="_x8Nc8IewEeOoRKagkMqmQA" name="emergency detection">
+    <requirements xsi:type="core:Requirement" id="__b58QIewEeOoRKagkMqmQA" name="system detects and signal emergency" containedRequirements="#_KLJ3wIeyEeOoRKagkMqmQA #_L075AIeyEeOoRKagkMqmQA" verifiedBy="#__BynkIe6EeOoRKagkMqmQA"/>
+    <requirements xsi:type="core:Requirement" id="_KLJ3wIeyEeOoRKagkMqmQA" name="detect smoke"/>
+    <requirements xsi:type="core:Requirement" id="_L075AIeyEeOoRKagkMqmQA" name="manual emergency alarm"/>
+  </requirementGroups>
+  <requirementGroups id="_tVWKEIexEeOoRKagkMqmQA" name="usability">
+    <requirements xsi:type="core:Requirement" id="_uZEQ4IexEeOoRKagkMqmQA" name="safely open the door" stakeHolders="#_zusuQIewEeOoRKagkMqmQA" containedRequirements="#_5XmQcIewEeOoRKagkMqmQA #_7xk_kIewEeOoRKagkMqmQA"/>
+    <requirements xsi:type="core:Requirement" id="_zqjYoIexEeOoRKagkMqmQA" name="open the door during an emergency" stakeHolders="#_zusuQIewEeOoRKagkMqmQA" containedRequirements="#_BjvWAIeyEeOoRKagkMqmQA"/>
+  </requirementGroups>
+  <requirementGroups id="_VbWuwIe0EeOoRKagkMqmQA" name="speed control">
+    <requirements xsi:type="core:Requirement" id="_NdU5gIe6EeOoRKagkMqmQA" name="monitor train speed" verifiedBy="#_A2oz4Ie8EeOoRKagkMqmQA"/>
+  </requirementGroups>
+</core:Specification>

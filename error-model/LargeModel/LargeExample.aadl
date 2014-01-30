@@ -120,12 +120,17 @@ annex EMV2 {**
       [ others]-> Fail_Unknown;
       end composite;
 **};
-annex behavior_specification {** 
-    transitions 
-    T1_4: S123 -[ S2.A_Failed and S3.A_Failed ]-> S234; 
-    T2_4: S123 -[ S1.A_Failed and S3.B_Failed ]-> S134;
-    T3_4: S123 -[ S1.B_Failed and S2.B_Failed ]-> S124;
-**} ;
+--annex behavior_specification {** 
+--	states
+--		S123 : initial complete state;
+--		S234 : complete state;
+--		S134 : complete state;
+--		S124 : complete state;
+--    transitions 
+--    T1_4: S123 -[ S2.A_Failed and S3.A_Failed ]-> S234; 
+--    T2_4: S123 -[ S1.A_Failed and S3.B_Failed ]-> S134;
+--    T3_4: S123 -[ S1.B_Failed and S2.B_Failed ]-> S124;
+--**} ;
 end Dependable_System.Notional;
 
 

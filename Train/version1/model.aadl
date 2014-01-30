@@ -4,6 +4,7 @@ public
 
 with EMV2;
 with Data_Model;
+with train_errors;
 
 data speed
 end speed;
@@ -38,6 +39,24 @@ annex EMV2 {**
 	transitions
 		t0 : Operational -[Internal_Failure]-> Failed;
 	end component;
+	properties
+		EMV2::hazards => 
+		([	crossreference => "N/A";
+			failure => "Door is not operating";
+			phases => ("");
+			description => "";
+			comment => "";
+		])
+		applies to Failed;
+		
+		EMV2::hazards => 
+		([	crossreference => "N/A";
+			failure => "Door is fully operational";
+			phases => ("");
+			description => "";
+			comment => "";
+		])
+		applies to Operational;
 **};
 end door;
 
@@ -66,7 +85,7 @@ annex behavior_specification {**
 annex EMV2 {**
 	use types ErrorLibrary;
 	use behavior train_errors::simple;
-	
+	 
 	error propagations
 		speed 			: in propagation{ValueError,ServiceError};
 		intransit 		: in propagation{ValueError,ServiceError};
@@ -94,7 +113,26 @@ annex EMV2 {**
 --        the idea here is to capture the fact that when we have an error, the self.safe
 --        is set to false so that we cannot trigger any transition.
 --		p0 : Failed -[]-> self{ValueError};
+
 	end component;
+	properties
+		EMV2::hazards => 
+		([	crossreference => "N/A";
+			failure => "Unability to control the door";
+			phases => ("");
+			description => "";
+			comment => "";
+		])
+		applies to Failed;
+		
+		EMV2::hazards => 
+		([	crossreference => "N/A";
+			failure => "The door controller is fully operational";
+			phases => ("");
+			description => "";
+			comment => "";
+		])
+		applies to Operational;
 **};
 end door_controller;
 
@@ -140,9 +178,30 @@ annex EMV2 {**
 		Failure : error event;
 	transitions
 		t0 : Operational -[Failure]-> Failed;
+--      FIXME: how to show the synchronization between behavior and error model annex?
+--      see below
+--		t1 : Failed      -[self.reset]-> Operational;
 	propagations
 		p10 : Failed -[]-> alert{ValueError};
 	end component;
+	properties
+		EMV2::hazards => 
+		([	crossreference => "N/A";
+			failure => "Alarm is not operating";
+			phases => ("");
+			description => "";
+			comment => "";
+		])
+		applies to Failed;
+		
+		EMV2::hazards => 
+		([	crossreference => "N/A";
+			failure => "Alarm is fully operational";
+			phases => ("");
+			description => "";
+			comment => "";
+		])
+		applies to Operational;
 **};
 end alarm;
 
@@ -181,6 +240,24 @@ annex EMV2 {**
 		p20 : Failed -[]-> intransit{ValueError};
 		p21 : Failed -[]-> intransit{ServiceError};
 	end component;
+	properties
+		EMV2::hazards => 
+		([	crossreference => "N/A";
+			failure => "Train Controller is not operating";
+			phases => ("");
+			description => "";
+			comment => "";
+		])
+		applies to Failed;
+		
+		EMV2::hazards => 
+		([	crossreference => "N/A";
+			failure => "Train Controller is fully operational";
+			phases => ("");
+			description => "";
+			comment => "";
+		])
+		applies to Operational;
 **};
 end train_controller;
 
@@ -215,6 +292,24 @@ annex EMV2 {**
 	propagations
 		p10 : Failed -[]-> value{ValueError};
 	end component;
+	properties
+		EMV2::hazards => 
+		([	crossreference => "N/A";
+			failure => "Door sensor is not operating";
+			phases => ("");
+			description => "";
+			comment => "";
+		])
+		applies to Failed;
+		
+		EMV2::hazards => 
+		([	crossreference => "N/A";
+			failure => "Door sensor is fully operational";
+			phases => ("");
+			description => "";
+			comment => "";
+		])
+		applies to Operational;
 **};
 end door_sensor;
 
@@ -236,6 +331,17 @@ connections
 	conn_alarm  : port alarm.alert 				-> door_ctrl.alarm;
 	conn_speed  : port train_ctrl.speed 		-> door_ctrl.speed;
 	conn_transit: port train_ctrl.intransit 	-> door_ctrl.intransit;
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior train_errors::simple;
+	
+	composite error behavior
+	states
+		[alarm.Operational and door_ctrl.Operational and train_ctrl.Operational and door_sensor.Operational]->Operational;
+		[door_ctrl.Failed and door_sensor.Failed]->Failed;
+		[alarm.Failed]->Failed;
+	end composite;
+**};
 end train.i1;
 
 end train_version1;

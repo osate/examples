@@ -43,7 +43,7 @@ annex EMV2 {**
 		(	[crossreference => "1.1.1";
 			 failure => "Loss of sensor readings";
 			 phases => ("all");
-			 likelihood => 2;
+			 likelihood => A;
 			 severity => 1;
 			 description => "No position readings due to sensor failure";
 			 comment => "Becomes major hazard, if no rdeundant sensor";
