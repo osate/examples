@@ -1,0 +1,18 @@
+package call_spg_impl
+public
+
+thread T
+end T;
+
+subprogram S
+end S;
+
+subprogram implementation S.impl
+end S.impl;
+
+thread implementation T.impl
+calls
+callSeq_Default: { call_1: subprogram S.impl;};
+end T.impl;
+
+end call_spg_impl;

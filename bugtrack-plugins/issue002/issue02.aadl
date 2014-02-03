@@ -1,0 +1,21 @@
+package plugins_issue002
+
+public
+
+device foo
+end foo;
+
+device implementation foo.bar
+end foo.bar;
+
+
+system test
+end test;
+
+
+system implementation test.i
+subcomponents
+   d : device foo.bar;
+end test.i;
+
+end plugins_issue002;
