@@ -1,0 +1,56 @@
+package issue332
+public
+
+with Base_Types;
+
+system S
+end S;
+
+system implementation S.i
+subcomponents
+  p : process P.i;
+end S.i ;
+
+process P
+features
+  none;
+end P ;
+
+process implementation P.i
+subcomponents
+  prod : thread Prod.i;
+  cons : thread Cons.i;
+connections
+  conn : port prod.output -> cons.input;
+end P.i ;
+
+thread Prod
+features
+  output : out event data port Base_Types::Integer;
+end Prod ;
+
+thread implementation Prod.i
+annex behavior_specification {**
+    states
+        s0 : initial complete state;
+    transitions 
+        t0 : s0 -[ on dispatch ]-> s0 { output!(1) };
+**};
+end Prod.i ;
+
+thread Cons 
+features 
+    input : in event data port Base_Types::Integer;   
+end Cons ;
+
+thread implementation Cons.i
+subcomponents
+  x : data Base_Types::Integer;
+annex behavior_specification {** 
+    states 
+        s0 : initial complete state;
+    transitions
+        t0 : s0 -[ input?(x) ]-> s0 { };  
+**};
+end Cons.i ;
+end issue332;
