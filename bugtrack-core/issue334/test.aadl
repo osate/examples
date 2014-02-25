@@ -1,0 +1,39 @@
+package issue334
+public
+with ARINC653;
+
+system A653
+end A653;
+
+system implementation A653.Imp
+subcomponents
+    module: processor;
+    part1: virtual processor;
+    part2: virtual processor;       
+    p1: process;
+    p2: process;
+properties
+    -- Processes are bound to partitions
+    Actual_Processor_Binding => (reference (part1)) applies to p1;
+    Actual_Processor_Binding => (reference (part2)) applies to p2;  
+
+    -- Partitions are bound to processors
+
+    Actual_Processor_Binding => (reference (module)) applies to part1;
+    Actual_Processor_Binding => (reference (module)) applies to part2;
+
+    -- Module integrator declares the schedule for this configuration.
+
+    ARINC653::Module_Major_Frame => 20ms applies to module;
+    ARINC653::Partition_Slots => (5ms, 5ms) applies to module;
+
+    -- The ARINC653 property set only allows references to virtual processors
+    -- to appear in the list, but the following erroneously names the processes
+    -- rather than the partition virtual processors.  Shouldn't this generate
+    -- an error message?
+    ARINC653::Slots_Allocation => (reference (p1), reference (p2)) applies to module;           
+
+end A653.Imp;
+
+end issue334;
+
