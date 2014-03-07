@@ -1,0 +1,25 @@
+package issue340 
+public
+with Base_Types ;
+ 
+process proc
+ 
+features
+inPortA : in event data port Base_Types::Integer ;
+inPortB : in event data port Base_Types::Integer ;
+inPortC : in event data port Base_Types::Integer ;
+modes
+m1 : mode ;
+m2 : mode ;
+m1 -[self.inPortA, self.inPortA, self.inPortB, self.inPortC]-> m2 ;
+annex behavior_specification {**
+ 
+states
+m1 : initial complete state ;
+finalState : final state ; 
+transitions
+m1 -[on dispatch inPorta and inPortB or inPortc and inPortA]-> finalState ;
+**};
+end proc ;
+  
+end issue340 ;
