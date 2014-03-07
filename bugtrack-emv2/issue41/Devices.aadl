@@ -1,0 +1,181 @@
+package Devices
+public
+with KSU_Isolette, Iso_Variables, Base_Types, EMV2, ARP4761, Nursery;
+
+
+--A.5.1.4 Detect Regulator Failure Function
+device detect_regulator_failure
+features
+  internal_failure : out data port Base_Types::Boolean;
+annex EMV2 
+  {** 
+  use types ErrorLibrary;
+  use behavior KSU_Isolette::FailStop; 
+  error propagations
+  internal_failure: out propagation {ItemOmission,ItemCommission};
+  flows  --model error in detection and reporting
+    inf: error source internal_failure{ItemOmission};
+  end propagations;
+  component error behavior
+    detections  --in "failed" state put value on port internal_failure
+      failed -[ ]-> internal_failure!;
+  end component;
+  properties  --set occurrence of detection failure
+    EMV2::OccurrenceDistribution => Iso_Properties::DetectionRegulatorFailureRate 
+      applies to inf;      
+    --set failure rate for regulator
+    EMV2::OccurrenceDistribution => Iso_Properties::RegulatorFailureRate 
+      applies to fail;      
+    EMV2::hazards => 
+	   ( [	crossreference => "REMH A.5.1.4";
+		  failure => "regulator failure not detected";
+		  phases => ("all");
+		  environment => "infant intensive care";
+		  description => "failed, but not detected";
+		  comment => "effect unknown";
+			]) applies to inf;
+	  EMV2::Severity => ARP4761::Minor applies to inf;
+	  EMV2::Likelihood => ARP4761::ExtremelyRemote applies to inf;  
+  **};
+end detect_regulator_failure;
+
+device implementation detect_regulator_failure.impl
+end detect_regulator_failure.impl;
+
+
+--A.5.2.4 Detect Monitor Failure Function
+--this is where error models signal active threads an 
+--internal thermostat monitor failure has been detected
+device detect_monitor_failure
+features
+  internal_failure : out data port Base_Types::Boolean;
+annex EMV2 
+  {** 
+  use types ErrorLibrary;
+  use behavior KSU_Isolette::FailStop;
+  error propagations
+    internal_failure: out propagation {ItemOmission};
+    internal_failure: not out propagation {ItemCommission};
+  flows  --model error in detection and reporting
+    dmf: error source internal_failure{ItemOmission};
+  end propagations;
+  component error behavior
+    detections  --in "failed" state put value on port internal_failure
+      failed -[ ]-> internal_failure!;
+  end component;
+  properties  --set failure rate for temp monitor
+    EMV2::OccurrenceDistribution => Iso_Properties::MonitorFailureRate 
+      applies to fail;      
+  --set occurrence of detection failure
+    EMV2::OccurrenceDistribution => Iso_Properties::DetectionMonitorFailureRate 
+      applies to dmf;      
+    EMV2::Hazards => (
+	    [	crossreference => "REMH A.5.2.4";
+		  failure => "monitor failure w/o report";
+		  phases => ("all");
+		  environment => "infant intensive care";
+		  description => "monitor failure false negative";
+		  comment => "failure to detect monitor failures loses mitigation of heat control errors";
+			] ) applies to dmf.ItemOmission;
+	  EMV2::Severity => ARP4761::Hazardous applies to dmf.ItemOmission;
+	  EMV2::Likelihood => ARP4761::ExtremelyImprobable applies to dmf.ItemOmission;
+  **};
+end detect_monitor_failure;
+
+device implementation detect_monitor_failure.impl
+end detect_monitor_failure.impl;
+
+device temperature_sensor
+features
+  air : in data port Iso_Variables::current_temperature;
+  current_temperature : out data port Iso_Variables::current_temperature;
+flows
+    air_temp_flow : flow path air -> current_temperature;
+annex EMV2 
+  {** 
+  use types ErrorLibrary;
+  use behavior KSU_Isolette::FailSubtle;
+  error propagations
+  current_temperature: out propagation
+    {OutOfRange,UndetectableValueError};
+  flows
+    f: error source current_temperature{UndetectableValueError}
+      when flakey;	
+    stp: error source current_temperature{OutOfRange} when failed;
+  end propagations;
+  properties
+    EMV2::OccurrenceDistribution => Iso_Properties::TemperatureSensorBreaks 
+      applies to hardfail;
+    EMV2::OccurrenceDistribution => Iso_Properties::TemperatureSensorOutOfRange 
+      applies to current_temperature.OutOfRange;
+    EMV2::OccurrenceDistribution => Iso_Properties::TemperatureSensorUndetectableValueError 
+      applies to current_temperature.UndetectableValueError;
+    EMV2::hazards => 
+	    ( [	crossreference => "REMH A.3.2";
+		  failure => "temperature sensor total failure";
+		  phases => ("all");
+		  environment => "infant intensive care";
+		  description => "temperature sensor breaks";
+		  comment => "easily detected and alarm issued";
+			] ) applies to hardfail;
+	  EMV2::Severity => ARP4761::Minor applies to hardfail;
+	  EMV2::Likelihood => ARP4761::Remote applies to hardfail;
+    EMV2::hazards => (
+	    [	crossreference => "REMH A.3.2";
+		  failure => "temperature sensor out of range";
+		  phases => ("all");
+		  environment => "infant intensive care";
+		  description => "temperature sensor out of range";
+		  comment => "easily detected and alarm issued";
+			]) applies to f.OutOfRange;
+	  EMV2::Severity => ARP4761::Minor applies to f.OutOfRange;
+	  EMV2::Likelihood => ARP4761::Remote applies to f.OutOfRange;
+    EMV2::hazards => (
+	    [	crossreference => "REMH A.3.2";
+		  failure => "temperature sensor bad value";
+		  phases =>( "all");
+		  environment => "infant intensive care";
+		  description => "temperature sensor out of calibration";
+		  comment => "undetectable";
+			] )applies to subtlefail;
+	  EMV2::Severity => ARP4761::Hazardous applies to subtlefail;
+	  EMV2::Likelihood => ARP4761::ExtremelyRemote applies to subtlefail;  
+  **};
+end temperature_sensor;
+
+device implementation temperature_sensor.impl
+end temperature_sensor.impl;
+
+device heat_source
+features
+  heat_control : in data port Iso_Variables::on_off;
+  heat_out : out data port Nursery::Heat;
+flows
+  temp_to_heat_flow: flow path heat_control -> heat_out;
+annex EMV2 
+  {** 
+  use types KSU_Isolette;
+  use behavior KSU_Isolette::FailStop;
+  error propagations
+    heat_control: in propagation {HeatControlError};
+  end propagations;
+  properties
+    EMV2::OccurrenceDistribution => Iso_Properties::HeatSourceFailure 
+      applies to fail;
+    EMV2::hazards => (
+	    [	crossreference => "REMH A.3.2";
+		  failure => "heat source breaks";
+		  phases => ("all"); 
+		  environment => "infant intensive care";
+		  description => "mechanical disconnection of heat source";
+		  comment => "always fails open (off)";
+			]) applies to fail;
+	  EMV2::Severity => ARP4761::Hazardous applies to fail;
+	  EMV2::Likelihood => ARP4761::ExtremelyRemote applies to fail;  
+  **};
+end heat_source;
+
+device implementation heat_source.impl
+end heat_source.impl;
+
+end Devices;
