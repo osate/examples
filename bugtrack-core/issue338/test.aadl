@@ -1,0 +1,49 @@
+package issue338
+public
+
+subprogram CriticalSection
+features
+    d: requires data access {Concurrency_Control_Protocol => Priority_Inheritance;};
+end CriticalSection;
+
+subprogram implementation CriticalSection.Imp
+end CriticalSection.Imp;
+
+subprogram group Queue
+features
+    enque: provides subprogram access CriticalSection.Imp;
+    deque: provides subprogram access CriticalSection.Imp;
+end Queue;
+
+subprogram group implementation Queue.Imp
+subcomponents
+    queue: data {Source_Data_Size => 1024 Bytes;};
+    enq: subprogram CriticalSection.Imp {Compute_Execution_Time => 50 us .. 100 us;};
+    deq: subprogram CriticalSection.Imp {Compute_Execution_Time => 25 us .. 50 us;};        
+end Queue.Imp;
+
+thread queingThread
+features
+    queue: requires subprogram group access Queue.Imp;                  
+end queingThread;
+
+thread implementation queingThread.Imp
+end queingThread.Imp;
+
+process queingProc
+end queingProc;
+
+process implementation queingProc.Imp
+subcomponents
+    q: subprogram group Queue.Imp;
+    t1: thread queingThread.Imp;
+    t2: thread queingThread.Imp;
+connections
+    -- Why errors on the following two lines?
+    -- Similar to pattern used for data and subprogram accesses in Queue.Imp.
+    -- Error message talks about bus access, not subprogram group access.
+    sga1: subprogram group  access q -> t1.queue;    
+    sga2: subprogram group access q -> t2.queue;     
+end queingProc.Imp; 
+
+end issue338;
