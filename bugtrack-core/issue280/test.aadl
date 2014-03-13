@@ -1,0 +1,18 @@
+package issue280
+public
+system TestSystemA
+prototypes
+	fp1: feature;
+	fp2: feature;
+	fp3: feature;
+end TestSystemA;
+
+system TestSystemB extends TestSystemA
+(
+	fp1 => requires bus access, 
+	fp2 => in feature fp2,
+	fp3 => feature fp2 -- Should not be an error
+)
+end TestSystemB;
+
+end issue280;
