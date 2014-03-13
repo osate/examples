@@ -1,0 +1,35 @@
+package security_example
+
+public
+
+with SEI;
+
+process psrc
+features
+	pout : out data port;
+properties
+	SEI::SecurityLevel => 4;	
+	SEI::SafetyCriticality => 2;
+end psrc;
+
+process pdst
+features
+	pin : in data port;
+properties
+	SEI::SecurityLevel => 5;
+	SEI::SafetyCriticality => 3;
+end pdst;
+
+
+system main
+end main;
+
+system implementation main.i
+subcomponents
+	psrc : process psrc;
+	pdst : process pdst;
+connections
+	c0 : port psrc.pout -> pdst.pin;
+end main.i;
+
+end security_example;
