@@ -1,0 +1,37 @@
+package issue324
+public
+
+system fi_bug
+  features
+    in1 : in event port;
+    out1 : out event port;
+  flows
+    fp : flow path in1 -> out1;
+end fi_bug;
+
+system implementation fi_bug.impl
+  subcomponents
+    sc1 : system sc_classifier;
+    sc2 : system sc_classifier;
+  connections
+    c1 : port in1 -> sc1.in1;
+    c2 : port sc1.out_1 -> out1;
+    c3 : port in1 -> sc2.in1;
+    c4 : port sc2.out_1 -> out1;
+  flows
+    -- First implementation. OK.
+    fp: flow path in1 -> c1 -> sc1.fp -> c2 -> out1;
+
+    -- Second implementation. 10.2 (N1) of the standard allows it, but OSATE does not. "Flow implementation fp declared more than once"
+    fp: flow path in1 -> c3 -> sc2.fp -> c4 -> out1;
+end fi_bug.impl;
+
+system sc_classifier
+  features
+    in1 : in event port;
+    out_1 : out event port;
+  flows
+    fp : flow path in1 -> out_1;
+end sc_classifier;
+
+end issue324;
