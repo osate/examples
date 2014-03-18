@@ -1,0 +1,110 @@
+package hbs_components
+
+public
+
+---------------------------------------
+-- MECHANICAL PEDAL
+---------------------------------------
+system mechanical_pedal
+features
+	output : out data port;
+end mechanical_pedal;
+
+system implementation mechanical_pedal.i
+end mechanical_pedal.i;
+
+
+---------------------------------------
+-- ELECTRONICAL PEDAL
+---------------------------------------
+system electronic_pedal
+features
+	mechanical_input: in data port;
+	output1         : out data port;
+	output2         : out data port;
+end electronic_pedal;
+
+system implementation electronic_pedal.i
+end electronic_pedal.i;
+
+-----------------------
+--  COMMUNICATION BUS
+-----------------------
+
+bus communication_bus
+end communication_bus;
+
+bus implementation communication_bus.i
+end communication_bus.i;
+
+-----------------------------------------
+-- EMB stands for Electromechanical Brake
+-----------------------------------------
+system emb
+end emb;
+
+system implementation emb.i
+end emb.i;
+
+--------------------------------
+-- IWM stands for In-Wheel Motor
+--------------------------------
+system iwm
+end iwm;
+
+system implementation iwm.i
+end iwm.i;
+
+
+---------------------------------------
+-- WNC stands for Wheel-Node Controller
+---------------------------------------
+system wnc
+features
+	input1 : in data port;
+	input2 : in data port;
+	output1 : out data port;
+	output2 : out data port;
+end wnc;
+
+system implementation wnc.i
+end wnc.i;
+
+-------------------------------
+-- Power Converters
+-------------------------------
+system power_converter
+end power_converter;
+
+system emb_power_converter extends power_converter
+end emb_power_converter;
+
+system implementation emb_power_converter.i
+end emb_power_converter.i;
+
+system iwm_power_converter extends power_converter
+end iwm_power_converter;
+
+system implementation iwm_power_converter.i
+end iwm_power_converter.i;
+
+-------------------------------
+-- Batteries
+-------------------------------
+system battery
+end battery;
+
+system powertrain_battery extends battery
+end powertrain_battery;
+
+system implementation powertrain_battery.i
+end powertrain_battery.i;
+
+system auxiliary_battery extends battery
+end auxiliary_battery;
+
+system implementation auxiliary_battery.i
+end auxiliary_battery.i;
+
+
+end hbs_components;

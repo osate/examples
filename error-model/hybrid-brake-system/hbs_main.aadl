@@ -1,0 +1,34 @@
+package hbs_main
+
+public
+
+with hbs_components;
+
+system main
+end main;
+
+system implementation main.i
+subcomponents
+	mp : system hbs_components::mechanical_pedal.i;
+	ep : system hbs_components::electronic_pedal.i;
+	wnc : system hbs_components::wnc.i;
+	epc : system hbs_components::emb_power_converter.i;
+	ipc : system hbs_components::iwm_power_converter.i;
+	ab  : system hbs_components::auxiliary_battery.i;
+	pb  : system hbs_components::powertrain_battery.i;
+	iwm  : system hbs_components::iwm.i;
+	emb  : system hbs_components::emb.i;
+connections
+	mp_ep : port mp.output -> ep.mechanical_input;
+--	wnc_ipc
+--	wnc_epc
+--	ab_epc
+--	epc_emb
+--	ipc_pb
+--	pb_iwm
+--	iwm_ipc
+--	ipc_iwm
+end main.i;
+
+
+end hbs_main;
