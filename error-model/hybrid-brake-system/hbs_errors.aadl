@@ -8,6 +8,13 @@ annex EMV2 {**
 		Operational : initial state ;
 		Failed : state {ServiceOmission,ValueError};
 	end behavior;
+	
+	error behavior wnc
+	use types ErrorLibrary;
+	states
+		Operational : initial state ;
+		Failed : state {ServiceOmission,ValueError};
+	end behavior;
 		
 	error behavior simple
 	states

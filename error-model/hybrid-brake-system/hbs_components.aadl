@@ -229,6 +229,65 @@ features
 	input2 : in data port;
 	to_epc : out data port;
 	to_ipc : out data port;
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior hbs_errors::wnc;
+
+	error propagations
+		input1 : in propagation {ServiceOmission,ValueError};
+		input2 : in propagation {ServiceOmission,ValueError};
+		to_epc : out propagation {ServiceOmission,ValueError};
+		to_ipc : out propagation {ServiceOmission,ValueError};
+	flows
+		f0 : error path input1{ServiceOmission} -> to_epc(ServiceOmission);
+		f1 : error path input1{ServiceOmission} -> to_ipc(ServiceOmission);
+		f2 : error path input1{ValueError} -> to_epc(ValueError);
+		f3 : error path input1{ValueError} -> to_ipc(ValueError);
+		f5 : error path input2{ServiceOmission} -> to_epc(ServiceOmission);
+		f6 : error path input2{ServiceOmission} -> to_ipc(ServiceOmission);
+		f7 : error path input2{ValueError} -> to_epc(ValueError);
+		f8 : error path input2{ValueError} -> to_ipc(ValueError);
+	end propagations;
+
+	component error behavior
+	events
+		InternalOmissionFault : error event;
+		InternalValueFault : error event;
+	transitions
+		t0 : Operational -[input1{ServiceOmission} and input2{ServiceOmission} or InternalOmissionFault]-> Failed{ServiceOmission};
+		t1 : Operational -[(input1{ValueError} or input1{ServiceOmission}) and (input2{ValueError} or InternalValueFault)]-> Failed{ServiceOmission};
+		t2 : Operational -[input1{ServiceOmission} and input2{ServiceOmission} or InternalOmissionFault]-> Failed{ValueError};
+		t3 : Operational -[(input1{ValueError} or input1{ServiceOmission}) and (input2{ValueError} or InternalValueFault)]-> Failed{ValueError};
+	propagations
+		p0 : Failed{ValueError} -[]-> to_epc(ValueError);
+		p1 : Failed{ValueError} -[]-> to_ipc(ValueError);
+		p3 : Failed{ServiceOmission} -[]-> to_epc(ServiceOmission);
+		p4 : Failed{ServiceOmission} -[]-> to_ipc(ServiceOmission);		
+	end component;
+	
+	properties
+		emv2::severity => ARP4761::Hazardous applies to InternalOmissionFault;
+		emv2::likelihood => ARP4761::ExtremelyImprobable applies to InternalOmissionFault;
+		emv2::hazards => 
+			([	crossreference => "http://hip-hops.eu/index.php/hbs-failure-annotations/wheel-node-controller";
+				failure => "wheel node failure that leads to service omission";
+				phases => ("all");
+				description => "Internal error/fault that avoid to provide service";
+				comment => "n/a";
+			])
+			applies to InternalOmissionFault;
+			
+		emv2::severity => ARP4761::Hazardous applies to InternalValueFault;
+		emv2::likelihood => ARP4761::ExtremelyImprobable applies to InternalValueFault;
+		emv2::hazards => 
+			([	crossreference => "http://hip-hops.eu/index.php/hbs-failure-annotations/wheel-node-controller";
+				failure => "wheel node control failure that leads to the produce of a bad data";
+				phases => ("all");
+				description => "Internal error/fault that avoid to produce a good data";
+				comment => "n/a";
+			])
+			applies to InternalValueFault;
+**};	
 end wnc;
 
 system implementation wnc.i
