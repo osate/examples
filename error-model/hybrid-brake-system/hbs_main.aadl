@@ -36,8 +36,8 @@ subcomponents
 	iwm  		: system hbs_components::iwm.i;
 	emb  		: system hbs_components::emb.i;
 connections
-	ep_wnc1 : port ep.output1 -> wnc.input1 {Actual_Connection_Binding => (reference (commbus1), reference (commbus2));};
-	ep_wnc2 : port ep.output2 -> wnc.input2 {Actual_Connection_Binding => (reference (commbus1), reference (commbus2));};
+	ep_wnc1 : port ep.output1 -> wnc.input1;
+	ep_wnc2 : port ep.output2 -> wnc.input2;
 	mp_ep : port mp.output -> ep.mechanical_input; 
 	wnc_ipc : port wnc.to_ipc -> ipc.from_wnc;
 	wnc_epc : port wnc.to_epc -> epc.from_wnc; 
@@ -47,6 +47,9 @@ connections
 	pb_iwm : port pb.output -> iwm.from_battery;
 	iwm_ipc : port iwm.to_ipc -> ipc.from_iwm;
 	ipc_iwm : port ipc.to_iwm -> iwm.from_ipc;
+properties
+	Actual_Connection_Binding => (reference (commbus1), reference (commbus2)) applies to ep_wnc1;
+	Actual_Connection_Binding => (reference (commbus1), reference (commbus2)) applies to ep_wnc2;
 annex EMV2 {**
 	use types ErrorLibrary;
 	use behavior hbs_errors::simple;
