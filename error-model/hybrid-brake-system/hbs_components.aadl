@@ -2,12 +2,35 @@ package hbs_components
 
 public
 
+with emv2;
+
 ---------------------------------------
 -- MECHANICAL PEDAL
 ---------------------------------------
 system mechanical_pedal
 features
 	output : out data port;
+annex EMV2 {**
+	use types ErrorLibrary;
+
+	error propagations
+		output : out propagation {ServiceOmission};
+	flows
+		f0 : error source output {ServiceOmission};
+	end propagations;
+	
+	properties
+		emv2::severity => ARP4761::Hazardous applies to output.ServiceOmission;
+		emv2::likelihood => ARP4761::ExtremelyImprobable applies to output.ServiceOmission;
+		emv2::hazards => 
+			([	crossreference => "http://hip-hops.eu/index.php/hbs-failure-annotations/electronic-pedal";
+				failure => "no mechanical signal from the pedal";
+				phases => ("all");
+				description => "Pedal signal is not provided";
+				comment => "n/a";
+			])
+			applies to output.ServiceOmission;
+**};
 end mechanical_pedal;
 
 system implementation mechanical_pedal.i
@@ -17,11 +40,70 @@ end mechanical_pedal.i;
 ---------------------------------------
 -- ELECTRONICAL PEDAL
 ---------------------------------------
+--From the requirements
+--* Omission of the electronic pedal's outputs 
+--  can be originated by the omission of the 
+--  mechanical pedal's output or by internal 
+--  components failure detection (expected 
+--  fail-silent behavior – see here).
+--
+--* Internal failures are admitted as a causes 
+--  of wrong value outputs in spite of the 
+--  expected fail-silent behavior of this unit. 
+--  This is because at the considered design stage, 
+--  details about the electronic pedal internal 
+--  components are unknown. The same type of output 
+--  deviation can be triggered by a mechanical 
+--  pedal deviated output.
+
+--  Independent internal failures were considered 
+--  as causes of the deviations of each output of 
+--  the electronic pedal because the adoption of a 
+--  redundant structure was expected for this 
+--  subsystem (see here).
+
 system electronic_pedal
 features
 	mechanical_input: in data port;
 	output1         : out data port;
 	output2         : out data port;
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior hbs_errors::simple;
+
+	error propagations
+		mechanical_input : in propagation {ServiceOmission};
+		output1 : out propagation {ServiceOmission,ValueError};
+		output2 : out propagation {ServiceOmission,ValueError};
+	flows
+		f0 : error source output1 {ValueError};
+		f1 : error source output2 {ValueError};
+		f2 : error path mechanical_input{ServiceOmission} -> output1(ServiceOmission);
+		f3 : error path mechanical_input{ServiceOmission} -> output2(ServiceOmission);
+	end propagations;
+
+	component error behavior
+	events
+		InternalFault : error event;
+	transitions
+		t0 : Operational -[InternalFault]-> Failed;
+	propagations
+		p0 : Failed -[]-> output1(ValueError);
+		p1 : Failed -[]-> output2(ValueError);
+	end component;
+	
+	properties
+		emv2::severity => ARP4761::Hazardous applies to InternalFault;
+		emv2::likelihood => ARP4761::ExtremelyImprobable applies to InternalFault;
+		emv2::hazards => 
+			([	crossreference => "http://hip-hops.eu/index.php/hbs-failure-annotations/electronic-pedal";
+				failure => "electronic failure that leads to the produce of a bad data";
+				phases => ("all");
+				description => "Internal error/fault that avoid to produce a good data";
+				comment => "n/a";
+			])
+			applies to InternalFault;
+**};
 end electronic_pedal;
 
 system implementation electronic_pedal.i
@@ -30,6 +112,39 @@ end electronic_pedal.i;
 -----------------------
 --  COMMUNICATION BUS
 -----------------------
+-- The communication buses are considered to only have 
+-- internal failures of the omission type due to the 
+-- TTP/C proprieties: in the presence of other types 
+-- of faults, such as a value failure caused by EMI 
+-- interference, a Cyclic Redundancy Check (CRC) 
+-- mechanism is responsible for discarding the message 
+-- at the receiving unit, assuring fail-silent behavior. 
+-- In this way the failure can be classified as of the 
+-- omission type. Omission of the output of each bus 
+-- can also be caused by the omission of its two inputs.
+--
+-- Considering the scenario where the electronic pedal 
+-- produces value deviated outputs, again the behavior 
+-- of components within TTP/C architectures must be kept 
+-- in mind: components are expected to deliver correct 
+-- information or no information at all. Therefore, if 
+-- a value failure signal is inputted to the bus, the 
+-- deviation will be propagated. However, as the pedal 
+-- unit includes two communications controllers, it 
+-- can be considered that the buses' outputs will only 
+-- have a value deviation if:
+--
+-- *  the output of the leading controller is value 
+--    deviated OR
+--
+-- *  the output of the leading controller has an omission 
+--    deviation and the replica controller outputs a value 
+--    deviated signal.
+--
+-- Leading controller refers to the element whose information 
+-- is considered first in the receiving unit. The replica 
+-- controller information is used when a failure (no information) 
+-- is detected in the leading element.
 
 bus communication_bus
 end communication_bus;
@@ -43,6 +158,18 @@ end communication_bus.i;
 system emb
 features
 	from_epc : in data port;
+	output   : out data port;
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior hbs_errors::simple;
+
+	error propagations
+		output : out propagation {ServiceOmission,ValueError};
+	flows
+		f0 : error source output {ServiceOmission,ValueError};
+	end propagations;
+
+**};
 end emb;
 
 system implementation emb.i
@@ -56,6 +183,18 @@ features
 	from_battery : in data port;
 	from_ipc : in data port;
 	to_ipc   : out data port;
+	output   : out data port;
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior hbs_errors::simple;
+
+	error propagations
+		output : out propagation {ServiceOmission,ValueError};
+	flows
+		f0 : error source output {ServiceOmission,ValueError};
+	end propagations;
+
+**};
 end iwm;
 
 system implementation iwm.i
@@ -65,6 +204,25 @@ end iwm.i;
 ---------------------------------------
 -- WNC stands for Wheel-Node Controller
 ---------------------------------------
+--
+-- * As with the electronic pedal, in spite of the fail silent 
+--   expected behavior of the local control unit, at the design 
+--   stage at hand internal value failures are considered to be 
+--   possible causes of output value deviations. Moreover, wrong 
+--   value outputs can also be triggered by value deviation of the 
+--   output of the leading bus or by the omission of that same 
+--   output and value deviation of the output of the replica bus.
+--
+-- * Omission of both outputs can be caused by omission of both 
+--   buses' outputs. Internal failures can also cause omission 
+--   of the outputs. These failures may be related with component 
+--   failure detection which results in the inhibition of the controller.
+--
+--Like with the pedal unit, independent internal failures were 
+--considered for the causes of the deviations of each output. 
+--Each power converter reference may be calculated independently 
+--to avoid simultaneous failure of both braking devices, for example.
+--
 system wnc
 features
 	input1 : in data port;

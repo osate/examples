@@ -1,7 +1,19 @@
 package hbs_errors
 
 public
+annex EMV2 {**
+	error behavior brake
+	use types ErrorLibrary;
+	states
+		Operational : initial state ;
+		Failed : state {ServiceOmission,ValueError};
+	end behavior;
+		
+	error behavior simple
+	states
+		Operational : initial state ;
+		Failed : state;
+	end behavior;
 
-
-
+**};
 end hbs_errors;

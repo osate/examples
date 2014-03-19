@@ -2,10 +2,25 @@ package hbs_main
 
 public
 
+with emv2;
 with hbs_components;
 
 system main
 end main;
+
+
+--
+-- See error description on http://hip-hops.eu/index.php/hbs-failure-annotations/hazards
+--
+-- For this simplified case-study, only two hazards were considered:
+-- * No braking after command (H1)
+-- * Wrong value braking (H2)
+--
+-- An omission of braking hazard (H1) occurs when braking is omitted from 
+-- both the in-wheel motor and the electromechanical brake; a value 
+-- braking hazard (H2) occurs when either of the two braking devices 
+-- brakes with an incorrect value. 
+--
 
 system implementation main.i
 subcomponents
@@ -32,6 +47,16 @@ connections
 	pb_iwm : port pb.output -> iwm.from_battery;
 	iwm_ipc : port iwm.to_ipc -> ipc.from_iwm;
 	ipc_iwm : port ipc.to_iwm -> iwm.from_ipc;
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior hbs_errors::simple;
+
+	composite error behavior 
+	states
+		[emb.Failed{ServiceOmission} and iwm.Failed{ServiceOmission}]-> Failed;
+		[emb.Failed{ValueError} or iwm.Failed{ValueError}]-> Failed; 
+	end composite;
+**};
 end main.i; 
 
 
