@@ -164,11 +164,12 @@ annex EMV2 {**
 	use behavior hbs_errors::simple;
 
 	error propagations
+		from_epc : in propagation {ServiceOmission,ValueError};
 		output : out propagation {ServiceOmission,ValueError};
 	flows
-		f0 : error source output {ServiceOmission,ValueError};
+		f0 : error path from_epc{ServiceOmission} -> output {ServiceOmission};
+		f1 : error path from_epc{ValueError} -> output {ValueError};
 	end propagations;
-
 **};
 end emb;
 
@@ -189,11 +190,12 @@ annex EMV2 {**
 	use behavior hbs_errors::simple;
 
 	error propagations
+		from_ipc : in propagation {ServiceOmission,ValueError};
 		output : out propagation {ServiceOmission,ValueError};
 	flows
-		f0 : error source output {ServiceOmission,ValueError};
+		f0 : error path from_ipc{ServiceOmission} -> output {ServiceOmission};
+		f1 : error path from_ipc{ValueError} -> output {ValueError};
 	end propagations;
-
 **};
 end iwm;
 
@@ -304,6 +306,18 @@ features
 	from_battery : in data port;
 	from_wnc : in data port;
 	to_emb : out data port;
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior hbs_errors::simple;
+
+	error propagations
+		from_wnc : in propagation {ServiceOmission,ValueError};
+		to_emb : out propagation {ServiceOmission,ValueError};
+	flows
+		f0 : error path from_wnc {ServiceOmission} -> to_emb {ServiceOmission};
+		f1 : error path from_wnc {ValueError} -> to_emb {ValueError};
+	end propagations;
+**};
 end emb_power_converter;
 
 system implementation emb_power_converter.i
@@ -315,6 +329,18 @@ features
 	to_iwm     : out data port;
 	from_wnc   : in data port;
 	from_iwm   : in data port;
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior hbs_errors::simple;
+
+	error propagations
+		from_wnc : in propagation {ServiceOmission,ValueError};
+		to_iwm : out propagation {ServiceOmission,ValueError};
+	flows
+		f0 : error path from_wnc {ServiceOmission} -> to_iwm {ServiceOmission};
+		f1 : error path from_wnc {ValueError} -> to_iwm {ValueError};
+	end propagations;
+**};
 end iwm_power_converter;
 
 system implementation iwm_power_converter.i

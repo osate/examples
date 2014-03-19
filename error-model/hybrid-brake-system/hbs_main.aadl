@@ -40,10 +40,10 @@ connections
 	ep_wnc2 : port ep.output2 -> wnc.input2 {Actual_Connection_Binding => (reference (commbus1), reference (commbus2));};
 	mp_ep : port mp.output -> ep.mechanical_input; 
 	wnc_ipc : port wnc.to_ipc -> ipc.from_wnc;
-	wnc_epc : port wnc.to_epc -> epc.from_wnc;
-	ab_epc : port ab.output -> epc.from_battery;
+	wnc_epc : port wnc.to_epc -> epc.from_wnc; 
+	ab_epc : port ab.output -> epc.from_battery; 
 	epc_emb : port epc.to_emb -> emb.from_epc;
-	ipc_pb : port ipc.to_battery -> pb.input;
+	ipc_pb : port ipc.to_battery -> pb.input; 
 	pb_iwm : port pb.output -> iwm.from_battery;
 	iwm_ipc : port iwm.to_ipc -> ipc.from_iwm;
 	ipc_iwm : port ipc.to_iwm -> iwm.from_ipc;
