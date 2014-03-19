@@ -41,6 +41,8 @@ end communication_bus.i;
 -- EMB stands for Electromechanical Brake
 -----------------------------------------
 system emb
+features
+	from_epc : in data port;
 end emb;
 
 system implementation emb.i
@@ -50,6 +52,10 @@ end emb.i;
 -- IWM stands for In-Wheel Motor
 --------------------------------
 system iwm
+features
+	from_battery : in data port;
+	from_ipc : in data port;
+	to_ipc   : out data port;
 end iwm;
 
 system implementation iwm.i
@@ -63,8 +69,8 @@ system wnc
 features
 	input1 : in data port;
 	input2 : in data port;
-	output1 : out data port;
-	output2 : out data port;
+	to_epc : out data port;
+	to_ipc : out data port;
 end wnc;
 
 system implementation wnc.i
@@ -77,12 +83,21 @@ system power_converter
 end power_converter;
 
 system emb_power_converter extends power_converter
+features
+	from_battery : in data port;
+	from_wnc : in data port;
+	to_emb : out data port;
 end emb_power_converter;
 
 system implementation emb_power_converter.i
 end emb_power_converter.i;
 
 system iwm_power_converter extends power_converter
+features
+	to_battery : out data port;
+	to_iwm     : out data port;
+	from_wnc   : in data port;
+	from_iwm   : in data port;
 end iwm_power_converter;
 
 system implementation iwm_power_converter.i
@@ -92,9 +107,13 @@ end iwm_power_converter.i;
 -- Batteries
 -------------------------------
 system battery
+features
+	output : out data port;
 end battery;
 
 system powertrain_battery extends battery
+features
+	input : in data port;
 end powertrain_battery;
 
 system implementation powertrain_battery.i
