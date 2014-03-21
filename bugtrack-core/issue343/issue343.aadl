@@ -1,0 +1,10 @@
+package issue343
+public
+	abstract test
+	features
+		prov_sp : provides subprogram access; -- "Subprograms cannot have provides subprogram access."		
+		prov_spg : provides subprogram group access; -- "Subprograms cannot have provides subprogram group access."
+		req_sp : requires subprogram access; -- "Processor, VirtualProcessor, Device cannot have requires subprogram access."
+		req_spg : requires subprogram group access; -- "Processor, VirtualProcessor, Device cannot have requires subprogram group access."		
+	end test;
+end issue343;
