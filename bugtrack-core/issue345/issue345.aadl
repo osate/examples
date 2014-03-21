@@ -1,0 +1,55 @@
+package issue345
+public
+
+data dt
+end dt;
+
+system outer
+end outer;
+
+system implementation outer.impl
+  subcomponents
+    d1: data dt;
+    d2: data dt;
+    inner: system inner.impl;
+  connections
+    c1: port d1 -> inner.in1;
+    c2: port inner.out1 -> d2;
+  flows
+    -- this one has a bug
+    e2e_1: end to end flow d1 -> c1 -> inner -> c2 -> d2;
+    -- this one is OK
+    e2e_2: end to end flow d1 -> c1 -> inner.fpi -> c2 -> d2;
+end outer.impl;
+
+system inner
+  features
+    in1 : in data port dt;
+    out1 : out data port dt;
+  flows
+    fpi : flow path in1 -> out1;
+end inner;
+
+system implementation inner.impl
+  subcomponents
+    sc1 : system sc_classifier;
+    sc2 : system sc_classifier;
+  connections
+    c1 : port in1 -> sc1.in1;
+    c2 : port sc1.out_1 -> out1;
+    c3 : port in1 -> sc2.in1;
+    c4 : port sc2.out_1 -> out1;
+  flows
+    fpi: flow path in1 -> c1 -> sc1.fp -> c2 -> out1;
+    fpi: flow path in1 -> c3 -> sc2.fp -> c4 -> out1;
+end inner.impl;
+
+system sc_classifier
+  features
+    in1 : in data port dt;
+    out_1 : out data port dt;
+  flows
+    fp : flow path in1 -> out_1;
+end sc_classifier;
+
+end issue345;
