@@ -1,0 +1,83 @@
+package error_compliance
+
+public
+
+with EMV2;
+
+system mysystem_out
+features
+	dout : out data port;
+annex EMV2 {**
+	use types ErrorLibrary;
+	
+	error propagations
+		dout : out propagation {ValueError};
+	end propagations;
+	
+	properties
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.1 ; Distribution => Fixed;] applies to dout.ValueError;
+		
+**};
+end mysystem_out;
+
+system implementation mysystem_out.impl1
+annex EMV2 {**
+	use types ErrorLibrary;
+	
+	error propagations
+		dout : out propagation {ValueError,ServiceOmission};
+	end propagations;
+	
+	properties
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.1 ; Distribution => Fixed;] applies to dout.ValueError;
+**};
+end mysystem_out.impl1;
+
+system implementation mysystem_out.impl2
+end mysystem_out.impl2;
+
+
+system mysystem_in
+features
+	din : in data port;
+annex EMV2 {**
+	use types ErrorLibrary;
+	
+	error propagations
+		din : in propagation {ValueError};
+	end propagations;
+	
+	properties
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.1 ; Distribution => Fixed;] applies to din.ValueError;
+		
+**};
+end mysystem_in;
+
+system implementation mysystem_in.impl1
+annex EMV2 {**
+	use types ErrorLibrary;
+	
+	error propagations
+		din : in propagation {ValueError,ServiceOmission};
+	end propagations;
+	properties
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.2 ; Distribution => Fixed;] applies to din.ValueError;
+	
+**};
+end mysystem_in.impl1;
+
+system implementation mysystem_in.impl2
+end mysystem_in.impl2;
+
+system integration
+end integration;
+
+system implementation integration.i
+subcomponents
+	snd : system mysystem_out.impl1;
+	recv : system mysystem_in.impl1;
+connections
+	c0 : port snd.dout -> recv.din;
+end integration.i;
+
+end error_compliance;
