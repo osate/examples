@@ -4,11 +4,37 @@ public
 
 with EMV2;
 
+annex EMV2 {**
+	error behavior Basic1
+	use types ErrorLibrary;
+	events
+	    Failed : error event{ServiceOmission};
+	states
+	    Error_Free: initial state;
+	    Permanent_Failure: state{ValueError};
+	transitions
+	     Error_Free -[Failed]-> Permanent_Failure;
+	end behavior;
+
+	error behavior Basic2
+	use types ErrorLibrary;
+	events
+	    Failed : error event{SequenceError};
+	    Failed2 : error event{ValueError};
+	states
+	    Error_Free: initial state;
+	    Permanent_Failure: state{ServiceOmission};
+	transitions
+	     Error_Free -[Failed]-> Permanent_Failure;
+	end behavior;
+**};
+
 system mysystem_out
 features
 	dout : out data port;
 annex EMV2 {**
 	use types ErrorLibrary;
+	use behavior error_compliance::basic1;
 	
 	error propagations
 		dout : out propagation {ValueError};
@@ -23,17 +49,21 @@ end mysystem_out;
 system implementation mysystem_out.impl1
 annex EMV2 {**
 	use types ErrorLibrary;
-	
+	use behavior error_compliance::basic2;
 	error propagations
 		dout : out propagation {ValueError,ServiceOmission};
 	end propagations;
 	
 	properties
-		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.1 ; Distribution => Fixed;] applies to dout.ValueError;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.2 ; Distribution => Fixed;] applies to dout.ValueError;
 **};
 end mysystem_out.impl1;
 
 system implementation mysystem_out.impl2
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior error_compliance::basic2;
+**};
 end mysystem_out.impl2;
 
 
