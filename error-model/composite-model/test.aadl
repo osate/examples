@@ -1,0 +1,51 @@
+package composite_model
+
+public
+
+with EMV2;
+
+system component
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior composite_model::basic;
+**};
+end component;
+
+system implementation component.impl
+end component.impl;
+
+system toplevel
+end toplevel;
+
+
+system implementation toplevel.i
+subcomponents
+	sub1 : system component.impl;
+	sub2 : system component.impl;
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior composite_model::basic;
+	composite error behavior
+	states
+		[sub1.Failed and sub2.Failed]->Failed;
+	end composite;
+**};
+end toplevel.i;
+
+
+annex EMV2 {**
+		-- simple error model
+	error behavior Basic
+	events
+	    Failure : error event;
+	states
+	    Operational: initial state;
+	    Failed: state;
+	transitions
+	     Operational -[Failure]-> Failed;
+	properties
+	     EMV2::OccurrenceDistribution => [ProbabilityValue => 25.0E-4; Distribution => Poisson;] applies to Failure;
+	end behavior;
+**};
+
+end composite_model;
