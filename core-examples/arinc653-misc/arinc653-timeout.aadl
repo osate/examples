@@ -1,0 +1,28 @@
+package arinc653_timeout
+public
+
+with arinc653;
+
+thread timed_thread
+features
+	input : in event data port {arinc653::timeout => 5 ms;};
+properties
+	Dispatch_Protocol => timed;
+end timed_thread;
+
+thread implementation timed_thread.ok
+properties
+	-- Ok, the period is greater than the timeout on the port
+	Period => 10 ms;
+end timed_thread.ok;
+
+
+thread implementation timed_thread.ko
+properties
+	-- KO, the period is shorter than the timeout on the port
+	-- so that the task cannot have the time to grab
+	-- the event or data on the port.
+	Period => 2 ms;
+end timed_thread.ko;
+
+end arinc653_timeout;
