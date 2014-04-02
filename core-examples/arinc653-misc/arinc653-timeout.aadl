@@ -13,7 +13,7 @@ end timed_thread;
 thread implementation timed_thread.ok
 properties
 	-- Ok, the period is greater than the timeout on the port
-	Period => 10 ms;
+	Period => 10 ms; 
 end timed_thread.ok;
 
 

@@ -6,8 +6,14 @@ with arinc653;
 
 virtual processor part
 modes
-	Partition_Init : initial mode{ARINC653::System_State_Description=>"Partition Init";};
-	Process_Execution : mode{ARINC653::System_State_Description=>"Execute Process";};
+	Partition_Init : initial mode
+			{ARINC653::State_Information => [Identifier => 1;
+			                             Description => "Partition Init";
+			];};
+	Process_Execution : mode
+			{ARINC653::State_Information => [Identifier => 2;
+			                             Description => "Process Execution";
+			];};
 end part;
 
 virtual processor implementation part.impl
@@ -30,7 +36,10 @@ subcomponents
 												 ]) in modes(Process_Execution);
 };
 modes
-	Module_Init: initial mode{ARINC653::System_State_Description=>"Module Init";};
+	Module_Init: initial mode
+		{ARINC653::State_Information => [Identifier => 1;
+			                             Description => "Module Init";
+		];};
 properties
 	ARINC653::HM_Error_ID_Levels=> ([ErrorIdentifier => 1;
 		                             Description => "Configuration Error";
