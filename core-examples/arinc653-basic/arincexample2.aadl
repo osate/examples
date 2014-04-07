@@ -1,0 +1,222 @@
+package arincexample2
+public
+with ARINC653;
+
+-- First, define generic component
+data integer
+end integer;
+
+memory memchunk
+end memchunk;
+
+memory mainmemory
+end mainmemory;
+
+bus anybus
+end anybus;
+
+bus implementation anybus.i
+end anybus.i;
+thread network_driver_thread
+properties
+   Source_Stack_Size => 4 Bytes;
+   Source_Code_Size => 10 Bytes;
+   Period => 200 ms;
+   Compute_Execution_Time => 5 ms .. 10 ms; 
+end network_driver_thread;
+
+thread implementation network_driver_thread.i
+end network_driver_thread.i;
+
+abstract network_driver_partition
+end network_driver_partition;
+
+abstract implementation network_driver_partition.i
+subcomponents
+   thr : thread network_driver_thread.i;
+end network_driver_partition.i;
+
+device network_interface
+features
+   thebus: requires bus access anybus.i;
+properties
+		Device_Driver => classifier (arincexample2::network_driver_partition.i);
+end network_interface;
+
+device implementation network_interface.i
+end network_interface.i;
+
+virtual processor partition_runtime
+properties
+      Scheduling_Protocol => (RMS);
+end partition_runtime;
+
+processor arinckernel
+end arinckernel;
+
+-- Then, we define the first module and its subcomponents.
+
+processor implementation arinckernel.module1
+subcomponents
+   part1 : virtual processor partition_runtime
+{ARINC653::DAL => LEVEL_A;};
+   part2 : virtual processor partition_runtime
+			{ARINC653::DAL => LEVEL_B;};
+   part3 : virtual processor partition_runtime
+{ARINC653::DAL => LEVEL_C;};
+properties
+   ARINC653::Module_Major_Frame => 40ms;
+   ARINC653::Partition_Slots => (10ms, 10ms, 20ms);
+   ARINC653::Slots_Allocation => 
+(reference (part1), reference (part2), reference (part3));
+end arinckernel.module1;
+
+memory implementation mainmemory.module1
+subcomponents
+   mem1 : memory memchunk;
+   mem2 : memory memchunk;
+   mem3 : memory memchunk;
+end mainmemory.module1;
+
+thread module1_thread_part1
+features
+   sensorout : out event data port integer;
+end module1_thread_part1;
+
+-- Thread for the first partition
+
+thread module1_thread_part2
+end module1_thread_part2;
+
+-- Thread for the second partition
+
+process module1_process_part1
+features
+   sensorout : out event data port integer{Queue_Size => 1;
+                                          ARINC653::Timeout => 5ms; 
+                                          ARINC653::Queueing_Discipline => FIFO;};
+end module1_process_part1;
+
+process implementation module1_process_part1.impl
+subcomponents
+   mythread : thread module1_thread_part1;
+connections
+   c0 : port mythread.sensorout -> sensorout;
+end module1_process_part1.impl;
+
+-- Process for the first partition
+
+process module1_process_part2
+end module1_process_part2;
+
+process implementation module1_process_part2.impl
+subcomponents
+   mythread : thread module1_thread_part2;
+end module1_process_part2.impl;
+
+-- Process for the second partition
+
+system module1_system
+features
+   thebus: requires bus access anybus.i;
+   sensorout : out event data port integer;
+end module1_system;
+
+system implementation module1_system.impl
+subcomponents
+   netif : device network_interface.i;
+   mainmemory : memory mainmemory.module1;
+   cpu : processor arinckernel.module1;
+   process_part1 : process module1_process_part1;
+   process_part2 : process module1_process_part2;
+connections
+   c0 : port process_part1.sensorout -> sensorout;
+   c1 : bus access thebus -> netif.thebus;
+properties
+   Actual_Processor_Binding   => (reference (cpu.part1)) applies to process_part1;
+   Actual_Processor_Binding   => (reference (cpu.part2)) applies to process_part2;
+   Actual_Processor_Binding   => (reference (cpu.part2)) applies to netif;
+   Actual_Memory_Binding  => (reference (mainmemory.mem1)) applies to process_part1;
+   Actual_Memory_Binding  => (reference (mainmemory.mem2)) applies to process_part2;
+   Actual_Memory_Binding  => (reference (mainmemory.mem3)) applies to netif;
+end module1_system.impl;
+
+-- System that contain everything for the first module
+
+-- Now, we declare the second module
+
+processor implementation arinckernel.module2
+subcomponents
+   part1 : virtual processor partition_runtime;
+properties
+   ARINC653::Module_Major_Frame => 40ms;
+   ARINC653::Partition_Slots => (20ms, 20ms);
+   ARINC653::Slots_Allocation => (reference (part1));
+end arinckernel.module2;
+
+thread module2_thread_part1
+features
+   sensorin : in event data port integer;
+end module2_thread_part1;
+
+process module2_process_part1
+features
+   sensorin : in event data port integer{Queue_Size => 1;
+                                         ARINC653::Timeout => 5ms; 
+                                         ARINC653::Queueing_Discipline => FIFO;};
+end module2_process_part1;
+
+process implementation module2_process_part1.impl
+subcomponents
+   thread_part1 : thread module2_thread_part1;
+connections
+   c0 : port sensorin -> thread_part1.sensorin;
+end module2_process_part1.impl;
+
+memory implementation mainmemory.module2
+subcomponents
+   mem1 : memory memchunk;
+   mem2 : memory memchunk;
+end mainmemory.module2;
+
+system module2_system
+features
+   thebus   : requires bus access anybus.i;
+   sensorin : in event data port integer;
+end module2_system;
+
+system implementation module2_system.impl
+subcomponents
+   mainmemory     : memory mainmemory.module2;
+   cpu            : processor arinckernel.module2;
+   process_part1  : process module2_process_part1.impl;
+   netif          : device network_interface.i;
+connections
+   c0 : port sensorin -> process_part1.sensorin;
+   c1 : bus access thebus -> netif.thebus;
+properties
+   Actual_Processor_Binding   => (reference (cpu.part1)) applies to process_part1;
+   Actual_Processor_Binding   => (reference (cpu.part1)) applies to netif;
+   Actual_Memory_Binding  => (reference (mainmemory.mem1)) applies to process_part1;
+   Actual_Memory_Binding  => (reference (mainmemory.mem2)) applies to netif;
+end module2_system.impl;
+
+
+-- Now, we declare the main system that contains both modules
+
+system arinc653system
+end arinc653system;
+
+system implementation arinc653system.impl
+subcomponents
+   module1  : system module1_system.impl;
+   module2  : system module2_system.impl;
+   rtbus    : bus anybus.i;
+connections
+   conn1 : port module1.sensorout -> module2.sensorin;
+   busaccess_module1 : bus access rtbus -> module1.thebus;
+   busaccess_module2 : bus access rtbus -> module2.thebus;
+properties
+   Actual_Connection_Binding => (reference (rtbus)) applies to conn1;
+end arinc653system.impl;
+end arincexample2;
