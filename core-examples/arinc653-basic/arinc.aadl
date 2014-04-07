@@ -13,6 +13,7 @@ properties
 	Source_Stack_Size => 200 Bytes;
 	Source_Data_Size => 200 Bytes;
 	Source_Code_Size => 200 Bytes;
+	Period => 10 ms;
 end thr_sensor;
 
 thread implementation thr_sensor.i
@@ -42,6 +43,7 @@ properties
 	Source_Stack_Size => 200 Bytes;
 	Source_Data_Size => 200 Bytes;
 	Source_Code_Size => 200 Bytes;
+		Period => 10 ms;
 end thr_filter;
 
 thread implementation thr_filter.i
@@ -54,6 +56,7 @@ properties
 	Source_Stack_Size => 100 KByte;
 	Source_Data_Size => 100 KByte;
 	Source_Code_Size => 100 KByte;
+		Period => 10 ms;
 end thr_collector;
 
 thread implementation thr_collector.i
@@ -104,16 +107,45 @@ end arinc_module;
 
 processor implementation arinc_module.two_partitions
 subcomponents
-	runtime1 : virtual processor partition.i {ARINC653::Criticality => LEVEL_B;};
-	runtime2 : virtual processor partition.i {ARINC653::Criticality => LEVEL_A;};
+	runtime1 : virtual processor partition.i {ARINC653::DAL => LEVEL_B;};
+	runtime2 : virtual processor partition.i {ARINC653::DAL => LEVEL_A;};
 properties
 	ARINC653::Partition_Slots => (10 ms, 20 ms);
 	ARINC653::Slots_Allocation => (reference (runtime1), 
 		                           reference (runtime2)
 	);
 	ARINC653::Module_Major_Frame => 30 ms;
-	ARINC653::HM_Errors => (Module_Config, Module_Init, Module_Scheduling);
-	ARINC653::HM_Module_Recovery_Actions => (Ignore, Reset, Reset);
+	ARINC653::HM_Error_ID_Levels =>
+		([ErrorIdentifier => 1;
+		  Description     => "Module Config Error";
+		  ErrorLevel      => Module_Level;
+		  ErrorCode       => Module_Config;
+		],
+		[ErrorIdentifier => 2;
+		  Description     => "Module Initialization Error";
+		  ErrorLevel      => Module_Level;
+		  ErrorCode       => Module_Init;
+		],
+		[ErrorIdentifier => 3;
+		  Description     => "Module Scheduling Error";
+		  ErrorLevel      => Module_Level;
+		  ErrorCode       => Module_Scheduling;
+		]);
+	ARINC653::HM_Error_ID_Actions =>
+	(
+		[ErrorIdentifier => 1;
+		 Description     => "Ignore the error";
+		 Action          => "ignore";
+		],
+		[ErrorIdentifier => 2;
+		 Description     => "Reset the Module";
+		 Action          => "reset";
+		],
+		[ErrorIdentifier => 3;
+		 Description     => "Reset the Module";
+		 Action          => "reset";
+		]
+	);
 end arinc_module.two_partitions;
 
 system arinc653_system

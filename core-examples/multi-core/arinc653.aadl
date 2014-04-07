@@ -53,10 +53,10 @@ system implementation multi_core.dual
 subcomponents
 	cores : processor core.i[2];
 properties
-	ARINC653::Criticality => LEVEL_A applies to cores[0].runtimes[0];
-	ARINC653::Criticality => LEVEL_A applies to cores[0].runtimes[1];
-	ARINC653::Criticality => LEVEL_B applies to cores[1].runtimes[0];
-	ARINC653::Criticality => LEVEL_B applies to cores[1].runtimes[1];
+	ARINC653::DAL => LEVEL_A applies to cores[0].runtimes[0];
+	ARINC653::DAL => LEVEL_A applies to cores[0].runtimes[1];
+	ARINC653::DAL => LEVEL_B applies to cores[1].runtimes[0];
+	ARINC653::DAL => LEVEL_B applies to cores[1].runtimes[1];
 
 	Processor_Properties::Speed => [Freq => 20.0 Mhz .. 20.0 Mhz; Kind => (IPS, Freq); Ips => 200.0 MIPS; ] applies to cores[0], cores[1];
 end multi_core.dual;

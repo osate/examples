@@ -9,7 +9,7 @@ features
 	pout : out data port;
 properties
 	SEI::SecurityLevel => 4;	
-	SEI::SafetyCriticality => 2;
+	SEI::SafetyCriticality => 5;
 end psrc;
 
 process pdst
@@ -17,7 +17,7 @@ features
 	pin : in data port;
 properties
 	SEI::SecurityLevel => 5;
-	SEI::SafetyCriticality => 3;
+	SEI::SafetyCriticality => 4;
 end pdst;
 
 
