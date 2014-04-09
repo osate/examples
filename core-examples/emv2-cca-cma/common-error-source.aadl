@@ -1,0 +1,140 @@
+package example_cca_cma1
+
+public
+
+with EMV2;
+with ARP4761;
+with cma_cca_errlib;
+
+device battery
+features
+	powerout : requires bus access power;
+annex EMV2 {**
+	use types errorlibrary;
+	use behavior cma_cca_errlib::simple;
+	error propagations
+		powerout : out propagation {ServiceError};
+	flows
+		f0 : error source powerout {ServiceError};	
+	end propagations;
+
+	component error behavior
+	events
+		Depleted : error event;
+	transitions
+		t0 : Operational -[Depleted]-> Failed;
+	propagations
+		p0 : Failed -[]-> powerout(ServiceError);
+	end component;
+	
+	properties
+		EMV2::severity => ARP4761::Hazardous applies to powerout.ServiceError;
+**};
+end battery;
+
+device implementation battery.i1
+end battery.i1;
+
+device implementation battery.i2
+end battery.i2;
+
+bus power
+end power;
+
+bus implementation power.i1
+end power.i1;
+
+bus implementation power.i2
+end power.i2;
+
+
+device sensor
+features
+	powerin : requires bus access power;
+annex EMV2 {**
+	use types errorlibrary;
+	use behavior cma_cca_errlib::simple;
+	error propagations
+		powerin : in propagation {ServiceError};
+	flows
+		f0 : error sink powerin {ServiceError};	
+	end propagations;
+	
+	component error behavior
+	transitions
+		t0 : Operational -[ powerin{ServiceError}]-> Failed;
+	end component;
+**};
+end sensor;
+
+device implementation sensor.i1
+end sensor.i1;
+
+
+device implementation sensor.i2
+end sensor.i2;
+
+system assembly
+end assembly;
+
+--
+-- In this example, the CMA analysis tool should raise at least two
+-- issues:
+--  1. There is a common error source for an ANDed error state
+--  2. The same component is reused into an ANDed gate
+--     we should have different classifiers.
+--
+
+system implementation assembly.i
+subcomponents
+	s1   : device sensor.i1;
+	s2   : device sensor.i1;
+	p1   : bus power.i1;
+	bat1 : device battery.i1; 
+annex EMV2 {**
+	use types errorlibrary;
+	use behavior cma_cca_errlib::simple;
+
+	composite error behavior
+	states
+		[ s1.Failed and s2.Failed]-> Failed;
+	end composite;	
+	properties
+		EMV2::severity => ARP4761::Hazardous applies to Failed;
+**};
+end assembly.i;
+
+system implementation assembly.i1 extends assembly.i
+connections
+	s1p : bus access p1 <-> s1.powerin;
+	s2p : bus access p1 <-> s2.powerin;
+	bp1 : bus access p1 <-> bat1.powerout;
+end assembly.i1;
+
+--
+--  In this second version, the second problem should then
+--  be addressed because each sensor is independent.
+--
+system implementation assembly.i2 extends assembly.i1
+subcomponents
+	s2 : refined to device sensor.i2;
+end assembly.i2;
+
+--
+--  In this third version, all problems have been
+--  addressed and no warning should popup.
+--
+system implementation assembly.i3 extends assembly.i
+subcomponents
+    s2 : refined to device sensor.i2;
+    p2   : bus power.i2;
+	bat2 : device battery.i2; 
+connections
+	s1p : bus access p1 <-> s1.powerin;
+	s2p : bus access p2 <-> s2.powerin;
+	bp1 : bus access p1 <-> bat1.powerout;
+	bp2 : bus access p2 <-> bat2.powerout;
+end assembly.i3;
+
+
+end example_cca_cma1;

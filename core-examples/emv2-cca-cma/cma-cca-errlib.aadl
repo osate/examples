@@ -1,0 +1,10 @@
+package cma_cca_errlib
+public
+annex EMV2 {**
+	error behavior Simple
+	states
+		Operational : initial state;
+		Failed      : state;
+	end behavior;
+**};
+end cma_cca_errlib;
