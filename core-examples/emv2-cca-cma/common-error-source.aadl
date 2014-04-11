@@ -106,9 +106,9 @@ end assembly.i;
 
 system implementation assembly.i1 extends assembly.i
 connections
-	s1p : bus access p1 <-> s1.powerin;
-	s2p : bus access p1 <-> s2.powerin;
-	bp1 : bus access p1 <-> bat1.powerout;
+	s1p : bus access p1 -> s1.powerin;
+	s2p : bus access p1 -> s2.powerin;
+	bp1 : bus access p1 -> bat1.powerout;
 end assembly.i1;
 
 --
@@ -130,10 +130,10 @@ subcomponents
     p2   : bus power.i2;
 	bat2 : device battery.i2; 
 connections
-	s1p : bus access p1 <-> s1.powerin;
-	s2p : bus access p2 <-> s2.powerin;
-	bp1 : bus access p1 <-> bat1.powerout;
-	bp2 : bus access p2 <-> bat2.powerout;
+	s1p : bus access p1 -> s1.powerin;
+	s2p : bus access p2 -> s2.powerin;
+	bp1 : bus access p1 -> bat1.powerout;
+	bp2 : bus access p2 -> bat2.powerout;
 end assembly.i3;
 
 
