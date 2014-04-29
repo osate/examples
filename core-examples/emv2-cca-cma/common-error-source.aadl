@@ -39,6 +39,16 @@ device implementation battery.i2
 end battery.i2;
 
 bus power
+annex EMV2 {**
+	use types errorlibrary;
+	use behavior cma_cca_errlib::simple;
+	error propagations
+		access : in propagation {ServiceError};
+		access : out propagation {ServiceError};
+	flows
+		f0 : error path access {ServiceError} -> access {ServiceError};	
+	end propagations;
+**};
 end power;
 
 bus implementation power.i1
