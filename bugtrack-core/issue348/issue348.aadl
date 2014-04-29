@@ -1,0 +1,10 @@
+package classifier_property
+public
+  with Base_Types,Data_Model ;
+ 
+  data My_Integer
+    properties
+      Data_Model::Base_Type => (classifier(Base_Types::Integer)); 
+  end My_Integer ;
+ 
+end classifier_property ;

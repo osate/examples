@@ -1,0 +1,68 @@
+-- Example AADL code to demonstrate "inverse of" issue.
+package inv_err
+public
+with Base_Types;
+	system Block
+	prototypes
+		the_outs : feature group;
+		the_ins : feature group;
+	features
+		outs : feature group the_outs;
+		ins : feature group the_ins;
+	end Block;
+
+	system implementation Block.impl
+	subcomponents
+		a_system : system ASystem.impl;
+	end Block.impl;
+
+	system BlockA extends Block (the_outs => feature group a_out, the_ins => feature group a_in)
+	end BlockA;
+
+	feature group a_out
+	features
+		a_line : out data port Base_Types::Boolean;
+	end a_out;
+
+	feature group a_in
+	features
+		a_line : in data port Base_Types::Boolean;
+	end a_in;
+
+	system implementation BlockA.impl extends Block.impl
+--	connections
+--		a_blk_out : port a_system.sys_out -> outs.a_line;
+--		a_blk_in : port ins.a_line -> a_system.sys_in;
+	end BlockA.impl;
+
+	system BlockB extends Block (the_outs => feature group b_out, the_ins => feature group b_in)
+	end BlockB;
+
+	feature group b_out
+	features
+		b_line : out data port Base_Types::Boolean;
+	end b_out;
+
+	feature group b_in inverse of b_out -- Osate won't connect to inversed groups...
+	end b_in; -- ...much redeclare with directions reversed.
+	
+	system implementation BlockB.impl extends Block.impl
+	connections
+--		 b_blk_out : port a_system.sys_out -> outs.b_line;
+		b_blk_in : port ins.b_line -> a_system.sys_in;
+
+	end BlockB.impl;
+
+
+
+
+	system ASystem
+	features
+		sys_out : out data port Base_Types::Boolean;
+		sys_in : in data port Base_Types::Boolean;
+	end ASystem;
+
+	system implementation ASystem.impl
+	end ASystem.impl;
+
+end inv_err;

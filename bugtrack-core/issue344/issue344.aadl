@@ -1,0 +1,11 @@
+package issue344
+public
+  abstract test_classifier
+    features
+      f1 : in data port;
+    modes
+      m1 : mode;
+      m2 : mode;
+      mt : m2 -[ f1 ]-> m2; -- Error while typing or changing this line
+    end test_classifier; 
+end issue344;
