@@ -24,7 +24,7 @@ end cpu;
 
 processor implementation cpu.impl
 subcomponents
-	the_part: virtual processor part.impl	{ARINC653::Partition_Identifier=> "2";
+	the_part: virtual processor part.impl	{ARINC653::Partition_Identifier=> 2;
 											 ARINC653::HM_Error_ID_Actions=>
 												([ErrorIdentifier => 5;
 												  Description     => "Segmentation Error";

@@ -19,8 +19,8 @@ bus implementation anybus.i
 end anybus.i;
 thread network_driver_thread
 properties
-   Source_Stack_Size => 4 Bytes;
-   Source_Code_Size => 10 Bytes;
+   Stack_Size => 4 Bytes;
+   Code_Size => 10 Bytes;
    Period => 200 ms;
    Compute_Execution_Time => 5 ms .. 10 ms; 
 end network_driver_thread;

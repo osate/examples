@@ -24,7 +24,7 @@ annex EMV2 {**
 	transitions
 		t0 : Operational -[Depleted]-> Failed;
 	propagations
-		p0 : Failed -[]-> powerout(ServiceError);
+		p0 : Failed -[]-> powerout{ServiceError};
 	end component;
 	
 	properties

@@ -59,7 +59,7 @@ properties
    Initialize_Entrypoint =>
 classifier (arincexample1::sensor_temperature_spg);
    Priority => 42;
-   Source_Stack_Size => 100 Kbyte;
+   Stack_Size => 100 Kbyte;
    Period => 20 ms;
    Compute_Execution_Time => 10 ms .. 12 ms;
    Deadline => 40 ms;
@@ -76,7 +76,7 @@ properties
    Initialize_Entrypoint =>
 classifier (arincexample1::sensor_receiveinput_spg);
    Priority => 10;
-   Source_Stack_Size => 100 Kbyte;
+   Stack_Size => 100 Kbyte;
    Period => 20 ms;
    Compute_Execution_Time => 8 ms .. 10 ms;
    Deadline => 40 ms;
@@ -97,7 +97,7 @@ properties
    Initialize_Entrypoint => 
 classifier (arincexample1::commandboard_receiveinput_spg);
    Priority => 42;
-   Source_Stack_Size => 100 Kbyte;
+   Stack_Size => 100 Kbyte;
    Period => 20 ms;
    Compute_Execution_Time => 5 ms .. 7 ms;
    Deadline => 40 ms;
@@ -113,7 +113,7 @@ properties
    Initialize_Entrypoint =>
 classifier (arincexample1::commandboard_printinfos_spg);
    Priority => 43;
-   Source_Stack_Size => 100 Kbyte;
+   Stack_Size => 100 Kbyte;
    Period => 20 ms;
    Compute_Execution_Time => 2 ms .. 6 ms;
    Deadline => 40 ms;

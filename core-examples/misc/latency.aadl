@@ -7,7 +7,7 @@ with SEI;
 
 data mydata
 properties
-	Source_Data_Size => 320 bits ;
+	Data_Size => 320 bits ;
 end mydata;
 
 bus mybus

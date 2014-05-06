@@ -10,9 +10,9 @@ thread thr_sensor
 features
 	value : out data port dummy;
 properties
-	Source_Stack_Size => 200 Bytes;
-	Source_Data_Size => 200 Bytes;
-	Source_Code_Size => 200 Bytes;
+	Stack_Size => 200 Bytes;
+	Data_Size => 200 Bytes;
+	Code_Size => 200 Bytes;
 	Period => 10 ms;
 end thr_sensor;
 
@@ -40,9 +40,9 @@ features
 	sensor2inval : in data port dummy;
 	filteredout : out data port dummy;
 properties
-	Source_Stack_Size => 200 Bytes;
-	Source_Data_Size => 200 Bytes;
-	Source_Code_Size => 200 Bytes;
+	Stack_Size => 200 Bytes;
+	Data_Size => 200 Bytes;
+	Code_Size => 200 Bytes;
 		Period => 10 ms;
 end thr_filter;
 
@@ -53,9 +53,9 @@ thread thr_collector
 features
   	filteredin : in data port dummy;
 properties
-	Source_Stack_Size => 100 KByte;
-	Source_Data_Size => 100 KByte;
-	Source_Code_Size => 100 KByte;
+	Stack_Size => 100 KByte;
+	Data_Size => 100 KByte;
+	Code_Size => 100 KByte;
 		Period => 10 ms;
 end thr_collector;
 

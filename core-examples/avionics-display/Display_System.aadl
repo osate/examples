@@ -47,627 +47,627 @@ with RockwellCollins;
 -- Data Types for Project Test35
 data ADC_Cdu_Msn_Page_Text_Type
   properties
-    Source_Data_Size => 148 Bytes;
+    Data_Size => 148 Bytes;
 end ADC_Cdu_Msn_Page_Text_Type;
 
 data ARINC_429_Data_In_Type
   properties
-    Source_Data_Size => 20 Bytes;
+    Data_Size => 20 Bytes;
 end ARINC_429_Data_In_Type;
 
 data ARINC_429_Data_Out_Type
   properties
-    Source_Data_Size => 20 Bytes;
+    Data_Size => 20 Bytes;
 end ARINC_429_Data_Out_Type;
 
 data ATC_Manual_Active_State_Data_NDO_Type
   properties
-    Source_Data_Size => 20 Bytes;
+    Data_Size => 20 Bytes;
 end ATC_Manual_Active_State_Data_NDO_Type;
 
 data ATC_Preset_Active_State_Data_NDO_Type
   properties
-    Source_Data_Size => 28 Bytes;
+    Data_Size => 28 Bytes;
 end ATC_Preset_Active_State_Data_NDO_Type;
 
 data ATC_Preset_Data_NDO_Type
   properties
-    Source_Data_Size => 366 Bytes;
+    Data_Size => 366 Bytes;
 end ATC_Preset_Data_NDO_Type;
 
 data Active_Leg_Data_Type
   properties
-    Source_Data_Size => 126 Bytes;
+    Data_Size => 126 Bytes;
 end Active_Leg_Data_Type;
 
 data Advisory_Active_Type
   properties
-    Source_Data_Size => 356 Bytes;
+    Data_Size => 356 Bytes;
 end Advisory_Active_Type;
 
 data Advisory_Aknowledged_Type
   properties
-    Source_Data_Size => 356 Bytes;
+    Data_Size => 356 Bytes;
 end Advisory_Aknowledged_Type;
 
 data Aircraft_Config_Type
   properties
-    Source_Data_Size => 8 Bytes;
+    Data_Size => 8 Bytes;
 end Aircraft_Config_Type;
 
 data Annunciation_Active_Type
   properties
-    Source_Data_Size => 304 Bytes;
+    Data_Size => 304 Bytes;
 end Annunciation_Active_Type;
 
 data BITE_Command_Type
   properties
-    Source_Data_Size => 8 Bytes;
+    Data_Size => 8 Bytes;
 end BITE_Command_Type;
 
 data BITE_Command_Ack_Type
   properties
-    Source_Data_Size => 8 Bytes;
+    Data_Size => 8 Bytes;
 end BITE_Command_Ack_Type;
 
 data BITE_Status_Type
   properties
-    Source_Data_Size => 8 Bytes;
+    Data_Size => 8 Bytes;
 end BITE_Status_Type;
 
 data CDU_Annunciation_Type
   properties
-    Source_Data_Size => 32 Bytes;
+    Data_Size => 32 Bytes;
 end CDU_Annunciation_Type;
 
 data CDU_DM_Display_Buffer_NDO_Type
   properties
-    Source_Data_Size => 1088 Bytes;
+    Data_Size => 1088 Bytes;
 end CDU_DM_Display_Buffer_NDO_Type;
 
 data CDU_DM_Handshake_NDO_Type
   properties
-    Source_Data_Size => 12 Bytes;
+    Data_Size => 12 Bytes;
 end CDU_DM_Handshake_NDO_Type;
 
 data CDU_DM_Key_NDO_Type
   properties
-    Source_Data_Size => 41 Bytes;
+    Data_Size => 41 Bytes;
 end CDU_DM_Key_NDO_Type;
 
 data CDU_DM_Page_Chg_NDO_Type
   properties
-    Source_Data_Size => 18 Bytes;
+    Data_Size => 18 Bytes;
 end CDU_DM_Page_Chg_NDO_Type;
 
 data CDU_DM_SP_NDO_Type
   properties
-    Source_Data_Size => 59 Bytes;
+    Data_Size => 59 Bytes;
 end CDU_DM_SP_NDO_Type;
 
 data CDU_Disp_EICAS_Cmds_Type
   properties
-    Source_Data_Size => 8 Bytes;
+    Data_Size => 8 Bytes;
 end CDU_Disp_EICAS_Cmds_Type;
 
 data Call_Address_Preset_Data_NDO_Type
   properties
-    Source_Data_Size => 426 Bytes;
+    Data_Size => 426 Bytes;
 end Call_Address_Preset_Data_NDO_Type;
 
 data Caution_Type
   properties
-    Source_Data_Size => 472 Bytes;
+    Data_Size => 472 Bytes;
 end Caution_Type;
 
 data Comm_Alerts_Type
   properties
-    Source_Data_Size => 116 Bytes;
+    Data_Size => 116 Bytes;
 end Comm_Alerts_Type;
 
 data Common_Active_State_Data_NDO_Type
   properties
-    Source_Data_Size => 16 Bytes;
+    Data_Size => 16 Bytes;
 end Common_Active_State_Data_NDO_Type;
 
 data Cue_Cold_Preset_Data_NDO_Type
   properties
-    Source_Data_Size => 126 Bytes;
+    Data_Size => 126 Bytes;
 end Cue_Cold_Preset_Data_NDO_Type;
 
 data Cursor_Position_Type
   properties
-    Source_Data_Size => 12 Bytes;
+    Data_Size => 12 Bytes;
 end Cursor_Position_Type;
 
 data Cursor_Slewed_Type
   properties
-    Source_Data_Size => 12 Bytes;
+    Data_Size => 12 Bytes;
 end Cursor_Slewed_Type;
 
 data DCU_Cdu_Msn_Page_Text_Type
   properties
-    Source_Data_Size => 148 Bytes;
+    Data_Size => 148 Bytes;
 end DCU_Cdu_Msn_Page_Text_Type;
 
 data DME_Alerts_Type
   properties
-    Source_Data_Size => 68 Bytes;
+    Data_Size => 68 Bytes;
 end DME_Alerts_Type;
 
 data DME_Cdu_Msn_Page_Text_Type
   properties
-    Source_Data_Size => 148 Bytes;
+    Data_Size => 148 Bytes;
 end DME_Cdu_Msn_Page_Text_Type;
 
 data DME_Manual_Active_State_Data_NDO_Type
   properties
-    Source_Data_Size => 16 Bytes;
+    Data_Size => 16 Bytes;
 end DME_Manual_Active_State_Data_NDO_Type;
 
 data DME_Preset_Data_NDO_Type
   properties
-    Source_Data_Size => 366 Bytes;
+    Data_Size => 366 Bytes;
 end DME_Preset_Data_NDO_Type;
 
 data Datapump_Mode_Type
   properties
-    Source_Data_Size => 8 Bytes;
+    Data_Size => 8 Bytes;
 end Datapump_Mode_Type;
 
 data Destination_Data_Type
   properties
-    Source_Data_Size => 516 Bytes;
+    Data_Size => 516 Bytes;
 end Destination_Data_Type;
 
 data Dig_Map_Type
   properties
-    Source_Data_Size => 16 Bytes;
+    Data_Size => 16 Bytes;
 end Dig_Map_Type;
 
 data Display_Preset_List_NDO_Type
   properties
-    Source_Data_Size => 12 Bytes;
+    Data_Size => 12 Bytes;
 end Display_Preset_List_NDO_Type;
 
-data EGI_Source_Type
+data EGI_Type
   properties
-    Source_Data_Size => 8 Bytes;
-end EGI_Source_Type;
+    Data_Size => 8 Bytes;
+end EGI_Type;
 
 data EICAS_Cdu_Msn_Page_Text_Type
   properties
-    Source_Data_Size => 148 Bytes;
+    Data_Size => 148 Bytes;
 end EICAS_Cdu_Msn_Page_Text_Type;
 
 data EICAS_Master_Type
   properties
-    Source_Data_Size => 8 Bytes;
+    Data_Size => 8 Bytes;
 end EICAS_Master_Type;
 
 data EICAS_X_Side_CDU_Annunciation_Data_Type
   properties
-    Source_Data_Size => 208 Bytes;
+    Data_Size => 208 Bytes;
 end EICAS_X_Side_CDU_Annunciation_Data_Type;
 
 data EICAS_X_Side_Data_Type
   properties
-    Source_Data_Size => 280 Bytes;
+    Data_Size => 280 Bytes;
 end EICAS_X_Side_Data_Type;
 
 data EICAS_X_Side_MFD1_Annunciation_Data_Type
   properties
-    Source_Data_Size => 208 Bytes;
+    Data_Size => 208 Bytes;
 end EICAS_X_Side_MFD1_Annunciation_Data_Type;
 
 data EICAS_X_Side_MFD2_Annunciation_Data_Type
   properties
-    Source_Data_Size => 208 Bytes;
+    Data_Size => 208 Bytes;
 end EICAS_X_Side_MFD2_Annunciation_Data_Type;
 
 data Engine_Type
   properties
-    Source_Data_Size => 72 Bytes;
+    Data_Size => 72 Bytes;
 end Engine_Type;
 
 data Exceedance_Type
   properties
-    Source_Data_Size => 108 Bytes;
+    Data_Size => 108 Bytes;
 end Exceedance_Type;
 
 data FD_Alerts_Type
   properties
-    Source_Data_Size => 19 Bytes;
+    Data_Size => 19 Bytes;
 end FD_Alerts_Type;
 
 data FLIR_Data_Type
   properties
-    Source_Data_Size => 24 Bytes;
+    Data_Size => 24 Bytes;
 end FLIR_Data_Type;
 
 data FMC_Alerts_Type
   properties
-    Source_Data_Size => 44 Bytes;
+    Data_Size => 44 Bytes;
 end FMC_Alerts_Type;
 
 data FMC_CDU_Msn_Page_Text_Type
   properties
-    Source_Data_Size => 148 Bytes;
+    Data_Size => 148 Bytes;
 end FMC_CDU_Msn_Page_Text_Type;
 
 data FM_Alerts_Type
   properties
-    Source_Data_Size => 144 Bytes;
+    Data_Size => 144 Bytes;
 end FM_Alerts_Type;
 
 data Flight_Data_Type
   properties
-    Source_Data_Size => 16 Bytes;
+    Data_Size => 16 Bytes;
 end Flight_Data_Type;
 
 data Flight_Mode_Type
   properties
-    Source_Data_Size => 8 Bytes;
+    Data_Size => 8 Bytes;
 end Flight_Mode_Type;
 
 data Flight_Setup_Text_Type
   properties
-    Source_Data_Size => 50 Bytes;
+    Data_Size => 50 Bytes;
 end Flight_Setup_Text_Type;
 
 data Flt_Mgr_FD_Cmds_Type
   properties
-    Source_Data_Size => 22 Bytes;
+    Data_Size => 22 Bytes;
 end Flt_Mgr_FD_Cmds_Type;
 
 data Fly_To_Waypoint_Cdu_Msn_Page_Text_Type
   properties
-    Source_Data_Size => 148 Bytes;
+    Data_Size => 148 Bytes;
 end Fly_To_Waypoint_Cdu_Msn_Page_Text_Type;
 
 data Fly_to_FMC_Cdu_Msn_Page_Text_Type
   properties
-    Source_Data_Size => 148 Bytes;
+    Data_Size => 148 Bytes;
 end Fly_to_FMC_Cdu_Msn_Page_Text_Type;
 
 data Fuel_Type
   properties
-    Source_Data_Size => 72 Bytes;
+    Data_Size => 72 Bytes;
 end Fuel_Type;
 
 data GPS_Cdu_Msn_Page_Text_Type
   properties
-    Source_Data_Size => 148 Bytes;
+    Data_Size => 148 Bytes;
 end GPS_Cdu_Msn_Page_Text_Type;
 
 data GPS_Freq_Preset_Data_NDO_Type
   properties
-    Source_Data_Size => 346 Bytes;
+    Data_Size => 346 Bytes;
 end GPS_Freq_Preset_Data_NDO_Type;
 
 data ILS_Alerts_Type
   properties
-    Source_Data_Size => 16 Bytes;
+    Data_Size => 16 Bytes;
 end ILS_Alerts_Type;
 
 data ILS_Cdu_Msn_Page_Text_Type
   properties
-    Source_Data_Size => 148 Bytes;
+    Data_Size => 148 Bytes;
 end ILS_Cdu_Msn_Page_Text_Type;
 
 data ILS_Tracking_Data_Type
   properties
-    Source_Data_Size => 17 Bytes;
+    Data_Size => 17 Bytes;
 end ILS_Tracking_Data_Type;
 
 data IRS_Cdu_Msn_Page_Text_Type
   properties
-    Source_Data_Size => 148 Bytes;
+    Data_Size => 148 Bytes;
 end IRS_Cdu_Msn_Page_Text_Type;
 
 data Indicators_Type
   properties
-    Source_Data_Size => 40 Bytes;
+    Data_Size => 40 Bytes;
 end Indicators_Type;
 
 data Inhibit_Status_Mode_Type
   properties
-    Source_Data_Size => 8 Bytes;
+    Data_Size => 8 Bytes;
 end Inhibit_Status_Mode_Type;
 
 data Laser_Mode_Type
   properties
-    Source_Data_Size => 8 Bytes;
+    Data_Size => 8 Bytes;
 end Laser_Mode_Type;
 
 data Log_Status_Command_Type
   properties
-    Source_Data_Size => 8 Bytes;
+    Data_Size => 8 Bytes;
 end Log_Status_Command_Type;
 
 data Log_Status_Mode_Type
   properties
-    Source_Data_Size => 8 Bytes;
+    Data_Size => 8 Bytes;
 end Log_Status_Mode_Type;
 
 data MFD_Cdu_Msn_Page_Text_Type
   properties
-    Source_Data_Size => 148 Bytes;
+    Data_Size => 148 Bytes;
 end MFD_Cdu_Msn_Page_Text_Type;
 
 data MFD_DM_Alerts_Type
   properties
-    Source_Data_Size => 20 Bytes;
+    Data_Size => 20 Bytes;
 end MFD_DM_Alerts_Type;
 
 data MFD_Disp_Comm_Cmds_Type
   properties
-    Source_Data_Size => 13 Bytes;
+    Data_Size => 13 Bytes;
 end MFD_Disp_Comm_Cmds_Type;
 
 data MFD_Disp_EICAS_Cmds_Type
   properties
-    Source_Data_Size => 16 Bytes;
+    Data_Size => 16 Bytes;
 end MFD_Disp_EICAS_Cmds_Type;
 
 data MFD_Disp_FD_Cmds_Type
   properties
-    Source_Data_Size => 24 Bytes;
+    Data_Size => 24 Bytes;
 end MFD_Disp_FD_Cmds_Type;
 
 data MFD_Disp_Flt_Mgr_Cmds_Type
   properties
-    Source_Data_Size => 8 Bytes;
+    Data_Size => 8 Bytes;
 end MFD_Disp_Flt_Mgr_Cmds_Type;
 
 data MFD_Disp_Msn_Snsr_Cmds_Type
   properties
-    Source_Data_Size => 36 Bytes;
+    Data_Size => 36 Bytes;
 end MFD_Disp_Msn_Snsr_Cmds_Type;
 
 data MFD_Disp_Sys_Mgr_Cmds_Type
   properties
-    Source_Data_Size => 12 Bytes;
+    Data_Size => 12 Bytes;
 end MFD_Disp_Sys_Mgr_Cmds_Type;
 
 data MFD_Disp_TSA_Cmds_Type
   properties
-    Source_Data_Size => 36 Bytes;
+    Data_Size => 36 Bytes;
 end MFD_Disp_TSA_Cmds_Type;
 
 data MFD_Disp_Weapons_Cmds_Type
   properties
-    Source_Data_Size => 8 Bytes;
+    Data_Size => 8 Bytes;
 end MFD_Disp_Weapons_Cmds_Type;
 
 data MFD_Disp_X_Side_Data_Type
   properties
-    Source_Data_Size => 44 Bytes;
+    Data_Size => 44 Bytes;
 end MFD_Disp_X_Side_Data_Type;
 
 data MFD_Mode_Type
   properties
-    Source_Data_Size => 260 Bytes;
+    Data_Size => 260 Bytes;
 end MFD_Mode_Type;
 
 data Maritime_Manual_Active_State_Data_NDO_Type
   properties
-    Source_Data_Size => 20 Bytes;
+    Data_Size => 20 Bytes;
 end Maritime_Manual_Active_State_Data_NDO_Type;
 
 data Maritime_Preset_Data_NDO_Type
   properties
-    Source_Data_Size => 386 Bytes;
+    Data_Size => 386 Bytes;
 end Maritime_Preset_Data_NDO_Type;
 
 data Master_Time_Date_Type
   properties
-    Source_Data_Size => 20 Bytes;
+    Data_Size => 20 Bytes;
 end Master_Time_Date_Type;
 
-data Master_Time_Source_Offset_Type
+data Master_Time_Offset_Type
   properties
-    Source_Data_Size => 20 Bytes;
-end Master_Time_Source_Offset_Type;
+    Data_Size => 20 Bytes;
+end Master_Time_Offset_Type;
 
 data Mastership_Type
   properties
-    Source_Data_Size => 8 Bytes;
+    Data_Size => 8 Bytes;
 end Mastership_Type;
 
 data Navigation_Data_Type
   properties
-    Source_Data_Size => 116 Bytes;
+    Data_Size => 116 Bytes;
 end Navigation_Data_Type;
 
 data Next_Waypoint_Data_Type
   properties
-    Source_Data_Size => 28 Bytes;
+    Data_Size => 28 Bytes;
 end Next_Waypoint_Data_Type;
 
 data Off_Plan_Waypoints_Type
   properties
-    Source_Data_Size => 20 Bytes;
+    Data_Size => 20 Bytes;
 end Off_Plan_Waypoints_Type;
 
 data Past_Status_Type
   properties
-    Source_Data_Size => 76 Bytes;
+    Data_Size => 76 Bytes;
 end Past_Status_Type;
 
 data Perf_Data_Type
   properties
-    Source_Data_Size => 132 Bytes;
+    Data_Size => 132 Bytes;
 end Perf_Data_Type;
 
 data Pnav_Present_Position_Cdu_Msn_Page_Text_Type
   properties
-    Source_Data_Size => 148 Bytes;
+    Data_Size => 148 Bytes;
 end Pnav_Present_Position_Cdu_Msn_Page_Text_Type;
 
 data Power_Command_Type
   properties
-    Source_Data_Size => 8 Bytes;
+    Data_Size => 8 Bytes;
 end Power_Command_Type;
 
 data Power_Command_Ack_Type
   properties
-    Source_Data_Size => 8 Bytes;
+    Data_Size => 8 Bytes;
 end Power_Command_Ack_Type;
 
 data Power_Mode_Type
   properties
-    Source_Data_Size => 8 Bytes;
+    Data_Size => 8 Bytes;
 end Power_Mode_Type;
 
 data Preset_Active_State_Data_NDO_Type
   properties
-    Source_Data_Size => 36 Bytes;
+    Data_Size => 36 Bytes;
 end Preset_Active_State_Data_NDO_Type;
 
 data Progress_Msn_Page_Text_Type
   properties
-    Source_Data_Size => 148 Bytes;
+    Data_Size => 148 Bytes;
 end Progress_Msn_Page_Text_Type;
 
 data RNav_Cdu_Msn_Page_Text_Type
   properties
-    Source_Data_Size => 148 Bytes;
+    Data_Size => 148 Bytes;
 end RNav_Cdu_Msn_Page_Text_Type;
 
 data Reset_Status_Command_Type
   properties
-    Source_Data_Size => 8 Bytes;
+    Data_Size => 8 Bytes;
 end Reset_Status_Command_Type;
 
 data SW_Versions_Type
   properties
-    Source_Data_Size => 388 Bytes;
+    Data_Size => 388 Bytes;
 end SW_Versions_Type;
 
 data Scan_Active_State_Data_NDO_Type
   properties
-    Source_Data_Size => 36 Bytes;
+    Data_Size => 36 Bytes;
 end Scan_Active_State_Data_NDO_Type;
 
 data Selected_Radio_Data_NDO_Type
   properties
-    Source_Data_Size => 8 Bytes;
+    Data_Size => 8 Bytes;
 end Selected_Radio_Data_NDO_Type;
 
 data Shared_Single_Freq_Preset_Data_NDO_Type
   properties
-    Source_Data_Size => 366 Bytes;
+    Data_Size => 366 Bytes;
 end Shared_Single_Freq_Preset_Data_NDO_Type;
 
 data Status_Type
   properties
-    Source_Data_Size => 8 Bytes;
+    Data_Size => 8 Bytes;
 end Status_Type;
 
 data Std_Manual_Active_State_Data_NDO_Type
   properties
-    Source_Data_Size => 20 Bytes;
+    Data_Size => 20 Bytes;
 end Std_Manual_Active_State_Data_NDO_Type;
 
 data Std_Preset_Active_State_Data_NDO_Type
   properties
-    Source_Data_Size => 20 Bytes;
+    Data_Size => 20 Bytes;
 end Std_Preset_Active_State_Data_NDO_Type;
 
 data Sys_Mgr_Alerts_Type
   properties
-    Source_Data_Size => 76 Bytes;
+    Data_Size => 76 Bytes;
 end Sys_Mgr_Alerts_Type;
 
 data TACAN_Cdu_Msn_Page_Text_Type
   properties
-    Source_Data_Size => 148 Bytes;
+    Data_Size => 148 Bytes;
 end TACAN_Cdu_Msn_Page_Text_Type;
 
 data Test_Status_Type
   properties
-    Source_Data_Size => 76 Bytes;
+    Data_Size => 76 Bytes;
 end Test_Status_Type;
 
 data Timer_1_Msn_Page_Text_Type
   properties
-    Source_Data_Size => 148 Bytes;
+    Data_Size => 148 Bytes;
 end Timer_1_Msn_Page_Text_Type;
 
 data Timer_2_Msn_Page_Text_Type
   properties
-    Source_Data_Size => 148 Bytes;
+    Data_Size => 148 Bytes;
 end Timer_2_Msn_Page_Text_Type;
 
 data Timer_3_Msn_Page_Text_Type
   properties
-    Source_Data_Size => 148 Bytes;
+    Data_Size => 148 Bytes;
 end Timer_3_Msn_Page_Text_Type;
 
 data Tune_To_Preset_Response_NDO_Type
   properties
-    Source_Data_Size => 16 Bytes;
+    Data_Size => 16 Bytes;
 end Tune_To_Preset_Response_NDO_Type;
 
 data VOR_Cdu_Msn_Page_Text_Type
   properties
-    Source_Data_Size => 148 Bytes;
+    Data_Size => 148 Bytes;
 end VOR_Cdu_Msn_Page_Text_Type;
 
 data VOR_Manual_Active_State_Data_NDO_Type
   properties
-    Source_Data_Size => 20 Bytes;
+    Data_Size => 20 Bytes;
 end VOR_Manual_Active_State_Data_NDO_Type;
 
 data VOR_Preset_Data_NDO_Type
   properties
-    Source_Data_Size => 342 Bytes;
+    Data_Size => 342 Bytes;
 end VOR_Preset_Data_NDO_Type;
 
 data VOR_TACAN_Data_Type
   properties
-    Source_Data_Size => 28 Bytes;
+    Data_Size => 28 Bytes;
 end VOR_TACAN_Data_Type;
 
 data WOW_Override_Type
   properties
-    Source_Data_Size => 8 Bytes;
+    Data_Size => 8 Bytes;
 end WOW_Override_Type;
 
 data WXR_Data_Type
   properties
-    Source_Data_Size => 8 Bytes;
+    Data_Size => 8 Bytes;
 end WXR_Data_Type;
 
 data Waypoint_Cdu_Msn_Page_Text_Type
   properties
-    Source_Data_Size => 148 Bytes;
+    Data_Size => 148 Bytes;
 end Waypoint_Cdu_Msn_Page_Text_Type;
 
 data Waypoint_List_Type
   properties
-    Source_Data_Size => 184 Bytes;
+    Data_Size => 184 Bytes;
 end Waypoint_List_Type;
 
 data Weight_On_Wheels_Type
   properties
-    Source_Data_Size => 8 Bytes;
+    Data_Size => 8 Bytes;
 end Weight_On_Wheels_Type;
 
 data Xmsn_Type
   properties
-    Source_Data_Size => 64 Bytes;
+    Data_Size => 64 Bytes;
 end Xmsn_Type;
 
 data Zeroize_Command_Type
   properties
-    Source_Data_Size => 8 Bytes;
+    Data_Size => 8 Bytes;
 end Zeroize_Command_Type;
 
 data Zeroize_Command_Ack_Type
   properties
-    Source_Data_Size => 7 Bytes;
+    Data_Size => 7 Bytes;
 end Zeroize_Command_Ack_Type;
 
 -- Port Groups for Project Test35
