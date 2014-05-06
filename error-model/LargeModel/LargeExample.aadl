@@ -21,8 +21,8 @@ error propagations
    O : out propagation {Data_Fault};
 flows
  es: error source O{Data_Fault};
- ep1: error path A -> O(Bad_Data); 
- ep2: error path B-> O(Bad_Data);  
+ ep1: error path A -> O{Bad_Data}; 
+ ep2: error path B-> O{Bad_Data};  
  es2: error sink A;   
  es3: error sink B;   
 end propagations;
@@ -36,11 +36,11 @@ use types TripleErrorTypes;
 use behavior TripleErrorModel::Example; 
 component error behavior 
 propagations
-   Fail_Unknown -[ ]-> O(Bad_Data);
-   Fail_Stopped -[ ]-> O(No_Data);
+   Fail_Unknown -[ ]-> O{Bad_Data};
+   Fail_Stopped -[ ]-> O{No_Data};
 -- these conditions represent the Guard_In declaration in the EM V1 Example
-  Operational -[B{Data_Fault} or A{Data_Fault}]-> all(noerror);
-  Operational -[A{Data_Fault} and B{Data_Fault}]-> O(Bad_Data);
+  Operational -[B{Data_Fault} or A{Data_Fault}]-> all{noerror};
+  Operational -[A{Data_Fault} and B{Data_Fault}]-> O{Bad_Data};
 detections
    Operational -[1 ormore(A{No_Data},A{Bad_Data})]-> A_Failed!;
    Operational -[1 ormore(B{No_Data},B{Bad_Data})]-> B_Failed!;

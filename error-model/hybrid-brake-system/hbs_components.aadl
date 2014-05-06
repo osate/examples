@@ -78,8 +78,8 @@ annex EMV2 {**
 	flows
 		f0 : error source output1 {ValueError};
 		f1 : error source output2 {ValueError};
-		f2 : error path mechanical_input{ServiceOmission} -> output1(ServiceOmission);
-		f3 : error path mechanical_input{ServiceOmission} -> output2(ServiceOmission);
+		f2 : error path mechanical_input{ServiceOmission} -> output1{ServiceOmission};
+		f3 : error path mechanical_input{ServiceOmission} -> output2{ServiceOmission};
 	end propagations;
 
 	component error behavior
@@ -88,8 +88,8 @@ annex EMV2 {**
 	transitions
 		t0 : Operational -[InternalFault]-> Failed;
 	propagations
-		p0 : Failed -[]-> output1(ValueError);
-		p1 : Failed -[]-> output2(ValueError);
+		p0 : Failed -[]-> output1{ValueError};
+		p1 : Failed -[]-> output2{ValueError};
 	end component;
 	
 	properties
@@ -241,14 +241,14 @@ annex EMV2 {**
 		to_epc : out propagation {ServiceOmission,ValueError};
 		to_ipc : out propagation {ServiceOmission,ValueError};
 	flows
-		f0 : error path input1{ServiceOmission} -> to_epc(ServiceOmission);
-		f1 : error path input1{ServiceOmission} -> to_ipc(ServiceOmission);
-		f2 : error path input1{ValueError} -> to_epc(ValueError);
-		f3 : error path input1{ValueError} -> to_ipc(ValueError);
-		f5 : error path input2{ServiceOmission} -> to_epc(ServiceOmission);
-		f6 : error path input2{ServiceOmission} -> to_ipc(ServiceOmission);
-		f7 : error path input2{ValueError} -> to_epc(ValueError);
-		f8 : error path input2{ValueError} -> to_ipc(ValueError);
+		f0 : error path input1{ServiceOmission} -> to_epc{ServiceOmission};
+		f1 : error path input1{ServiceOmission} -> to_ipc{ServiceOmission};
+		f2 : error path input1{ValueError} -> to_epc{ValueError};
+		f3 : error path input1{ValueError} -> to_ipc{ValueError};
+		f5 : error path input2{ServiceOmission} -> to_epc{ServiceOmission};
+		f6 : error path input2{ServiceOmission} -> to_ipc{ServiceOmission};
+		f7 : error path input2{ValueError} -> to_epc{ValueError};
+		f8 : error path input2{ValueError} -> to_ipc{ValueError};
 	end propagations;
 
 	component error behavior
@@ -261,10 +261,10 @@ annex EMV2 {**
 		t2 : Operational -[input1{ServiceOmission} and input2{ServiceOmission} or InternalOmissionFault]-> Failed{ValueError};
 		t3 : Operational -[(input1{ValueError} or input1{ServiceOmission}) and (input2{ValueError} or InternalValueFault)]-> Failed{ValueError};
 	propagations
-		p0 : Failed{ValueError} -[]-> to_epc(ValueError);
-		p1 : Failed{ValueError} -[]-> to_ipc(ValueError);
-		p3 : Failed{ServiceOmission} -[]-> to_epc(ServiceOmission);
-		p4 : Failed{ServiceOmission} -[]-> to_ipc(ServiceOmission);		
+		p0 : Failed{ValueError} -[]-> to_epc{ValueError};
+		p1 : Failed{ValueError} -[]-> to_ipc{ValueError};
+		p3 : Failed{ServiceOmission} -[]-> to_epc{ServiceOmission};
+		p4 : Failed{ServiceOmission} -[]-> to_ipc{ServiceOmission};		
 	end component;
 	
 	properties
