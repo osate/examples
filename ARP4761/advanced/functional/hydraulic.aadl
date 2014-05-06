@@ -14,9 +14,9 @@ annex EMV2 {**
 		isFailing : out propagation {HydraulicErrors}; 
 	flows
 		f1 : error source isFailing {HydraulicErrors};
-		f2 : error path processor{AnyFunctionalError} -> isFailing (HydraulicLossBlue);
-		f3 : error path processor{AnyFunctionalError} -> isFailing (HydraulicLossGreen);
-		f4 : error path processor{AnyFunctionalError} -> isFailing (HydraulicLossComponents);
+		f2 : error path processor{AnyFunctionalError} -> isFailing {HydraulicLossBlue};
+		f3 : error path processor{AnyFunctionalError} -> isFailing {HydraulicLossGreen};
+		f4 : error path processor{AnyFunctionalError} -> isFailing {HydraulicLossComponents};
 --		f2 : error path processor -> isFailing use mappings WBSMappingErrorLib::ImplementationToFunction;
 --		f3 : error path processor -> isFailing (HydraulicLossGreen);
 --		f4 : error path processor -> isFailing (HydraulicLossComponents);
@@ -32,9 +32,9 @@ annex EMV2 {**
 		t2 : Operational -[ BluePumpError ]-> Failed;
 		t3 : Operational -[ ComponentError ]-> Failed;		
 	propagations
-		p1 : Failed -[]-> isFailing(HydraulicLossBlue);
-		p2 : Failed -[]-> isFailing(HydraulicLossGreen);
-		p3 : Failed -[]-> isFailing(HydraulicLossComponents);
+		p1 : Failed -[]-> isFailing{HydraulicLossBlue};
+		p2 : Failed -[]-> isFailing{HydraulicLossGreen};
+		p3 : Failed -[]-> isFailing{HydraulicLossComponents};
 	end component;
 	properties
 		-- Probability evaluated according to AIR6110, page 49

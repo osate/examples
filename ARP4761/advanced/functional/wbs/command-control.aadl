@@ -34,7 +34,7 @@ annex EMV2 {**
 		t1 : Operational -[lossBrakingCommand]-> Failed;
 		t2 : Operational -[ fromElectrical {AnyFunctionalError} ]-> Failed;  
 	propagations
-		p1 : Failed -[]-> fromBSCU(AnyFunctionalError);
+		p1 : Failed -[]-> fromBSCU{AnyFunctionalError};
 	end component;
 
 	composite error behavior

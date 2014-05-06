@@ -10,7 +10,7 @@ annex EMV2 {**
 	error propagations
 		processor : in propagation {AnyFunctionalError};
 	flows
-		f1 : error path processor{AnyFunctionalError} -> isFailing(AnyFunctionalError);
+		f1 : error path processor{AnyFunctionalError} -> isFailing{AnyFunctionalError};
 	end propagations;
 **};
 end Electrical;

@@ -68,8 +68,8 @@ annex EMV2 {**
 	    --  So, basically, this should be shown in the FMEA/FaultImpact
 	    --  report. So, the report should show the error flows
 	    --  pedals/NoService -> commands/brake/skid/NoValue -> monitor/NoValue -> selector/NoValue 
-		p1 : Failed -[]-> brake(NoValue);
-		p2 : Failed -[]-> skid(NoValue);
+		p1 : Failed -[]-> brake{NoValue};
+		p2 : Failed -[]-> skid{NoValue};
 	end component;
 **};
 end command.i;
@@ -114,7 +114,7 @@ annex EMV2 {**
 		terrfromplatformsoft : Operational -[processor{SoftwareFailure}]-> Failed;
 		terrfromplatformhard : Operational -[processor{HardwareFailure}]-> Failed;
 	propagations
-		p1 : Failed -[]-> valid(NoValue);
+		p1 : Failed -[]-> valid{NoValue};
 	end component;
 	properties
 		EMV2::severity => ARP4761::Minor applies to InvalidReport;
@@ -159,14 +159,14 @@ annex EMV2 {**
 		pwr       : in propagation {NoPower};
 		valid     : out propagation {NoValue};
 	flows
-	    nopwr   : error path pwr{NoPower} -> valid(NoValue);
+	    nopwr   : error path pwr{NoPower} -> valid{NoValue};
 	end propagations;
 	
 	component error behavior
 	transitions
 		t1 : Operational -[pwr{NoPower}]-> Failed;
 	propagations
-		p1 : Failed -[]-> valid(NoValue);
+		p1 : Failed -[]-> valid{NoValue};
 	end component;
 	
 	composite error behavior
@@ -229,7 +229,7 @@ annex EMV2 {**
 		--  we are no longer able to send a valid data.
 		t2 : Operational -[input1{NoValue} and input2{NoValue}]-> Failed; 
 	propagations
-		p1 : Failed -[]-> result(NoValue);
+		p1 : Failed -[]-> result{NoValue};
 	end component;
 	
 	properties

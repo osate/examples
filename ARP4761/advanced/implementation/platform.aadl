@@ -29,8 +29,8 @@ annex EMV2 {**
 	transitions
 		Operational -[SoftwareFailure]-> Failed;
 	propagations
-		normal : Operational -[]-> bindings (NoError);
-		p2     : Failed -[]-> bindings(SoftwareFailure);
+		normal : Operational -[]-> bindings {NoError};
+		p2     : Failed -[]-> bindings{SoftwareFailure};
 	end component;
 	properties
 		EMV2::severity => ARP4761::Major applies to SoftwareFailure;
@@ -80,8 +80,8 @@ annex EMV2 {**
 	transitions
 		Operational -[InternalFailure]-> Failed;
 	propagations
-		normal : Operational -[]-> bindings(NoError);
-		pfail  : Failed -[]-> bindings(HardwareFailure);
+		normal : Operational -[]-> bindings{NoError};
+		pfail  : Failed -[]-> bindings{HardwareFailure};
 	end component;
 	properties
 		EMV2::severity => ARP4761::Major applies to InternalFailure;
@@ -134,8 +134,8 @@ annex EMV2 {**
 	transitions
 		Operational -[SoftwareFailure]-> Failed;
 	propagations 
-		normal : Operational -[]-> processor(NoError);
-		psoft  : Failed -[]-> processor(SoftwareFailure);
+		normal : Operational -[]-> processor{NoError};
+		psoft  : Failed -[]-> processor{SoftwareFailure};
 	end component;
 	properties
 		EMV2::severity => ARP4761::Major applies to SoftwareFailure;

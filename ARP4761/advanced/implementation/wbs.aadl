@@ -61,13 +61,13 @@ annex EMV2 {**
 
 	composite error behavior
 	states
-		[bscu.Failed and accumulator.Failed and annunciation.Failed]-> Failed(TotalWBLossUnanunciated);
-		[blue_pump.Failed and green_pump.Failed and accumulator.Failed and annunciation.Failed]-> Failed(TotalWBLossUnanunciated);
-		[bscu.Failed and accumulator.Failed and annunciation.Failed]-> Failed(TotalWBLossUnanunciated);
+		[bscu.Failed and accumulator.Failed and annunciation.Failed]-> Failed{TotalWBLossUnanunciated};
+		[blue_pump.Failed and green_pump.Failed and accumulator.Failed and annunciation.Failed]-> Failed{TotalWBLossUnanunciated};
+		[bscu.Failed and accumulator.Failed and annunciation.Failed]-> Failed{TotalWBLossUnanunciated};
 		
-		[bscu.Failed and accumulator.Failed and annunciation.Operational]-> Failed(TotalWBLossAnunciated);
-		[blue_pump.Failed and green_pump.Failed and accumulator.Failed and annunciation.Operational]-> Failed(TotalWBLossAnunciated);
-		[bscu.Failed and accumulator.Failed and annunciation.Operational]-> Failed(TotalWBLossAnunciated);	end composite;
+		[bscu.Failed and accumulator.Failed and annunciation.Operational]-> Failed{TotalWBLossAnunciated};
+		[blue_pump.Failed and green_pump.Failed and accumulator.Failed and annunciation.Operational]-> Failed{TotalWBLossAnunciated};
+		[bscu.Failed and accumulator.Failed and annunciation.Operational]-> Failed{TotalWBLossAnunciated};	end composite;
 **};
 end wbs.generic;
  

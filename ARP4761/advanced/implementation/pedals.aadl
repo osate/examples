@@ -30,8 +30,8 @@ annex EMV2 {**
 	transitions
 		nosignal : Operational -[InternalFault]-> Failed;
 	propagations
-		p1 : Failed -[]-> signal1(NoService);
-		p2 : Failed -[]-> signal2(NoService);
+		p1 : Failed -[]-> signal1{NoService};
+		p2 : Failed -[]-> signal2{NoService};
 	end component;
 
 	properties

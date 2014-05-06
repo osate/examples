@@ -42,7 +42,7 @@ annex EMV2 {**
 	transitions
 		t1 : Operational -[ LossAnnunciation ]-> Failed;
 	propagations
-		p1 : Failed -[]-> information(NoService);
+		p1 : Failed -[]-> information{NoService};
 	end component;
 	
 	properties

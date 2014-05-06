@@ -24,7 +24,7 @@ annex EMV2 {**
 	transitions
 		t1 : Operational -[ Failure ]-> Failed;
 	propagations
-		p1 : Failed -[]-> isFailing (AnyFunctionalError);
+		p1 : Failed -[]-> isFailing {AnyFunctionalError};
 	end component;
 **};
 end Generic;

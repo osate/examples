@@ -156,8 +156,8 @@ annex EMV2 {**
 	    -- FHA for Unnanunciated loss of all wheel
 	    -- from AIR6110 page 49
 --		[decelerateonground.Failed]-> Failed(TotalWBLossAnunciated);
-		[decelerateonground.Failed]-> Failed(TotalWBLossUnAnunciated); 
-		[decelerateonground.Failed and in fromAlert{AnyFunctionalError}]-> Failed(TotalWBLossAnunciated);
+		[decelerateonground.Failed]-> Failed{TotalWBLossUnAnunciated}; 
+		[decelerateonground.Failed and in fromAlert{AnyFunctionalError}]-> Failed{TotalWBLossAnunciated};
 --		[decelerateonground.Failed]-> Failed;  
 	end composite;
  
