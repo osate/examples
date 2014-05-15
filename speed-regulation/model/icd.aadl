@@ -1,0 +1,30 @@
+package speed_regulation::icd
+
+public
+
+data gps_position
+end gps_position;
+
+data speed
+end speed;
+
+data picture 
+end picture; 
+
+data boolean
+end boolean;
+
+data command 
+end command;
+
+data distance 
+end distance;
+
+
+data implementation command.brake
+end command.brake;
+
+data implementation command.acceleration
+end command.acceleration;
+
+end speed_regulation::icd;

@@ -1,0 +1,87 @@
+package speed_regulation::devices
+
+
+public
+
+with speed_regulation::icd;
+ 
+-----------------------------------
+--  Camera and Object Detection  --
+-----------------------------------
+   
+device camera
+features
+	speed : out data port speed_regulation::icd::picture;
+properties 
+	Period => 10ms;
+end camera;
+
+device radar
+features
+	distance_estimate : out data port speed_regulation::icd::distance;
+properties 
+	Period => 10ms;
+end radar;
+ 
+---------------------
+--  Speed Sensors  --
+---------------------
+
+device speed_sensor
+features
+	speed : out data port speed_regulation::icd::speed;
+end speed_sensor; 
+
+device speed_wheel_sensor extends speed_sensor
+properties
+	Period => 10ms;
+end speed_wheel_sensor;
+
+device speed_laser_sensor extends speed_sensor
+properties
+	Period => 10ms;
+end speed_laser_sensor;
+
+------------------
+--  GPS device  --
+------------------
+
+device gps
+features
+	position : out data port speed_regulation::icd::gps_position;
+end gps;
+
+device implementation gps.impl1
+properties
+	Period => 10ms;
+end gps.impl1;
+
+device implementation gps.impl2
+properties
+	Period => 15ms;
+end gps.impl2;
+
+----------------------
+--  Warning Device  --
+----------------------
+
+device warning_device
+features
+	warning : in event data port speed_regulation::icd::boolean;
+end warning_device;
+
+-------------
+--  Brake  --
+-------------
+
+device brake
+features
+	warning : in event data port speed_regulation::icd::command.brake;
+end brake;
+
+device acceleration
+features
+	warning : in event data port speed_regulation::icd::command.acceleration;
+end acceleration;
+
+end speed_regulation::devices;
