@@ -14,17 +14,11 @@ end picture;
 data boolean
 end boolean;
 
-data command 
-end command;
+data speed_command 
+end speed_command;
 
 data distance 
 end distance;
 
-
-data implementation command.brake
-end command.brake;
-
-data implementation command.acceleration
-end command.acceleration;
 
 end speed_regulation::icd;

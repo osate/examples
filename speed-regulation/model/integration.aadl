@@ -1,0 +1,69 @@
+package speed_regulation::integration
+
+public
+
+with speed_regulation::devices;
+with speed_regulation::software;
+
+
+system integration
+end integration;
+
+system implementation integration.generic
+subcomponents
+-- input devices
+	obstacle_camera : device speed_regulation::devices::camera;
+	obstacle_radar : device speed_regulation::devices::radar;
+	wheel_sensor : device speed_regulation::devices::speed_wheel_sensor;
+	laser_sensor : device speed_regulation::devices::speed_laser_sensor;
+	gps1 : device speed_regulation::devices::gps.impl1;
+	gps2 : device speed_regulation::devices::gps.impl2;
+	
+-- software
+    image_acquisition : process speed_regulation::software::image_acquisition.i;
+    radar_acquisition : process speed_regulation::software::radar_acquisition.i;
+    
+    speed_estimate    : process speed_regulation::software::speed_estimate.i;
+    
+    position_voter    : process speed_regulation::software::position_voter.i;
+    
+    obstacle_detection : process speed_regulation::software::obstacle_detection.i;
+    
+    obstacle_distance_evaluation : process speed_regulation::software::obstacle_distance_evaluation.i;
+    
+    speed_threshold_calculation : process speed_regulation::software::speed_threshold_computation.i;
+    
+    speed_controller : process speed_regulation::software::speed_controller.i;
+    
+    emergency_detection : process speed_regulation::software::emergency_detection.i;
+    
+    warning_activation : process speed_regulation::software::warning_activation.i;
+	
+-- output devices
+	warning_alert : device speed_regulation::devices::warning_device;
+	brake         : device speed_regulation::devices::brake;
+	acceleration  : device speed_regulation::devices::acceleration;
+connections
+-- obstacle camera to image acquisition
+   c00 : port obstacle_camera.picture -> image_acquisition.picture;
+
+-- obstacle radar to radar acquisition
+   c10 : port obstacle_radar.distance_estimate -> radar_acquisition.obstacle_distance;
+
+-- speed wheel sensor to speed estimate
+   c20 : port wheel_sensor.speed -> speed_estimate.wheel_sensor;
+
+-- laser sensor to speed estimate
+   c31 : port laser_sensor.speed -> speed_estimate.laser_sensor;
+
+-- GPS1 to GPS voter
+	c41 : port gps1.position -> position_voter.position1;
+	
+-- GPS2 to GPS voter
+	c51 : port gps2.position -> position_voter.position2;
+	
+
+end integration.generic;
+
+
+end speed_regulation::integration;

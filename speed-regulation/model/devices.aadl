@@ -11,7 +11,9 @@ with speed_regulation::icd;
    
 device camera
 features
-	speed : out data port speed_regulation::icd::picture;
+	picture : out data port speed_regulation::icd::picture;
+flows
+	f0 : flow source picture;
 properties 
 	Period => 10ms;
 end camera;
@@ -19,6 +21,8 @@ end camera;
 device radar
 features
 	distance_estimate : out data port speed_regulation::icd::distance;
+flows
+	f0 : flow source distance_estimate;
 properties 
 	Period => 10ms;
 end radar;
@@ -30,6 +34,8 @@ end radar;
 device speed_sensor
 features
 	speed : out data port speed_regulation::icd::speed;
+flows
+	f0 : flow source speed;
 end speed_sensor; 
 
 device speed_wheel_sensor extends speed_sensor
@@ -49,6 +55,8 @@ end speed_laser_sensor;
 device gps
 features
 	position : out data port speed_regulation::icd::gps_position;
+flows
+	f0 : flow source position;
 end gps;
 
 device implementation gps.impl1
@@ -68,6 +76,10 @@ end gps.impl2;
 device warning_device
 features
 	warning : in event data port speed_regulation::icd::boolean;
+flows
+	f0 : flow sink warning;
+properties
+	Period => 500ms;
 end warning_device;
 
 -------------
@@ -76,12 +88,20 @@ end warning_device;
 
 device brake
 features
-	warning : in event data port speed_regulation::icd::command.brake;
+	cmd : in event data port speed_regulation::icd::speed_command;
+flows
+	f0 : flow sink cmd;
+properties
+	Period => 2ms;
 end brake;
 
 device acceleration
 features
-	warning : in event data port speed_regulation::icd::command.acceleration;
+	cmd : in event data port speed_regulation::icd::speed_command;
+flows
+	f0 : flow sink cmd;
+properties
+	Period => 2ms;
 end acceleration;
 
 end speed_regulation::devices;

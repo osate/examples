@@ -191,7 +191,32 @@ features
 	current_speed : in data port speed_regulation::icd::speed;
 	obstacle_distance : in data port speed_regulation::icd::distance;
 	emergency_detected : out data port speed_regulation::icd::boolean;
+flows
+	f0 : flow path current_speed -> emergency_detected;
+	f1 : flow path obstacle_distance -> emergency_detected;
 end emergency_detection;
+
+process implementation emergency_detection.i
+subcomponents
+	thr : thread emergency_detection_thr;
+connections
+	c0 : port current_speed -> thr.current_speed;
+	c1 : port obstacle_distance -> thr.obstacle_distance;
+	c2 : port thr.emergency_detected -> emergency_detected;
+flows
+	f0 : flow path current_speed -> c0 -> thr.f0 -> c2 -> emergency_detected;
+	f1 : flow path obstacle_distance -> c1 -> thr.f1 -> c2 -> emergency_detected;
+end emergency_detection.i;
+
+thread emergency_detection_thr
+features
+	current_speed : in data port speed_regulation::icd::speed;
+	obstacle_distance : in data port speed_regulation::icd::distance;
+	emergency_detected : out data port speed_regulation::icd::boolean;
+flows
+	f0 : flow path current_speed -> emergency_detected;
+	f1 : flow path obstacle_distance -> emergency_detected;
+end emergency_detection_thr;
 
 --------------------------
 --  Warning Activation  --
@@ -201,7 +226,27 @@ process warning_activation
 features
 	emergency_detected : in data port speed_regulation::icd::boolean;
 	activate_warning   : out data port speed_regulation::icd::boolean;
+flows
+	f0 : flow path emergency_detected -> activate_warning;
 end warning_activation;
+
+process implementation warning_activation.i
+subcomponents
+	thr : thread warning_activation_thr;
+connections
+	c0 : port emergency_detected -> thr.emergency_detected;
+	c1 : port thr.activate_warning -> activate_warning;
+flows
+	f0 : flow path emergency_detected -> c0 -> thr.f0 -> c1 -> activate_warning;
+end warning_activation.i;
+
+thread warning_activation_thr
+features
+	emergency_detected : in data port speed_regulation::icd::boolean;
+	activate_warning   : out data port speed_regulation::icd::boolean;
+flows
+	f0 : flow path emergency_detected -> activate_warning;
+end warning_activation_thr;
 
 ----------------------
 --  Position Voter  --
@@ -211,7 +256,33 @@ process position_voter
 features
 	position1 : in data port speed_regulation::icd::gps_position;
 	position2 : in data port speed_regulation::icd::gps_position;
+	position  : out data port speed_regulation::icd::gps_position;
+flows
+	f0 : flow path position1 -> position;
+	f1 : flow path position2 -> position;
 end position_voter;
+
+process implementation position_voter.i
+subcomponents
+	thr : thread position_voter_thr;
+connections
+	c0 : port position1 -> thr.position1;
+	c1 : port position2 -> thr.position2;
+	c2 : port thr.position -> position;
+flows
+	f0 : flow path position1 -> c0 -> thr.f0 -> c2 -> position;
+	f1 : flow path position2 -> c1 -> thr.f1 -> c2 -> position;
+end position_voter.i;
+
+thread position_voter_thr
+features
+	position1 : in data port speed_regulation::icd::gps_position;
+	position2 : in data port speed_regulation::icd::gps_position;
+	position  : out data port speed_regulation::icd::gps_position;
+flows
+	f0 : flow path position1 -> position;
+	f1 : flow path position2 -> position;
+end position_voter_thr;
 
 -----------------------------------
 --  Speed Threshold Computation  --
@@ -222,7 +293,32 @@ features
 	position      : in data port speed_regulation::icd::gps_position;
 	current_speed : in data port speed_regulation::icd::speed;
 	threshold     : out data port speed_regulation::icd::speed;
+flows
+	f0 : flow path position -> threshold;
+	f1 : flow path current_speed -> threshold;
 end speed_threshold_computation;
+
+process implementation speed_threshold_computation.i
+subcomponents
+	thr : thread speed_threshold_computation_thr;
+connections
+	c0 : port position -> thr.position;
+	c1 : port current_speed -> thr.current_speed;
+	c2 : port thr.threshold -> threshold;
+flows
+	f0 : flow path position -> c0 -> thr.f0 -> c2 -> threshold;
+	f1 : flow path current_speed -> c1 -> thr.f1 -> c2 -> threshold;
+end speed_threshold_computation.i; 
+
+thread speed_threshold_computation_thr
+features
+	position      : in data port speed_regulation::icd::gps_position;
+	current_speed : in data port speed_regulation::icd::speed;
+	threshold     : out data port speed_regulation::icd::speed;
+flows
+	f0 : flow path position -> threshold;
+	f1 : flow path current_speed -> threshold;
+end speed_threshold_computation_thr;
 
 ------------------------
 --  Speed Controller  --
@@ -233,9 +329,38 @@ features
 	position      : in data port speed_regulation::icd::gps_position;
 	current_speed : in data port speed_regulation::icd::speed;
 	threshold     : in data port speed_regulation::icd::speed;
-	brake_cmd     : out data port speed_regulation::icd::command.brake;
-	accel_cmd     : out data port speed_regulation::icd::command.acceleration;
+	cmd           : out data port speed_regulation::icd::speed_command;
+flows
+	f0 : flow path position -> cmd;
+	f1 : flow path current_speed -> cmd;
+	f2 : flow path threshold -> cmd;
 end speed_controller;
+
+process implementation speed_controller.i
+subcomponents
+	thr : thread speed_controller_thr;
+connections
+	c0 : port position -> thr.position;
+	c1 : port current_speed -> thr.current_speed;
+	c2 : port threshold -> thr.threshold;
+	c3 : port thr.cmd -> cmd;
+flows
+	f0 : flow path position -> c0 -> thr.f0 -> c3 -> cmd;
+	f1 : flow path current_speed -> c1 -> thr.f1 -> c3 -> cmd;
+	f2 : flow path threshold -> c2 -> thr.f2 -> c3 -> cmd;
+end speed_controller.i;
+
+thread speed_controller_thr
+features
+	position      : in data port speed_regulation::icd::gps_position;
+	current_speed : in data port speed_regulation::icd::speed;
+	threshold     : in data port speed_regulation::icd::speed;
+	cmd           : out data port speed_regulation::icd::speed_command;
+flows
+	f0 : flow path position -> cmd;
+	f1 : flow path current_speed -> cmd;
+	f2 : flow path threshold -> cmd;
+end speed_controller_thr;
 
 end speed_regulation::software;
   
