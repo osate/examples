@@ -109,7 +109,7 @@ connections
 	c200 : port speed_controller.cmd -> brake.cmd;
 	
 -- speed controller to acceleration
-	c210 : port speed_controller.cmd -> brake.cmd;
+	c210 : port speed_controller.cmd -> acceleration.cmd;
 
 flows
     --  From the camera to the warning device
@@ -119,7 +119,23 @@ flows
 							obstacle_distance_evaluation.f1 -> c090 ->
 							emergency_detection.f1 -> c100 ->
 							warning_activation.f0 -> c110 ->
-							warning_alert.f0;		
+							warning_alert.f0;	
+    --  From the camera to the brake
+	f1 : end to end flow 	obstacle_camera.f0 -> c000 ->
+							image_acquisition.f0 -> c060 ->
+							obstacle_detection.f0 -> c080 ->
+							obstacle_distance_evaluation.f1 -> c090 ->
+							emergency_detection.f1 -> c160 ->
+							speed_controller.f3 -> c200 ->
+							brake.f0;	
+    --  From the camera to the acceleration
+	f2 : end to end flow 	obstacle_camera.f0 -> c000 ->
+							image_acquisition.f0 -> c060 ->
+							obstacle_detection.f0 -> c080 ->
+							obstacle_distance_evaluation.f1 -> c090 ->
+							emergency_detection.f1 -> c160 ->
+							speed_controller.f3 -> c210 ->
+							acceleration.f0;		
 end integration.generic;
 
 
