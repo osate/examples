@@ -5,5 +5,100 @@ public
 
 with speed_regulation::icd;
 
+-------------------------
+--  Image Acquisition  --
+-------------------------
+
+process image_acquisition
+features
+	picture           : in data port speed_regulation::icd::picture;
+	obstacle_detected : out data port speed_regulation::icd::boolean;
+end image_acquisition;
+
+-------------------------
+--  Radar Acquisition  --
+-------------------------
+
+process radar_acquisition
+features
+	obstacle_distance : in data port speed_regulation::icd::distance;
+	obstacle_detected : out data port speed_regulation::icd::boolean;
+end radar_acquisition;
+
+----------------------
+--  Speed Estimate  --
+----------------------
+
+process speed_estimate
+features
+	wheel_sensor : in data port speed_regulation::icd::speed;
+	laser_sensor : in data port speed_regulation::icd::speed;
+end speed_estimate;
+
+
+--------------------------
+--  Obstacle Detection  --
+--------------------------
+
+process obstacle_detection
+features
+	camera : in data port speed_regulation::icd::boolean;
+	radar : in data port speed_regulation::icd::boolean;
+	obstacle_detected : out data port speed_regulation::icd::boolean;
+end obstacle_detection;
+
+
+------------------------------------
+--  Obstacle Distance Evaluation  --
+------------------------------------
+
+process obstacle_distance_evaluation
+features
+	current_speed : in data port speed_regulation::icd::speed;
+	obstacle_distance : in data port speed_regulation::icd::distance;
+end obstacle_distance_evaluation;
+
+---------------------------
+--  Emergency Detection  --
+---------------------------
+
+process emergency_detection
+features
+	current_speed : in data port speed_regulation::icd::speed;
+	obstacle_distance : in data port speed_regulation::icd::distance;
+	emergency_detected : out data port speed_regulation::icd::boolean;
+end emergency_detection;
+
+--------------------------
+--  Warning Activation  --
+--------------------------
+
+process warning_activation
+features
+	emergency_detected : in data port speed_regulation::icd::boolean;
+	activate_warning   : out data port speed_regulation::icd::boolean;
+end warning_activation;
+
+----------------------
+--  Position Voter  --
+----------------------
+
+process position_voter
+end position_voter;
+
+-----------------------------------
+--  Speed Threshold Computation  --
+-----------------------------------
+
+process speed_threshold_computation
+end speed_threshold_computation;
+
+------------------------
+--  Speed Controller  --
+------------------------
+
+process speed_controller
+end speed_controller;
+
 end speed_regulation::software;
   
