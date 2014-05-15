@@ -13,7 +13,30 @@ process image_acquisition
 features
 	picture           : in data port speed_regulation::icd::picture;
 	obstacle_detected : out data port speed_regulation::icd::boolean;
+flows
+	f0 : flow path picture -> obstacle_detected;
 end image_acquisition;
+
+process implementation image_acquisition.i
+subcomponents
+	thr : thread image_acquisition_thr.i;
+connections
+	c0 : port picture -> thr.picture;
+	c1 : port thr.obstacle_detected -> obstacle_detected;
+flows
+	f0 : flow path picture -> c0 -> thr.f0 -> c1 -> obstacle_detected;
+end image_acquisition.i;
+
+thread image_acquisition_thr
+features
+	picture           : in data port speed_regulation::icd::picture;
+	obstacle_detected : out data port speed_regulation::icd::boolean;
+flows
+	f0 : flow path picture -> obstacle_detected;
+end image_acquisition_thr;
+
+thread implementation image_acquisition_thr.i
+end image_acquisition_thr.i;
 
 -------------------------
 --  Radar Acquisition  --
@@ -23,7 +46,30 @@ process radar_acquisition
 features
 	obstacle_distance : in data port speed_regulation::icd::distance;
 	obstacle_detected : out data port speed_regulation::icd::boolean;
+flows
+	f0 : flow path obstacle_distance -> obstacle_detected;
 end radar_acquisition;
+
+process implementation radar_acquisition.i
+subcomponents
+	thr : thread radar_acquisition_thr.i;
+connections
+	c0 : port obstacle_distance -> thr.obstacle_distance;
+	c1 : port thr.obstacle_detected -> obstacle_detected;
+flows
+	f0 : flow path obstacle_distance -> c0 -> thr.f0 -> c1 -> obstacle_detected;
+end radar_acquisition.i;
+
+thread radar_acquisition_thr
+features
+	obstacle_distance : in data port speed_regulation::icd::distance;
+	obstacle_detected : out data port speed_regulation::icd::boolean;
+flows
+	f0 : flow path obstacle_distance -> obstacle_detected;
+end radar_acquisition_thr;
+
+thread implementation radar_acquisition_thr.i
+end radar_acquisition_thr.i;
 
 ----------------------
 --  Speed Estimate  --
@@ -33,8 +79,36 @@ process speed_estimate
 features
 	wheel_sensor : in data port speed_regulation::icd::speed;
 	laser_sensor : in data port speed_regulation::icd::speed;
+	speed        : out data port speed_regulation::icd::speed;
+flows
+	f0 : flow path wheel_sensor -> speed;
+	f1 : flow path laser_sensor -> speed;
 end speed_estimate;
 
+process implementation speed_estimate.i
+subcomponents
+	thr : thread speed_estimate_thr.i;
+connections
+	c0 : port wheel_sensor -> thr.wheel_sensor;
+	c1 : port laser_sensor -> thr.laser_sensor;
+	c2 : port thr.speed -> speed;
+flows
+	f0 : flow path wheel_sensor -> c0 -> thr.f0 -> c2 -> speed;
+	f1 : flow path laser_sensor -> c1 -> thr.f1 -> c2 -> speed;
+end speed_estimate.i;
+
+thread speed_estimate_thr
+features
+	wheel_sensor : in data port speed_regulation::icd::speed;
+	laser_sensor : in data port speed_regulation::icd::speed;
+	speed        : out data port speed_regulation::icd::speed;
+flows
+	f0 : flow path wheel_sensor -> speed;
+	f1 : flow path laser_sensor -> speed;
+end speed_estimate_thr;
+
+thread implementation speed_estimate_thr.i
+end speed_estimate_thr.i;
 
 --------------------------
 --  Obstacle Detection  --
@@ -45,8 +119,32 @@ features
 	camera : in data port speed_regulation::icd::boolean;
 	radar : in data port speed_regulation::icd::boolean;
 	obstacle_detected : out data port speed_regulation::icd::boolean;
+flows
+	f0 : flow path camera -> obstacle_detected;
+	f1 : flow path radar -> obstacle_detected;
 end obstacle_detection;
 
+process implementation obstacle_detection.i
+subcomponents
+	thr : thread obstacle_detection_thr;
+connections
+	c0 : port camera -> thr.camera;
+	c1 : port radar -> thr.radar;
+	c2 : port thr.obstacle_detected -> obstacle_detected;
+flows
+	f0 : flow path camera -> c0 -> thr.f0 -> c2 -> obstacle_detected;
+	f1 : flow path radar -> c1 -> thr.f1 -> c2 -> obstacle_detected;
+end obstacle_detection.i;
+
+thread obstacle_detection_thr
+features
+	camera : in data port speed_regulation::icd::boolean;
+	radar : in data port speed_regulation::icd::boolean;
+	obstacle_detected : out data port speed_regulation::icd::boolean;
+flows
+	f0 : flow path camera -> obstacle_detected;
+	f1 : flow path radar -> obstacle_detected;
+end obstacle_detection_thr;
 
 ------------------------------------
 --  Obstacle Distance Evaluation  --
@@ -55,8 +153,34 @@ end obstacle_detection;
 process obstacle_distance_evaluation
 features
 	current_speed : in data port speed_regulation::icd::speed;
-	obstacle_distance : in data port speed_regulation::icd::distance;
+	obstacle_detected : in data port speed_regulation::icd::boolean;
+	obstacle_distance : out data port speed_regulation::icd::distance;
+flows
+	f0 : flow path current_speed -> obstacle_distance;
+	f1 : flow path obstacle_detected -> obstacle_distance;
 end obstacle_distance_evaluation;
+
+process implementation obstacle_distance_evaluation.i
+subcomponents
+	thr : thread obstacle_distance_evaluation_thr;
+connections
+	c0 : port current_speed -> thr.current_speed;
+	c1 : port obstacle_detected -> thr.obstacle_detected;
+	c2 : port thr.obstacle_distance -> obstacle_distance;
+flows
+	f0 : flow path current_speed -> c0 -> thr.f0 -> c2 -> obstacle_distance;
+	f1 : flow path obstacle_detected -> c1 -> thr.f1 -> c2 -> obstacle_distance;
+end obstacle_distance_evaluation.i;
+
+thread obstacle_distance_evaluation_thr
+features
+	current_speed : in data port speed_regulation::icd::speed;
+	obstacle_detected : in data port speed_regulation::icd::boolean;
+	obstacle_distance : out data port speed_regulation::icd::distance;
+flows
+	f0 : flow path current_speed -> obstacle_distance;
+	f1 : flow path obstacle_detected -> obstacle_distance;
+end obstacle_distance_evaluation_thr;
 
 ---------------------------
 --  Emergency Detection  --
@@ -84,6 +208,9 @@ end warning_activation;
 ----------------------
 
 process position_voter
+features
+	position1 : in data port speed_regulation::icd::gps_position;
+	position2 : in data port speed_regulation::icd::gps_position;
 end position_voter;
 
 -----------------------------------
@@ -91,6 +218,10 @@ end position_voter;
 -----------------------------------
 
 process speed_threshold_computation
+features
+	position      : in data port speed_regulation::icd::gps_position;
+	current_speed : in data port speed_regulation::icd::speed;
+	threshold     : out data port speed_regulation::icd::speed;
 end speed_threshold_computation;
 
 ------------------------
@@ -98,6 +229,12 @@ end speed_threshold_computation;
 ------------------------
 
 process speed_controller
+features
+	position      : in data port speed_regulation::icd::gps_position;
+	current_speed : in data port speed_regulation::icd::speed;
+	threshold     : in data port speed_regulation::icd::speed;
+	brake_cmd     : out data port speed_regulation::icd::command.brake;
+	accel_cmd     : out data port speed_regulation::icd::command.acceleration;
 end speed_controller;
 
 end speed_regulation::software;
