@@ -326,14 +326,16 @@ end speed_threshold_computation_thr;
 
 process speed_controller
 features
-	position      : in data port speed_regulation::icd::gps_position;
-	current_speed : in data port speed_regulation::icd::speed;
-	threshold     : in data port speed_regulation::icd::speed;
-	cmd           : out data port speed_regulation::icd::speed_command;
+	position      			: in data port speed_regulation::icd::gps_position;
+	current_speed		 	: in data port speed_regulation::icd::speed;
+	threshold     			: in data port speed_regulation::icd::speed;
+	emergency_detected     	: in data port speed_regulation::icd::boolean;
+	cmd           			: out data port speed_regulation::icd::speed_command;
 flows
 	f0 : flow path position -> cmd;
 	f1 : flow path current_speed -> cmd;
 	f2 : flow path threshold -> cmd;
+	f3 : flow path emergency_detected -> cmd;
 end speed_controller;
 
 process implementation speed_controller.i
@@ -343,11 +345,13 @@ connections
 	c0 : port position -> thr.position;
 	c1 : port current_speed -> thr.current_speed;
 	c2 : port threshold -> thr.threshold;
-	c3 : port thr.cmd -> cmd;
+	c3 : port emergency_detected -> thr.emergency_detected;
+	c4 : port thr.cmd -> cmd;
 flows
-	f0 : flow path position -> c0 -> thr.f0 -> c3 -> cmd;
-	f1 : flow path current_speed -> c1 -> thr.f1 -> c3 -> cmd;
-	f2 : flow path threshold -> c2 -> thr.f2 -> c3 -> cmd;
+	f0 : flow path position -> c0 -> thr.f0 -> c4 -> cmd;
+	f1 : flow path current_speed -> c1 -> thr.f1 -> c4 -> cmd;
+	f2 : flow path threshold -> c2 -> thr.f2 -> c4 -> cmd;
+	f3 : flow path emergency_detected -> c3 -> thr.f3 -> c4 -> cmd;
 end speed_controller.i;
 
 thread speed_controller_thr
@@ -355,11 +359,13 @@ features
 	position      : in data port speed_regulation::icd::gps_position;
 	current_speed : in data port speed_regulation::icd::speed;
 	threshold     : in data port speed_regulation::icd::speed;
+	emergency_detected     	: in data port speed_regulation::icd::boolean;
 	cmd           : out data port speed_regulation::icd::speed_command;
 flows
 	f0 : flow path position -> cmd;
 	f1 : flow path current_speed -> cmd;
 	f2 : flow path threshold -> cmd;
+	f3 : flow path emergency_detected -> cmd;
 end speed_controller_thr;
 
 end speed_regulation::software;
