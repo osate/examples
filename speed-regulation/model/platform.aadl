@@ -1,0 +1,33 @@
+package speed_regulation::platform
+
+public
+
+with SEI;
+
+processor ecu
+properties
+	SEI::MIPSCapacity => 10.0 MIPS;
+end ecu;
+
+
+processor ecu_one_connector extends ecu
+features
+	can_socket : requires bus access can;
+end ecu_one_connector;
+
+
+processor ecu_two_connectors extends ecu
+features
+	can_socket1 : requires bus access can;
+	can_socket2 : requires bus access can;
+end ecu_two_connectors;
+
+bus can
+properties
+	Latency => 1 Ms .. 1 Ms;
+	SEI::BandWidthCapacity => 500000.0 bitsps; 
+	Transmission_Time => [ Fixed => 0 ms .. 10ms;
+                          PerByte => 0 ms .. 100 us; ];
+end can;
+
+end speed_regulation::platform;

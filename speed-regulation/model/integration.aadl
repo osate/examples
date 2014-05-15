@@ -135,7 +135,24 @@ flows
 							obstacle_distance_evaluation.f1 -> c090 ->
 							emergency_detection.f1 -> c160 ->
 							speed_controller.f3 -> c210 ->
-							acceleration.f0;		
+							acceleration.f0;
+	-- From the wheel speed sensor to brake
+	
+	-- From the wheel speed sensor to acceleration
+	
+	-- From the laser speed sensor to brake
+	
+	-- From the laser speed sensor to acceleration
+	
+	
+	-- From gps1 to brake
+	
+	-- From gps2 to acceleration
+	
+	-- From gps1 to warning device
+	
+	-- From gps2 to warning device
+	
 end integration.generic;
 
 
