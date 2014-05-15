@@ -33,6 +33,9 @@ features
 	obstacle_detected : out data port speed_regulation::icd::boolean;
 flows
 	f0 : flow path picture -> obstacle_detected;
+properties
+	Dispatch_Protocol => Periodic;
+	Period            => 50ms;
 end image_acquisition_thr;
 
 thread implementation image_acquisition_thr.i
@@ -66,6 +69,9 @@ features
 	obstacle_detected : out data port speed_regulation::icd::boolean;
 flows
 	f0 : flow path obstacle_distance -> obstacle_detected;
+properties
+	Dispatch_Protocol => Periodic;
+	Period            => 10ms;
 end radar_acquisition_thr;
 
 thread implementation radar_acquisition_thr.i
@@ -105,6 +111,9 @@ features
 flows
 	f0 : flow path wheel_sensor -> speed;
 	f1 : flow path laser_sensor -> speed;
+properties
+	Dispatch_Protocol => Periodic;
+	Period            => 8ms;
 end speed_estimate_thr;
 
 thread implementation speed_estimate_thr.i
@@ -144,6 +153,9 @@ features
 flows
 	f0 : flow path camera -> obstacle_detected;
 	f1 : flow path radar -> obstacle_detected;
+properties
+	Dispatch_Protocol => Periodic;
+	Period            => 100ms;
 end obstacle_detection_thr;
 
 ------------------------------------
@@ -180,6 +192,9 @@ features
 flows
 	f0 : flow path current_speed -> obstacle_distance;
 	f1 : flow path obstacle_detected -> obstacle_distance;
+properties
+	Dispatch_Protocol => Periodic;
+	Period            => 10ms;
 end obstacle_distance_evaluation_thr;
 
 ---------------------------
@@ -216,6 +231,9 @@ features
 flows
 	f0 : flow path current_speed -> emergency_detected;
 	f1 : flow path obstacle_distance -> emergency_detected;
+properties
+	Dispatch_Protocol => Periodic;
+	Period            => 4ms;
 end emergency_detection_thr;
 
 --------------------------
@@ -246,6 +264,9 @@ features
 	activate_warning   : out data port speed_regulation::icd::boolean;
 flows
 	f0 : flow path emergency_detected -> activate_warning;
+properties
+	Dispatch_Protocol => Periodic;
+	Period            => 2ms;
 end warning_activation_thr;
 
 ----------------------
@@ -282,6 +303,9 @@ features
 flows
 	f0 : flow path position1 -> position;
 	f1 : flow path position2 -> position;
+properties
+	Dispatch_Protocol => Periodic;
+	Period            => 12ms;
 end position_voter_thr;
 
 -----------------------------------
@@ -318,6 +342,9 @@ features
 flows
 	f0 : flow path position -> threshold;
 	f1 : flow path current_speed -> threshold;
+properties
+	Dispatch_Protocol => Periodic;
+	Period            => 4ms;
 end speed_threshold_computation_thr;
 
 ------------------------
@@ -366,6 +393,9 @@ flows
 	f1 : flow path current_speed -> cmd;
 	f2 : flow path threshold -> cmd;
 	f3 : flow path emergency_detected -> cmd;
+properties
+	Dispatch_Protocol => Periodic;
+	Period            => 5ms;
 end speed_controller_thr;
 
 end speed_regulation::software;
