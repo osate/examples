@@ -24,12 +24,12 @@ annex EMV2 {**
 	error propagations
 		picture : out propagation {NoValue};
 	flows
-		f0 : error source picture{NoValue};
+		ef0 : error source picture{NoValue};
 	end propagations;
 
 	properties
-		emv2::severity => ARP4761::Major applies to f0;
-		emv2::likelihood => ARP4761::Probable applies to f0;
+		emv2::severity => ARP4761::Major applies to ef0;
+		emv2::likelihood => ARP4761::Probable applies to ef0;
 		emv2::hazards => 
 			([	crossreference => "TBD";
 				failure => "";
@@ -37,7 +37,7 @@ annex EMV2 {**
 				description => "No picture from the camera";
 				comment => "Would impact the detection of obstacle";
 			])
-			applies to f0;
+			applies to ef0;
 **};	
 end camera;
 
@@ -54,12 +54,12 @@ annex EMV2 {**
 	error propagations
 		distance_estimate : out propagation {NoValue,InvalidValue};
 	flows
-		f0 : error source distance_estimate{NoValue,InvalidValue};
+		ef0 : error source distance_estimate{NoValue,InvalidValue};
 	end propagations;
 
 	properties
-		emv2::severity => ARP4761::Major applies to f0;
-		emv2::likelihood => ARP4761::Probable applies to f0;
+		emv2::severity => ARP4761::Major applies to ef0;
+		emv2::likelihood => ARP4761::Probable applies to ef0;
 		emv2::hazards => 
 			([	crossreference => "TBD";
 				failure => "";
@@ -67,7 +67,7 @@ annex EMV2 {**
 				description => "No picture from the camera";
 				comment => "Would impact the detection of obstacle";
 			])
-			applies to f0;
+			applies to ef0;
 **};
 end radar;
  
@@ -86,12 +86,12 @@ annex EMV2 {**
 	error propagations
 		speed : out propagation {NoValue,InvalidValue};
 	flows
-		f0 : error source speed{NoValue,InvalidValue};
+		ef0 : error source speed{NoValue,InvalidValue};
 	end propagations;
 
 	properties
-		emv2::severity => ARP4761::Major applies to f0;
-		emv2::likelihood => ARP4761::Probable applies to f0;
+		emv2::severity => ARP4761::Major applies to ef0;
+		emv2::likelihood => ARP4761::Probable applies to ef0;
 		emv2::hazards => 
 			([	crossreference => "TBD";
 				failure => "";
@@ -99,7 +99,7 @@ annex EMV2 {**
 				description => "No speed from sensor";
 				comment => "";
 			])
-			applies to f0;
+			applies to ef0;
 **};
 end speed_sensor; 
 
@@ -128,12 +128,12 @@ annex EMV2 {**
 	error propagations
 		position : out propagation {NoValue,InvalidValue};
 	flows
-		f0 : error source position{NoValue,InvalidValue};
+		ef0 : error source position{NoValue,InvalidValue};
 	end propagations;
 
 	properties
-		emv2::severity => ARP4761::Major applies to f0;
-		emv2::likelihood => ARP4761::Probable applies to f0;
+		emv2::severity => ARP4761::Major applies to ef0;
+		emv2::likelihood => ARP4761::Probable applies to ef0;
 		emv2::hazards => 
 			([	crossreference => "TBD";
 				failure => "";
@@ -141,7 +141,7 @@ annex EMV2 {**
 				description => "No value from the gps";
 				comment => "";
 			])
-			applies to f0.novalue;
+			applies to ef0.novalue;
 		emv2::hazards => 
 			([	crossreference => "TBD";
 				failure => "";
@@ -149,7 +149,7 @@ annex EMV2 {**
 				description => "Invalid value from the gps";
 				comment => "";
 			])
-			applies to f0.invalidvalue;			
+			applies to ef0.invalidvalue;			
 **};
 end gps;
 
@@ -174,6 +174,15 @@ flows
 	f0 : flow sink warning;
 properties
 	Period => 500ms;
+annex EMV2 {**
+	use types speed_regulation::error_library;
+
+	error propagations
+		warning : in propagation {NoValue};
+	flows
+		ef0 : error sink warning{NoValue};
+	end propagations;
+**};
 end warning_device;
 
 -------------
@@ -187,6 +196,15 @@ flows
 	f0 : flow sink cmd;
 properties
 	Period => 2ms;
+annex EMV2 {**
+	use types speed_regulation::error_library;
+
+	error propagations
+		cmd : in propagation {NoValue};
+	flows
+		ef0 : error sink cmd{NoValue};
+	end propagations;
+**};
 end brake;
 
 device acceleration
@@ -196,6 +214,15 @@ flows
 	f0 : flow sink cmd;
 properties
 	Period => 2ms;
+annex EMV2 {**
+	use types speed_regulation::error_library;
+
+	error propagations
+		cmd : in propagation {NoValue};
+	flows
+		ef0 : error sink cmd{NoValue};
+	end propagations;
+**};
 end acceleration;
 
 end speed_regulation::devices;
