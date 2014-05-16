@@ -3,10 +3,63 @@ package speed_regulation::platform
 public
 
 with SEI;
+with emv2;
+with arp4761;
 
 processor ecu
 properties
 	SEI::MIPSCapacity => 10.0 MIPS;
+annex EMV2 {**
+	use types speed_regulation::error_library;
+	use behavior speed_regulation::error_library::simple;
+
+	error propagations
+		bindings : out propagation {SoftwareFailure, HardwareFailure};
+	flows
+		fsoft : error source bindings{SoftwareFailure};
+		fhard : error source bindings{HardwareFailure};
+	end propagations;
+
+	component error behavior
+	events
+		SoftwareError : error event;
+		HardwareError : error event;
+		Reset         : recover event;
+	transitions
+		Operational -[SoftwareError]-> Failed;
+		Operational -[HardwareError]-> Failed;
+		Failed      -[Reset]->         Operational;
+	propagations
+		normal       : Operational -[]-> bindings (NoError);
+		softfailed   : Failed -[]-> bindings(SoftwareFailure);
+		hardfailed   : Failed -[]-> bindings(HardwareFailure);
+	end component;
+	properties
+		emv2::severity => ARP4761::Major applies to SoftwareError;
+		emv2::likelihood => ARP4761::Probable applies to SoftwareError;
+		emv2::hazards => 
+			([	crossreference => "TBD";
+				failure => "";
+				phases => ("all");
+				description => "Software failure from the platform (OS exception, etc.)";
+				comment => "Impact all components that are controlled by this software";
+			])
+			applies to SoftwareError;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.35e-5 ; Distribution => Poisson;] applies to SoftwareError;
+
+
+		emv2::severity => ARP4761::Major applies to HardwareError;
+		emv2::likelihood => ARP4761::Probable applies to HardwareError;
+		emv2::hazards => 
+			([	crossreference => "TBD";
+				failure => "";
+				phases => ("all");
+				description => "Hardware failure from the platform (OS exception, etc.)";
+				comment => "Impact all components that are controlled by this processor";
+			])
+			applies to HardwareError;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.35e-5 ; Distribution => Poisson;] applies to HardwareError;
+**};	
 end ecu;
 
 

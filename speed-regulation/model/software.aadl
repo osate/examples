@@ -387,7 +387,7 @@ features
 	current_speed : in data port speed_regulation::icd::speed;
 	threshold     : in data port speed_regulation::icd::speed;
 	emergency_detected     	: in data port speed_regulation::icd::boolean;
-	cmd           : out data port speed_regulation::icd::speed_command;
+	cmd           : out data port speed_regulation::icd::speed_command.i;
 flows
 	f0 : flow path position -> cmd;
 	f1 : flow path current_speed -> cmd;

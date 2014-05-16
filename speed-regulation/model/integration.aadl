@@ -273,6 +273,23 @@ end integration.implementation1;
 
 
 system implementation integration.implementation2 extends integration.generic
+subcomponents
+	ecu1 : processor speed_regulation::platform::ecu_one_connector;
+	ecu2 : processor speed_regulation::platform::ecu_one_connector;
+	ecu3 : processor speed_regulation::platform::ecu_two_connectors;
+	can1  : bus speed_regulation::platform::can;
+	can2  : bus speed_regulation::platform::can;
+connections
+	b0 : bus access ecu1.can_socket <-> can1;
+	b1 : bus access ecu2.can_socket <-> can2;
+	b2 : bus access ecu3.can_socket1 <-> can1;
+	b3 : bus access ecu3.can_socket2 <-> can2;
+properties
+	Actual_Connection_Binding => (reference (can1)) applies to c080, c120, c130, c140, c150;
+	Actual_Connection_Binding => (reference (can2)) applies to c180, c190;
+	Actual_Processor_Binding => (reference (ecu1)) applies to image_acquisition, radar_acquisition, speed_estimate, obstacle_detection;
+	Actual_Processor_Binding => (reference (ecu2)) applies to position_voter;
+	Actual_Processor_Binding => (reference (ecu3)) applies to obstacle_distance_evaluation, speed_threshold_calculation, speed_controller, emergency_detection, warning_activation;
 end integration.implementation2;
 
 

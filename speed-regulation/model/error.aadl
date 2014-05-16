@@ -1,0 +1,18 @@
+package speed_regulation::error_library
+public
+annex EMV2 {**
+	error types
+		NoPower   				: type;
+		ValueError				: type;
+		NoValue					: type extends ValueError;
+		HardwareFailure			: type;
+		SoftwareFailure			: type;
+	end types;
+
+	error behavior simple
+	states
+		Operational : initial state;
+		Failed      : state;
+	end behavior;
+**};
+end speed_regulation::error_library;

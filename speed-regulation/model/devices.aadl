@@ -4,6 +4,8 @@ package speed_regulation::devices
 public
 
 with speed_regulation::icd;
+with emv2;
+with arp4761;
  
 -----------------------------------
 --  Camera and Object Detection  --
@@ -16,6 +18,27 @@ flows
 	f0 : flow source picture;
 properties 
 	Period => 10ms;
+annex EMV2 {**
+	use types speed_regulation::error_library;
+
+	error propagations
+		picture : out propagation {NoValue};
+	flows
+		f0 : error source picture{NoValue};
+	end propagations;
+
+	properties
+		emv2::severity => ARP4761::Major applies to f0;
+		emv2::likelihood => ARP4761::Probable applies to f0;
+		emv2::hazards => 
+			([	crossreference => "TBD";
+				failure => "";
+				phases => ("all");
+				description => "No picture from the camera";
+				comment => "Would impact the detection of obstacle";
+			])
+			applies to f0;
+**};	
 end camera;
 
 device radar
@@ -25,6 +48,27 @@ flows
 	f0 : flow source distance_estimate;
 properties 
 	Period => 10ms;
+annex EMV2 {**
+	use types speed_regulation::error_library;
+
+	error propagations
+		distance_estimate : out propagation {NoValue};
+	flows
+		f0 : error source distance_estimate{NoValue};
+	end propagations;
+
+	properties
+		emv2::severity => ARP4761::Major applies to f0;
+		emv2::likelihood => ARP4761::Probable applies to f0;
+		emv2::hazards => 
+			([	crossreference => "TBD";
+				failure => "";
+				phases => ("all");
+				description => "No picture from the camera";
+				comment => "Would impact the detection of obstacle";
+			])
+			applies to f0;
+**};
 end radar;
  
 ---------------------
@@ -88,7 +132,7 @@ end warning_device;
 
 device brake
 features
-	cmd : in event data port speed_regulation::icd::speed_command;
+	cmd : in event data port speed_regulation::icd::speed_command.i;
 flows
 	f0 : flow sink cmd;
 properties
@@ -97,7 +141,7 @@ end brake;
 
 device acceleration
 features
-	cmd : in event data port speed_regulation::icd::speed_command;
+	cmd : in event data port speed_regulation::icd::speed_command.i;
 flows
 	f0 : flow sink cmd;
 properties
