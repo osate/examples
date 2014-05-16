@@ -6,9 +6,9 @@ with SEI;
 with emv2;
 with arp4761;
 
-processor ecu
+processor ecu 
 properties
-	SEI::MIPSCapacity => 10.0 MIPS;
+	SEI::MIPSCapacity => 10.0 MIPS; 
 annex EMV2 {**
 	use types speed_regulation::error_library;
 	use behavior speed_regulation::error_library::simple;

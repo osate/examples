@@ -6,7 +6,7 @@ with speed_regulation::devices;
 with speed_regulation::software;
 with speed_regulation::platform;
 
-system integration
+system integration 
 end integration;
 
 system implementation integration.generic

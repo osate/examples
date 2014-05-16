@@ -5,9 +5,10 @@ annex EMV2 {**
 		NoPower   				: type;
 		ValueError				: type;
 		NoValue					: type extends ValueError;
+		InvalidValue			: type extends ValueError;
 		HardwareFailure			: type;
 		SoftwareFailure			: type;
-	end types;
+	end types; 
 
 	error behavior simple
 	states

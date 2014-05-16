@@ -52,9 +52,9 @@ annex EMV2 {**
 	use types speed_regulation::error_library;
 
 	error propagations
-		distance_estimate : out propagation {NoValue};
+		distance_estimate : out propagation {NoValue,InvalidValue};
 	flows
-		f0 : error source distance_estimate{NoValue};
+		f0 : error source distance_estimate{NoValue,InvalidValue};
 	end propagations;
 
 	properties
@@ -80,6 +80,27 @@ features
 	speed : out data port speed_regulation::icd::speed;
 flows
 	f0 : flow source speed;
+annex EMV2 {**
+	use types speed_regulation::error_library;
+
+	error propagations
+		speed : out propagation {NoValue,InvalidValue};
+	flows
+		f0 : error source speed{NoValue,InvalidValue};
+	end propagations;
+
+	properties
+		emv2::severity => ARP4761::Major applies to f0;
+		emv2::likelihood => ARP4761::Probable applies to f0;
+		emv2::hazards => 
+			([	crossreference => "TBD";
+				failure => "";
+				phases => ("all");
+				description => "No speed from sensor";
+				comment => "";
+			])
+			applies to f0;
+**};
 end speed_sensor; 
 
 device speed_wheel_sensor extends speed_sensor
@@ -94,13 +115,42 @@ end speed_laser_sensor;
 
 ------------------
 --  GPS device  --
-------------------
+------------------ 
 
 device gps
 features
 	position : out data port speed_regulation::icd::gps_position;
 flows
 	f0 : flow source position;
+annex EMV2 {**
+	use types speed_regulation::error_library;
+
+	error propagations
+		position : out propagation {NoValue,InvalidValue};
+	flows
+		f0 : error source position{NoValue,InvalidValue};
+	end propagations;
+
+	properties
+		emv2::severity => ARP4761::Major applies to f0;
+		emv2::likelihood => ARP4761::Probable applies to f0;
+		emv2::hazards => 
+			([	crossreference => "TBD";
+				failure => "";
+				phases => ("all");
+				description => "No value from the gps";
+				comment => "";
+			])
+			applies to f0.novalue;
+		emv2::hazards => 
+			([	crossreference => "TBD";
+				failure => "";
+				phases => ("all");
+				description => "Invalid value from the gps";
+				comment => "";
+			])
+			applies to f0.invalidvalue;			
+**};
 end gps;
 
 device implementation gps.impl1

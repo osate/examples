@@ -5,7 +5,7 @@ public
 with base_types;
 with data_model;
 
-data gps_position
+data gps_position 
 properties
 	data_size => 50 Bytes;
 	data_model::data_representation => Array;
