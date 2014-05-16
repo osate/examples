@@ -4,7 +4,7 @@ public
 
 with speed_regulation::devices;
 with speed_regulation::software;
-
+with speed_regulation::platform;
 
 system integration
 end integration;
@@ -137,23 +137,144 @@ flows
 							speed_controller.f3 -> c210 ->
 							acceleration.f0;
 	-- From the wheel speed sensor to brake
-	
+	f3 : end to end flow wheel_sensor.f0 -> c020 -> 
+	                     speed_estimate.f0 -> c120 ->
+	                     speed_threshold_calculation.f1 -> c170 ->
+	                     speed_controller.f2 -> c200 ->
+	                     brake.f0;
+	f4 : end to end flow wheel_sensor.f0 -> c020 -> 
+	                     speed_estimate.f0 -> c130 ->
+	                     speed_controller.f1 -> c200 ->
+	                     brake.f0;
+	                     
 	-- From the wheel speed sensor to acceleration
-	
+	f5 : end to end flow wheel_sensor.f0 -> c020 -> 
+	                     speed_estimate.f0 -> c120 ->
+	                     speed_threshold_calculation.f1 -> c170 ->
+	                     speed_controller.f2 -> c210 ->
+	                     acceleration.f0;
+	f6 : end to end flow wheel_sensor.f0 -> c020 -> 
+	                     speed_estimate.f0 -> c130 ->
+	                     speed_controller.f1 -> c210 ->
+	                     acceleration.f0;	
+	                     
 	-- From the laser speed sensor to brake
-	
+	f7 : end to end flow laser_sensor.f0 -> c030 -> 
+	                     speed_estimate.f1 -> c120 ->
+	                     speed_threshold_calculation.f1 -> c170 ->
+	                     speed_controller.f2 -> c200 ->
+	                     brake.f0;
+	                     
+	f8 : end to end flow laser_sensor.f0 -> c030 -> 
+	                     speed_estimate.f1 -> c130 ->
+	                     speed_controller.f1 -> c200 ->
+	                     brake.f0;	
+	                     	
 	-- From the laser speed sensor to acceleration
-	
+	f9 : end to end flow laser_sensor.f0 -> c030 -> 
+	                     speed_estimate.f1 -> c120 ->
+	                     speed_threshold_calculation.f1 -> c170 ->
+	                     speed_controller.f2 -> c210 ->
+	                     acceleration.f0;
+	                     
+	f10 : end to end flow laser_sensor.f0 -> c030 -> 
+	                     speed_estimate.f1 -> c130 ->
+	                     speed_controller.f1 -> c210 ->
+	                     acceleration.f0;		
 	
 	-- From gps1 to brake
-	
+	f11 : end to end flow gps1.f0 -> c040 ->
+	                      position_voter.f0 -> c190 ->
+	                      speed_threshold_calculation.f0 -> c170 ->
+	                      speed_controller.f2 -> c200 ->
+	                      brake.f0;	 
+	f12 : end to end flow gps1.f0 -> c040 ->
+	                      position_voter.f0 -> c180 ->
+	                      speed_controller.f0 -> c200 ->
+	                      brake.f0;	                     
+	-- From gps1 to acceleration
+	f13 : end to end flow gps1.f0 -> c040 ->
+	                      position_voter.f0 -> c190 ->
+	                      speed_threshold_calculation.f0 -> c170 ->
+	                      speed_controller.f2 -> c210 ->
+	                      acceleration.f0;	 
+	f14 : end to end flow gps1.f0 -> c040 ->
+	                      position_voter.f0 -> c180 ->
+	                      speed_controller.f0 -> c210 ->
+	                      acceleration.f0;	  
+
+	-- From gps2 to brake
+	f15 : end to end flow gps2.f0 -> c040 ->
+	                      position_voter.f0 -> c190 ->
+	                      speed_threshold_calculation.f0 -> c170 ->
+	                      speed_controller.f2 -> c200 ->
+	                      brake.f0;	 
+	f16 : end to end flow gps2.f0 -> c040 ->
+	                      position_voter.f0 -> c180 ->
+	                      speed_controller.f0 -> c200 ->
+	                      brake.f0;	 
+	                                          
 	-- From gps2 to acceleration
-	
-	-- From gps1 to warning device
-	
-	-- From gps2 to warning device
-	
+	f17 : end to end flow gps2.f0 -> c050 ->
+	                      position_voter.f1 -> c190 ->
+	                      speed_threshold_calculation.f0 -> c170 ->
+	                      speed_controller.f2 -> c210 ->
+	                      acceleration.f0;	 
+	f18 : end to end flow gps2.f0 -> c050 ->
+	                      position_voter.f1 -> c180 ->
+	                      speed_controller.f0 -> c210 ->
+	                      acceleration.f0;	 
+
+	                      	
+	-- From wheel speed sensor to warning device
+	f19 : end to end flow wheel_sensor.f0 -> c020 -> 
+	                     speed_estimate.f0 -> c140 ->
+						 obstacle_distance_evaluation.f0 -> c090 ->
+						 emergency_detection.f1 -> c100 ->
+						 warning_activation.f0 -> c110 ->
+						 warning_alert.f0;	
+						 
+	f20 : end to end flow wheel_sensor.f0 -> c020 -> 
+	                     speed_estimate.f0 -> c150 ->
+						 emergency_detection.f0 -> c100 ->
+						 warning_activation.f0 -> c110 ->
+						 warning_alert.f0;	
+
+	-- From laser speed sensor to warning device
+	f21 : end to end flow laser_sensor.f0 -> c030 -> 
+	                     speed_estimate.f1 -> c140 ->
+						 obstacle_distance_evaluation.f0 -> c090 ->
+						 emergency_detection.f1 -> c100 ->
+						 warning_activation.f0 -> c110 ->
+						 warning_alert.f0;	
+						 
+	f22 : end to end flow laser_sensor.f0 -> c030 -> 
+	                     speed_estimate.f1 -> c150 ->
+						 emergency_detection.f0 -> c100 ->
+						 warning_activation.f0 -> c110 ->
+						 warning_alert.f0;							 
+						 	
 end integration.generic;
+
+
+system implementation integration.implementation1 extends integration.generic
+subcomponents
+	ecu1 : processor speed_regulation::platform::ecu_one_connector;
+	ecu2 : processor speed_regulation::platform::ecu_one_connector;
+	can  : bus speed_regulation::platform::can;
+connections
+	b0 : bus access ecu1.can_socket <-> can;
+	b1 : bus access ecu2.can_socket <-> can;
+properties
+	Actual_Connection_Binding => (reference (can)) applies to c080, c120, c130, c140, c150, c180, c190;
+	Actual_Processor_Binding => (reference (ecu1)) applies to image_acquisition, radar_acquisition, speed_estimate, position_voter, obstacle_detection;
+	Actual_Processor_Binding => (reference (ecu2)) applies to obstacle_distance_evaluation, speed_threshold_calculation, speed_controller, emergency_detection, warning_activation;
+end integration.implementation1;
+
+
+system implementation integration.implementation2 extends integration.generic
+end integration.implementation2;
+
 
 
 end speed_regulation::integration;
