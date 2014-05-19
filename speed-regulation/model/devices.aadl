@@ -19,7 +19,7 @@ flows
 properties 
 	Period => 10ms;
 annex EMV2 {**
-	use types speed_regulation::error_library;
+	use types speed_regulation::error_library; 
 
 	error propagations
 		picture : out propagation {NoValue};
@@ -28,8 +28,8 @@ annex EMV2 {**
 	end propagations;
 
 	properties
-		emv2::severity => ARP4761::Major applies to ef0;
-		emv2::likelihood => ARP4761::Probable applies to ef0;
+		emv2::severity => ARP4761::Major applies to picture;
+		emv2::likelihood => ARP4761::Probable applies to picture;
 		emv2::hazards => 
 			([	crossreference => "TBD";
 				failure => "";
@@ -37,7 +37,7 @@ annex EMV2 {**
 				description => "No picture from the camera";
 				comment => "Would impact the detection of obstacle";
 			])
-			applies to ef0;
+			applies to picture;
 **};	
 end camera;
 
@@ -58,8 +58,8 @@ annex EMV2 {**
 	end propagations;
 
 	properties
-		emv2::severity => ARP4761::Major applies to ef0;
-		emv2::likelihood => ARP4761::Probable applies to ef0;
+		emv2::severity => ARP4761::Major applies to distance_estimate;
+		emv2::likelihood => ARP4761::Probable applies to distance_estimate;
 		emv2::hazards => 
 			([	crossreference => "TBD";
 				failure => "";
@@ -67,7 +67,7 @@ annex EMV2 {**
 				description => "No picture from the camera";
 				comment => "Would impact the detection of obstacle";
 			])
-			applies to ef0;
+			applies to distance_estimate;
 **};
 end radar;
  
@@ -90,8 +90,8 @@ annex EMV2 {**
 	end propagations;
 
 	properties
-		emv2::severity => ARP4761::Major applies to ef0;
-		emv2::likelihood => ARP4761::Probable applies to ef0;
+		emv2::severity => ARP4761::Major applies to speed.novalue;
+		emv2::likelihood => ARP4761::Probable applies to speed.novalue;
 		emv2::hazards => 
 			([	crossreference => "TBD";
 				failure => "";
@@ -99,7 +99,7 @@ annex EMV2 {**
 				description => "No speed from sensor";
 				comment => "";
 			])
-			applies to ef0;
+			applies to speed.novalue;
 **};
 end speed_sensor; 
 
@@ -132,8 +132,8 @@ annex EMV2 {**
 	end propagations;
 
 	properties
-		emv2::severity => ARP4761::Major applies to ef0;
-		emv2::likelihood => ARP4761::Probable applies to ef0;
+		emv2::severity => ARP4761::Major applies to position;
+		emv2::likelihood => ARP4761::Probable applies to position;
 		emv2::hazards => 
 			([	crossreference => "TBD";
 				failure => "";
@@ -141,7 +141,7 @@ annex EMV2 {**
 				description => "No value from the gps";
 				comment => "";
 			])
-			applies to ef0.novalue;
+			applies to position.novalue;
 		emv2::hazards => 
 			([	crossreference => "TBD";
 				failure => "";
@@ -149,7 +149,7 @@ annex EMV2 {**
 				description => "Invalid value from the gps";
 				comment => "";
 			])
-			applies to ef0.invalidvalue;			
+			applies to position.invalidvalue;			
 **};
 end gps;
 
@@ -175,13 +175,23 @@ flows
 properties
 	Period => 500ms;
 annex EMV2 {**
-	use types speed_regulation::error_library;
+	use types 		speed_regulation::error_library;
+	use behavior  	speed_regulation::error_library::simple;
 
 	error propagations
-		warning : in propagation {NoValue};
+		warning : in propagation {NoValue,InvalidValue};
 	flows
-		ef0 : error sink warning{NoValue};
+		ef0 : error sink warning{NoValue,InvalidValue};
 	end propagations;
+	
+	component error behavior
+	events
+		Reset : recover event;
+	transitions
+		t0 : Operational -[warning{NoValue}]-> Failed;
+		t1 : Operational -[warning{InvalidValue}]-> Failed;
+		t2 : Failed -[Reset]-> Operational;
+	end component;
 **};
 end warning_device;
 
@@ -198,12 +208,22 @@ properties
 	Period => 2ms;
 annex EMV2 {**
 	use types speed_regulation::error_library;
+	use behavior  	speed_regulation::error_library::simple;
 
 	error propagations
-		cmd : in propagation {NoValue};
+		cmd : in propagation {NoValue,InvalidValue};
 	flows
-		ef0 : error sink cmd{NoValue};
+		ef0 : error sink cmd{NoValue,InvalidValue};
 	end propagations;
+	
+	component error behavior
+	events
+		Reset : recover event;
+	transitions
+		t0 : Operational -[cmd{NoValue}]-> Failed;
+		t1 : Operational -[cmd{InvalidValue}]-> Failed;
+		t2 : Failed -[Reset]-> Operational;
+	end component;
 **};
 end brake;
 
@@ -216,12 +236,23 @@ properties
 	Period => 2ms;
 annex EMV2 {**
 	use types speed_regulation::error_library;
+	use behavior  	speed_regulation::error_library::simple;
 
 	error propagations
-		cmd : in propagation {NoValue};
+		cmd : in propagation {NoValue,InvalidValue};
 	flows
-		ef0 : error sink cmd{NoValue};
+		ef0 : error sink cmd{NoValue,InvalidValue};
 	end propagations;
+	
+	
+	component error behavior
+	events
+		Reset : recover event;
+	transitions
+		t0 : Operational -[cmd{NoValue}]-> Failed;
+		t1 : Operational -[cmd{InvalidValue}]-> Failed;
+		t2 : Failed -[Reset]-> Operational;
+	end component;
 **};
 end acceleration;
 

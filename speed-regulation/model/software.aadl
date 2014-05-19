@@ -79,12 +79,13 @@ annex EMV2 {**
 	use behavior  	speed_regulation::error_library::simple;
 
 	error propagations
-		obstacle_distance : in propagation {NoValue};
+		obstacle_distance : in propagation {NoValue,InvalidValue};
 		obstacle_detected : out propagation {NoValue,InvalidValue};
 		processor : in propagation {SoftwareFailure, HardwareFailure};
 	flows
 		ef0 : error path obstacle_distance{NoValue} -> obstacle_detected{NoValue};
 		ef1 : error path obstacle_distance{NoValue} -> obstacle_detected{InvalidValue};
+		ef3 : error path obstacle_distance{InvalidValue} -> obstacle_detected{InvalidValue};
 		ef2 : error path processor{HardwareFailure,SoftwareFailure} -> obstacle_detected{NoValue};
 	end propagations;
 
@@ -208,8 +209,8 @@ annex EMV2 {**
 	use behavior  	speed_regulation::error_library::simple;
 
 	error propagations
-		camera : in propagation {NoValue};
-		radar : in propagation {NoValue};
+		camera : in propagation {NoValue,InvalidValue};
+		radar : in propagation {NoValue,InvalidValue};
 		obstacle_detected : out propagation {NoValue,InvalidValue};
 		processor : in propagation {SoftwareFailure, HardwareFailure};
 	flows
@@ -218,6 +219,8 @@ annex EMV2 {**
 		ef2 : error path camera{NoValue} -> obstacle_detected{InvalidValue};
 		ef3 : error path radar{NoValue} -> obstacle_detected{InvalidValue};
 		ef4 : error path processor{HardwareFailure,SoftwareFailure} -> obstacle_detected{NoValue};
+		ef5 : error path camera{InvalidValue} -> obstacle_detected{InvalidValue};
+		ef6 : error path radar{InvalidValue} -> obstacle_detected{InvalidValue};
 	end propagations;
 
 	component error behavior
@@ -338,8 +341,8 @@ annex EMV2 {**
 	use behavior  	speed_regulation::error_library::simple;
 
 	error propagations
-		current_speed : in propagation {NoValue};
-		obstacle_distance : in propagation {NoValue};
+		current_speed : in propagation {NoValue,InvalidValue};
+		obstacle_distance : in propagation {NoValue,InvalidValue};
 		emergency_detected : out propagation {NoValue,InvalidValue};
 		processor : in propagation {SoftwareFailure, HardwareFailure};
 	flows
@@ -348,6 +351,8 @@ annex EMV2 {**
 		ef2 : error path current_speed{NoValue} -> emergency_detected{InvalidValue};
 		ef3 : error path obstacle_distance{NoValue} -> emergency_detected{InvalidValue};
 		ef4 : error path processor{HardwareFailure,SoftwareFailure} -> emergency_detected{NoValue};
+		ef5 : error path current_speed{InvalidValue} -> emergency_detected{InvalidValue};
+		ef6 : error path obstacle_distance{InvalidValue} -> emergency_detected{InvalidValue};
 	end propagations;
 
 	component error behavior

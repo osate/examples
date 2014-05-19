@@ -48,7 +48,7 @@ connections
    c000 : port obstacle_camera.picture -> image_acquisition.picture;
 
 -- obstacle radar to radar acquisition
-   c010 : port obstacle_radar.distance_estimate -> radar_acquisition.obstacle_distance;
+   c010 : port obstacle_radar.distance_estimate -> radar_acquisition.obstacle_distance; 
 
 -- speed wheel sensor to speed estimate
    c020 : port wheel_sensor.speed -> speed_estimate.wheel_sensor;
@@ -63,7 +63,7 @@ connections
 	c050 : port gps2.position -> position_voter.position2;
 	
 -- Image acquisition to obstacle detection
-   c060 : port image_acquisition.obstacle_detected -> obstacle_detection.camera;
+   c060 : port image_acquisition.obstacle_detected -> obstacle_detection.camera; 
 
 -- Radar acquisition to obstacle detection
    c070 : port radar_acquisition.obstacle_detected -> obstacle_detection.radar;
@@ -72,13 +72,13 @@ connections
    c080 : port obstacle_detection.obstacle_detected -> obstacle_distance_evaluation.obstacle_detected;
 
 -- obstacle distance evaluation to emergency detection
-   c090 : port obstacle_distance_evaluation.obstacle_distance -> emergency_detection.obstacle_distance;
+   c090 : port obstacle_distance_evaluation.obstacle_distance -> emergency_detection.obstacle_distance; 
 
 -- emergency detection to warning activation
    c100 : port emergency_detection.emergency_detected -> warning_activation.emergency_detected;
    
--- warning activation to warning device
-   c110 : port warning_activation.activate_warning -> warning_alert.warning;
+-- warning activation to warning device 
+   c110 : port warning_activation.activate_warning -> warning_alert.warning; 
    
 -- speed estimate to speed threshold computation
 
@@ -105,8 +105,8 @@ connections
 -- position voter to speed threshold computation
 	c190 : port position_voter.position -> speed_threshold_calculation.position;
 	
--- speed controller to brake
-	c200 : port speed_controller.cmd -> brake.cmd;
+-- speed controller to brake 
+	c200 : port speed_controller.cmd -> brake.cmd; 
 	
 -- speed controller to acceleration
 	c210 : port speed_controller.cmd -> acceleration.cmd;
