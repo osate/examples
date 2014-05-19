@@ -4,6 +4,7 @@ public
 
 
 with speed_regulation::icd; 
+with sei;
 
 -------------------------
 --  Image Acquisition  --
@@ -57,6 +58,7 @@ features
 flows
 	f0 : flow path picture -> obstacle_detected;
 properties
+	sei::mipsbudget   => 30.0 mips;
 	Dispatch_Protocol => Periodic;
 	Period            => 50ms;
 end image_acquisition_thr;
@@ -119,6 +121,7 @@ flows
 properties
 	Dispatch_Protocol => Periodic;
 	Period            => 10ms;
+	sei::mipsbudget   => 4.0 mips;
 end radar_acquisition_thr;
 
 thread implementation radar_acquisition_thr.i
@@ -187,6 +190,7 @@ flows
 properties
 	Dispatch_Protocol => Periodic;
 	Period            => 8ms;
+	sei::mipsbudget   => 4.0 mips;
 end speed_estimate_thr;
 
 thread implementation speed_estimate_thr.i
@@ -257,6 +261,7 @@ flows
 properties
 	Dispatch_Protocol => Periodic;
 	Period            => 100ms;
+	sei::mipsbudget   => 10.0 mips;
 end obstacle_detection_thr;
 
 ------------------------------------
@@ -389,6 +394,7 @@ flows
 properties
 	Dispatch_Protocol => Periodic;
 	Period            => 4ms;
+	sei::mipsbudget   => 5.0 mips;
 end emergency_detection_thr;
 
 --------------------------
@@ -445,6 +451,7 @@ flows
 properties
 	Dispatch_Protocol => Periodic;
 	Period            => 2ms;
+	sei::mipsbudget   => 5.0 mips;
 end warning_activation_thr;
 
 ----------------------
@@ -508,6 +515,7 @@ flows
 properties
 	Dispatch_Protocol => Periodic;
 	Period            => 12ms;
+	sei::mipsbudget   => 8.0 mips;
 end position_voter_thr;
 
 -----------------------------------
@@ -571,6 +579,7 @@ flows
 properties
 	Dispatch_Protocol => Periodic;
 	Period            => 4ms;
+	sei::mipsbudget   => 5.0 mips;
 end speed_threshold_computation_thr;
 
 ------------------------
@@ -650,6 +659,7 @@ flows
 properties
 	Dispatch_Protocol => Periodic;
 	Period            => 5ms;
+	sei::mipsbudget   => 20.0 mips;
 end speed_controller_thr;
 
 end speed_regulation::software;

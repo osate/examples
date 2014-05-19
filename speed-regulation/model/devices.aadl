@@ -17,7 +17,7 @@ features
 flows
 	f0 : flow source picture;
 properties 
-	Period => 10ms;
+	Period => 200ms;
 annex EMV2 {**
 	use types speed_regulation::error_library; 
 
@@ -155,12 +155,12 @@ end gps;
 
 device implementation gps.impl1
 properties
-	Period => 10ms;
+	Period => 6ms;
 end gps.impl1;
 
 device implementation gps.impl2
 properties
-	Period => 15ms;
+	Period => 9ms;
 end gps.impl2;
 
 ----------------------
