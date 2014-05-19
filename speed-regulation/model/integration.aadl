@@ -110,7 +110,6 @@ connections
 	
 -- speed controller to acceleration
 	c210 : port speed_controller.cmd -> acceleration.cmd;
-
 flows
     --  From the camera to the warning device
 	f0 : end to end flow 	obstacle_camera.f0 -> c000 ->
@@ -253,7 +252,15 @@ flows
 						 emergency_detection.f0 -> c100 ->
 						 warning_activation.f0 -> c110 ->
 						 warning_alert.f0;							 
-						 	
+annex EMV2 {**
+	use types speed_regulation::error_library;
+	use behavior  	speed_regulation::error_library::simple;
+
+	composite error behavior
+	states
+		[brake.Failed and acceleration.Failed]-> Failed;
+	end composite;
+**};						 	
 end integration.generic;
 
 
