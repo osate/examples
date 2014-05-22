@@ -1,3 +1,14 @@
+--
+--  This model is part of the Speed Regulation model
+--  that is a case-study that uses AADL for making
+--  analysis of different architecture variations.
+--
+--  A full description of this case study can be found
+--  on https://wiki.sei.cmu.edu/aadl/index.php/SpeedRegulation
+--
+--  Copyright Carnegie Mellon Software Engineering Institute, 2014.
+--
+
 package speed_regulation::software
 
 public

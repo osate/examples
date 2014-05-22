@@ -1,3 +1,14 @@
+--
+--  This model is part of the Speed Regulation model
+--  that is a case-study that uses AADL for making
+--  analysis of different architecture variations.
+--
+--  A full description of this case study can be found
+--  on https://wiki.sei.cmu.edu/aadl/index.php/SpeedRegulation
+--
+--  Copyright Carnegie Mellon Software Engineering Institute, 2014.
+--
+
 package speed_regulation::integration
 
 public
@@ -252,6 +263,10 @@ flows
 						 emergency_detection.f0 -> c100 ->
 						 warning_activation.f0 -> c110 ->
 						 warning_alert.f0;							 
+properties
+	Timing => immediate applies to 	c000, c010, c020, c030, c040, c050, c060, c070, c080, c090,
+									c100, c110, c120, c130, c140, c150, c160, c170, c180, c190,
+									c200, c210;
 annex EMV2 {**
 	use types speed_regulation::error_library;
 	use behavior  	speed_regulation::error_library::simple;
