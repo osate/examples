@@ -180,7 +180,7 @@ end gps.impl2;
 
 device warning_device
 features
-	warning : in event data port speed_regulation::icd::boolean;
+	warning : in data port speed_regulation::icd::boolean;
 flows
 	f0 : flow sink warning;
 properties
@@ -212,7 +212,7 @@ end warning_device;
 
 device brake
 features
-	cmd : in event data port speed_regulation::icd::speed_command.i;
+	cmd : in data port speed_regulation::icd::speed_command.i;
 flows
 	f0 : flow sink cmd;
 properties
@@ -240,7 +240,7 @@ end brake;
 
 device acceleration
 features
-	cmd : in event data port speed_regulation::icd::speed_command.i;
+	cmd : in data port speed_regulation::icd::speed_command.i;
 flows
 	f0 : flow sink cmd;
 properties
