@@ -42,13 +42,13 @@ annex EMV2 {**
 		emv2::severity => ARP4761::Major applies to picture;
 		emv2::likelihood => ARP4761::Probable applies to picture;
 		emv2::hazards => 
-			([	crossreference => "TBD";
-				failure => "";
+			([	crossreference => "N/A";
+				failure => "Novalue";
 				phases => ("all");
 				description => "No picture from the camera";
-				comment => "Would impact the detection of obstacle";
+				comment => "Would impact the detection of obstacle if the radar is not working as well";
 			])
-			applies to picture;
+			applies to picture.novalue;
 **};	
 end camera;
 
@@ -69,16 +69,27 @@ annex EMV2 {**
 	end propagations;
 
 	properties
-		emv2::severity => ARP4761::Major applies to distance_estimate;
-		emv2::likelihood => ARP4761::Probable applies to distance_estimate;
+		emv2::severity => ARP4761::Major applies to distance_estimate.novalue;
+		emv2::likelihood => ARP4761::Probable applies to distance_estimate.novalue;
 		emv2::hazards => 
-			([	crossreference => "TBD";
-				failure => "";
+			([	crossreference => "N/A";
+				failure => "NoValue";
 				phases => ("all");
-				description => "No picture from the camera";
-				comment => "Would impact the detection of obstacle";
+				description => "No information from the Radar";
+				comment => "Error if both the camera and the radar does not send any value";
 			])
-			applies to distance_estimate;
+			applies to distance_estimate.novalue;
+
+		emv2::severity => ARP4761::Minor applies to distance_estimate.invalidvalue;
+		emv2::likelihood => ARP4761::Probable applies to distance_estimate.invalidvalue;
+		emv2::hazards => 
+			([	crossreference => "N/A";
+				failure => "InvalidValue";
+				phases => ("all");
+				description => "Invalid distance sent by the radar";
+				comment => "First occurrences of invalid data Should be handled by the distance estimator.";
+			])
+			applies to distance_estimate.invalidvalue;
 **};
 end radar;
  
@@ -101,14 +112,25 @@ annex EMV2 {**
 	end propagations;
 
 	properties
+		emv2::severity => ARP4761::Major applies to speed.invalidvalue;
+		emv2::likelihood => ARP4761::Probable applies to speed.invalidvalue;
+		emv2::hazards => 
+			([	crossreference => "N/A";
+				failure => "InvalidValue";
+				phases => ("all");
+				description => "Invalid value from sensor";
+				comment => "The speed sensor sends invalid value. This should be then discovered and handled by the speed controller.";
+			])
+			applies to speed.invalidvalue;	
+			
 		emv2::severity => ARP4761::Major applies to speed.novalue;
 		emv2::likelihood => ARP4761::Probable applies to speed.novalue;
 		emv2::hazards => 
-			([	crossreference => "TBD";
-				failure => "";
+			([	crossreference => "N/A";
+				failure => "NoValue";
 				phases => ("all");
 				description => "No speed from sensor";
-				comment => "";
+				comment => "The sensor does not sendn any speed, might be an error if all sensors does not send a consistent value";
 			])
 			applies to speed.novalue;
 **};
@@ -146,19 +168,19 @@ annex EMV2 {**
 		emv2::severity => ARP4761::Major applies to position;
 		emv2::likelihood => ARP4761::Probable applies to position;
 		emv2::hazards => 
-			([	crossreference => "TBD";
-				failure => "";
+			([	crossreference => "N/A";
+				failure => "Novalue";
 				phases => ("all");
 				description => "No value from the gps";
-				comment => "";
+				comment => "No value from the GPS, may then be an issue if the voter has no position from all gps";
 			])
 			applies to position.novalue;
 		emv2::hazards => 
-			([	crossreference => "TBD";
-				failure => "";
+			([	crossreference => "N/A";
+				failure => "InvalidValue";
 				phases => ("all");
 				description => "Invalid value from the gps";
-				comment => "";
+				comment => "Invalid value from the GPS that can then trigger issue in the position voter";
 			])
 			applies to position.invalidvalue;			
 **};

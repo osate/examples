@@ -49,8 +49,8 @@ annex EMV2 {**
 		emv2::severity => ARP4761::Major applies to SoftwareError;
 		emv2::likelihood => ARP4761::Probable applies to SoftwareError;
 		emv2::hazards => 
-			([	crossreference => "TBD";
-				failure => "";
+			([	crossreference => "N/A";
+				failure => "SoftwareFault";
 				phases => ("all");
 				description => "Software failure from the platform (OS exception, etc.)";
 				comment => "Impact all components that are controlled by this software";
@@ -62,8 +62,8 @@ annex EMV2 {**
 		emv2::severity => ARP4761::Major applies to HardwareError;
 		emv2::likelihood => ARP4761::Probable applies to HardwareError;
 		emv2::hazards => 
-			([	crossreference => "TBD";
-				failure => "";
+			([	crossreference => "N/A";
+				failure => "HardwareFault";
 				phases => ("all");
 				description => "Hardware failure from the platform (OS exception, etc.)";
 				comment => "Impact all components that are controlled by this processor";
