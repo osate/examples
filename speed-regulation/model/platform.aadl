@@ -74,17 +74,28 @@ annex EMV2 {**
 end ecu;
 
 
-processor ecu_one_connector extends ecu
+processor ecu_can_one_connector extends ecu
 features
-	can_socket : requires bus access can;
-end ecu_one_connector;
+	socket : requires bus access can;
+end ecu_can_one_connector;
 
 
-processor ecu_two_connectors extends ecu
+processor ecu_rs232_one_connector extends ecu
 features
-	can_socket1 : requires bus access can;
-	can_socket2 : requires bus access can;
-end ecu_two_connectors;
+	socket : requires bus access rs232;
+end ecu_rs232_one_connector;
+
+processor ecu_can_two_connectors extends ecu
+features
+	socket1 : requires bus access can;
+	socket2 : requires bus access can;
+end ecu_can_two_connectors;
+
+processor ecu_rs232_two_connectors extends ecu
+features
+	socket1 : requires bus access rs232;
+	socket2 : requires bus access rs232;
+end ecu_rs232_two_connectors;
 
 --
 -- About CAN and bus bandwidth
@@ -97,8 +108,16 @@ bus can
 properties
 	Latency => 1 Ms .. 1 Ms;
 	SEI::BandWidthCapacity => 500000.0 bitsps; 
-	Transmission_Time => [ Fixed => 0 ms .. 10ms;
-                          PerByte => 0 ms .. 100 us; ];
+	Transmission_Time => [ Fixed => 10 ms .. 30ms;
+                          PerByte => 1 us .. 10 us; ];
 end can;
+
+bus rs232
+properties
+	Latency => 1 Ms .. 1 Ms;
+	SEI::BandWidthCapacity => 5.0 KBytesps; 
+	Transmission_Time => [ Fixed => 50 ms .. 100ms;
+                          PerByte => 10 us .. 50 us; ];
+end rs232;
 
 end speed_regulation::platform;
