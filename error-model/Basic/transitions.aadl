@@ -1,0 +1,30 @@
+package TypedErrorModelLibrary
+public
+annex EMV2 {**
+error types
+  MyFault: type; 
+  DetectedFault: type extends MyFault;
+  BITFault: type extends DetectedFault;
+  StuckBit: type extends BITFault;
+  BadBlock: type extends BITFault;
+  NoValueFault: type extends DetectedFault;
+  NoServiceFault: type extends DetectedFault;
+  UndetectedFault: type extends Myfault; 
+end types;
+error behavior Example
+use types TypedErrorModelLibrary;
+  events  
+    Fault: error event {MyFault};   
+    SelfRepair: recover event; 
+   states
+    Operational: initial state ;
+    FailTransient: state {DetectedFault};
+    FailPermanent: state {MyFault};
+  transitions
+     SelfFail: Operational -[Fault{DetectedFault}]-> 
+        (FailPermanent with 0.7, FailTransient with 0.3);
+     Recovery: FailTransient -[SelfRepair]-> Operational;
+     UncoveredFail: Operational -[Fault{UndetectedFault}]-> FailPermanent;
+  end behavior;
+ **};
+end TypedErrorModelLibrary;
