@@ -1,0 +1,217 @@
+package plugin_issue024
+public
+with SEI, MILSTD882, EMV2;
+system Complete
+end Complete;
+
+system implementation Complete.PBA_speed_control
+subcomponents
+speed_sensor : device sensor.speed;
+throttle : device actuator.speed;
+speed_control : process control_ex.speed;
+--interface_unit : device interface.pilot;
+interface_unit : device interface_unit;
+RT_1GHz : processor Real_Time.one_GHz;
+Standard_Marine_Bus : bus Marine.Standard;
+Stand_Memory : memory RAM.Standard;
+display_unit : device display_unit;
+connections
+DC1 : port speed_sensor.sensor_data -> speed_control.sensor_data;
+DC2 : port speed_control.command_data -> throttle.cmd;
+DC3 : port interface_unit.set_speed -> speed_control.set_speed;
+--DC4: port set_speed -> speed_control_laws.set_speed;
+EC4 : port interface_unit.disengage -> speed_control.disengage;
+EC5 : port interface_unit.control_on -> speed_control.control_on;
+DC6 : port speed_control.status -> display_unit.status;
+BAC1 : bus access Standard_Marine_Bus <-> speed_sensor.BA1;
+BAC2 : bus access Standard_Marine_Bus <-> RT_1GHz.BA1;
+BAC3 : bus access Standard_Marine_Bus <-> throttle.BA1;
+--BAC4 : bus access Standard_Marine_Bus <-> interface_unit.BA1;
+BAC5 : bus access Standard_Marine_Bus <-> Stand_Memory.BA1;
+flows
+on_end_to_end :
+end to
+end flow interface_unit.on_flow_src -> DC3 -> speed_control.on_flow_path -> DC2 -> throttle.on_flow_snk {
+Latency => 350 ms .. 350 ms;
+};
+properties
+Allowed_Processor_Binding => (reference (RT_1GHz))
+applies to speed_control.speed_control_laws;
+Allowed_Processor_Binding => (reference (RT_1GHz))
+applies to speed_control.scale_speed_data;
+Actual_Memory_Binding => (reference (Stand_Memory))
+applies to speed_control;
+SEI::MIPSCapacity => 1000.0 MIPS;
+end Complete.PBA_speed_control;
+device sensor
+features
+sensor_data : out data port;
+BA1 : requires bus access Marine.Standard;
+end sensor;
+device implementation sensor.speed
+end sensor.speed;
+
+--device interface
+--features
+-- set_speed : out data port;
+-- disengage : out event port;
+-- BA1 : requires bus access Marine.Standard;
+--end interface;
+device interface_unit
+features
+set_speed : out data port;
+disengage : out event port;
+control_on : out event port;
+flows
+on_flow_src : flow source set_speed {
+latency => 5 ms .. 5 ms;
+};
+end interface_unit;
+device display_unit -- new device
+
+features
+status : in data port;
+end display_unit;
+thread monitor -- new thread
+
+features
+sensor_data : in data port;
+status : out data port;
+end monitor;
+
+--device implementation interface.pilot
+--end interface.pilot;
+
+-- process control
+-- features
+-- command_data : out data port;
+-- sensor_data : in data port;
+-- set_speed : in data port;
+-- disengage : in event port;
+--end control;
+
+--process implementation control.speed
+--subcomponents
+--scale_speed_data : thread read_data.speed;
+--speed_control_laws : thread control_laws.speed;
+--connections
+--DC1 : port sensor_data -> scale_speed_data.sensor_data;
+--DC2 : port scale_speed_data.proc_data -> speed_control_laws.proc_data;
+--DC3 : port speed_control_laws.cmd -> command_data;
+--EC1 : port disengage -> speed_control_laws.disengage;
+--DC4 : port set_speed -> speed_control_laws.set_speed;
+--end control.speed;
+process control_ex
+features
+sensor_data : in data port;
+command_data : out data port;
+status : out data port;
+disengage : in event port;
+set_speed : in data port;
+control_on : in event port;
+flows
+on_flow_path : flow path set_speed -> command_data {
+latency => 10 ms .. 20 ms;
+};
+properties
+Period => 50 Ms;
+end control_ex;
+process implementation control_ex.speed
+subcomponents
+scale_speed_data : thread read_data in modes
+(controlling);
+speed_control_laws : thread control_laws_ex;
+monitor : thread monitor in modes
+(monitoring);
+connections
+DC1 : port sensor_data -> scale_speed_data.sensor_data in modes
+(controlling);
+--DC2 : port scale_speed_data.proc_data -> speed_control_laws.proc_data in modes
+--(controlling);
+DC3 : port speed_control_laws.cmd -> command_data;
+DC4 : port set_speed -> speed_control_laws.set_speed;
+DC5 : port monitor.status -> status in modes
+(monitoring);
+DC6 : port sensor_data -> monitor.sensor_data in modes
+(monitoring);
+DC8 : port speed_control_laws.status -> status in modes
+(controlling);
+EC1 : port disengage -> speed_control_laws.disengage in modes
+(controlling);
+EC2 : port control_on -> speed_control_laws.control_on in modes
+(controlling);
+flows
+on_flow_path : flow path set_speed -> DC4 -> speed_control_laws.masira -> DC3 -> command_data {
+latency => 5 ms .. 5 ms;
+};
+modes
+monitoring : initial mode;
+controlling : mode;
+monitoring -[ control_on ]-> controlling;
+controlling -[ disengage ]-> monitoring;
+end control_ex.speed;
+thread read_data
+features
+sensor_data : in data port;
+proc_data : out data port;
+properties
+Dispatch_Protocol => Periodic;
+Compute_Execution_Time => 1 ms .. 2 ms;
+Period => 50 ms;
+end read_data;
+thread implementation read_data.speed
+end read_data.speed;
+--thread control_laws
+-- features
+-- proc_data : in data port;
+-- cmd : out data port;
+-- disengage : in event port;
+-- set_speed : in data port;
+-- properties
+-- Dispatch_Protocol => Periodic;
+-- Compute_Execution_Time => 3 ms .. 5 ms;
+-- Period => 50 ms;
+--end Control_laws;
+thread control_laws_ex
+features
+proc_data : in data port;
+set_speed : in data port;
+disengage : in event port;
+control_on : in event port; -- added port
+status : out data port; -- added port
+cmd : out data port;
+flows
+masira : flow path set_speed -> cmd;
+end control_laws_ex;
+--thread implementation control_laws.speed
+--end control_laws.speed;
+device actuator
+features
+cmd : in data port;
+BA1 : requires bus access Marine.Standard;
+flows
+on_flow_snk : flow sink cmd {
+latency => 8 ms .. 8 ms;
+};
+end actuator;
+device implementation actuator.speed
+end actuator.speed;
+processor Real_Time
+features
+BA1 : requires bus access Marine.Standard;
+end Real_Time;
+processor implementation Real_Time.one_GHz
+properties
+SEI::MIPSCapacity => 1000.0 MIPS;
+end Real_Time.one_GHz;
+memory RAM
+features
+BA1 : requires bus access Marine.Standard;
+end RAM;
+memory implementation RAM.Standard
+end RAM.Standard;
+bus Marine
+end Marine;
+bus implementation Marine.Standard
+end Marine.Standard;
+end plugin_issue024;
