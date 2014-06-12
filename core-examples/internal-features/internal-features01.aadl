@@ -1,0 +1,25 @@
+package internal_features
+
+public
+
+with base_types;
+
+system s
+end s;
+
+system implementation s.i
+internal features
+	fi0 : event;
+	fi1 : event;
+annex behavior_specification {**
+  states
+    s0 : initial state;
+    s1 : complete state;
+  transitions
+    s0 -[ fi0 ]-> s1 { fi1! };
+**};
+end s.i;
+
+
+
+end internal_features;
