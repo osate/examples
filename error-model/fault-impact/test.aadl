@@ -1,0 +1,67 @@
+package faultimpact_model
+
+public
+
+with EMV2;
+
+system errsrc
+features
+	eout : out event port;
+annex EMV2 {**
+	use types ErrorLibrary;
+
+	error propagations
+		eout : out propagation {BadValue};
+	flows
+		f0 : error source eout{BadValue};
+	end propagations;
+**};
+end errsrc;
+
+system errpath
+features
+	ein : in event port;
+	eout : out event port;
+annex EMV2 {**
+	use types ErrorLibrary;
+
+	error propagations
+		ein : in propagation {BadValue};
+		eout : out propagation {BadValue};
+	flows
+		f0 : error path ein{BadValue} -> eout{BadValue};
+	end propagations;
+**};
+end errpath;
+
+system errdst
+features
+	ein : in event port;
+annex EMV2 {**
+	use types ErrorLibrary;
+
+	error propagations
+		ein : in propagation {BadValue};
+	flows
+		f0 : error sink ein{BadValue};
+	end propagations;
+**};
+end errdst;
+
+system toplevel
+end toplevel;
+
+
+system implementation toplevel.i
+subcomponents
+	s1 : system errsrc;
+	s2 : system errpath;
+	s3 : system errdst;
+connections
+	c0 : port s1.eout -> s2.ein;
+	c1 : port s2.eout -> s3.ein;
+end toplevel.i;
+
+
+
+end faultimpact_model;

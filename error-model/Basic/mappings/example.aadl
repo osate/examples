@@ -78,9 +78,9 @@ end Example;
 
 annex EMV2{**
 	type mappings ErrorMappings
-		{ErrorTypeLibBox1::DelayedInfo} -> {ErrorTypeLibBox2::DelayedInfo};
-		{ErrorTypeLibBox1::NoInfo} -> {ErrorTypeLibBox2::NoInfo};
-		{ErrorTypeLibBox1::WrongInfo} -> {ErrorTypeLibBox2::WrongInfo};
+		{ErrorTypeLibBox1::DelayedInfo} -> (ErrorTypeLibBox2::DelayedInfo);
+		{ErrorTypeLibBox1::NoInfo} -> (ErrorTypeLibBox2::NoInfo);
+		{ErrorTypeLibBox1::WrongInfo} -> (ErrorTypeLibBox2::WrongInfo);
 	
 	end mappings;
 	

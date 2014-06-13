@@ -80,7 +80,7 @@ annex EMV2 {**
 		avalueout2 : out propagation {ValueError};
 	flows
 		-- Violation of C14: we should also have a path from valuein to valueout2
-		f1 : error path avaluein{ValueError} -> avalueout1{ValueError};
+		f1 : error path avaluein{ValueError} -> avalueout1(ValueError);
 	end propagations;
 **};	
 end assembly.i2;

@@ -56,15 +56,12 @@ process implementation receiver.i
 subcomponents
 	thr1 : thread thr_receiver.i in modes (nominal,recovery);
 	thr2: thread thr_receiver.i in modes (recovery);
-internal features
- triggerrecovery: event;
- triggernormal: event;
 connections
 	c1 : port inevent -> thr1.inevent;
 	c2 : port inevent -> thr2.inevent;
 modes
-	nominal-[triggerrecovery]->recovery;
-	recovery-[triggernormal]->nominal;
+	nominal-[self.triggerrecovery]->recovery;
+	recovery-[self.triggernormal]->nominal;
 annex EMV2 {**
 	use types ErrorModelLibrary;
 	use behavior ErrorModelLibrary::Simple;

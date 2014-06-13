@@ -1,0 +1,77 @@
+package errormodel_basicflow
+
+public
+
+system sender
+features
+	outp : out event data port;
+annex EMV2 {**
+	use types errorlibrary;
+	
+	error propagations
+		outp : out propagation {serviceomission};
+	flows
+		f0 : error source outp{serviceomission};
+	end propagations;
+**};
+end sender;
+
+system middle
+features
+	inp : in event data port;
+	outp : out event data port;
+annex EMV2 {**
+	use types errorlibrary;
+	
+	error propagations
+		inp : in propagation {serviceomission};
+		outp : out propagation {serviceomission};
+	flows
+		f0 : error path inp{serviceomission} -> outp{serviceomission};
+	end propagations;
+**};
+end middle;
+
+system receiver
+features
+	inp : in event data port;
+annex EMV2 {**
+	use types errorlibrary;
+	use behavior ErrorModelLibrary::Simple;
+	
+	error propagations
+		inp : in propagation {serviceomission};
+	flows
+		f0 : error sink inp{serviceomission};
+	end propagations;
+	
+	composite error behavior
+	states
+		[in inp]->failed;
+	end composite;
+**};
+end receiver;
+
+system main
+end main;
+
+system implementation main.i
+subcomponents
+	s : system sender;
+	m : system middle;
+	r : system receiver;
+connections
+	c0 : port s.outp -> m.inp;
+	c1 : port m.outp -> r.inp;
+annex EMV2 {**
+	use types errorlibrary;
+	use behavior ErrorModelLibrary::Simple;
+	
+	composite error behavior
+	states
+		[r.failed]->failed;
+	end composite;
+**};
+end main.i;
+
+end errormodel_basicflow;

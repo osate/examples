@@ -38,6 +38,8 @@ annex EMV2 {**
 	
 	error propagations
 		dout : out propagation {ValueError};
+	flows
+		f0 : error source dout{ValueError};
 	end propagations;
 	
 	properties
@@ -52,6 +54,8 @@ annex EMV2 {**
 	use behavior error_compliance::basic2;
 	error propagations
 		dout : out propagation {ValueError,ServiceOmission};
+	flows
+		f0 : error source dout{ValueError,ServiceOmission};
 	end propagations;
 	
 	properties
@@ -63,6 +67,9 @@ system implementation mysystem_out.impl2
 annex EMV2 {**
 	use types ErrorLibrary;
 	use behavior error_compliance::basic2;
+	properties
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.05 ; Distribution => Fixed;] applies to dout.ValueError;
+
 **};
 end mysystem_out.impl2;
 
@@ -89,6 +96,8 @@ annex EMV2 {**
 	
 	error propagations
 		din : in propagation {ValueError,ServiceOmission};
+	flows
+		f0 : error sink din{ServiceOmission};
 	end propagations;
 	properties
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.2 ; Distribution => Fixed;] applies to din.ValueError;
@@ -104,10 +113,10 @@ end integration;
 
 system implementation integration.i
 subcomponents
-	snd : system mysystem_out.impl1;
+	snd : system mysystem_out.impl2;
 	recv : system mysystem_in.impl1;
 connections
-	c0 : port snd.dout -> recv.din;
+	c0 : port snd.dout -> recv.din; 
 end integration.i;
 
 end error_compliance;

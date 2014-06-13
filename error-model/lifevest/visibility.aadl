@@ -36,7 +36,7 @@ annex EMV2 {**
 		t2 : Operational -[sensor_clogged]-> Failed;
 		t3 : Operational -[led_damaged]-> Failed;
 	propagations
-		p1 : Failed -[]-> visibility{NotVisible};
+		p1 : Failed -[]-> visibility(NotVisible);
 	end component;
 	properties
 		EMV2::hazards => 

@@ -102,7 +102,7 @@ component error behavior
 transitions
      Error_Free -[inport]-> Permanent_Failure;
 propagations
-     Permanent_Failure -[]-> outport{ServiceOmission};
+     Permanent_Failure -[]-> outport(ServiceOmission);
 end component;
 properties
      EMV2::OccurrenceDistribution => [ProbabilityValue => 10.0E-6; Distribution => Poisson;] applies to outport.ServiceOmission;

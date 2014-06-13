@@ -123,9 +123,9 @@ annex EMV2 {**
 	
 	component error behavior
 	propagations
-		p1 : Operational -[ valuein1{LateDelivery}]-> valueout1{ValueError}; -- should raise error
-		p2 : Operational -[ valuein1{LateDelivery}]-> valueout1{NoError}; -- OK
-		p3 : Operational -[ valuein2{LateDelivery}]-> valueout2{ValueError}; -- error, we should declare a path here
+		p1 : Operational -[ valuein1{LateDelivery}]-> valueout1(ValueError); -- should raise error
+		p2 : Operational -[ valuein1{LateDelivery}]-> valueout1(NoError); -- OK
+		p3 : Operational -[ valuein2{LateDelivery}]-> valueout2(ValueError); -- error, we should declare a path here
 	end component;
 **};
 end receiver2.i1;
@@ -141,7 +141,7 @@ annex EMV2 {**
 		valuein2 : in propagation {LateDelivery};
 		valueout2 : out propagation {ValueError};
 	flows
-		f1 : error path valuein1 {LateDelivery} -> valueout1 {ValueError};
+		f1 : error path valuein1 {LateDelivery} -> valueout1 (ValueError);
 		f3 : error sink valuein2 {LateDelivery}; 
 		f4 : error source valueout2 {ValueError};
 	end propagations;
@@ -149,8 +149,8 @@ annex EMV2 {**
 	component error behavior
 	propagations
 	    -- Test for violation of rule C4
-		p1 : Operational -[ valuein1{LateDelivery}]-> valueout1{ValueError}; -- OK, we have the path
-		p3 : Operational -[ valuein2{LateDelivery}]-> valueout2{ValueError}; -- error, we should declare a path here
+		p1 : Operational -[ valuein1{LateDelivery}]-> valueout1(ValueError); -- OK, we have the path
+		p3 : Operational -[ valuein2{LateDelivery}]-> valueout2(ValueError); -- error, we should declare a path here
 	end component;
 **};
 end receiver2.i2;
@@ -168,7 +168,7 @@ annex EMV2 {**
 	component error behavior
 	propagations
 	    -- Violation of C6
-		p1 : Operational -[]-> valueout1{ValueError}; -- Error, I should also have another one for TimingError
+		p1 : Operational -[]-> valueout1(ValueError); -- Error, I should also have another one for TimingError
 	end component;
 **};
 end receiver2.i3;
@@ -194,7 +194,7 @@ annex EMV2 {**
 	-- Violation of C9
 	propagations
 	-- ERROR rule C7: error sink cannot be used to propagate an error.
-		p1 : Operational -[valuein1{ValueError}]-> valueout1{ValueError};
+		p1 : Operational -[valuein1{ValueError}]-> valueout1(ValueError);
 	end component;
 **};
 end receiver2.i4;
@@ -209,15 +209,15 @@ annex EMV2 {**
 		valuein2 : in propagation {LateDelivery};
 		valueout2 : out propagation {ValueError};
 	flows
-		f1 : error path valuein1 {LateDelivery} -> valueout1 {ValueError};
+		f1 : error path valuein1 {LateDelivery} -> valueout1 (ValueError);
 		f3 : error sink valuein2 {LateDelivery}; 
 		f4 : error source valueout2 {ValueError};
 	end propagations;
 	
 	component error behavior
 	propagations
-		p1 : Operational -[]-> valueout1{ValueError}; -- Error, this is part of an error path
-		p3 : Operational -[]-> valueout2{ValueError}; -- OK
+		p1 : Operational -[]-> valueout1(ValueError); -- Error, this is part of an error path
+		p3 : Operational -[]-> valueout2(ValueError); -- OK
 	end component;
 **};
 end receiver2.i5;
