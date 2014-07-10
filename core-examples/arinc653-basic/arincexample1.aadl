@@ -13,7 +13,6 @@ end ordercmd;
 data protected_data
 properties
    Concurrency_Control_Protocol => Protected_Access;
-   ARINC653::Queueing_Discipline => FIFO;
 end protected_data;
 
 
@@ -90,15 +89,16 @@ end                     sensor_receiveinput_thread.impl;
 thread commandboard_receiveinput_thread
 features
    temp: in data port integer;
-   tempavg : requires data access integer;
+   tempavg : requires data access integer {ARINC653::Queueing_Discipline => FIFO;};
    newavg: out event port;
-   need_semaphore : requires data access protected_data;
+   need_semaphore : requires data access protected_data  {ARINC653::Queueing_Discipline => FIFO;};
 properties
    Initialize_Entrypoint => 
 classifier (arincexample1::commandboard_receiveinput_spg);
    Priority => 42;
    Stack_Size => 100 Kbyte;
    Period => 20 ms;
+   ARINC653::Time_Capacity => 7 ms;
    Compute_Execution_Time => 5 ms .. 7 ms;
    Deadline => 40 ms;
 end commandboard_receiveinput_thread;
@@ -106,15 +106,16 @@ end commandboard_receiveinput_thread;
 thread commandboard_printinfos_thread
 features
    ordersensor: out event data port integer;
-   tempavg : requires data access integer;
+   tempavg : requires data access integer  {ARINC653::Queueing_Discipline => FIFO;};
    newavg: in event port;
-   need_semaphore : requires data access protected_data;
+   need_semaphore : requires data access protected_data  {ARINC653::Queueing_Discipline => FIFO;};
 properties
    Initialize_Entrypoint =>
 classifier (arincexample1::commandboard_printinfos_spg);
    Priority => 43;
    Stack_Size => 100 Kbyte;
    Period => 20 ms;
+   ARINC653::Time_Capacity => 6 ms;
    Compute_Execution_Time => 2 ms .. 6 ms;
    Deadline => 40 ms;
 end commandboard_printinfos_thread;
@@ -186,9 +187,18 @@ subcomponents
    part2:   virtual processor partition2_rt.impl;
 properties
    ARINC653::Module_Major_Frame => 50ms;
-   ARINC653::Partition_Slots => (10ms, 10ms, 30ms);
-   ARINC653::Slots_Allocation => 
-(reference (part1), reference (part2), reference (part1));
+
+	ARINC653::Module_Schedule => 
+	    ( [Partition => reference (part1);
+	      Duration  => 10 ms;
+	      Periodic_Processing_Start => false;],
+	      [Partition => reference (part2);
+	      Duration  => 10 ms;
+	      Periodic_Processing_Start => false;],
+	      [Partition => reference (part1);
+	      Duration  => 30 ms;
+	      Periodic_Processing_Start => false;]
+	    );
 end powerpc.impl;
 
 

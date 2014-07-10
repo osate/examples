@@ -66,9 +66,18 @@ subcomponents
 {ARINC653::DAL => LEVEL_C;};
 properties
    ARINC653::Module_Major_Frame => 40ms;
-   ARINC653::Partition_Slots => (10ms, 10ms, 20ms);
-   ARINC653::Slots_Allocation => 
-(reference (part1), reference (part2), reference (part3));
+
+	ARINC653::Module_Schedule => 
+	    ( [Partition => reference (part1);
+	      Duration  => 10 ms;
+	      Periodic_Processing_Start => false;],
+	      [Partition => reference (part2);
+	      Duration  => 10 ms;
+	      Periodic_Processing_Start => false;],
+	      [Partition => reference (part3);
+	      Duration  => 20 ms;
+	      Periodic_Processing_Start => false;]
+	    );
 end arinckernel.module1;
 
 memory implementation mainmemory.module1
@@ -150,8 +159,14 @@ subcomponents
    part1 : virtual processor partition_runtime;
 properties
    ARINC653::Module_Major_Frame => 40ms;
-   ARINC653::Partition_Slots => (20ms, 20ms);
-   ARINC653::Slots_Allocation => (reference (part1));
+	ARINC653::Module_Schedule => 
+	    ( [Partition => reference (part1);
+	      Duration  => 20 ms;
+	      Periodic_Processing_Start => false;],
+	      [Partition => reference (part1);
+	      Duration  => 20 ms;
+	      Periodic_Processing_Start => false;]
+	    );   
 end arinckernel.module2;
 
 thread module2_thread_part1
