@@ -1,0 +1,93 @@
+package multicore
+
+public
+
+with arinc653;
+
+virtual processor partition
+end partition;
+
+virtual processor implementation partition.i
+end partition.i;
+
+processor core
+end core;
+
+processor implementation core.i
+end core.i;
+
+system multi_core_processor
+end multi_core_processor;
+
+system implementation multi_core_processor.four
+subcomponents
+	core1 : processor core;
+	core2 : processor core;
+	core3 : processor core;
+	core4 : processor core;
+end multi_core_processor.four;
+
+memory segment
+properties
+	ARINC653::Memory_Type => (Data_Memory, Code_Memory);
+end segment;
+
+memory ram
+end ram;
+
+memory implementation ram.i
+subcomponents
+	seg1 : memory segment;
+	seg2 : memory segment;
+end ram.i;
+
+process application
+end application;
+
+process implementation application.impl
+end application.impl;
+
+system arinc_multicore
+end arinc_multicore;
+
+
+--
+--  In the following deployment strategy, the first application
+--  partition is associated with the two first cores. The second
+--  application partition is associated with the two others.
+--
+system implementation arinc_multicore.i
+subcomponents
+   cpu        : system multi_core_processor.four;
+   part1      : virtual processor partition.i;
+   part2      : virtual processor partition.i;
+   ram        : memory ram.i;
+   app1       : process application.impl;
+   app2       : process application.impl;
+properties
+   	Actual_Processor_Binding => (reference (part1)) 
+                               applies to app1;
+   	Actual_Processor_Binding => (reference (part2)) 
+                               applies to app2;
+   	Actual_Processor_Binding => (reference (cpu.core1), reference (cpu.core2)) 
+                               applies to part1;    
+   	Actual_Processor_Binding => (reference (cpu.core3), reference (cpu.core4)) 
+                               applies to part2;                   
+   	Actual_Memory_Binding => (reference (ram.seg1)) 
+                               applies to app1;
+   	Actual_Memory_Binding => (reference (ram.seg2)) 
+                               applies to app2;
+	ARINC653::Module_Schedule => 
+	    ( [Partition => reference (part1);
+	      Duration  => 10 ms;
+	      Periodic_Processing_Start => false;]
+	    ) applies to cpu.core1, cpu.core2;
+	ARINC653::Module_Schedule => 
+	    ( [Partition => reference (part2);
+	      Duration  => 10 ms;
+	      Periodic_Processing_Start => false;]
+	    ) applies to cpu.core1, cpu.core2;
+	ARINC653::Module_Major_Frame => 10 ms applies to cpu.core1, cpu.core2, cpu.core3, cpu.core4;
+end arinc_multicore.i;
+
+end multicore;
