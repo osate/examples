@@ -1,4 +1,4 @@
-package multicore
+package arinc653_multicore
 
 public
 
@@ -90,4 +90,4 @@ properties
 	ARINC653::Module_Major_Frame => 10 ms applies to cpu.core1, cpu.core2, cpu.core3, cpu.core4;
 end arinc_multicore.i;
 
-end multicore;
+end arinc653_multicore;
