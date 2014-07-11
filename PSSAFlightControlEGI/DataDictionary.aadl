@@ -1,0 +1,42 @@
+package DataDictionary
+public
+with Data_Model;
+data DeviceCommand
+properties
+  Data_Model::Data_Representation => enum;
+  Data_Model::Enumerators => ("Stopped", "Extend", "Retract");
+end DeviceCommand;
+
+data ActuatorCommand
+properties
+  Data_Model::Data_Representation => enum;
+  Data_Model::Enumerators => ("Extend", "Retract");
+end ActuatorCommand;
+
+data GripStabilatorCommand
+properties
+  Data_Model::Data_Representation => enum;
+  Data_Model::Enumerators => ("Reset", "NoseUp","NoseDown");
+end GripStabilatorCommand;
+
+data DeviceControlMode
+properties
+  Data_Model::Data_Representation => enum;
+  Data_Model::Enumerators => ("Automatic", "Manual");
+end DeviceControlMode;
+
+data Velocity
+end Velocity;
+  
+  data Position
+  end Position;
+  
+  data RawPosition
+  end RawPosition;
+
+data CommandExecutionFailure
+-- record of DeviceCommand, failure type (control or command or both)
+end CommandExecutionFailure;
+
+
+end DataDictionary ;
