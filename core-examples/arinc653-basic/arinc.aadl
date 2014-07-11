@@ -54,7 +54,7 @@ features
   	filteredin : in data port dummy;
 properties
 	Stack_Size => 100 KByte;
-	Data_Size => 100 KByte;
+	Data_Size => 100 KByte; 
 	Code_Size => 100 KByte;
 		Period => 10 ms;
 end thr_collector;
@@ -110,12 +110,16 @@ subcomponents
 	runtime1 : virtual processor partition.i {ARINC653::DAL => LEVEL_B;};
 	runtime2 : virtual processor partition.i {ARINC653::DAL => LEVEL_A;};
 properties
-	ARINC653::Partition_Slots => (10 ms, 20 ms);
-	ARINC653::Slots_Allocation => (reference (runtime1), 
-		                           reference (runtime2)
-	);
+	ARINC653::Module_Schedule => 
+	    ( [Partition => reference (runtime1);
+	      Duration  => 10 ms;
+	      Periodic_Processing_Start => false;],
+	      [Partition => reference (runtime2);
+	      Duration  => 20 ms;
+	      Periodic_Processing_Start => false;]
+	    ); 
 	ARINC653::Module_Major_Frame => 30 ms;
-	ARINC653::HM_Error_ID_Levels =>
+	ARINC653::HM_Error_ID_Levels => 
 		([ErrorIdentifier => 1;
 		  Description     => "Module Config Error";
 		  ErrorLevel      => Module_Level;
