@@ -1,0 +1,48 @@
+package ErrorBehaviorLibrary 
+public
+annex EMV2 {**
+error types
+		NoValue : type ;
+		BadValue : type ;
+		LateValue : type ;
+		NoService : type ;
+	end types ;
+	error behavior ThreeErrorStates
+	events
+		BadValueEvent : error event ;
+		NoValueEvent : error event ;
+		LateValueEvent : error event ;
+	states
+		Operational : initial state ;
+		BadValueState : state ;
+		FailedState : state ;
+		LateValueState : state ;
+	transitions
+		BadValueTransition : Operational -[ BadValueEvent ]-> BadValueState ;
+		NoValueTransition : Operational -[ NoValueEvent ]-> FailedState ;
+		LateTransition : Operational -[ LateValueEvent ]-> LateValueState ;
+	end behavior ;
+	
+	error behavior Simple
+	events
+		Failure : error event ;
+	states
+		Operational : initial state ;
+		Failed : state ;
+	transitions
+		BadValueTransition : Operational -[ Failure ]-> Failed ;
+	end behavior ;
+
+	
+	error behavior ThreeState
+	events
+		Failure : error event ;
+	states
+		Operational : initial state ;
+		NonCriticalFailure : state ;
+		CriticalFailure : state ;
+	transitions
+		FailureTransition : Operational -[ Failure ]-> CriticalFailure ;
+	end behavior ;
+**} ;
+end ErrorBehaviorLibrary ;

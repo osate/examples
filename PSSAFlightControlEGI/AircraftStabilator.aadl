@@ -1,0 +1,270 @@
+package fhasys
+public
+-- similar to the FHA example. This one include the pilot grip and data types representing commands
+with SEI, EMV2, DataDictionary;
+with ErrorLibrary, ErrorBehaviorLibrary;
+  
+  device PositionSensor
+    features
+      PositionReading: out data port DataDictionary::Position;                  -- DataDictionary::RawPosition
+    flows
+      f1: flow source PositionReading {
+        Latency => 2 ms .. 3 ms;
+        };
+    annex EMV2 {**
+        use types ErrorLibrary, FHAErrorLibrary;
+    	use behavior ErrorBehaviorLibrary::Simple;
+   	error propagations 
+    		PositionReading: out propagation  {ServiceOmission};
+    	flows
+		 ef1:error source PositionReading {ServiceOmission} when Failed;
+	end propagations;
+	properties
+	EMV2::hazards => 
+	([	crossreference => "1.1.3";
+		failure => "Loss of sensor readings";
+		phases => ("all");
+		severity => MILSTD882::Critical;
+		likelihood => MILSTD882::remote;
+		description => "No stabilator position readings due to sensor failure";
+		comment => "Becomes major hazard, if no reundant sensor";
+			])
+			applies to ef1.Failed;
+    **};
+  end PositionSensor;
+
+  
+  device CollectiveCommandGrip
+    features
+      DesiredPosition: out data port DataDictionary::Position; 
+    flows
+      f1: flow source DesiredPosition {
+        Latency => 2 ms .. 3 ms;
+        };
+    annex EMV2 {**
+        use types ErrorLibrary, FHAErrorLibrary;
+    	use behavior ErrorBehaviorLibrary::Simple;
+    	error propagations 
+    		DesiredPosition: out propagation  {MalFunction};
+    	flows
+    	-- MalFunction instead of Failure
+		 ef1:error source DesiredPosition {MalFunction} when Failed;
+	end propagations;
+	properties
+	EMV2::hazards => 
+	([	crossreference => "1.1.9";
+		failure => "Grip Failure";
+		phases => ("all");
+		severity => MILSTD882::Critical;
+		likelihood => MILSTD882::remote;
+		description => "Pilot cannot provide desire position setting";
+		comment => "Becomes major hazard, if no reundant grip";
+			])
+			applies to Failed;
+   **};
+  end CollectiveCommandGrip;
+
+  
+  
+  device StabilatorActuator
+    features
+      ActCmd: in data port DataDictionary::ActuatorCommand;
+    flows
+      fs: flow sink ActCmd {
+        Latency => 2 ms .. 3 ms;
+        };
+    annex EMV2 {**
+        use types ErrorLibrary, FHAErrorLibrary;
+    	error propagations 
+    		operation: out propagation {GuidanceLoss} ;
+    		ActCmd: in propagation  {ServiceOmission,ValueError,ItemOmission};
+    	flows
+		 ef1:error sink ActCmd{ValueError};
+		 ef2:error source operation {ServiceOmission} ;
+		 
+ end propagations;
+ propagation paths
+ 	operation: propagation point;
+ end paths;
+	properties
+	EMV2::hazards => 
+	([	crossreference => "1.1.2";
+		failure => "Loss of actuator functionality";
+		phases => ("all");
+		severity => MILSTD882::Critical;
+		likelihood => MILSTD882::remote;
+		description => "Failure to move stabilator into desired position";
+		comment => "Is a major hazard. Pilot cannot control stabilator due to sensor failure";
+			])
+			applies to operation.ServiceOmission;
+    **};
+  end StabilatorActuator;
+  
+  
+  system EGI
+    features
+      trueairspeed: out data port DataDictionary::Velocity;
+    flows
+      f1: flow source trueairspeed {
+        Latency => 2 ms .. 3 ms;
+        };
+    annex EMV2 {**
+        use types ErrorLibrary, FHAErrorLibrary;
+    	use behavior ErrorBehaviorLibrary::ThreeErrorStates;
+    	error propagations 
+    		trueairspeed: out propagation  {Failure, EGIMalFunction}; -- Added later
+    	flows
+		 ef1:error source trueairspeed {Failure} when FailedState;
+		 ef2:error source trueairspeed {EGIMalFunction} when BadValueState;  
+	end propagations;
+	properties
+	EMV2::hazards => 
+	([	crossreference => "1.1.11";
+		failure => "Incorrect true airspeed readings";
+		phases => ("all");
+		severity => MILSTD882::Critical;
+		likelihood => MILSTD882::remote;
+		description => "Incorrect true airspeed reading due to sync error";
+		comment => "Becomes major hazard, if no visual flight";
+			])
+			applies to FailedState;
+	EMV2::hazards => 
+	([	crossreference => "1.1.12";
+		failure => "Incorrect true airspeed readings";
+		phases => ("all");
+		severity => MILSTD882::Critical;
+		likelihood => MILSTD882::remote;
+		description => "Incorrect true airspeed reading due to sync error";
+		comment => "Becomes major hazard, effecting a Hardover on aircraft";
+			])
+			applies to BadValueState;
+    **};
+  end EGI;
+  
+  
+  process StabilatorControl
+    features
+      Position: in data port DataDictionary::Position;
+      Setpoint: in data port DataDictionary::Position;
+      TrueAirSpeed: in data port DataDictionary::Velocity;
+      ActCmd: out data port DataDictionary::ActuatorCommand;
+    flows
+      fs: flow sink Setpoint {
+        Latency => 1 ms .. 2 ms;
+        };
+      fp: flow path Position -> ActCmd {
+        Latency => 3 ms .. 5 ms;
+        };
+    properties
+      SEI::MIPSBudget => 2.0 MIPS;
+    annex EMV2 {**
+        use types ErrorLibrary,FHAErrorLibrary;
+    	error propagations 
+    		Position: in propagation {ServiceOmission};
+    		TrueAirSpeed: in propagation {Failure};
+    		Setpoint: in propagation {MalFunction};
+    		ActCmd: out propagation  {GuidanceLoss,TransferControlLoss,GuidanceIncorrect};
+    	flows
+		 ef1:error path Position-> ActCmd;
+		 haz1: error source ActCmd {GuidanceLoss,TransferControlLoss,GuidanceIncorrect};
+ end propagations;
+	properties
+	EMV2::hazards => 
+	([	crossreference => "1.1.1";
+		failure => "Loss of guidance values";
+		phases => ("Approach");
+		severity => MILSTD882::Marginal;
+		likelihood => MILSTD882::remote;
+		description => "Absence of computed data should signal disconnect";
+		comment => "Becomes major hazard, equivalent to incorrect guidance, if disconnect fails";
+			])
+			applies to ActCmd.GuidanceLoss, ActCmd.GuidanceIncorrect,ActCmd.TransferControlLoss;
+    **};
+  end StabilatorControl;
+  
+  process implementation StabilatorControl.i
+    subcomponents
+      CLTask: thread ControlLaw;
+      Monitor: thread ControlMonitor;
+    connections
+      SensorReading: port Position -> Monitor.position;
+      monitored: port Monitor.estpos -> CLTask.Position;
+      pilotCommanded: port Setpoint -> CLTask.Setpoint;
+      trueAirSpeedReading: port TrueAirSpeed -> CLTask.TrueAirSpeed;
+      stabilatorCmdSignal: port CLTask.ActCmd -> ActCmd;
+    flows
+      fp: flow path Position -> 
+      SensorReading -> Monitor.cmdflow
+      -> monitored -> CLTask.CmdFlow
+         -> stabilatorCmdSignal -> 
+         ActCmd;
+         
+      modes
+      Automatic: initial mode;
+      Manual: mode;
+  end StabilatorControl.i;
+  
+  thread ControlMonitor
+  features
+  position : in data port;
+  estpos: out data port;
+  flows
+       cmdflow: flow path Position -> estpos;
+  properties
+      SEI::MIPSBudget => 1.0 MIPS;
+  end ControlMonitor;
+  
+  thread ControlLaw
+    features
+      Position: in data port ; --DataDictionary::Position; -- DEMO comment out data type
+      Setpoint: in data port DataDictionary::Position;
+      TrueAirSpeed: in data port DataDictionary::Velocity; -- DEMO comment out data type
+      ActCmd: out data port DataDictionary::ActuatorCommand;
+      flows 
+       cmdflow: flow path Position -> ActCmd;
+      properties
+      Period => 20 ms;
+      Dispatch_Protocol => Periodic;
+      SEI::MIPSBudget => 1.5 MIPS;
+  end ControlLaw;
+  
+  processor PowerPC
+    properties
+      SEI::MIPSCapacity => 5.0 MIPS;
+  end PowerPC;
+  
+
+  system AircraftStabilator
+  end AircraftStabilator;
+  
+  system implementation AircraftStabilator.i
+    subcomponents
+      PilotCollectiveCommandGrip: device CollectiveCommandGrip;
+      StabilatorPositionSensor: device PositionSensor;
+      EGI: system EGI;
+      StabilatorController: process StabilatorControl.i ;
+      StabAct1: device StabilatorActuator ;
+      StabAct2: device StabilatorActuator ;
+      FMCProcessor: processor PowerPC;
+    connections
+      pilotCmd: port PilotCollectiveCommandGrip.DesiredPosition -> StabilatorController.Setpoint;
+      sensedPosition: port StabilatorPositionSensor.PositionReading -> StabilatorController.Position;
+      Stabilator1Cmd: port StabilatorController.ActCmd -> StabAct1.ActCmd;
+      Stabilator2Cmd: port StabilatorController.ActCmd -> StabAct2.ActCmd;
+      vtx: port EGI.TrueAirSpeed -> StabilatorController.TrueAirSpeed;
+    flows
+         critical1: end to end flow StabilatorPositionSensor.f1 -> sensedPosition -> StabilatorController.fp
+         -> Stabilator1Cmd -> StabAct1.fs
+         {
+          Latency => 15 ms .. 20 ms;
+          };
+      critical2: end to end flow StabilatorPositionSensor.f1 -> sensedPosition -> StabilatorController.fp
+         -> Stabilator2Cmd -> StabAct2.fs
+         {
+          Latency => 15 ms .. 20 ms;
+          };
+    properties
+      Actual_Processor_Binding => (reference( FMCProcessor)) applies to StabilatorController.CLTask;
+      Actual_Processor_Binding => (reference( FMCProcessor)) applies to StabilatorController.Monitor;
+  end AircraftStabilator.i;
+end fhasys;

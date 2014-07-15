@@ -1,0 +1,20 @@
+package FHAErrorLibrary
+public
+with ErrorLibrary;
+annex emv2 {**
+error types extends ErrorLibrary with
+MalFunction renames type ValueError;
+Failure renames type ServiceOmission;
+
+CorruptedData renames type ValueError;
+EGIMalFunction renames type ValueError;
+NoData renames type ServiceOmission;
+
+GuidanceLoss renames type ServiceOmission;
+GuidanceIncorrect renames type ValueError;
+TransferControlLoss renames type ItemOmission;
+
+
+end types;
+**}; 
+ end FHAErrorLibrary;
