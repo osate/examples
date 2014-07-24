@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<File xmlns="http://www.esterel-technologies.com/ns/scade/4" xmlns:ed="http://www.esterel-technologies.com/ns/scade/pragmas/editor/4" xmlns:kcg="http://www.esterel-technologies.com/ns/scade/pragmas/codegen/2">
+	<declarations>
+		<Operator kind="node" name="actuate">
+			<inputs>
+				<Variable name="commanded_position">
+					<type>
+						<NamedType>
+							<type>
+								<TypeRef name="int"/>
+							</type>
+						</NamedType>
+					</type>
+					<pragmas>
+						<ed:Variable oid="!ed/3bee/1CCB/1488/53d1411b1f03"/>
+					</pragmas>
+				</Variable>
+			</inputs>
+			<outputs>
+				<Variable name="do_step">
+					<type>
+						<NamedType>
+							<type>
+								<TypeRef name="bool"/>
+							</type>
+						</NamedType>
+					</type>
+					<pragmas>
+						<ed:Variable oid="!ed/3bf0/1CCB/1488/53d1414220bc"/>
+					</pragmas>
+				</Variable>
+			</outputs>
+			<locals>
+				<Variable name="actual_position">
+					<type>
+						<NamedType>
+							<type>
+								<TypeRef name="bool"/>
+							</type>
+						</NamedType>
+					</type>
+					<pragmas>
+						<ed:Variable oid="!ed/f8f7/1CCB/1488/53d148e318d1"/>
+					</pragmas>
+				</Variable>
+				<Variable name="Local2">
+					<type>
+						<NamedType>
+							<type>
+								<TypeRef name="bool"/>
+							</type>
+						</NamedType>
+					</type>
+					<pragmas>
+						<ed:Variable oid="!ed/f909/1CCB/1488/53d149033437"/>
+					</pragmas>
+				</Variable>
+			</locals>
+			<pragmas>
+				<ed:Operator oid="!ed/3be8/1CCB/1488/53d140fc5a04" xmlns="http://www.esterel-technologies.com/ns/scade/pragmas/editor/4">
+					<diagrams>
+						<NetDiagram name="state_machine" landscape="true" format="A4 (210 297)" oid="!ed/3be9/1CCB/1488/53d140fc2c28"/>
+					</diagrams>
+				</ed:Operator>
+			</pragmas>
+		</Operator>
+	</declarations>
+</File>

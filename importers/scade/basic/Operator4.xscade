@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<File xmlns="http://www.esterel-technologies.com/ns/scade/4" xmlns:ed="http://www.esterel-technologies.com/ns/scade/pragmas/editor/4" xmlns:kcg="http://www.esterel-technologies.com/ns/scade/pragmas/codegen/2">
+	<declarations>
+		<Operator kind="node" name="main">
+			<locals>
+				<Variable name="_L1">
+					<type>
+						<NamedType>
+							<type>
+								<TypeRef name="int"/>
+							</type>
+						</NamedType>
+					</type>
+					<pragmas>
+						<ed:Variable oid="!ed/3c08/1CCB/1488/53d14298294d"/>
+					</pragmas>
+				</Variable>
+				<Variable name="_L2">
+					<type>
+						<NamedType>
+							<type>
+								<TypeRef name="int"/>
+							</type>
+						</NamedType>
+					</type>
+					<pragmas>
+						<ed:Variable oid="!ed/3c13/1CCB/1488/53d142a52cba"/>
+					</pragmas>
+				</Variable>
+				<Variable name="_L3">
+					<type>
+						<NamedType>
+							<type>
+								<TypeRef name="bool"/>
+							</type>
+						</NamedType>
+					</type>
+					<pragmas>
+						<ed:Variable oid="!ed/3c19/1CCB/1488/53d142a74f31"/>
+					</pragmas>
+				</Variable>
+			</locals>
+			<data>
+				<!-- _L1 = interface(); -->
+				<Equation>
+					<lefts>
+						<VariableRef name="_L1"/>
+					</lefts>
+					<right>
+						<!-- interface() -->
+						<CallExpression>
+							<operator>
+								<OpCall name="1">
+									<operator>
+										<OperatorRef name="interface"/>
+									</operator>
+								</OpCall>
+							</operator>
+						</CallExpression>
+					</right>
+					<pragmas>
+						<ed:Equation oid="!ed/3c07/1CCB/1488/53d142986211"/>
+					</pragmas>
+				</Equation>
+				<!-- () = motor(_L3); -->
+				<Equation>
+					<right>
+						<!-- motor(_L3) -->
+						<CallExpression>
+							<operator>
+								<OpCall name="1">
+									<operator>
+										<OperatorRef name="motor"/>
+									</operator>
+								</OpCall>
+							</operator>
+							<callParameters>
+								<IdExpression>
+									<path>
+										<ConstVarRef name="_L3"/>
+									</path>
+								</IdExpression>
+							</callParameters>
+						</CallExpression>
+					</right>
+					<pragmas>
+						<ed:Equation oid="!ed/3c0d/1CCB/1488/53d142a16a68"/>
+					</pragmas>
+				</Equation>
+				<!-- _L2 = control(_L1); -->
+				<Equation>
+					<lefts>
+						<VariableRef name="_L2"/>
+					</lefts>
+					<right>
+						<!-- control(_L1) -->
+						<CallExpression>
+							<operator>
+								<OpCall name="1">
+									<operator>
+										<OperatorRef name="control"/>
+									</operator>
+								</OpCall>
+							</operator>
+							<callParameters>
+								<IdExpression>
+									<path>
+										<ConstVarRef name="_L1"/>
+									</path>
+								</IdExpression>
+							</callParameters>
+						</CallExpression>
+					</right>
+					<pragmas>
+						<ed:Equation oid="!ed/3c12/1CCB/1488/53d142a51f27"/>
+					</pragmas>
+				</Equation>
+				<!-- _L3 = actuate(_L2); -->
+				<Equation>
+					<lefts>
+						<VariableRef name="_L3"/>
+					</lefts>
+					<right>
+						<!-- actuate(_L2) -->
+						<CallExpression>
+							<operator>
+								<OpCall name="1">
+									<operator>
+										<OperatorRef name="actuate"/>
+									</operator>
+								</OpCall>
+							</operator>
+							<callParameters>
+								<IdExpression>
+									<path>
+										<ConstVarRef name="_L2"/>
+									</path>
+								</IdExpression>
+							</callParameters>
+						</CallExpression>
+					</right>
+					<pragmas>
+						<ed:Equation oid="!ed/3c18/1CCB/1488/53d142a77b74"/>
+					</pragmas>
+				</Equation>
+			</data>
+			<pragmas>
+				<ed:Operator oid="!ed/3bec/1CCB/1488/53d1410c7b3f" xmlns="http://www.esterel-technologies.com/ns/scade/pragmas/editor/4">
+					<diagrams>
+						<NetDiagram name="diagram_main_1" landscape="true" format="A4 (210 297)" oid="!ed/3bed/1CCB/1488/53d1410c426c">
+							<presentationElements>
+								<EquationGE presentable="!ed/3c07/1CCB/1488/53d142986211">
+									<position>
+										<Point x="1474" y="3643"/>
+									</position>
+									<size>
+										<Size width="3640" height="1842"/>
+									</size>
+								</EquationGE>
+								<EquationGE presentable="!ed/3c0d/1CCB/1488/53d142a16a68">
+									<position>
+										<Point x="16060" y="3810"/>
+									</position>
+									<size>
+										<Size width="1772" height="1402"/>
+									</size>
+								</EquationGE>
+								<EquationGE presentable="!ed/3c12/1CCB/1488/53d142a51f27">
+									<position>
+										<Point x="7091" y="3863"/>
+									</position>
+									<size>
+										<Size width="1773" height="1403"/>
+									</size>
+								</EquationGE>
+								<EquationGE presentable="!ed/3c18/1CCB/1488/53d142a77b74">
+									<position>
+										<Point x="11271" y="3836"/>
+									</position>
+									<size>
+										<Size width="1773" height="1402"/>
+									</size>
+								</EquationGE>
+								<Edge leftVarIndex="1" rightExprIndex="1" srcEquation="!ed/3c07/1CCB/1488/53d142986211" dstEquation="!ed/3c12/1CCB/1488/53d142a51f27">
+									<positions>
+										<Point x="5080" y="4577"/>
+										<Point x="6429" y="4577"/>
+										<Point x="6429" y="4577"/>
+										<Point x="7091" y="4577"/>
+									</positions>
+								</Edge>
+								<Edge leftVarIndex="1" rightExprIndex="1" srcEquation="!ed/3c12/1CCB/1488/53d142a51f27" dstEquation="!ed/3c18/1CCB/1488/53d142a77b74">
+									<positions>
+										<Point x="8864" y="4577"/>
+										<Point x="10927" y="4577"/>
+										<Point x="10927" y="4551"/>
+										<Point x="11271" y="4551"/>
+									</positions>
+								</Edge>
+								<Edge leftVarIndex="1" rightExprIndex="1" srcEquation="!ed/3c18/1CCB/1488/53d142a77b74" dstEquation="!ed/3c0d/1CCB/1488/53d142a16a68">
+									<positions>
+										<Point x="13044" y="4551"/>
+										<Point x="14896" y="4551"/>
+										<Point x="14896" y="4524"/>
+										<Point x="16060" y="4524"/>
+									</positions>
+								</Edge>
+							</presentationElements>
+						</NetDiagram>
+					</diagrams>
+				</ed:Operator>
+			</pragmas>
+		</Operator>
+	</declarations>
+</File>

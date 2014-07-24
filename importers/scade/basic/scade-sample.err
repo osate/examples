@@ -1,0 +1,8 @@
+*** Semantic Warning (WAR_508): Unused input
+  at file C:\Users\jdelange\AppData\Local\Temp\ScadeChecker\5256\checker_file.scade, line 13, character 0
+  at path control/desired_position/
+ The input variable desired_position is never used
+*** Semantic Error (ERR_516): Undefined variable
+  at file C:\Users\jdelange\AppData\Local\Temp\ScadeChecker\5256\checker_file.scade, line 18, character 0
+  at path control/commanded_position/
+ the output variable commanded_position has no definition

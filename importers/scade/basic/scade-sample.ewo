@@ -1,0 +1,42 @@
+
+[STUDIO\TOOLS\CONFIGURATIONS\Code Generator]
+
+"C:\\Users\\jdelange\\Desktop\\scade-sample\\scade-sample\\scade-sample.etp"="KCG" 
+
+[STUDIO\TOOLS\CONFIGURATIONS\Design Verifier]
+
+"C:\\Users\\jdelange\\Desktop\\scade-sample\\scade-sample\\scade-sample.etp"="KCG" 
+
+[STUDIO\TOOLS\CONFIGURATIONS\Reporter]
+
+"C:\\Users\\jdelange\\Desktop\\scade-sample\\scade-sample\\scade-sample.etp"="HTML" 
+
+[STUDIO\TOOLS\CONFIGURATIONS\Synchronization]
+
+"C:\\Users\\jdelange\\Desktop\\scade-sample\\scade-sample\\scade-sample.etp"="Synchronization" 
+
+[STUDIO\TOOLS\CONFIGURATIONS\DiffAnalyzer]
+
+"C:\\Users\\jdelange\\Desktop\\scade-sample\\scade-sample\\scade-sample.etp"="KCG" 
+
+[STUDIO\TOOLS\CONFIGURATIONS\Instrumenter]
+
+"C:\\Users\\jdelange\\Desktop\\scade-sample\\scade-sample\\scade-sample.etp"="MTC" 
+
+[SCADE\Editor\Shortcut]
+
+"groupNb"="0" 
+
+[SCADE\Editor\Tool]
+
+"UsePolyline"="false" 
+"TransitionKind"="weak" 
+
+[SCADE\Diff\Tool]
+
+"LastProject1"="" 
+"LastProject2"="" 
+
+[STUDIO\TOOLS\CONFIGURATIONS\Test Tool]
+
+"C:\\Users\\jdelange\\Desktop\\scade-sample\\scade-sample\\scade-sample.etp"="KCG" 
