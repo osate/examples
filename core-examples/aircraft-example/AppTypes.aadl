@@ -41,7 +41,7 @@ with AppTypes;
   
   data GuidanceData
     properties
-      Source_Data_Size => 8 Bytes;
+      Data_Size => 8 Bytes;
   end GuidanceData;
   
   data FPData

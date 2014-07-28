@@ -2,11 +2,11 @@ package BaseTypes
 public
   data uint16
     properties
-      Source_Data_Size => 16 Bits;
+      Data_Size => 16 Bits;
   end uint16;
   
   data uint8
     properties
-      Source_Data_Size => 8 Bits;
+      Data_Size => 8 Bits;
   end uint8;
 end BaseTypes;
