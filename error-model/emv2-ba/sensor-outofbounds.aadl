@@ -1,0 +1,84 @@
+package emv2_ba
+
+public
+
+with base_types;
+
+
+system sensor
+features
+	outval : out data port base_types::integer;
+end sensor;
+
+system implementation sensor.i
+end sensor.i;
+
+
+system processing
+features
+	inval : in data port base_types::integer;
+	outval : out data port base_types::integer;
+annex EMV2 {**
+	use types errorlibrary;
+	
+	error propagations
+		outval : out propagation {badvalue};
+	flows
+		f0 : error source outval{badvalue};
+	end propagations;
+**};
+annex behavior_specification {**
+	states
+		idle : initial complete state;
+		compute : state;
+	transitions
+		t0 : idle 		-[ on dispatch ]-> compute;
+		
+		-- the following two transitions should trigger
+		-- an internal event that trigger a fault
+		-- the EMV2 would then send a badvalue error to outval
+		t1 : compute 	-[ inval < 0 ]-> idle {outval := 0};
+		t2 : compute 	-[ inval > 100 ]-> idle {outval := 0};
+		
+		--
+		t3 : compute    -[ inval > 0 and inval < 100]-> idle {outval := inval / 2};
+**};
+end processing;
+
+system implementation processing.i
+end processing.i;
+
+
+system actuator
+features
+	inval : in data port base_types::integer;
+annex EMV2 {**
+	use types errorlibrary;
+	
+	error propagations
+		inval : in propagation {badvalue};
+	flows
+		f0 : error sink inval{badvalue};
+	end propagations;
+**};
+end actuator;
+
+system implementation actuator.i
+end actuator.i;
+
+
+system assembly
+end assembly;
+
+system implementation assembly.i
+subcomponents
+	s : system sensor.i;
+	p : system processing.i;
+	a : system actuator.i;
+connections
+	c0 : port s.outval -> p.inval;
+	c1 : port p.outval -> a.inval;
+end assembly.i;
+
+
+end emv2_ba;
