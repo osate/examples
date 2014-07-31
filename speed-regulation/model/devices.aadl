@@ -114,36 +114,59 @@ annex EMV2 {**
 	properties
 		emv2::severity => ARP4761::Major applies to speed.invalidvalue;
 		emv2::likelihood => ARP4761::Probable applies to speed.invalidvalue;
-		emv2::hazards => 
-			([	crossreference => "N/A";
-				failure => "InvalidValue";
-				phases => ("all");
-				description => "Invalid value from sensor";
-				comment => "The speed sensor sends invalid value. This should be then discovered and handled by the speed controller.";
-			])
-			applies to speed.invalidvalue;	
-			
 		emv2::severity => ARP4761::Major applies to speed.novalue;
 		emv2::likelihood => ARP4761::Probable applies to speed.novalue;
-		emv2::hazards => 
-			([	crossreference => "N/A";
-				failure => "NoValue";
-				phases => ("all");
-				description => "No speed from sensor";
-				comment => "The sensor does not sendn any speed, might be an error if all sensors does not send a consistent value";
-			])
-			applies to speed.novalue;
 **};
 end speed_sensor; 
 
 device speed_wheel_sensor extends speed_sensor
 properties
 	Period => 10ms;
+annex EMV2 {**
+	properties
+		emv2::hazards => 
+			([	crossreference => "N/A";
+				failure => "InvalidValue";
+				phases => ("all");
+				description => "Invalid value from wheel sensor";
+				comment => "The speed sensor sends invalid value. This should be then discovered and handled by the speed controller.";
+			])
+			applies to speed.invalidvalue;	
+			
+		emv2::hazards => 
+			([	crossreference => "N/A";
+				failure => "NoValue";
+				phases => ("all");
+				description => "No speed from wheel sensor";
+				comment => "The sensor does not sendn any speed, might be an error if all sensors does not send a consistent value";
+			])
+			applies to speed.novalue;
+**};
 end speed_wheel_sensor;
 
 device speed_laser_sensor extends speed_sensor
 properties
 	Period => 10ms;
+annex EMV2 {**
+	properties
+		emv2::hazards => 
+			([	crossreference => "N/A";
+				failure => "InvalidValue";
+				phases => ("all");
+				description => "Invalid value from laser sensor";
+				comment => "The speed sensor sends invalid value. This should be then discovered and handled by the speed controller.";
+			])
+			applies to speed.invalidvalue;	
+			
+		emv2::hazards => 
+			([	crossreference => "N/A";
+				failure => "NoValue";
+				phases => ("all");
+				description => "No speed from laser sensor";
+				comment => "The sensor does not sendn any speed, might be an error if all sensors does not send a consistent value";
+			])
+			applies to speed.novalue;
+**};
 end speed_laser_sensor;
 
 ------------------
@@ -166,12 +189,32 @@ annex EMV2 {**
 
 	properties
 		emv2::severity => ARP4761::Major applies to position;
+		emv2::likelihood => ARP4761::Probable applies to position;			
+		emv2::OccurrenceDistribution => [ ProbabilityValue => 3.4e-5 ; Distribution => Fixed;] applies to position.invalidvalue;
+			
+**};
+end gps;
+
+device implementation gps.impl1
+properties
+	Period => 6ms;
+annex EMV2 {**
+	use types speed_regulation::error_library;
+
+	error propagations
+		position : out propagation {NoValue,InvalidValue};
+	flows
+		ef0 : error source position{NoValue,InvalidValue};
+	end propagations;
+
+	properties
+		emv2::severity => ARP4761::Major applies to position;
 		emv2::likelihood => ARP4761::Probable applies to position;
 		emv2::hazards => 
 			([	crossreference => "N/A";
 				failure => "Novalue";
 				phases => ("all");
-				description => "No value from the gps";
+				description => "No value from the gps from vendor1";
 				comment => "No value from the GPS, may then be an issue if the voter has no position from all gps";
 			])
 			applies to position.novalue;
@@ -187,16 +230,43 @@ annex EMV2 {**
 		emv2::OccurrenceDistribution => [ ProbabilityValue => 3.4e-5 ; Distribution => Fixed;] applies to position.invalidvalue;
 			
 **};
-end gps;
-
-device implementation gps.impl1
-properties
-	Period => 6ms;
 end gps.impl1;
 
 device implementation gps.impl2
 properties
 	Period => 9ms;
+annex EMV2 {**
+	use types speed_regulation::error_library;
+
+	error propagations
+		position : out propagation {NoValue,InvalidValue};
+	flows
+		ef0 : error source position{NoValue,InvalidValue};
+	end propagations;
+
+	properties
+		emv2::severity => ARP4761::Major applies to position;
+		emv2::likelihood => ARP4761::Probable applies to position;
+		emv2::hazards => 
+			([	crossreference => "N/A";
+				failure => "Novalue";
+				phases => ("all");
+				description => "No value from the gps from vendor2";
+				comment => "No value from the GPS, may then be an issue if the voter has no position from all gps";
+			])
+			applies to position.novalue;
+		emv2::hazards => 
+			([	crossreference => "N/A";
+				failure => "InvalidValue";
+				phases => ("all");
+				description => "Invalid value from the gps from vendor2";
+				comment => "Invalid value from the GPS that can then trigger issue in the position voter";
+			])
+			applies to position.invalidvalue;
+			
+		emv2::OccurrenceDistribution => [ ProbabilityValue => 3.4e-5 ; Distribution => Fixed;] applies to position.invalidvalue;
+			
+**};
 end gps.impl2;
 
 ----------------------
