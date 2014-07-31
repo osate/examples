@@ -182,7 +182,10 @@ annex EMV2 {**
 				description => "Invalid value from the gps";
 				comment => "Invalid value from the GPS that can then trigger issue in the position voter";
 			])
-			applies to position.invalidvalue;			
+			applies to position.invalidvalue;
+			
+		emv2::OccurrenceDistribution => [ ProbabilityValue => 3.4e-5 ; Distribution => Fixed;] applies to position.invalidvalue;
+			
 **};
 end gps;
 

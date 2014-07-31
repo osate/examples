@@ -233,9 +233,11 @@ annex EMV2 {**
 		ef1 : error path radar{NoValue} -> obstacle_detected{NoValue};
 		ef2 : error path camera{NoValue} -> obstacle_detected{InvalidValue};
 		ef3 : error path radar{NoValue} -> obstacle_detected{InvalidValue};
-		ef4 : error path processor{HardwareFailure,SoftwareFailure} -> obstacle_detected{NoValue};
+		ef4 : error path processor{HardwareFailure} -> obstacle_detected{NoValue};
 		ef5 : error path camera{InvalidValue} -> obstacle_detected{InvalidValue};
 		ef6 : error path radar{InvalidValue} -> obstacle_detected{InvalidValue};
+		ef7 : error path processor{SoftwareFailure} -> obstacle_detected{NoValue};
+
 	end propagations;
 
 	component error behavior
@@ -429,7 +431,8 @@ annex EMV2 {**
 	flows
 		ef0 : error path emergency_detected{NoValue} -> activate_warning{NoValue};
 		ef1 : error path emergency_detected{InvalidValue} -> activate_warning{InvalidValue};
-		ef4 : error path processor{HardwareFailure,SoftwareFailure} -> activate_warning{NoValue};
+		ef4 : error path processor{HardwareFailure} -> activate_warning{NoValue};
+		ef5 : error path processor{SoftwareFailure} -> activate_warning{NoValue};
 	end propagations;
 
 	component error behavior
@@ -487,8 +490,10 @@ annex EMV2 {**
 		position : out propagation {NoValue,InvalidValue};
 		processor : in propagation {SoftwareFailure, HardwareFailure};
 	flows
-		ef0 : error path position1 -> position;
-		ef1 : error path position2 -> position;
+		ef00 : error path position1{novalue} -> position{novalue};
+		ef01 : error path position1{invalidvalue} -> position{invalidvalue};
+		ef10 : error path position2{novalue} -> position{novalue};
+		ef11 : error path position2{invalidvalue} -> position{invalidvalue};
 		ef4 : error path processor{HardwareFailure,SoftwareFailure} -> position{NoValue};
 	end propagations;
 
@@ -551,9 +556,12 @@ annex EMV2 {**
 		threshold : out propagation {NoValue,InvalidValue};
 		processor : in propagation {SoftwareFailure, HardwareFailure};
 	flows
-		ef0 : error path position -> threshold;
-		ef1 : error path current_speed -> threshold;
-		ef4 : error path processor{HardwareFailure,SoftwareFailure} -> threshold{NoValue};
+		ef0 : error path position{novalue} -> threshold{novalue};
+		ef1 : error path position{invalidvalue} -> threshold{invalidvalue};
+		ef2 : error path current_speed{novalue} -> threshold{novalue};
+		ef3 : error path current_speed{invalidvalue} -> threshold{invalidvalue};
+		ef4 : error path processor{HardwareFailure} -> threshold{NoValue};
+		ef5 : error path processor{SoftwareFailure} -> threshold{NoValue};
 	end propagations;
 
 	component error behavior
@@ -621,11 +629,16 @@ annex EMV2 {**
 		cmd : out propagation {NoValue,InvalidValue};
 		processor : in propagation {SoftwareFailure, HardwareFailure};
 	flows
-		ef0 : error path position -> cmd;
-		ef1 : error path current_speed -> cmd;
-		ef2 : error path threshold -> cmd;
-		ef3 : error path emergency_detected -> cmd;
-		ef4 : error path processor{HardwareFailure,SoftwareFailure} -> cmd{NoValue};
+		ef00 : error path position{NoValue} -> cmd{NoValue};
+		ef01 : error path position{InvalidValue} -> cmd{InvalidValue};
+		ef10 : error path current_speed{NoValue} -> cmd{NoValue};
+		ef11 : error path current_speed{InvalidValue} -> cmd{InvalidValue};
+		ef20 : error path threshold{NoValue} -> cmd{NoValue};
+		ef21 : error path threshold{InvalidValue} -> cmd{InvalidValue};
+		ef30 : error path emergency_detected{NoValue} -> cmd{NoValue};
+		ef31 : error path emergency_detected{InvalidValue} -> cmd{InvalidValue};
+		ef40 : error path processor{HardwareFailure} -> cmd{NoValue};
+		ef41 : error path processor{SoftwareFailure} -> cmd{NoValue};
 	end propagations;
 
 	component error behavior
