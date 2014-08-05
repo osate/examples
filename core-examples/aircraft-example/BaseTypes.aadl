@@ -7,6 +7,6 @@ public
   
   data uint8
     properties
-      Data_Size => 8 Bits;
+      Data_Size => 8 bytes; 
   end uint8;
 end BaseTypes;

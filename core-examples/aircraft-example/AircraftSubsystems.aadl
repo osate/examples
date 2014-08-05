@@ -1,8 +1,4 @@
--- This package contains the Tier 2 system specifications.
--- The AADL system type declarations correspond to spec sheets for these subsystems.
--- Here we can assign property values for physical system characteristics.
--- This is illustrated with the pressure property for the hydrolics.
--- For the engine we illustrate how we can specify mode specific property values.
+
 package AircraftSubsystems
 public
 with AircraftSubsystems, SEI;

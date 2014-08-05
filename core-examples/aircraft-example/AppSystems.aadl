@@ -1,6 +1,3 @@
---       This package defines the avionics system
---       The system implementations represent a progression of the system model
---       each with increasing fidelity.
 package AppSystems
 public
 with HardwareParts, AppSubSystems, Flightmanager, SEI;
@@ -12,9 +9,7 @@ with HardwareParts, AppSubSystems, Flightmanager, SEI;
       reference_processor => classifier( HardwareParts::Xeon.solo );
   end EmbeddedApp;
   
-  --       This system declaration defines the system as a part list
-  --       The subsystems are declared in terms of subsystem classifiers without implementation details
-  --       The subsystems are specified without any connections
+
   system implementation EmbeddedApp.SubSystemParts
     subcomponents
       PilotDisplay: device HardwareParts::MFD;

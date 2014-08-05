@@ -1,6 +1,3 @@
---     This package defines the major subsystems of an avionics system
---     Each subsystem is defined with resource budgets and flow specifications with latency
---     Each subsystem is considered to be a partition
 package AppSubSystems
 public
 with AppTypes, SEI;

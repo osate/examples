@@ -1,21 +1,13 @@
--- This package contains the aircraft system model with its tier 2 systems as AADL subcomponent.
--- This model is then expanded to include one and two levels of subcomponents of the tier 2 systems.
 package AircraftSystem
 public
 with AircraftSubsystems, FlightGuidanceIMA, SEI;
-  -- with SAVI, AircraftSubsystems;
-  -- Aircraft system: the Tier 1 system 
+
   system AircraftSystem
     properties
       SEI::WeightLimit => 70000.0 kg;
   end AircraftSystem;
-  
-  -- Aircraft system with Tier 2 systems as subsystems. 
-  -- This is done only specifying the AADL system type of each Tier 2 system
-  -- Instantiation of this AADL system implementation results in an instance model
-  -- of Tier 1 and Tier 2 systems of the Aircraft.
-  -- This instance model can be analyzed for physical system properties such as weight.
-  -- We can also check for model consistency such as connection to the correct bus type 
+ 
+ 
   system implementation AircraftSystem.SubsystemSpec
     subcomponents
       FGS: system AircraftSubsystems::FlightGuidance;

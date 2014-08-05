@@ -1,6 +1,6 @@
 --        This package contains hardware components
 --        The hardware components have resource capacity properties
---        These property values are used in resoruce budget analysis
+--        These property values are used in resource budget analysis
 --        The multi-function display also includes a flow specification with a latency value
 package HardwareParts
 public
