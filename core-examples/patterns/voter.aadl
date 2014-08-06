@@ -90,7 +90,7 @@ annex EMV2 {**
 				description => "Bad Value sent by a producer";
 				comment => "Becomes major hazard, if no redundant sensor is available";
 					])
-			applies to ef0.valueerror;
+			applies to dataout.valueerror;
 **};
 end producer_thr;
 
@@ -184,7 +184,7 @@ annex EMV2 {**
 				description => "No value at all, the value is not available because no good value can be found";
 				comment => "Major issue";
 					])
-			applies to ef0.valueerror;
+			applies to dataout.valueerror;
 **};
 end consumer_thr;
 
@@ -196,10 +196,10 @@ end consumer_thr.i;
 --  main assembly
 --
 
-system producer_consumer_example
-end producer_consumer_example;
+system voter_example
+end voter_example;
 
-system implementation producer_consumer_example.i
+system implementation voter_example.i
 subcomponents
 	producer_cpu : processor mycpu;
 	consumer_cpu : processor mycpu;
@@ -233,7 +233,7 @@ properties
 	actual_memory_binding    => (reference (producer_ram)) applies to producer1_prs;
 	actual_memory_binding    => (reference (producer_ram)) applies to producer2_prs;
 	actual_memory_binding    => (reference (producer_ram)) applies to producer0_prs;
-end producer_consumer_example.i;
+end voter_example.i;
 
 
 
