@@ -1,4 +1,4 @@
-package voter
+package consumer_producer
 
 public
 
@@ -129,8 +129,10 @@ subcomponents
 	consumer_ram : memory ram;
 	producer_prs : process producer.i;
 	consumer_prs : process consumer.i;
+	eth       	 : bus ethernet;
 connections
-	producer_to_consumer : port producer_prs.dataout -> consumer_prs.datain;
+	producer_to_consumer : port producer_prs.dataout -> consumer_prs.datain
+		{Actual_Connection_Binding => (reference (eth));};
 flows
 	f0 : end to end flow producer_prs.f0 -> producer_to_consumer -> consumer_prs.f0
 	 	{Latency => 20ms .. 50 ms;};
@@ -141,4 +143,4 @@ properties
 	actual_memory_binding    => (reference (producer_ram)) applies to producer_prs;
 end producer_consumer_example.i;
 
-end voter;
+end producer_consumer;

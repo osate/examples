@@ -1,5 +1,247 @@
-package consumer_producer
+package voter
+
 
 public
 
-end consumer_producer;
+with errorlibrary;
+with base_types;
+with sei;
+with emv2;
+
+data mydata extends base_types::Integer_16
+end mydata;
+
+data implementation mydata.i
+end mydata.i;
+
+
+--
+--  Hardware Part
+--
+
+processor mycpu
+features
+	eth : requires bus access ethernet;
+properties
+	sei::mipscapacity => 1000.0 mips;
+end mycpu;
+
+memory ram
+properties
+	sei::ramcapacity => 1000.0 mbyte;
+end ram;
+
+bus ethernet
+properties
+	latency => 1 Ms .. 1 Ms;
+	sei::bandwidthcapacity => 100.0 mbytesps; 
+	transmission_time => [ fixed => 10 ms .. 30ms;
+                           perbyte => 1 us .. 10 us; ];
+end ethernet;
+
+
+--
+--  Producer software part
+--
+
+process producer
+features
+	dataout : out data port mydata.i;
+flows
+	f0 : flow source dataout;
+end producer;
+
+process implementation producer.i
+subcomponents
+	thr : thread producer_thr.i;
+connections
+	c0 : port thr.dataout -> dataout;
+flows
+	f0 : flow source thr.f0 -> c0 -> dataout;
+properties
+	sei::rambudget => 100.0 mbyte;
+end producer.i;
+
+thread producer_thr
+features
+	dataout : out data port mydata.i;
+flows
+	f0 : flow source dataout;
+properties
+	Period 			  => 20ms;
+	sei::mipsbudget   => 30.0 mips;
+	Dispatch_Protocol => periodic;
+annex EMV2 {**
+	use types ErrorLibrary;
+    
+    error propagations 
+    	dataout: out propagation  {valueerror};
+    flows  	
+		ef0 :error source dataout {valueerror};
+	end propagations;
+	
+	properties
+		emv2::hazards => 
+			([	crossreference => "N/A";
+				failure => "Bad Values";
+				phases => ("all");
+				severity => ARP4761::Hazardous;
+				likelihood => ARP4761::Remote;
+				description => "Bad Value sent by a producer";
+				comment => "Becomes major hazard, if no redundant sensor is available";
+					])
+			applies to ef0.valueerror;
+**};
+end producer_thr;
+
+thread implementation producer_thr.i
+end producer_thr.i;
+
+
+--
+--  Consumer Software Part
+--
+
+process voter
+features
+	datain0 : in data port mydata.i;
+	datain1 : in data port mydata.i;
+	datain2 : in data port mydata.i;
+	dataout : out data port mydata.i;
+flows
+	f0 : flow sink datain0;
+	f1 : flow sink datain1;
+	f2 : flow sink datain2;
+	f3 : flow source dataout;
+end voter;
+
+process implementation voter.i
+subcomponents
+	thr : thread consumer_thr.i;
+connections
+	c0 : port datain0 -> thr.datain0;
+	c1 : port datain1 -> thr.datain1;
+	c2 : port datain2 -> thr.datain2;
+	c3 : port thr.dataout -> dataout;
+flows
+	f0 : flow sink datain0 -> c0 -> thr.f0;
+	f1 : flow sink datain1 -> c1 -> thr.f1;
+	f2 : flow sink datain2 -> c2 -> thr.f2;
+	f3 : flow source thr.f3 -> c3 -> dataout;
+properties
+	sei::rambudget => 80.0 mbyte;
+end voter.i;
+
+thread consumer_thr
+features
+	datain0 : in data port mydata.i;
+	datain1 : in data port mydata.i;
+	datain2 : in data port mydata.i;
+	dataout : out data port mydata.i;
+flows
+	f0 : flow sink datain0;
+	f1 : flow sink datain1;
+	f2 : flow sink datain2;
+	f3 : flow source dataout;
+properties
+	Period 			  => 20ms;
+	sei::mipsbudget   => 30.0 mips;
+	Dispatch_Protocol => periodic;
+annex EMV2 {**
+	use types ErrorLibrary;
+    use behavior voter::simple;
+    error propagations 
+    	datain0: in propagation  {valueerror};
+    	datain1: in propagation  {valueerror};
+    	datain2: in propagation  {valueerror};
+    	dataout: out propagation {serviceomission};
+    flows  	
+		ef0 : error sink datain0 {valueerror};
+		ef1 : error sink datain1 {valueerror};
+		ef2 : error sink datain2 {valueerror};
+		ef3 : error source dataout{serviceomission};
+	end propagations;
+	
+	component error behavior
+	transitions
+		t0 : operational -[ datain0{valueerror} and datain1{valueerror} ]-> failed;
+		t1 : operational -[ datain0{valueerror} and datain2{valueerror} ]-> failed;
+		t2 : operational -[ datain1{valueerror} and datain2{valueerror} ]-> failed;
+		t3 : failed      -[ datain0{noerror} and datain1{noerror} ]-> operational;
+		t4 : failed      -[ datain2{noerror} and datain1{noerror} ]-> operational;
+		t5 : failed      -[ datain2{noerror} and datain1{noerror} ]-> operational;
+	propagations
+		p0 : failed -[]-> dataout{serviceomission};
+	end component;
+	
+	properties
+		emv2::hazards => 
+			([	crossreference => "N/A";
+				failure => "No value on the port";
+				phases => ("all");
+				severity => ARP4761::Hazardous;
+				likelihood => ARP4761::Remote;
+				description => "No value at all, the value is not available because no good value can be found";
+				comment => "Major issue";
+					])
+			applies to ef0.valueerror;
+**};
+end consumer_thr;
+
+thread implementation consumer_thr.i
+end consumer_thr.i;
+
+
+--
+--  main assembly
+--
+
+system producer_consumer_example
+end producer_consumer_example;
+
+system implementation producer_consumer_example.i
+subcomponents
+	producer_cpu : processor mycpu;
+	consumer_cpu : processor mycpu;
+	producer_ram : memory ram;
+	consumer_ram : memory ram;
+	producer0_prs : process producer.i;
+	producer1_prs : process producer.i;
+	producer2_prs : process producer.i;
+	voter_prs : process voter.i;
+	eth       : bus ethernet;
+connections
+	producer0_to_voter : port producer0_prs.dataout -> voter_prs.datain0
+		{Actual_Connection_Binding => (reference (eth));};
+	producer1_to_voter : port producer1_prs.dataout -> voter_prs.datain1
+		{Actual_Connection_Binding => (reference (eth));};
+	producer2_to_voter : port producer2_prs.dataout -> voter_prs.datain2
+		{Actual_Connection_Binding => (reference (eth));};
+flows
+	f0 : end to end flow producer0_prs.f0 -> producer0_to_voter -> voter_prs.f0
+	 	{Latency => 20ms .. 50 ms;};
+	f1 : end to end flow producer1_prs.f0 -> producer1_to_voter -> voter_prs.f1
+	 	{Latency => 20ms .. 50 ms;};
+	f2 : end to end flow producer2_prs.f0 -> producer2_to_voter -> voter_prs.f2
+	 	{Latency => 20ms .. 50 ms;};
+properties
+	actual_processor_binding => (reference (producer_cpu)) applies to producer0_prs;
+	actual_processor_binding => (reference (producer_cpu)) applies to producer1_prs;
+	actual_processor_binding => (reference (producer_cpu)) applies to producer2_prs;
+	actual_processor_binding => (reference (consumer_cpu)) applies to voter_prs;
+	actual_memory_binding    => (reference (consumer_ram)) applies to voter_prs;
+	actual_memory_binding    => (reference (producer_ram)) applies to producer1_prs;
+	actual_memory_binding    => (reference (producer_ram)) applies to producer2_prs;
+	actual_memory_binding    => (reference (producer_ram)) applies to producer0_prs;
+end producer_consumer_example.i;
+
+
+
+annex EMV2 {**
+	error behavior simple
+	states
+		operational : initial state ;
+		failed : state ;
+	end behavior ;
+**};
+end voter;
