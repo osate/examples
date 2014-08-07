@@ -8,6 +8,7 @@
 --           * Latency
 --           * Functional Hazard Assessment
 --           * Fault Impact
+--           * Fault Tree Analysis
 --
 --  For more information about our examples, please visit
 --  our wiki: https://wiki.sei.cmu.edu/aadl/index.php/Models_examples
