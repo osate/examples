@@ -1,5 +1,5 @@
 --
---  The producer consumer example consists in two processes
+--  The sense actuate example consists in two processes
 --  running on separate processors that exchange data through
 --  a shared buses.
 --
@@ -11,6 +11,9 @@
 --           * Weight
 --			 * Reliability Block Diagram
 --           * Functional Hazard Assessment
+--
+--  For more information about our examples, please visit
+--  our wiki: https://wiki.sei.cmu.edu/aadl/index.php/Models_examples
 --
 --  Copyright Carnegie Mellon Software Engineering Institute, 2014
 --

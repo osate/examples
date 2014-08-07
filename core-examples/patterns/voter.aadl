@@ -1,12 +1,16 @@
 --
---  The producer consumer example consists in two processes
+--  The voter example consists in two processes
 --  running on separate processors that exchange data through
 --  a shared buses.
 --
 --  The following example can be used with the following
 --  plugins:
---           * 
+--           * Latency
 --           * Functional Hazard Assessment
+--           * Fault Impact
+--
+--  For more information about our examples, please visit
+--  our wiki: https://wiki.sei.cmu.edu/aadl/index.php/Models_examples
 --
 --  Copyright Carnegie Mellon Software Engineering Institute, 2014
 --

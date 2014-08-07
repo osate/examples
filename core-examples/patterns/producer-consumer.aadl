@@ -7,6 +7,12 @@
 --  plugins:
 --           * Flow Latency
 --           * Functional Hazard Assessment
+--           * Resources Budgets
+--           * Resources Allocations
+--           * Bus Load
+--
+--  For more information about our examples, please visit
+--  our wiki: https://wiki.sei.cmu.edu/aadl/index.php/Models_examples
 --
 --  Copyright Carnegie Mellon Software Engineering Institute, 2014
 --
