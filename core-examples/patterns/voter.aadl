@@ -57,7 +57,7 @@ properties
 end ethernet;
 
 
---
+-- 
 --  Producer software part
 --
 
@@ -70,11 +70,11 @@ end producer;
 
 process implementation producer.i
 subcomponents
-	thr : thread producer_thr.i;
+	producer_thr : thread producer_thr.i;
 connections
-	c0 : port thr.dataout -> dataout;
+	c0 : port producer_thr.dataout -> dataout;
 flows
-	f0 : flow source thr.f0 -> c0 -> dataout;
+	f0 : flow source producer_thr.f0 -> c0 -> dataout;
 properties
 	sei::rambudget => 100.0 mbyte;
 annex EMV2 {**
@@ -83,7 +83,7 @@ annex EMV2 {**
 
 	composite error behavior
 	states
-		[thr.failed ]-> failed;
+		[producer_thr.failed ]-> failed;
 	end composite;
 **};
 end producer.i;
@@ -126,7 +126,9 @@ annex EMV2 {**
 				comment => "Becomes major hazard, if no redundant sensor is available";
 					])
 			applies to dataout.valueerror;
-		emv2::occurrencedistribution => [ probabilityvalue => 1.00 ; Distribution => Fixed;] applies to failure;
+		emv2::occurrencedistribution => [ probabilityvalue => 0.15 ; Distribution => Fixed;] applies to dataout.valueerror;
+		
+		emv2::occurrencedistribution => [ probabilityvalue => 0.05 ; Distribution => Fixed;] applies to failure;
 **};
 end producer_thr;
 
@@ -153,17 +155,17 @@ end voter;
 
 process implementation voter.i
 subcomponents
-	thr : thread consumer_thr.i;
+	voter_thr : thread voter_thr.i;
 connections
-	c0 : port datain0 -> thr.datain0;
-	c1 : port datain1 -> thr.datain1;
-	c2 : port datain2 -> thr.datain2;
-	c3 : port thr.dataout -> dataout;
+	c0 : port datain0 -> voter_thr.datain0;
+	c1 : port datain1 -> voter_thr.datain1;
+	c2 : port datain2 -> voter_thr.datain2;
+	c3 : port voter_thr.dataout -> dataout;
 flows
-	f0 : flow sink datain0 -> c0 -> thr.f0;
-	f1 : flow sink datain1 -> c1 -> thr.f1;
-	f2 : flow sink datain2 -> c2 -> thr.f2;
-	f3 : flow source thr.f3 -> c3 -> dataout;
+	f0 : flow sink datain0 -> c0 -> voter_thr.f0;
+	f1 : flow sink datain1 -> c1 -> voter_thr.f1;
+	f2 : flow sink datain2 -> c2 -> voter_thr.f2;
+	f3 : flow source voter_thr.f3 -> c3 -> dataout;
 properties
 	sei::rambudget => 80.0 mbyte;
 annex EMV2 {**
@@ -172,12 +174,12 @@ annex EMV2 {**
 
 	composite error behavior
 	states
-		[thr.failed ]-> failed;
+		[voter_thr.failed ]-> failed;
 	end composite;
 **};
 end voter.i;
 
-thread consumer_thr
+thread voter_thr
 features
 	datain0 : in data port mydata.i;
 	datain1 : in data port mydata.i;
@@ -231,10 +233,10 @@ annex EMV2 {**
 					])
 			applies to dataout.valueerror;
 **};
-end consumer_thr;
+end voter_thr;
 
-thread implementation consumer_thr.i
-end consumer_thr.i;
+thread implementation voter_thr.i
+end voter_thr.i; 
 
 
 --
