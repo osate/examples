@@ -1,3 +1,16 @@
+--
+--  The producer consumer example consists in two processes
+--  running on separate processors that exchange data through
+--  a shared buses.
+--
+--  The following example can be used with the following
+--  plugins:
+--           * 
+--           * Functional Hazard Assessment
+--
+--  Copyright Carnegie Mellon Software Engineering Institute, 2014
+--
+
 package voter
 
 
@@ -60,6 +73,15 @@ flows
 	f0 : flow source thr.f0 -> c0 -> dataout;
 properties
 	sei::rambudget => 100.0 mbyte;
+annex EMV2 {**
+	use types ErrorLibrary;
+    use behavior voter::simple;
+
+	composite error behavior
+	states
+		[thr.failed ]-> failed;
+	end composite;
+**};
 end producer.i;
 
 thread producer_thr
@@ -73,12 +95,21 @@ properties
 	Dispatch_Protocol => periodic;
 annex EMV2 {**
 	use types ErrorLibrary;
-    
+    use behavior voter::simple;
     error propagations 
     	dataout: out propagation  {valueerror};
     flows  	
 		ef0 :error source dataout {valueerror};
 	end propagations;
+	
+	component error behavior
+	events
+		failure : error event;
+	transitions
+		t0 : operational -[failure]-> failed;
+	propagations
+		p0 : failed -[]-> dataout{valueerror};
+	end component;
 	
 	properties
 		emv2::hazards => 
@@ -91,6 +122,7 @@ annex EMV2 {**
 				comment => "Becomes major hazard, if no redundant sensor is available";
 					])
 			applies to dataout.valueerror;
+		emv2::occurrencedistribution => [ probabilityvalue => 1.00 ; Distribution => Fixed;] applies to failure;
 **};
 end producer_thr;
 
@@ -130,6 +162,15 @@ flows
 	f3 : flow source thr.f3 -> c3 -> dataout;
 properties
 	sei::rambudget => 80.0 mbyte;
+annex EMV2 {**
+	use types ErrorLibrary;
+    use behavior voter::simple;
+
+	composite error behavior
+	states
+		[thr.failed ]-> failed;
+	end composite;
+**};
 end voter.i;
 
 thread consumer_thr
@@ -233,6 +274,18 @@ properties
 	actual_memory_binding    => (reference (producer_ram)) applies to producer1_prs;
 	actual_memory_binding    => (reference (producer_ram)) applies to producer2_prs;
 	actual_memory_binding    => (reference (producer_ram)) applies to producer0_prs;
+annex EMV2 {**
+	use types ErrorLibrary;
+    use behavior voter::simple;
+
+	composite error behavior
+	states
+		[voter_prs.failed]-> failed;
+		[producer0_prs.failed and producer1_prs.failed]-> failed;
+		[producer1_prs.failed and producer2_prs.failed]-> failed;
+		[producer0_prs.failed and producer2_prs.failed]-> failed;
+	end composite;
+**};
 end voter_example.i;
 
 

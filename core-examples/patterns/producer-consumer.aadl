@@ -1,3 +1,16 @@
+--
+--  The producer consumer example consists in two processes
+--  running on separate processors that exchange data through
+--  a shared buses.
+--
+--  The following example can be used with the following
+--  plugins:
+--           * Flow Latency
+--           * Functional Hazard Assessment
+--
+--  Copyright Carnegie Mellon Software Engineering Institute, 2014
+--
+
 package consumer_producer
 
 public
@@ -5,6 +18,7 @@ public
 with errorlibrary;
 with base_types;
 with sei;
+with emv2;
 
 data mydata extends base_types::Integer_16
 end mydata;
@@ -70,6 +84,27 @@ properties
 	Period 			  => 20ms;
 	sei::mipsbudget   => 30.0 mips;
 	Dispatch_Protocol => periodic;
+annex EMV2 {**
+	use types ErrorLibrary;
+    
+    error propagations 
+    	dataout: out propagation  {valueerror};
+    flows  	
+		ef0 : error source dataout {valueerror};
+	end propagations;
+	
+	properties
+		emv2::hazards => 
+			([	crossreference => "N/A";
+				failure => "Bad Values";
+				phases => ("all");
+				severity => ARP4761::Hazardous;
+				likelihood => ARP4761::Remote;
+				description => "Bad Value sent by the producer";
+				comment => "Not so important if the next data is correct";
+					])
+			applies to dataout.valueerror;
+**};
 end producer_thr;
 
 thread implementation producer_thr.i
@@ -108,6 +143,15 @@ properties
 	Period 			  => 20ms;
 	sei::mipsbudget   => 30.0 mips;
 	Dispatch_Protocol => periodic;
+annex EMV2 {**
+	use types ErrorLibrary;
+    
+    error propagations 
+    	datain: in propagation  {valueerror};
+    flows  	
+		ef0 : error sink datain {valueerror};
+	end propagations;
+**};
 end consumer_thr;
 
 thread implementation consumer_thr.i
