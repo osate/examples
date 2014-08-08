@@ -1,0 +1,36 @@
+
+
+package Power
+public
+  with SEI; 
+  
+
+  bus PowerSupply      
+  end PowerSupply; 
+  
+  bus PowerSupply_component 
+  	extends PowerSupply 
+  	features
+  		power_feed: requires bus access Power::PowerSupply_System {
+	        SEI::PowerBudget => 75.0 W;
+	        };  
+  end PowerSupply_component; 
+  
+  bus implementation PowerSupply_component.v30
+    properties
+      SEI::PowerCapacity => 75.0 W;
+  end PowerSupply_component.v30; 
+   
+  -------------------------------------------------------------------------
+  
+  bus PowerSupply_System
+  	extends PowerSupply 
+  end PowerSupply_System; 
+  
+  bus implementation PowerSupply_System.v30
+    properties
+      SEI::PowerCapacity => 800.0 W;
+  end PowerSupply_System.v30; 
+  
+    
+end Power; 

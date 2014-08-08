@@ -1,0 +1,53 @@
+package Components
+public
+	with HW_components, Power;
+	
+	system Comp_1 
+	end Comp_1;
+
+	system implementation Comp_1.impl
+		subcomponents
+			d1: device HW_components::dev1_interface;
+			d2: device HW_components::dev1_interface;
+			d3: device HW_components::dev2_interface;
+			
+			PS: bus Power::PowerSupply_component.v30; 
+		connections				
+			P1: bus access PS -> d1.Power;
+			P2: bus access PS -> d2.Power;
+			P3: bus access PS -> d3.Power;
+	end Comp_1.impl;
+	
+	system Comp_2
+	end Comp_2;
+	
+	system implementation Comp_2.impl
+		subcomponents
+			d1: device HW_components::dev2_interface;
+			d2: device HW_components::dev2_interface;
+			d3: device HW_components::dev3_interface;
+			
+			PS: bus Power::PowerSupply_component.v30; 
+		connections				
+			P1: bus access PS -> d1.Power;
+			P2: bus access PS -> d2.Power;
+			P3: bus access PS -> d3.Power;
+	end Comp_2.impl;
+	
+	system Comp_3
+	end Comp_3;
+		
+	system implementation Comp_3.impl
+		subcomponents
+			d1: device HW_components::dev3_interface;
+			d2: device HW_components::dev3_interface;
+			d3: device HW_components::dev1_interface;
+			
+			PS: bus Power::PowerSupply_component.v30; 
+		connections				
+			P1: bus access PS -> d1.Power;
+			P2: bus access PS -> d2.Power;
+			P3: bus access PS -> d3.Power;
+	end Comp_3.impl;
+	
+end Components; 

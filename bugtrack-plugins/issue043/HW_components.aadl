@@ -1,0 +1,34 @@
+package HW_components
+public
+	with Power;
+	with SEI;
+	
+	device dev1_interface 
+		features 
+			Power: requires bus access Power::PowerSupply_component {
+				SEI::PowerBudget => 128.0 mW;
+			};
+	end dev1_interface;
+
+	device dev2_interface
+		features  
+			Power: requires bus access Power::PowerSupply_component {
+				SEI::PowerBudget => 68.0 mW;
+			};
+	end dev2_interface;
+	
+	device dev3_interface
+		features 
+			Power: requires bus access Power::PowerSupply_component {
+				SEI::PowerBudget => 48.0 mW;
+			};
+	end dev3_interface;
+	
+	device dev4_interface
+		features 
+			Power: requires bus access Power::PowerSupply_component {
+				SEI::PowerBudget => 98.0 mW;
+			};
+	end dev4_interface;
+		
+end HW_components; 
