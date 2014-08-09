@@ -1,0 +1,116 @@
+package SimpleThreadLatency
+public
+-- annex description at end of package for details
+thread ts
+features
+outp: out data port;
+flows 
+fsource: flow source outp;
+properties
+latency => 4ms..6ms applies to fsource;
+end ts;
+
+thread tsp extends ts
+properties
+Dispatch_protocol => Periodic;
+period => 50 ms;
+Deadline => 5ms; -- The deadline less than the flow spec latency is the latency contribution if schedulable.
+end tsp;
+
+thread tp
+features
+inp: in data port;
+outp: out data port;
+insink: in data port;
+flows 
+fpath: flow path inp -> outp;
+fsink: flow sink insink ;
+properties
+latency => 2ms..3ms applies to fsink;
+latency => 20ms..30ms applies to fpath;
+end tp;
+
+thread tpp extends tp
+properties
+Dispatch_protocol => Periodic;
+period => 50 ms;
+Deadline => 35ms ;-- This should generate a warning since its value is larger than the flow spec value and would be the worst case output time if schedulable.
+end tpp;
+
+process p
+end p;
+
+process implementation p.i
+subcomponents
+	task1: thread ts;
+	task2: thread tp;
+	task3: thread tp;
+connections
+	c1: port task1.outp -> task2.inp;
+	c2: port task2.outp -> task3.insink;
+flows
+	signal: end to end flow task1.fsource -> c1 -> task2.fpath -> c2 -> task3.fsink;
+end p.i;
+
+process implementation p.sampled extends p.i
+subcomponents
+	task1: refined to thread tsp;
+	task2: refined to thread tpp;
+	task3: refined to thread tpp;
+end p.sampled;
+
+process implementation p.immediate extends p.sampled
+properties
+	Timing => immediate applies to c1, c2;
+end p.immediate;
+
+process implementation p.delayed extends p.sampled
+properties
+	Timing => delayed applies to c1, c2;
+end p.delayed;
+
+process implementation p.mixed extends p.sampled
+properties
+	Timing => immediate applies to c1;
+	Timing => delayed applies to c2;
+end p.mixed;
+
+process implementation p.mixed2 extends p.sampled
+properties
+	Timing => immediate applies to c2;
+	Timing => delayed applies to c1;
+end p.mixed2;
+
+system s
+end s;
+
+system implementation s.i
+subcomponents
+	Flowbased: process p.i;  -- add up only the flow spec latencies. Best/worst case - add min/max flow spec numbers. Result: min: 26ms max 39ms.
+	Sampled: process p.sampled;  -- add up all there flow spec latencies plus sampling latencies for task2 and task3 if no deadline is specified. Otherwise use deadlines for Max and min exec time for min.
+						-- This assumes worst case that they may execute on different machines and just have missed the arriving data. Min: 126 ms Max: 139ms
+	Immediate: process p.immediate; -- In synchronous setting: flow latencies without sampling latency. If no deadline is specified then deadline = period (default value)
+									-- for sequence of immediate connections the last deadline matters. The sum of flow specs should not exceed the last deadline.
+									-- result: min: 35 ms (sum of minimum compute execution times if specified) max: 35ms
+									-- Note: Compute Deadline could be per port. We could have a separate deadline for inp and insink of tpp.
+									-- In asynchronous setting we cannot guarantee immediate connections and have to assume sampling
+									-- If we turn task2 an task3 into tasks with event data ports, then the tasks execute in order and the end to end latency is the sum of their deadlines. Best case, sum of min execution times. 
+	Delayed: process p.delayed;	-- Task1 + task2 period plus task three deadline. best: the periods plus min compute execution time.
+	ImmDelay: process p.mixed;  -- Immediate followed by Delayed: Task3 period plus Task3 deadline / min execution time
+	DelayImM: process p.mixed2;  -- Delayed followed by immediate: Task2 period plus task3 deadline (max) task2+3 min execution time (min)
+end s.i;
+
+annex description {**
+	This package contains a system with three periodic threads and an end-to-end flow
+	All three threads have flows with a specified flow latency.
+	The top level system contains several process subcomponents.
+	Each represents a different compute and communication timing behavior.
+	
+	Note: Deadline by default is set to be the same as Period. Would be better if not set.
+	Note: Deadline can be set for thread, thread group, process, system, device, virtual processor.
+	Note: Execution_Time can only be set for virtual processor.
+	Compute_Deadline and Compute_Execution_Time can be set for individual ports. This is because each port can trigger a different execution with its own deadline end execution time. 
+	Note: Compute_Deadline can be set for thread, device, subprogram, subprogram access, event port, event data port, i.e., not for thread groups, process, system, virtual processor.
+	Note: Compute_Execution_Time differs from Compute_Deadline by not including subprogram access. WE SHOULD BE MORE CONSISTENT.
+**};
+end SimpleThreadLatency;
