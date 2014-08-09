@@ -1,0 +1,15 @@
+package TopSystem
+public
+	with Components; 
+
+	system top_system
+	end top_system;
+	
+	system implementation top_system.impl
+		subcomponents
+			C1: system Components::Comp_1.impl; 
+			C2: system Components::Comp_2.impl; 
+			C3: system Components::Comp_3.impl; 
+	end top_system.impl;
+	
+end TopSystem;  
