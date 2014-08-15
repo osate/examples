@@ -1,0 +1,127 @@
+package latency_distributed
+public
+
+with base_types;
+
+data int extends base_types::integer_8
+end int;
+
+thread sender
+features
+	outp: out data port int;
+flows 
+	fsource: flow source outp;
+properties
+	latency => 4ms..6ms applies to fsource;
+	Dispatch_protocol => Periodic;
+	period => 50 ms;
+	Deadline => 10ms; -- The deadline less than the flow spec latency is the latency contribution if schedulable.
+	compute_execution_time => 3 ms .. 7 ms;
+end sender;
+
+
+thread receiver
+features
+	inp: in data port int; 
+flows 
+	fsink: flow sink inp ;
+properties
+	latency => 2ms..3ms applies to fsink;
+	Dispatch_protocol => Periodic;
+	period => 50 ms;
+	Deadline => 10ms; -- The deadline less than the flow spec latency is the latency contribution if schedulable.
+	compute_execution_time => 3 ms .. 7 ms;
+end receiver;
+
+process psender
+features
+	outp: out data port int;
+flows 
+	fsource: flow source outp;
+end psender;
+
+process implementation psender.i
+subcomponents
+	task1: thread sender;
+connections
+	c1: port task1.outp -> outp;
+end psender.i;
+
+process preceiver
+features
+	inp : in data port int;
+flows 
+	fsink: flow sink inp ;
+end preceiver;
+
+
+process implementation preceiver.i
+subcomponents
+	task1: thread receiver;
+connections
+	c1 : port inp -> task1.inp;
+end preceiver.i;
+
+processor genericcpu
+features
+	thebus : requires bus access genericbus;
+end genericcpu;
+
+bus genericbus
+properties
+	Latency => 1 Ms .. 1 Ms;
+	Transmission_Time => [ Fixed => 10 ms .. 30ms;
+                          PerByte => 1 us .. 10 us; ];
+end genericbus;
+
+system latencytest
+end latencytest;
+
+system implementation latencytest.generic
+subcomponents
+	s : process psender.i;
+	r : process preceiver.i;
+	scpu : processor genericcpu;
+	rcpu : processor genericcpu;
+connections
+	c0 : port s.outp -> r.inp;
+flows
+	etef0 : end to end flow s.fsource -> c0 -> r.fsink {Latency => 5 ms .. 10 ms;};
+properties
+	actual_processor_binding => (reference (scpu)) applies to s;
+	actual_processor_binding => (reference (rcpu)) applies to r;
+end latencytest.generic;
+
+system implementation latencytest.normal extends latencytest.generic
+subcomponents
+	b : bus genericbus;
+connections
+	c1 : bus access b <-> scpu.thebus;
+	c2 : bus access b <-> rcpu.thebus;
+properties
+	actual_connection_binding => (reference (b)) applies to c0;
+end latencytest.normal;
+
+system implementation latencytest.nobus extends latencytest.generic
+end latencytest.nobus;
+
+
+system implementation latencytest.unbound extends latencytest.generic
+subcomponents
+	b : bus genericbus;
+connections
+	c1 : bus access b <-> scpu.thebus;
+	c2 : bus access b <-> rcpu.thebus;
+end latencytest.unbound;
+
+
+annex description {**
+	This package contains models to test the latency plugin.
+	 * latencytest.normal  - contains a model to test a regular well-formed distributed system
+	 * latencytest.nobus   - contains a model where there is no bus between the processor
+	                         a warning should be issued
+	 * latencytest.unbound - contains a model where the connection is not bound to the bus
+	                         but the plugin should find the bus using the processor
+	                         bus access
+**};
+end latency_distributed;
