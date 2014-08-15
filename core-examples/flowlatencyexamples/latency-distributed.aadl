@@ -71,6 +71,8 @@ virtual processor partition
 end partition;
 
 processor arinc_module
+features
+	thebus : requires bus access genericbus;
 end arinc_module;
 
 processor implementation arinc_module.i
@@ -104,17 +106,45 @@ connections
 	c0 : port s.outp -> r.inp;
 flows
 	etef0 : end to end flow s.fsource -> c0 -> r.fsink {Latency => 5 ms .. 10 ms;};
-
 end latencytest.generic;
 
+system implementation latencytest.partitioned_local extends latencytest.generic
+subcomponents
+	module : processor arinc_module.i;
+properties
+	actual_processor_binding => (reference (module.part1)) applies to s;
+	actual_processor_binding => (reference (module.part2)) applies to r;
+end latencytest.partitioned_local;
+
+system implementation latencytest.partitioned_distributed extends latencytest.generic
+subcomponents
+	s2 : process psender.i;
+	r2 : process preceiver.i;
+	b : bus genericbus;
+	module1 : processor arinc_module.i;
+	module2 : processor arinc_module.i;
+connections
+	c2 : port s2.outp -> r2.inp;
+	ba1 : bus access b <-> module1.thebus;
+	ba2 : bus access b <-> module2.thebus;
+flows
+	etef1 : end to end flow s2.fsource -> c2 -> r2.fsink {Latency => 7 ms .. 15 ms;};
+properties
+	actual_processor_binding => (reference (module1.part1)) applies to s;
+	actual_processor_binding => (reference (module1.part2)) applies to r;
+	actual_processor_binding => (reference (module2.part1)) applies to s2;
+	actual_processor_binding => (reference (module2.part2)) applies to r2;
+	actual_connection_binding => (reference (b)) applies to c0;
+	actual_connection_binding => (reference (b)) applies to c2;
+end latencytest.partitioned_distributed;
 
 system implementation latencytest.distributed extends latencytest.generic
 subcomponents
 	scpu : processor genericcpu;
 	rcpu : processor genericcpu;
 properties
-	Actual_Processor_Binding => (reference (scpu)) applies to s;
-	Actual_Processor_Binding => (reference (rcpu)) applies to r;
+	actual_processor_binding => (reference (scpu)) applies to s;
+	actual_processor_binding => (reference (rcpu)) applies to r;
 end latencytest.distributed;
 
 system implementation latencytest.normal extends latencytest.distributed
@@ -148,5 +178,11 @@ annex description {**
 	 * latencytest.unbound - contains a model where the connection is not bound to the bus
 	                         but the plugin should find the bus using the processor
 	                         bus access
+	 * latencytest.partitioned_distributed
+	                         two senders and two receivers executed on separate partitions
+	                         distributed over several processors
+	 * latencytest.partitioned_local
+	 						 one sender and one receiver executed on separate
+	 						 partitions located on the same processor/module                         
 **};
 end latency_distributed;
