@@ -2,6 +2,7 @@ package latency_distributed
 public
 
 with base_types;
+with ARINC653;
 
 data int extends base_types::integer_8
 end int;
@@ -12,11 +13,11 @@ features
 flows 
 	fsource: flow source outp;
 properties
-	latency => 4ms..6ms applies to fsource;
-	Dispatch_protocol => Periodic;
-	period => 50 ms;
+	Latency => 4ms..6ms applies to fsource;
+	Dispatch_Protocol => Periodic;
+	Period => 50 ms;
 	Deadline => 10ms; -- The deadline less than the flow spec latency is the latency contribution if schedulable.
-	compute_execution_time => 3 ms .. 7 ms;
+	Compute_Execution_Time => 3 ms .. 7 ms;
 end sender;
 
 
@@ -26,11 +27,11 @@ features
 flows 
 	fsink: flow sink inp ;
 properties
-	latency => 2ms..3ms applies to fsink;
-	Dispatch_protocol => Periodic;
-	period => 50 ms;
+	Latency => 2ms..3ms applies to fsink;
+	Dispatch_Protocol => Periodic;
+	Period => 50 ms;
 	Deadline => 10ms; -- The deadline less than the flow spec latency is the latency contribution if schedulable.
-	compute_execution_time => 3 ms .. 7 ms;
+	Compute_Execution_Time => 3 ms .. 7 ms;
 end receiver;
 
 process psender
@@ -45,6 +46,8 @@ subcomponents
 	task1: thread sender;
 connections
 	c1: port task1.outp -> outp;
+flows
+	fsource : flow source task1.fsource -> c1 -> outp;
 end psender.i;
 
 process preceiver
@@ -60,7 +63,23 @@ subcomponents
 	task1: thread receiver;
 connections
 	c1 : port inp -> task1.inp;
+flows
+	fsink : flow sink inp -> c1 -> task1.fsink;
 end preceiver.i;
+
+virtual processor partition
+end partition;
+
+processor arinc_module
+end arinc_module;
+
+processor implementation arinc_module.i
+subcomponents
+	part1 : virtual processor partition;
+	part2 : virtual processor partition;
+properties
+	arinc653::module_schedule => ([Partition => reference (part1); Duration => 10 ms;Periodic_Processing_Start => true;]);
+end arinc_module.i;
 
 processor genericcpu
 features
@@ -69,7 +88,7 @@ end genericcpu;
 
 bus genericbus
 properties
-	Latency => 1 Ms .. 1 Ms;
+	Latency => 1 ms .. 1 ms;
 	Transmission_Time => [ Fixed => 10 ms .. 30ms;
                           PerByte => 1 us .. 10 us; ];
 end genericbus;
@@ -81,32 +100,38 @@ system implementation latencytest.generic
 subcomponents
 	s : process psender.i;
 	r : process preceiver.i;
-	scpu : processor genericcpu;
-	rcpu : processor genericcpu;
 connections
 	c0 : port s.outp -> r.inp;
 flows
 	etef0 : end to end flow s.fsource -> c0 -> r.fsink {Latency => 5 ms .. 10 ms;};
-properties
-	actual_processor_binding => (reference (scpu)) applies to s;
-	actual_processor_binding => (reference (rcpu)) applies to r;
+
 end latencytest.generic;
 
-system implementation latencytest.normal extends latencytest.generic
+
+system implementation latencytest.distributed extends latencytest.generic
+subcomponents
+	scpu : processor genericcpu;
+	rcpu : processor genericcpu;
+properties
+	Actual_Processor_Binding => (reference (scpu)) applies to s;
+	Actual_Processor_Binding => (reference (rcpu)) applies to r;
+end latencytest.distributed;
+
+system implementation latencytest.normal extends latencytest.distributed
 subcomponents
 	b : bus genericbus;
 connections
 	c1 : bus access b <-> scpu.thebus;
 	c2 : bus access b <-> rcpu.thebus;
 properties
-	actual_connection_binding => (reference (b)) applies to c0;
+	Actual_Connection_Binding => (reference (b)) applies to c0;
 end latencytest.normal;
 
-system implementation latencytest.nobus extends latencytest.generic
+system implementation latencytest.nobus extends latencytest.distributed
 end latencytest.nobus;
 
 
-system implementation latencytest.unbound extends latencytest.generic
+system implementation latencytest.unbound extends latencytest.distributed
 subcomponents
 	b : bus genericbus;
 connections
