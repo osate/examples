@@ -54,12 +54,12 @@ end image_acquisition;
 
 process implementation image_acquisition.i
 subcomponents
-	thr : thread image_acquisition_thr.i;
+	thr_acq : thread image_acquisition_thr.i;
 connections
-	c0 : port picture -> thr.picture;
-	c1 : port thr.obstacle_detected -> obstacle_detected;
+	c0 : port picture -> thr_acq.picture;
+	c1 : port thr_acq.obstacle_detected -> obstacle_detected;
 flows
-	f0 : flow path picture -> c0 -> thr.f0 -> c1 -> obstacle_detected;
+	f0 : flow path picture -> c0 -> thr_acq.f0 -> c1 -> obstacle_detected;
 end image_acquisition.i;
 
 thread image_acquisition_thr
@@ -72,6 +72,7 @@ properties
 	sei::mipsbudget   => 30.0 mips;
 	Dispatch_Protocol => Periodic;
 	Period            => 50ms;
+	compute_execution_time => 10 ms .. 40 ms;
 end image_acquisition_thr;
 
 thread implementation image_acquisition_thr.i

@@ -18,7 +18,7 @@ with emv2;
 with arp4761;
 
 processor ecu 
-properties
+properties 
 	SEI::MIPSCapacity => 50.0 MIPS; 
 annex EMV2 {**
 	use types speed_regulation::error_library;
@@ -37,13 +37,13 @@ annex EMV2 {**
 		HardwareError : error event;
 		Reset         : recover event;
 	transitions
-		Operational -[SoftwareError]-> Failed;
+		Operational -[SoftwareError]-> Failed; 
 		Operational -[HardwareError]-> Failed;
 		Failed      -[Reset]->         Operational;
 	propagations
-		normal       : Operational -[]-> bindings (NoError);
-		softfailed   : Failed -[]-> bindings(SoftwareFailure);
-		hardfailed   : Failed -[]-> bindings(HardwareFailure);
+		normal       : Operational -[]-> bindings {NoError};
+		softfailed   : Failed -[]-> bindings{SoftwareFailure};
+		hardfailed   : Failed -[]-> bindings{HardwareFailure};  
 	end component;
 	properties
 		emv2::severity => ARP4761::Major applies to SoftwareError;
