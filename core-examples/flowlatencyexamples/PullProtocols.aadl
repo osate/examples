@@ -16,7 +16,7 @@ SenderData: in data port ;
 ReceiverData: out data port ;
 flows
 Xfer: flow path SenderData -> ReceiverData;
-end PullDCFMInputDataset;
+end PullDCFMInputDataset; 
 
 process implementation PullDCFMInputDataset.CrossPartition
 subcomponents
@@ -26,7 +26,8 @@ subcomponents
  	incoming: port SenderData -> sender.SenderData;
  	outgoing: port requestor.ReceiverData -> ReceiverData;
  	STRequest: port requestor.SourceTracksRequest -> sender.SourceTracksRequest;
- 	STReply: port sender.SendSourceTrackSet -> requestor.ReceivedSourceTrackSet;
+ 	STReply: port sender.SendSourceTrackSet -> requestor.ReceivedSourceTrackSet
+ 		{Required_Virtual_Bus_Class => (classifier (PullProtocols::DCFMInputPullProtocol));};
  	CTRequest: port requestor.CorrelatedTracksRequest -> sender.CorrelatedTracksRequest;
  	CTReply: port sender.SendCorrelatedTrackSet -> requestor.ReceivedCorrelatedTrackSet;
  	APRequest: port requestor.OwnAircraftPositionRequest -> sender.OwnAircraftPositionRequest;

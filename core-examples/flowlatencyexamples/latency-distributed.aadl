@@ -80,7 +80,10 @@ subcomponents
 	part1 : virtual processor partition;
 	part2 : virtual processor partition;
 properties
-	arinc653::module_schedule => ([Partition => reference (part1); Duration => 10 ms;Periodic_Processing_Start => true;]);
+	arinc653::module_major_frame => 20ms;
+	arinc653::module_schedule => ([Partition => reference (part1); Duration => 10 ms;Periodic_Processing_Start => true;],
+								  [Partition => reference (part2); Duration => 10 ms;Periodic_Processing_Start => true;]
+	);
 end arinc_module.i;
 
 processor genericcpu
