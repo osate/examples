@@ -29,7 +29,7 @@ flows
 	f0 : flow source picture;
 properties 
 	Period => 200ms;
-	compute_execution_time => 100 ms .. 150 ms;
+	compute_execution_time => 20 ms .. 50 ms;
 annex EMV2 {**
 	use types speed_regulation::error_library; 
 
@@ -286,6 +286,7 @@ flows
 properties
 	Period => 500ms;
 	Deadline => 400ms;
+	Compute_Execution_Time => 20ms .. 50ms;
 annex EMV2 {**
 	use types 		speed_regulation::error_library;
 	use behavior  	speed_regulation::error_library::simple;

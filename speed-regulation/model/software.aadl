@@ -275,6 +275,7 @@ flows
 properties
 	Dispatch_Protocol => Periodic;
 	Period            => 100ms;
+	Compute_Execution_Time => 20 ms .. 50 ms;
 	sei::mipsbudget   => 10.0 mips;
 end obstacle_detection_thr;
 

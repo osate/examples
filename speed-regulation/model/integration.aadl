@@ -129,7 +129,7 @@ flows
 							obstacle_distance_evaluation.f1 -> c090 ->
 							emergency_detection.f1 -> c100 ->
 							warning_activation.f0 -> c110 ->
-							warning_alert.f0 {Latency => 800ms .. 1400 ms;};	
+							warning_alert.f0 {Latency => 700ms .. 900 ms;};	
     --  From the camera to the brake
 	f1 : end to end flow 	obstacle_camera.f0 -> c000 ->
 							image_acquisition.f0 -> c060 ->
