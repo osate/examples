@@ -1,0 +1,18 @@
+package issue363
+public
+
+  data integer
+  end integer;
+  
+  subprogram Put_Value
+    prototypes
+      value_type: data;
+    features
+      pvalue: in parameter value_type;
+  end Put_Value;
+
+  subprogram Put_Value_p_out
+    extends Put_Value (value_type => data Integer)
+  end Put_Value_p_out;
+  
+end issue363;

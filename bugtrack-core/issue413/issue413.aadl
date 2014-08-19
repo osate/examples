@@ -1,0 +1,33 @@
+package issue413
+public
+with ARINC653;
+
+system s
+end s;
+
+system implementation s.i
+subcomponents
+  p: processor arinc_module.i;
+end s.i;
+
+virtual processor partition
+end partition;
+
+processor arinc_module
+end arinc_module;
+
+processor implementation arinc_module.i
+subcomponents
+	part1 : virtual processor partition;
+	part2 : virtual processor partition;
+properties
+	arinc653::module_schedule => (
+		[
+			Partition => reference (part1);
+			Duration => 10 ms;
+			Periodic_Processing_Start => true;
+		]
+	);
+end arinc_module.i;
+
+end issue413;
