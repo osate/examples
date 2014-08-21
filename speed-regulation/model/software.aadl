@@ -16,6 +16,7 @@ public
 
 with speed_regulation::icd; 
 with sei;
+with speed_regulation::platform;
 
 -------------------------
 --  Image Acquisition  --
@@ -69,10 +70,12 @@ features
 flows
 	f0 : flow path picture -> obstacle_detected;
 properties
-	sei::mipsbudget   => 30.0 mips;
+	sei::mipsbudget   => 25.0 MIPS;
 	Dispatch_Protocol => Periodic;
 	Period            => 50ms;
 	compute_execution_time => 10 ms .. 40 ms;
+	reference_processor => classifier (speed_regulation::platform::ecu);
+	sei::instructionsperdispatch => 1.24 kipd .. 1.25 mipd; 
 end image_acquisition_thr;
 
 thread implementation image_acquisition_thr.i
@@ -133,7 +136,7 @@ flows
 properties
 	Dispatch_Protocol => Periodic;
 	Period            => 10ms;
-	sei::mipsbudget   => 4.0 mips;
+	sei::mipsbudget   => 4.0 MIPS;
 end radar_acquisition_thr;
 
 thread implementation radar_acquisition_thr.i
@@ -202,7 +205,7 @@ flows
 properties
 	Dispatch_Protocol => Periodic;
 	Period            => 8ms;
-	sei::mipsbudget   => 4.0 mips;
+	sei::mipsbudget   => 8.0 MIPS;
 end speed_estimate_thr;
 
 thread implementation speed_estimate_thr.i
@@ -275,8 +278,10 @@ flows
 properties
 	Dispatch_Protocol => Periodic;
 	Period            => 100ms;
-	Compute_Execution_Time => 20 ms .. 50 ms;
-	sei::mipsbudget   => 10.0 mips;
+	Compute_Execution_Time => 20 ms .. 50 ms; 
+	sei::mipsbudget   => 10.0 MIPS; 
+	sei::instructionsperdispatch => 0.9 kipd .. 0.98 mipd; 
+	reference_processor => classifier (speed_regulation::platform::ecu);
 end obstacle_detection_thr;
 
 ------------------------------------
@@ -342,6 +347,7 @@ flows
 properties
 	Dispatch_Protocol => Periodic;
 	Period            => 10ms;
+	sei::mipsbudget   => 8.0 MIPS;
 end obstacle_distance_evaluation_thr;
 
 ---------------------------
@@ -393,7 +399,7 @@ connections
 	c0 : port current_speed -> thr.current_speed;
 	c1 : port obstacle_distance -> thr.obstacle_distance;
 	c2 : port thr.emergency_detected -> emergency_detected;
-flows
+flows 
 	f0 : flow path current_speed -> c0 -> thr.f0 -> c2 -> emergency_detected;
 	f1 : flow path obstacle_distance -> c1 -> thr.f1 -> c2 -> emergency_detected;
 end emergency_detection.i;
@@ -409,7 +415,7 @@ flows
 properties
 	Dispatch_Protocol => Periodic;
 	Period            => 4ms;
-	sei::mipsbudget   => 5.0 mips;
+	sei::mipsbudget   => 5.0 MIPS;
 end emergency_detection_thr;
 
 --------------------------
@@ -467,7 +473,7 @@ flows
 properties
 	Dispatch_Protocol => Periodic;
 	Period            => 2ms;
-	sei::mipsbudget   => 5.0 mips;
+	sei::mipsbudget   => 5.0 MIPS;
 end warning_activation_thr;
 
 ----------------------
@@ -533,7 +539,7 @@ flows
 properties
 	Dispatch_Protocol => Periodic;
 	Period            => 12ms;
-	sei::mipsbudget   => 8.0 mips;
+	sei::mipsbudget   => 8.0 MIPS;
 end position_voter_thr;
 
 -----------------------------------
@@ -600,7 +606,7 @@ flows
 properties
 	Dispatch_Protocol => Periodic;
 	Period            => 4ms;
-	sei::mipsbudget   => 5.0 mips;
+	sei::mipsbudget   => 5.0 MIPS;
 end speed_threshold_computation_thr;
 
 ------------------------
@@ -685,7 +691,7 @@ flows
 properties
 	Dispatch_Protocol => Periodic;
 	Period            => 5ms;
-	sei::mipsbudget   => 20.0 mips;
+	sei::mipsbudget   => 5.0 MIPS;
 end speed_controller_thr;
 
 end speed_regulation::software;
