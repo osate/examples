@@ -1,0 +1,88 @@
+package CCThreads
+public
+with CCThreads;
+  thread ScanInputPorts
+    features
+      wheel_pulses: in data port;
+      brake_pedal_in: in data port;
+      actual_velocity: out data port;
+      brake_pedal_out: out data port;
+    flows
+      flow_W_T: flow path wheel_pulses -> actual_velocity;
+      flow_B_T: flow path brake_pedal_in -> brake_pedal_out;
+    properties
+      Dispatch_Protocol => Periodic;
+      Period => 5 Ms;
+      Compute_Execution_Time => 3 Ms .. 3 Ms;
+  end ScanInputPorts;
+  
+  thread ComputeDesiredSpeed
+    features
+      actual_velocity: in data port;
+      output_velocity: out data port;
+    flows
+      flow_W_T: flow path actual_velocity -> output_velocity;
+    properties
+      Dispatch_Protocol => Periodic;
+      Period => 10 Ms;
+      Compute_Execution_Time => 2 Ms .. 2 Ms;
+  end ComputeDesiredSpeed;
+  
+  thread ComputeThrottleSetting
+    features
+      output_velocity: in data port;
+      brake_pedal: in data port;
+      throttle_setting: out data port;
+    flows
+      flow_W_T: flow path output_velocity -> throttle_setting;
+      flow_B_T: flow path brake_pedal -> throttle_setting;
+    properties
+      Dispatch_Protocol => Periodic;
+      Period => 5 Ms;
+      Compute_Execution_Time => 3 Ms .. 3 Ms;
+  end ComputeThrottleSetting;
+  
+  process CruiseControlProcess
+    features
+      wheel_pulses: in data port;
+      brake_pedal: in data port;
+      throttle_setting: out data port;
+    flows
+      Flow_W_T: flow path wheel_pulses -> throttle_setting;
+      Flow_B_T: flow path brake_pedal -> throttle_setting;
+  end CruiseControlProcess;
+  
+  process implementation CruiseControlProcess.impl
+    subcomponents
+      scan_input_ports: thread ScanInputPorts;
+      compute_desired_speed: thread ComputeDesiredSpeed;
+      compute_throttle_setting: thread ComputeThrottleSetting;
+    connections
+      d1: port compute_desired_speed.output_velocity -> compute_throttle_setting.output_velocity {
+        Timing => Immediate;
+        };
+      d2: port scan_input_ports.actual_velocity -> compute_desired_speed.actual_velocity {
+        Timing => Immediate;
+        };
+      d3: port scan_input_ports.brake_pedal_out -> compute_throttle_setting.brake_pedal {
+        Timing => Immediate;
+        };
+      d4: port wheel_pulses -> scan_input_ports.wheel_pulses {
+        Timing => Immediate;
+        };
+      d5: port brake_pedal -> scan_input_ports.brake_pedal_in {
+        Timing => Immediate;
+        };
+      d6: port compute_throttle_setting.throttle_setting -> throttle_setting {
+        Timing => Immediate;
+        };
+    flows
+      Flow_W_T: flow path wheel_pulses -> d4 -> scan_input_ports.flow_W_T
+         -> d2 -> compute_desired_speed.flow_W_T
+         -> d1 -> compute_throttle_setting.flow_W_T
+         -> d6 -> throttle_setting;
+      Flow_B_T: flow path brake_pedal -> d5 -> scan_input_ports.flow_B_T
+         -> d3 -> compute_throttle_setting.flow_B_T
+         -> d6 -> throttle_setting;
+  end CruiseControlProcess.impl;
+end CCThreads;

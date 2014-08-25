@@ -27,10 +27,13 @@ with sei;
 -- It can already be referenced by the feature group declaration
 -- later we just need to fill in its features here
   feature group wrs_cc_type
+    features
+      wheel_pulses: out data port;
   end wrs_cc_type;
   
   feature group bp_cc_type
+    features
+      brake_pedal: out data port;
   end bp_cc_type;
-
 
 end Sensors;

@@ -17,6 +17,9 @@ with SEI;
 -- It can already be referenced by the feature group declaration
 -- later we just need to fill in its features here
   feature group ta_cc_type
+    features
+      throttle_setting: in data port;
   end ta_cc_type;
+
 
 end Actuators;

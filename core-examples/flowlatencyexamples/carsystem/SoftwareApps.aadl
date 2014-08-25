@@ -1,6 +1,7 @@
 package SoftwareApps
 public
 with Sensors, Actuators, SoftwareParts;
+with CCThreads;
   system CruiseControl
     features
       cc_wrs: feature group inverse of Sensors::wrs_cc_type;
@@ -10,10 +11,10 @@ with Sensors, Actuators, SoftwareParts;
       cc_ud: feature group;
     flows
       Flow_W_T: flow path cc_wrs -> cc_ta{
-        Latency => 20 Ms .. 20 Ms;
+        Latency => 20 ms .. 20 ms;
         };
       Flow_B_T: flow path cc_bp -> cc_ta{
-        Latency => 15 Ms .. 15 Ms;
+        Latency => 15 ms .. 15 ms;
         };
   end CruiseControl;
 
@@ -42,5 +43,21 @@ with Sensors, Actuators, SoftwareParts;
          -> scl_cts_conn -> cts.Flow_1
          -> cts_ta_conn -> cc_ta;
   end CruiseControl.impl;
+  
+  
+  system implementation CruiseControl.threads
+    subcomponents
+      cc_process: process CCThreads::CruiseControlProcess.impl;
+    connections
+      d1: port cc_wrs.wheel_pulses -> cc_process.wheel_pulses;
+      d2: port cc_bp.brake_pedal -> cc_process.brake_pedal;
+      d3: port cc_process.throttle_setting -> cc_ta.throttle_setting;
+    flows
+      Flow_W_T: flow path cc_wrs -> d1 -> cc_process.Flow_W_T
+         -> d3 -> cc_ta;
+      Flow_B_T: flow path cc_bp -> d2 -> cc_process.Flow_B_T
+         -> d3 -> cc_ta;
+  end CruiseControl.threads;
+  
   
 end SoftwareApps;
