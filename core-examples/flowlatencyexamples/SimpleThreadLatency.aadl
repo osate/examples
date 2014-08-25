@@ -93,7 +93,7 @@ properties
 	Timing => immediate applies to c2;
 	Timing => delayed applies to c1;
 end p.mixed2;
-
+ 
 system s
 end s;
 

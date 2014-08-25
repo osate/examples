@@ -1,0 +1,17 @@
+package issue
+public
+	system S
+	end S;
+
+	system implementation S.i
+	subcomponents
+		nodesA : process [3];
+		nodesB : process [3];
+	properties
+	    -- for all array elements
+	    deadline => 2ms applies to nodesA;
+	    -- for single array element
+	    deadline => 3ms applies to nodesB[2];
+	end S.i;
+
+end issue;

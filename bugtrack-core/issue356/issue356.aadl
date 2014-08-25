@@ -1,0 +1,21 @@
+package issue356
+public
+	thread test_thread
+	end test_thread;
+
+	subprogram test_sp
+	end test_sp;
+
+	thread implementation test_thread.impl
+	calls
+		cs1 : {
+			a : subprogram test_data.sp1;
+		};
+	end test_thread.impl;
+
+	data test_data
+	features
+		sp1 : provides subprogram access test_sp;
+	end test_data;
+
+end issue356;

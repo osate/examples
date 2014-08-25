@@ -129,7 +129,7 @@ flows
 							obstacle_distance_evaluation.f1 -> c090 ->
 							emergency_detection.f1 -> c100 ->
 							warning_activation.f0 -> c110 ->
-							warning_alert.f0 {Latency => 800ms .. 900 ms;};	
+							warning_alert.f0 {Latency => 700ms .. 900 ms;};	
     --  From the camera to the brake
 	f1 : end to end flow 	obstacle_camera.f0 -> c000 ->
 							image_acquisition.f0 -> c060 ->
@@ -263,10 +263,10 @@ flows
 						 emergency_detection.f0 -> c100 ->
 						 warning_activation.f0 -> c110 ->
 						 warning_alert.f0;							 
-properties
-	Timing => immediate applies to 	c000, c010, c020, c030, c040, c050, c060, c070, c080, c090,
-									c100, c110, c120, c130, c140, c150, c160, c170, c180, c190,
-									c200, c210;
+--properties
+--	Timing => immediate applies to 	c000, c010, c020, c030, c040, c050, c060, c070, c080, c090,
+--									c100, c110, c120, c130, c140, c150, c160, c170, c180, c190,
+--									c200, c210;
 annex EMV2 {**
 	use types speed_regulation::error_library;
 	use behavior  	speed_regulation::error_library::simple;

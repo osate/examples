@@ -20,7 +20,7 @@ annex EMV2 {**
 		HardwareFailure			: type;
 		SoftwareFailure			: type;
 	end types; 
-
+ 
 	error behavior simple
 	states
 		Operational : initial state;
