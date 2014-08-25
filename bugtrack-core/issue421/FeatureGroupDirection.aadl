@@ -1,0 +1,18 @@
+package featuregroupdirection
+public
+
+system s
+features
+fg: in feature group;
+end s;
+
+feature group fgt
+features
+p1: out event port;
+end fgt;
+
+system s1 extends s
+features
+fg: refined to feature group inverse of fgt;
+end s1;
+end featuregroupdirection;
