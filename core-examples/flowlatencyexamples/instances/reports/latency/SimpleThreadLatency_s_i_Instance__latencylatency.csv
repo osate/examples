@@ -1,0 +1,74 @@
+Latency Analysis Report
+
+Flow analysis for end to end flow signal
+Contributor,Min Expected,Min Value,Min Method,Max Expected,Max Value,Max Method,Comments,
+Thread task1,4.0ms,0.0ms,unknown,6.0ms,0.0ms,unknown,Time to take to send the data over the network,
+Sampled Connection task1.outp -> task2.inp,,0.0ms,sampled connection,,0.0ms,sampled connection,Data might arrive at dispatch time or next frame,
+Thread task2,20.0ms,0.0ms,unknown,30.0ms,0.0ms,unknown,Time to take to send the data over the network,
+Sampled Connection task2.outp -> task3.insink,,0.0ms,sampled connection,,0.0ms,sampled connection,Data might arrive at dispatch time or next frame,
+Thread task3,2.0ms,0.0ms,unknown,3.0ms,0.0ms,unknown,,
+Total,unspecified,0.0ms,,unspecified,0.0ms,,
+Total (Sync),unspecified,0.0ms,,unspecified,0.0ms,,
+
+
+
+Flow analysis for end to end flow signal
+Contributor,Min Expected,Min Value,Min Method,Max Expected,Max Value,Max Method,Comments,
+Thread task1,4.0ms,5.0ms,deadline,6.0ms,5.0ms,deadline,Time to take to send the data over the network,
+Sampled Connection task1.outp -> task2.inp,,0.0ms,sampled connection,,50.0ms,sampled connection,Data might arrive at dispatch time or next frame,
+Thread task2,20.0ms,35.0ms,deadline,30.0ms,35.0ms,deadline,Time to take to send the data over the network,
+Sampled Connection task2.outp -> task3.insink,,0.0ms,sampled connection,,50.0ms,sampled connection,Data might arrive at dispatch time or next frame,
+Thread task3,2.0ms,35.0ms,deadline,3.0ms,35.0ms,deadline,,
+Total,unspecified,75.0ms,,unspecified,175.0ms,,
+Total (Sync),unspecified,75.0ms,,unspecified,175.0ms,,
+
+
+
+Flow analysis for end to end flow signal
+Contributor,Min Expected,Min Value,Min Method,Max Expected,Max Value,Max Method,Comments,
+Thread task1,4.0ms,0.0ms,immediate connection,6.0ms,0.0ms,immediate connection,The connection is immediate and both parts are synchronized. Using either the min/max execution or assume execution time is negligible,
+Immediate Connection task1.outp -> task2.inp,,0.0ms,unknown,,0.0ms,unknown,,
+Thread task2,20.0ms,0.0ms,immediate connection,30.0ms,0.0ms,immediate connection,The connection is immediate and both parts are synchronized. Using either the min/max execution or assume execution time is negligible,
+Immediate Connection task2.outp -> task3.insink,,0.0ms,unknown,,0.0ms,unknown,,
+Thread task3,2.0ms,35.0ms,deadline,3.0ms,35.0ms,deadline,,
+Total,unspecified,35.0ms,,unspecified,35.0ms,,
+Total (Sync),unspecified,35.0ms,,unspecified,35.0ms,,
+
+
+
+Flow analysis for end to end flow signal
+Contributor,Min Expected,Min Value,Min Method,Max Expected,Max Value,Max Method,Comments,
+Thread task1,4.0ms,5.0ms,deadline,6.0ms,5.0ms,deadline,Time to take to send the data over the network,
+Delayed Connection task1.outp -> task2.inp,,0.0ms,period,,50.0ms,period,Data might arrive at dispatch time or next frame,
+Thread task2,20.0ms,35.0ms,deadline,30.0ms,35.0ms,deadline,Time to take to send the data over the network,
+Delayed Connection task2.outp -> task3.insink,,0.0ms,period,,50.0ms,period,Data might arrive at dispatch time or next frame,
+Thread task3,2.0ms,35.0ms,deadline,3.0ms,35.0ms,deadline,,
+Total,unspecified,75.0ms,,unspecified,175.0ms,,
+Total (Sync),unspecified,75.0ms,,unspecified,175.0ms,,
+
+
+
+Flow analysis for end to end flow signal
+Contributor,Min Expected,Min Value,Min Method,Max Expected,Max Value,Max Method,Comments,
+Thread task1,4.0ms,0.0ms,immediate connection,6.0ms,0.0ms,immediate connection,The connection is immediate and both parts are synchronized. Using either the min/max execution or assume execution time is negligible,
+Immediate Connection task1.outp -> task2.inp,,0.0ms,unknown,,0.0ms,unknown,,
+Thread task2,20.0ms,35.0ms,deadline,30.0ms,35.0ms,deadline,Time to take to send the data over the network,
+Delayed Connection task2.outp -> task3.insink,,0.0ms,period,,50.0ms,period,Data might arrive at dispatch time or next frame,
+Thread task3,2.0ms,35.0ms,deadline,3.0ms,35.0ms,deadline,,
+Total,unspecified,70.0ms,,unspecified,120.0ms,,
+Total (Sync),unspecified,70.0ms,,unspecified,120.0ms,,
+
+
+
+Flow analysis for end to end flow signal
+Contributor,Min Expected,Min Value,Min Method,Max Expected,Max Value,Max Method,Comments,
+Thread task1,4.0ms,5.0ms,deadline,6.0ms,5.0ms,deadline,Time to take to send the data over the network,
+Delayed Connection task1.outp -> task2.inp,,0.0ms,period,,50.0ms,period,Data might arrive at dispatch time or next frame,
+Thread task2,20.0ms,0.0ms,immediate connection,30.0ms,0.0ms,immediate connection,The connection is immediate and both parts are synchronized. Using either the min/max execution or assume execution time is negligible,
+Immediate Connection task2.outp -> task3.insink,,0.0ms,unknown,,0.0ms,unknown,,
+Thread task3,2.0ms,35.0ms,deadline,3.0ms,35.0ms,deadline,,
+Total,unspecified,40.0ms,,unspecified,90.0ms,,
+Total (Sync),unspecified,40.0ms,,unspecified,90.0ms,,
+
+
+

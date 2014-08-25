@@ -43,7 +43,7 @@ subcomponents
  		-> outgoing -> ReceiverData;
  	properties
  	-- alternating immediate/delayed emulates partition slots and communication within a frame.
- 	-- making all dealeyd emulates frame delayed corss partition communication.
+ 	-- making all delayed emulates frame delayed cross partition communication.
  	-- we could also indicates partitions by tagging the process as SEI::isPartition and a SEI::Partition_Latency
  	-- Alternatively we can use virtual processor and the ARINC653 properties or the period on the virtual processor
  		Timing => Immediate applies to STRequest,CTRequest,APRequest;

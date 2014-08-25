@@ -1,0 +1,963 @@
+<?xml version="1.0" encoding="ASCII"?>
+<instance:SystemInstance xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aadl2="http://aadl.info/AADL/2.0" xmlns:instance="http://aadl.info/AADL/2.0/instance" xmi:id="_1dUSkCjaEeS3Hfx3YtyN2g" name="s_i_Instance" category="system">
+  <componentInstance xmi:id="_1eNDYCjaEeS3Hfx3YtyN2g" name="Flowbased" category="process">
+    <componentInstance xmi:id="_1eW0YCjaEeS3Hfx3YtyN2g" name="task1" category="thread">
+      <featureInstance xmi:id="_1ef-UCjaEeS3Hfx3YtyN2g" name="outp" srcConnectionInstance="_1gI9ECjaEeS3Hfx3YtyN2g" dstFlowSpec="_1epvUCjaEeS3Hfx3YtyN2g" direction="out">
+        <feature xsi:type="aadl2:DataPort" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.0"/>
+      </featureInstance>
+      <flowSpecification xmi:id="_1epvUCjaEeS3Hfx3YtyN2g" name="fsource" destination="_1ef-UCjaEeS3Hfx3YtyN2g">
+        <ownedPropertyAssociation xmi:id="_1jtOcCjaEeS3Hfx3YtyN2g">
+          <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Latency"/>
+          <ownedValue xmi:id="_1jtOcSjaEeS3Hfx3YtyN2g">
+            <ownedValue xsi:type="aadl2:RangeValue" xmi:id="_1jtOcijaEeS3Hfx3YtyN2g">
+              <minimum xsi:type="aadl2:IntegerLiteral" xmi:id="_1jtOcyjaEeS3Hfx3YtyN2g" value="4">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </minimum>
+              <maximum xsi:type="aadl2:IntegerLiteral" xmi:id="_1jtOdCjaEeS3Hfx3YtyN2g" value="6">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </maximum>
+            </ownedValue>
+          </ownedValue>
+        </ownedPropertyAssociation>
+        <flowSpecification href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedFlowSpecification.0"/>
+      </flowSpecification>
+      <subcomponent xsi:type="aadl2:ThreadSubcomponent" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.7/@ownedThreadSubcomponent.0"/>
+      <index>0</index>
+    </componentInstance>
+    <componentInstance xmi:id="_1epvUSjaEeS3Hfx3YtyN2g" name="task2" category="thread">
+      <featureInstance xmi:id="_1epvUijaEeS3Hfx3YtyN2g" name="inp" dstConnectionInstance="_1gI9ECjaEeS3Hfx3YtyN2g" srcFlowSpec="_1epvVCjaEeS3Hfx3YtyN2g">
+        <feature xsi:type="aadl2:DataPort" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedDataPort.0"/>
+      </featureInstance>
+      <featureInstance xmi:id="_1epvUyjaEeS3Hfx3YtyN2g" name="outp" srcConnectionInstance="_1gSuECjaEeS3Hfx3YtyN2g" dstFlowSpec="_1epvVCjaEeS3Hfx3YtyN2g" direction="out">
+        <feature xsi:type="aadl2:DataPort" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedDataPort.1"/>
+      </featureInstance>
+      <flowSpecification xmi:id="_1epvVCjaEeS3Hfx3YtyN2g" name="fpath" source="_1epvUijaEeS3Hfx3YtyN2g" destination="_1epvUyjaEeS3Hfx3YtyN2g">
+        <ownedPropertyAssociation xmi:id="_1jtOdSjaEeS3Hfx3YtyN2g">
+          <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Latency"/>
+          <ownedValue xmi:id="_1jtOdijaEeS3Hfx3YtyN2g">
+            <ownedValue xsi:type="aadl2:RangeValue" xmi:id="_1jtOdyjaEeS3Hfx3YtyN2g">
+              <minimum xsi:type="aadl2:IntegerLiteral" xmi:id="_1jtOeCjaEeS3Hfx3YtyN2g" value="20">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </minimum>
+              <maximum xsi:type="aadl2:IntegerLiteral" xmi:id="_1jtOeSjaEeS3Hfx3YtyN2g" value="30">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </maximum>
+            </ownedValue>
+          </ownedValue>
+        </ownedPropertyAssociation>
+        <flowSpecification href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedFlowSpecification.0"/>
+      </flowSpecification>
+      <subcomponent xsi:type="aadl2:ThreadSubcomponent" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.7/@ownedThreadSubcomponent.1"/>
+      <index>0</index>
+    </componentInstance>
+    <componentInstance xmi:id="_1epvVSjaEeS3Hfx3YtyN2g" name="task3" category="thread">
+      <featureInstance xmi:id="_1epvVijaEeS3Hfx3YtyN2g" name="insink" dstConnectionInstance="_1gSuECjaEeS3Hfx3YtyN2g" srcFlowSpec="_1epvVyjaEeS3Hfx3YtyN2g">
+        <feature xsi:type="aadl2:DataPort" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedDataPort.0"/>
+      </featureInstance>
+      <flowSpecification xmi:id="_1epvVyjaEeS3Hfx3YtyN2g" name="fsink" source="_1epvVijaEeS3Hfx3YtyN2g">
+        <ownedPropertyAssociation xmi:id="_1jtOeijaEeS3Hfx3YtyN2g">
+          <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Latency"/>
+          <ownedValue xmi:id="_1jtOeyjaEeS3Hfx3YtyN2g">
+            <ownedValue xsi:type="aadl2:RangeValue" xmi:id="_1jtOfCjaEeS3Hfx3YtyN2g">
+              <minimum xsi:type="aadl2:IntegerLiteral" xmi:id="_1jtOfSjaEeS3Hfx3YtyN2g" value="2">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </minimum>
+              <maximum xsi:type="aadl2:IntegerLiteral" xmi:id="_1jtOfijaEeS3Hfx3YtyN2g" value="3">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </maximum>
+            </ownedValue>
+          </ownedValue>
+        </ownedPropertyAssociation>
+        <flowSpecification href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedFlowSpecification.0"/>
+      </flowSpecification>
+      <subcomponent xsi:type="aadl2:ThreadSubcomponent" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.7/@ownedThreadSubcomponent.2"/>
+      <index>0</index>
+    </componentInstance>
+    <endToEndFlow xmi:id="_1glpACjaEeS3Hfx3YtyN2g" name="signal" flowElement="_1epvUCjaEeS3Hfx3YtyN2g _1gI9ECjaEeS3Hfx3YtyN2g _1epvVCjaEeS3Hfx3YtyN2g _1gSuECjaEeS3Hfx3YtyN2g _1epvVyjaEeS3Hfx3YtyN2g">
+      <endToEndFlow href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.7/@ownedEndToEndFlow.0"/>
+    </endToEndFlow>
+    <connectionInstance xmi:id="_1gI9ECjaEeS3Hfx3YtyN2g" name="task1.outp -> task2.inp" complete="true" kind="portConnection" destination="_1epvUijaEeS3Hfx3YtyN2g" source="_1ef-UCjaEeS3Hfx3YtyN2g">
+      <connectionReference xmi:id="_1gI9ESjaEeS3Hfx3YtyN2g" context="_1eNDYCjaEeS3Hfx3YtyN2g" source="_1ef-UCjaEeS3Hfx3YtyN2g" destination="_1epvUijaEeS3Hfx3YtyN2g">
+        <connection xsi:type="aadl2:PortConnection" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.7/@ownedPortConnection.0"/>
+      </connectionReference>
+    </connectionInstance>
+    <connectionInstance xmi:id="_1gSuECjaEeS3Hfx3YtyN2g" name="task2.outp -> task3.insink" complete="true" kind="portConnection" destination="_1epvVijaEeS3Hfx3YtyN2g" source="_1epvUyjaEeS3Hfx3YtyN2g">
+      <connectionReference xmi:id="_1gSuESjaEeS3Hfx3YtyN2g" context="_1eNDYCjaEeS3Hfx3YtyN2g" source="_1epvUyjaEeS3Hfx3YtyN2g" destination="_1epvVijaEeS3Hfx3YtyN2g">
+        <connection xsi:type="aadl2:PortConnection" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.7/@ownedPortConnection.1"/>
+      </connectionReference>
+    </connectionInstance>
+    <subcomponent xsi:type="aadl2:ProcessSubcomponent" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.14/@ownedProcessSubcomponent.0"/>
+    <index>0</index>
+  </componentInstance>
+  <componentInstance xmi:id="_1epvWCjaEeS3Hfx3YtyN2g" name="Sampled" category="process">
+    <componentInstance xmi:id="_1epvWSjaEeS3Hfx3YtyN2g" name="task1" category="thread">
+      <ownedPropertyAssociation xmi:id="_1j2_cCjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Thread_Properties.aadl#Thread_Properties.Dispatch_Protocol"/>
+        <ownedValue xmi:id="_1j2_cSjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_1j2_cijaEeS3Hfx3YtyN2g">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.3/@ownedLiteral.0"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_1j2_cyjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Period"/>
+        <ownedValue xmi:id="_1j2_dCjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_1j2_dSjaEeS3Hfx3YtyN2g" value="50">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_1j2_dijaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Deadline"/>
+        <ownedValue xmi:id="_1j2_dyjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_1j2_eCjaEeS3Hfx3YtyN2g" value="5">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <featureInstance xmi:id="_1epvWijaEeS3Hfx3YtyN2g" name="outp" srcConnectionInstance="_1gSuEijaEeS3Hfx3YtyN2g" dstFlowSpec="_1epvWyjaEeS3Hfx3YtyN2g" direction="out">
+        <feature xsi:type="aadl2:DataPort" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.0"/>
+      </featureInstance>
+      <flowSpecification xmi:id="_1epvWyjaEeS3Hfx3YtyN2g" name="fsource" destination="_1epvWijaEeS3Hfx3YtyN2g">
+        <ownedPropertyAssociation xmi:id="_1j2_eSjaEeS3Hfx3YtyN2g">
+          <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Latency"/>
+          <ownedValue xmi:id="_1j2_eijaEeS3Hfx3YtyN2g">
+            <ownedValue xsi:type="aadl2:RangeValue" xmi:id="_1j2_eyjaEeS3Hfx3YtyN2g">
+              <minimum xsi:type="aadl2:IntegerLiteral" xmi:id="_1j2_fCjaEeS3Hfx3YtyN2g" value="4">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </minimum>
+              <maximum xsi:type="aadl2:IntegerLiteral" xmi:id="_1j2_fSjaEeS3Hfx3YtyN2g" value="6">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </maximum>
+            </ownedValue>
+          </ownedValue>
+        </ownedPropertyAssociation>
+        <flowSpecification href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedFlowSpecification.0"/>
+      </flowSpecification>
+      <subcomponent xsi:type="aadl2:ThreadSubcomponent" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.8/@ownedThreadSubcomponent.0"/>
+      <index>0</index>
+    </componentInstance>
+    <componentInstance xmi:id="_1epvXCjaEeS3Hfx3YtyN2g" name="task2" category="thread">
+      <ownedPropertyAssociation xmi:id="_1j2_fijaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Thread_Properties.aadl#Thread_Properties.Dispatch_Protocol"/>
+        <ownedValue xmi:id="_1j2_fyjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_1j2_gCjaEeS3Hfx3YtyN2g">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.3/@ownedLiteral.0"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_1kAwcCjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Period"/>
+        <ownedValue xmi:id="_1kAwcSjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_1kAwcijaEeS3Hfx3YtyN2g" value="50">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_1kAwcyjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Deadline"/>
+        <ownedValue xmi:id="_1kAwdCjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_1kAwdSjaEeS3Hfx3YtyN2g" value="35">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <featureInstance xmi:id="_1epvXSjaEeS3Hfx3YtyN2g" name="inp" dstConnectionInstance="_1gSuEijaEeS3Hfx3YtyN2g" srcFlowSpec="_1ezgUCjaEeS3Hfx3YtyN2g">
+        <feature xsi:type="aadl2:DataPort" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedDataPort.0"/>
+      </featureInstance>
+      <featureInstance xmi:id="_1epvXijaEeS3Hfx3YtyN2g" name="outp" srcConnectionInstance="_1gSuFCjaEeS3Hfx3YtyN2g" dstFlowSpec="_1ezgUCjaEeS3Hfx3YtyN2g" direction="out">
+        <feature xsi:type="aadl2:DataPort" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedDataPort.1"/>
+      </featureInstance>
+      <flowSpecification xmi:id="_1ezgUCjaEeS3Hfx3YtyN2g" name="fpath" source="_1epvXSjaEeS3Hfx3YtyN2g" destination="_1epvXijaEeS3Hfx3YtyN2g">
+        <ownedPropertyAssociation xmi:id="_1kAwdijaEeS3Hfx3YtyN2g">
+          <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Latency"/>
+          <ownedValue xmi:id="_1kAwdyjaEeS3Hfx3YtyN2g">
+            <ownedValue xsi:type="aadl2:RangeValue" xmi:id="_1kAweCjaEeS3Hfx3YtyN2g">
+              <minimum xsi:type="aadl2:IntegerLiteral" xmi:id="_1kAweSjaEeS3Hfx3YtyN2g" value="20">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </minimum>
+              <maximum xsi:type="aadl2:IntegerLiteral" xmi:id="_1kAweijaEeS3Hfx3YtyN2g" value="30">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </maximum>
+            </ownedValue>
+          </ownedValue>
+        </ownedPropertyAssociation>
+        <flowSpecification href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedFlowSpecification.0"/>
+      </flowSpecification>
+      <subcomponent xsi:type="aadl2:ThreadSubcomponent" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.8/@ownedThreadSubcomponent.1"/>
+      <index>0</index>
+    </componentInstance>
+    <componentInstance xmi:id="_1ezgUSjaEeS3Hfx3YtyN2g" name="task3" category="thread">
+      <ownedPropertyAssociation xmi:id="_1kAweyjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Thread_Properties.aadl#Thread_Properties.Dispatch_Protocol"/>
+        <ownedValue xmi:id="_1kAwfCjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_1kAwfSjaEeS3Hfx3YtyN2g">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.3/@ownedLiteral.0"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_1kAwfijaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Period"/>
+        <ownedValue xmi:id="_1kAwfyjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_1kAwgCjaEeS3Hfx3YtyN2g" value="50">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_1kAwgSjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Deadline"/>
+        <ownedValue xmi:id="_1kAwgijaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_1kAwgyjaEeS3Hfx3YtyN2g" value="35">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <featureInstance xmi:id="_1ezgUijaEeS3Hfx3YtyN2g" name="insink" dstConnectionInstance="_1gSuFCjaEeS3Hfx3YtyN2g" srcFlowSpec="_1ezgUyjaEeS3Hfx3YtyN2g">
+        <feature xsi:type="aadl2:DataPort" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedDataPort.0"/>
+      </featureInstance>
+      <flowSpecification xmi:id="_1ezgUyjaEeS3Hfx3YtyN2g" name="fsink" source="_1ezgUijaEeS3Hfx3YtyN2g">
+        <ownedPropertyAssociation xmi:id="_1kAwhCjaEeS3Hfx3YtyN2g">
+          <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Latency"/>
+          <ownedValue xmi:id="_1kAwhSjaEeS3Hfx3YtyN2g">
+            <ownedValue xsi:type="aadl2:RangeValue" xmi:id="_1kAwhijaEeS3Hfx3YtyN2g">
+              <minimum xsi:type="aadl2:IntegerLiteral" xmi:id="_1kAwhyjaEeS3Hfx3YtyN2g" value="2">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </minimum>
+              <maximum xsi:type="aadl2:IntegerLiteral" xmi:id="_1kAwiCjaEeS3Hfx3YtyN2g" value="3">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </maximum>
+            </ownedValue>
+          </ownedValue>
+        </ownedPropertyAssociation>
+        <flowSpecification href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedFlowSpecification.0"/>
+      </flowSpecification>
+      <subcomponent xsi:type="aadl2:ThreadSubcomponent" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.8/@ownedThreadSubcomponent.2"/>
+      <index>0</index>
+    </componentInstance>
+    <endToEndFlow xmi:id="_1g4j8CjaEeS3Hfx3YtyN2g" name="signal" flowElement="_1epvWyjaEeS3Hfx3YtyN2g _1gSuEijaEeS3Hfx3YtyN2g _1ezgUCjaEeS3Hfx3YtyN2g _1gSuFCjaEeS3Hfx3YtyN2g _1ezgUyjaEeS3Hfx3YtyN2g">
+      <endToEndFlow href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.7/@ownedEndToEndFlow.0"/>
+    </endToEndFlow>
+    <connectionInstance xmi:id="_1gSuEijaEeS3Hfx3YtyN2g" name="task1.outp -> task2.inp" complete="true" kind="portConnection" destination="_1epvXSjaEeS3Hfx3YtyN2g" source="_1epvWijaEeS3Hfx3YtyN2g">
+      <connectionReference xmi:id="_1gSuEyjaEeS3Hfx3YtyN2g" context="_1epvWCjaEeS3Hfx3YtyN2g" source="_1epvWijaEeS3Hfx3YtyN2g" destination="_1epvXSjaEeS3Hfx3YtyN2g">
+        <connection xsi:type="aadl2:PortConnection" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.7/@ownedPortConnection.0"/>
+      </connectionReference>
+    </connectionInstance>
+    <connectionInstance xmi:id="_1gSuFCjaEeS3Hfx3YtyN2g" name="task2.outp -> task3.insink" complete="true" kind="portConnection" destination="_1ezgUijaEeS3Hfx3YtyN2g" source="_1epvXijaEeS3Hfx3YtyN2g">
+      <connectionReference xmi:id="_1gSuFSjaEeS3Hfx3YtyN2g" context="_1epvWCjaEeS3Hfx3YtyN2g" source="_1epvXijaEeS3Hfx3YtyN2g" destination="_1ezgUijaEeS3Hfx3YtyN2g">
+        <connection xsi:type="aadl2:PortConnection" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.7/@ownedPortConnection.1"/>
+      </connectionReference>
+    </connectionInstance>
+    <subcomponent xsi:type="aadl2:ProcessSubcomponent" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.14/@ownedProcessSubcomponent.1"/>
+    <index>0</index>
+  </componentInstance>
+  <componentInstance xmi:id="_1ezgVCjaEeS3Hfx3YtyN2g" name="Immediate" category="process">
+    <componentInstance xmi:id="_1ezgVSjaEeS3Hfx3YtyN2g" name="task1" category="thread">
+      <ownedPropertyAssociation xmi:id="_1kAwiSjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Thread_Properties.aadl#Thread_Properties.Dispatch_Protocol"/>
+        <ownedValue xmi:id="_1kAwiijaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_1kAwiyjaEeS3Hfx3YtyN2g">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.3/@ownedLiteral.0"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_1kAwjCjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Period"/>
+        <ownedValue xmi:id="_1kJ6YCjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_1kJ6YSjaEeS3Hfx3YtyN2g" value="50">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_1kJ6YijaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Deadline"/>
+        <ownedValue xmi:id="_1kJ6YyjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_1kJ6ZCjaEeS3Hfx3YtyN2g" value="5">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <featureInstance xmi:id="_1ezgVijaEeS3Hfx3YtyN2g" name="outp" srcConnectionInstance="_1gSuFijaEeS3Hfx3YtyN2g" dstFlowSpec="_1ezgVyjaEeS3Hfx3YtyN2g" direction="out">
+        <feature xsi:type="aadl2:DataPort" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.0"/>
+      </featureInstance>
+      <flowSpecification xmi:id="_1ezgVyjaEeS3Hfx3YtyN2g" name="fsource" destination="_1ezgVijaEeS3Hfx3YtyN2g">
+        <ownedPropertyAssociation xmi:id="_1kJ6ZSjaEeS3Hfx3YtyN2g">
+          <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Latency"/>
+          <ownedValue xmi:id="_1kJ6ZijaEeS3Hfx3YtyN2g">
+            <ownedValue xsi:type="aadl2:RangeValue" xmi:id="_1kJ6ZyjaEeS3Hfx3YtyN2g">
+              <minimum xsi:type="aadl2:IntegerLiteral" xmi:id="_1kJ6aCjaEeS3Hfx3YtyN2g" value="4">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </minimum>
+              <maximum xsi:type="aadl2:IntegerLiteral" xmi:id="_1kJ6aSjaEeS3Hfx3YtyN2g" value="6">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </maximum>
+            </ownedValue>
+          </ownedValue>
+        </ownedPropertyAssociation>
+        <flowSpecification href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedFlowSpecification.0"/>
+      </flowSpecification>
+      <subcomponent xsi:type="aadl2:ThreadSubcomponent" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.8/@ownedThreadSubcomponent.0"/>
+      <index>0</index>
+    </componentInstance>
+    <componentInstance xmi:id="_1ezgWCjaEeS3Hfx3YtyN2g" name="task2" category="thread">
+      <ownedPropertyAssociation xmi:id="_1kJ6aijaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Thread_Properties.aadl#Thread_Properties.Dispatch_Protocol"/>
+        <ownedValue xmi:id="_1kJ6ayjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_1kJ6bCjaEeS3Hfx3YtyN2g">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.3/@ownedLiteral.0"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_1kJ6bSjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Period"/>
+        <ownedValue xmi:id="_1kJ6bijaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_1kJ6byjaEeS3Hfx3YtyN2g" value="50">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_1kJ6cCjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Deadline"/>
+        <ownedValue xmi:id="_1kJ6cSjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_1kJ6cijaEeS3Hfx3YtyN2g" value="35">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <featureInstance xmi:id="_1ezgWSjaEeS3Hfx3YtyN2g" name="inp" dstConnectionInstance="_1gSuFijaEeS3Hfx3YtyN2g" srcFlowSpec="_1ezgWyjaEeS3Hfx3YtyN2g">
+        <feature xsi:type="aadl2:DataPort" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedDataPort.0"/>
+      </featureInstance>
+      <featureInstance xmi:id="_1ezgWijaEeS3Hfx3YtyN2g" name="outp" srcConnectionInstance="_1gSuGCjaEeS3Hfx3YtyN2g" dstFlowSpec="_1ezgWyjaEeS3Hfx3YtyN2g" direction="out">
+        <feature xsi:type="aadl2:DataPort" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedDataPort.1"/>
+      </featureInstance>
+      <flowSpecification xmi:id="_1ezgWyjaEeS3Hfx3YtyN2g" name="fpath" source="_1ezgWSjaEeS3Hfx3YtyN2g" destination="_1ezgWijaEeS3Hfx3YtyN2g">
+        <ownedPropertyAssociation xmi:id="_1kJ6cyjaEeS3Hfx3YtyN2g">
+          <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Latency"/>
+          <ownedValue xmi:id="_1kJ6dCjaEeS3Hfx3YtyN2g">
+            <ownedValue xsi:type="aadl2:RangeValue" xmi:id="_1kJ6dSjaEeS3Hfx3YtyN2g">
+              <minimum xsi:type="aadl2:IntegerLiteral" xmi:id="_1kJ6dijaEeS3Hfx3YtyN2g" value="20">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </minimum>
+              <maximum xsi:type="aadl2:IntegerLiteral" xmi:id="_1kJ6dyjaEeS3Hfx3YtyN2g" value="30">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </maximum>
+            </ownedValue>
+          </ownedValue>
+        </ownedPropertyAssociation>
+        <flowSpecification href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedFlowSpecification.0"/>
+      </flowSpecification>
+      <subcomponent xsi:type="aadl2:ThreadSubcomponent" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.8/@ownedThreadSubcomponent.1"/>
+      <index>0</index>
+    </componentInstance>
+    <componentInstance xmi:id="_1ezgXCjaEeS3Hfx3YtyN2g" name="task3" category="thread">
+      <ownedPropertyAssociation xmi:id="_1kJ6eCjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Thread_Properties.aadl#Thread_Properties.Dispatch_Protocol"/>
+        <ownedValue xmi:id="_1kJ6eSjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_1kJ6eijaEeS3Hfx3YtyN2g">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.3/@ownedLiteral.0"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_1kJ6eyjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Period"/>
+        <ownedValue xmi:id="_1kJ6fCjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_1kJ6fSjaEeS3Hfx3YtyN2g" value="50">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_1kJ6fijaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Deadline"/>
+        <ownedValue xmi:id="_1kJ6fyjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_1kJ6gCjaEeS3Hfx3YtyN2g" value="35">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <featureInstance xmi:id="_1ezgXSjaEeS3Hfx3YtyN2g" name="insink" dstConnectionInstance="_1gSuGCjaEeS3Hfx3YtyN2g" srcFlowSpec="_1ezgXijaEeS3Hfx3YtyN2g">
+        <feature xsi:type="aadl2:DataPort" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedDataPort.0"/>
+      </featureInstance>
+      <flowSpecification xmi:id="_1ezgXijaEeS3Hfx3YtyN2g" name="fsink" source="_1ezgXSjaEeS3Hfx3YtyN2g">
+        <ownedPropertyAssociation xmi:id="_1kJ6gSjaEeS3Hfx3YtyN2g">
+          <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Latency"/>
+          <ownedValue xmi:id="_1kJ6gijaEeS3Hfx3YtyN2g">
+            <ownedValue xsi:type="aadl2:RangeValue" xmi:id="_1kJ6gyjaEeS3Hfx3YtyN2g">
+              <minimum xsi:type="aadl2:IntegerLiteral" xmi:id="_1kJ6hCjaEeS3Hfx3YtyN2g" value="2">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </minimum>
+              <maximum xsi:type="aadl2:IntegerLiteral" xmi:id="_1kJ6hSjaEeS3Hfx3YtyN2g" value="3">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </maximum>
+            </ownedValue>
+          </ownedValue>
+        </ownedPropertyAssociation>
+        <flowSpecification href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedFlowSpecification.0"/>
+      </flowSpecification>
+      <subcomponent xsi:type="aadl2:ThreadSubcomponent" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.8/@ownedThreadSubcomponent.2"/>
+      <index>0</index>
+    </componentInstance>
+    <endToEndFlow xmi:id="_1g4j8SjaEeS3Hfx3YtyN2g" name="signal" flowElement="_1ezgVyjaEeS3Hfx3YtyN2g _1gSuFijaEeS3Hfx3YtyN2g _1ezgWyjaEeS3Hfx3YtyN2g _1gSuGCjaEeS3Hfx3YtyN2g _1ezgXijaEeS3Hfx3YtyN2g">
+      <endToEndFlow href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.7/@ownedEndToEndFlow.0"/>
+    </endToEndFlow>
+    <connectionInstance xmi:id="_1gSuFijaEeS3Hfx3YtyN2g" name="task1.outp -> task2.inp" complete="true" kind="portConnection" destination="_1ezgWSjaEeS3Hfx3YtyN2g" source="_1ezgVijaEeS3Hfx3YtyN2g">
+      <ownedPropertyAssociation xmi:id="_1kJ6hijaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Timing"/>
+        <ownedValue xmi:id="_1kJ6hyjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_1kJ6iCjaEeS3Hfx3YtyN2g">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/Communication_Properties.aadl#//@ownedProperty.7/@ownedPropertyType/@ownedLiteral.1"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <connectionReference xmi:id="_1gSuFyjaEeS3Hfx3YtyN2g" context="_1ezgVCjaEeS3Hfx3YtyN2g" source="_1ezgVijaEeS3Hfx3YtyN2g" destination="_1ezgWSjaEeS3Hfx3YtyN2g">
+        <connection xsi:type="aadl2:PortConnection" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.7/@ownedPortConnection.0"/>
+      </connectionReference>
+    </connectionInstance>
+    <connectionInstance xmi:id="_1gSuGCjaEeS3Hfx3YtyN2g" name="task2.outp -> task3.insink" complete="true" kind="portConnection" destination="_1ezgXSjaEeS3Hfx3YtyN2g" source="_1ezgWijaEeS3Hfx3YtyN2g">
+      <ownedPropertyAssociation xmi:id="_1kJ6iSjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Timing"/>
+        <ownedValue xmi:id="_1kJ6iijaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_1kJ6iyjaEeS3Hfx3YtyN2g">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/Communication_Properties.aadl#//@ownedProperty.7/@ownedPropertyType/@ownedLiteral.1"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <connectionReference xmi:id="_1gSuGSjaEeS3Hfx3YtyN2g" context="_1ezgVCjaEeS3Hfx3YtyN2g" source="_1ezgWijaEeS3Hfx3YtyN2g" destination="_1ezgXSjaEeS3Hfx3YtyN2g">
+        <connection xsi:type="aadl2:PortConnection" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.7/@ownedPortConnection.1"/>
+      </connectionReference>
+    </connectionInstance>
+    <subcomponent xsi:type="aadl2:ProcessSubcomponent" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.14/@ownedProcessSubcomponent.2"/>
+    <index>0</index>
+  </componentInstance>
+  <componentInstance xmi:id="_1ezgXyjaEeS3Hfx3YtyN2g" name="Delayed" category="process">
+    <componentInstance xmi:id="_1e8qQCjaEeS3Hfx3YtyN2g" name="task1" category="thread">
+      <ownedPropertyAssociation xmi:id="_1kTrYCjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Thread_Properties.aadl#Thread_Properties.Dispatch_Protocol"/>
+        <ownedValue xmi:id="_1kTrYSjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_1kTrYijaEeS3Hfx3YtyN2g">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.3/@ownedLiteral.0"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_1kTrYyjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Period"/>
+        <ownedValue xmi:id="_1kTrZCjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_1kTrZSjaEeS3Hfx3YtyN2g" value="50">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_1kTrZijaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Deadline"/>
+        <ownedValue xmi:id="_1kTrZyjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_1kTraCjaEeS3Hfx3YtyN2g" value="5">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <featureInstance xmi:id="_1e8qQSjaEeS3Hfx3YtyN2g" name="outp" srcConnectionInstance="_1gSuGijaEeS3Hfx3YtyN2g" dstFlowSpec="_1e8qQijaEeS3Hfx3YtyN2g" direction="out">
+        <feature xsi:type="aadl2:DataPort" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.0"/>
+      </featureInstance>
+      <flowSpecification xmi:id="_1e8qQijaEeS3Hfx3YtyN2g" name="fsource" destination="_1e8qQSjaEeS3Hfx3YtyN2g">
+        <ownedPropertyAssociation xmi:id="_1kTraSjaEeS3Hfx3YtyN2g">
+          <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Latency"/>
+          <ownedValue xmi:id="_1kTraijaEeS3Hfx3YtyN2g">
+            <ownedValue xsi:type="aadl2:RangeValue" xmi:id="_1kTrayjaEeS3Hfx3YtyN2g">
+              <minimum xsi:type="aadl2:IntegerLiteral" xmi:id="_1kTrbCjaEeS3Hfx3YtyN2g" value="4">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </minimum>
+              <maximum xsi:type="aadl2:IntegerLiteral" xmi:id="_1kTrbSjaEeS3Hfx3YtyN2g" value="6">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </maximum>
+            </ownedValue>
+          </ownedValue>
+        </ownedPropertyAssociation>
+        <flowSpecification href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedFlowSpecification.0"/>
+      </flowSpecification>
+      <subcomponent xsi:type="aadl2:ThreadSubcomponent" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.8/@ownedThreadSubcomponent.0"/>
+      <index>0</index>
+    </componentInstance>
+    <componentInstance xmi:id="_1e8qQyjaEeS3Hfx3YtyN2g" name="task2" category="thread">
+      <ownedPropertyAssociation xmi:id="_1kTrbijaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Thread_Properties.aadl#Thread_Properties.Dispatch_Protocol"/>
+        <ownedValue xmi:id="_1kTrbyjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_1kTrcCjaEeS3Hfx3YtyN2g">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.3/@ownedLiteral.0"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_1kTrcSjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Period"/>
+        <ownedValue xmi:id="_1kTrcijaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_1kTrcyjaEeS3Hfx3YtyN2g" value="50">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_1kTrdCjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Deadline"/>
+        <ownedValue xmi:id="_1kTrdSjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_1kTrdijaEeS3Hfx3YtyN2g" value="35">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <featureInstance xmi:id="_1e8qRCjaEeS3Hfx3YtyN2g" name="inp" dstConnectionInstance="_1gSuGijaEeS3Hfx3YtyN2g" srcFlowSpec="_1e8qRijaEeS3Hfx3YtyN2g">
+        <feature xsi:type="aadl2:DataPort" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedDataPort.0"/>
+      </featureInstance>
+      <featureInstance xmi:id="_1e8qRSjaEeS3Hfx3YtyN2g" name="outp" srcConnectionInstance="_1gSuHCjaEeS3Hfx3YtyN2g" dstFlowSpec="_1e8qRijaEeS3Hfx3YtyN2g" direction="out">
+        <feature xsi:type="aadl2:DataPort" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedDataPort.1"/>
+      </featureInstance>
+      <flowSpecification xmi:id="_1e8qRijaEeS3Hfx3YtyN2g" name="fpath" source="_1e8qRCjaEeS3Hfx3YtyN2g" destination="_1e8qRSjaEeS3Hfx3YtyN2g">
+        <ownedPropertyAssociation xmi:id="_1kTrdyjaEeS3Hfx3YtyN2g">
+          <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Latency"/>
+          <ownedValue xmi:id="_1kTreCjaEeS3Hfx3YtyN2g">
+            <ownedValue xsi:type="aadl2:RangeValue" xmi:id="_1kTreSjaEeS3Hfx3YtyN2g">
+              <minimum xsi:type="aadl2:IntegerLiteral" xmi:id="_1kTreijaEeS3Hfx3YtyN2g" value="20">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </minimum>
+              <maximum xsi:type="aadl2:IntegerLiteral" xmi:id="_1kTreyjaEeS3Hfx3YtyN2g" value="30">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </maximum>
+            </ownedValue>
+          </ownedValue>
+        </ownedPropertyAssociation>
+        <flowSpecification href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedFlowSpecification.0"/>
+      </flowSpecification>
+      <subcomponent xsi:type="aadl2:ThreadSubcomponent" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.8/@ownedThreadSubcomponent.1"/>
+      <index>0</index>
+    </componentInstance>
+    <componentInstance xmi:id="_1e8qRyjaEeS3Hfx3YtyN2g" name="task3" category="thread">
+      <ownedPropertyAssociation xmi:id="_1kTrfCjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Thread_Properties.aadl#Thread_Properties.Dispatch_Protocol"/>
+        <ownedValue xmi:id="_1kTrfSjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_1kTrfijaEeS3Hfx3YtyN2g">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.3/@ownedLiteral.0"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_1kc1UCjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Period"/>
+        <ownedValue xmi:id="_1kc1USjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_1kc1UijaEeS3Hfx3YtyN2g" value="50">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_1kc1UyjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Deadline"/>
+        <ownedValue xmi:id="_1kc1VCjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_1kc1VSjaEeS3Hfx3YtyN2g" value="35">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <featureInstance xmi:id="_1e8qSCjaEeS3Hfx3YtyN2g" name="insink" dstConnectionInstance="_1gSuHCjaEeS3Hfx3YtyN2g" srcFlowSpec="_1e8qSSjaEeS3Hfx3YtyN2g">
+        <feature xsi:type="aadl2:DataPort" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedDataPort.0"/>
+      </featureInstance>
+      <flowSpecification xmi:id="_1e8qSSjaEeS3Hfx3YtyN2g" name="fsink" source="_1e8qSCjaEeS3Hfx3YtyN2g">
+        <ownedPropertyAssociation xmi:id="_1kc1VijaEeS3Hfx3YtyN2g">
+          <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Latency"/>
+          <ownedValue xmi:id="_1kc1VyjaEeS3Hfx3YtyN2g">
+            <ownedValue xsi:type="aadl2:RangeValue" xmi:id="_1kc1WCjaEeS3Hfx3YtyN2g">
+              <minimum xsi:type="aadl2:IntegerLiteral" xmi:id="_1kc1WSjaEeS3Hfx3YtyN2g" value="2">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </minimum>
+              <maximum xsi:type="aadl2:IntegerLiteral" xmi:id="_1kc1WijaEeS3Hfx3YtyN2g" value="3">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </maximum>
+            </ownedValue>
+          </ownedValue>
+        </ownedPropertyAssociation>
+        <flowSpecification href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedFlowSpecification.0"/>
+      </flowSpecification>
+      <subcomponent xsi:type="aadl2:ThreadSubcomponent" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.8/@ownedThreadSubcomponent.2"/>
+      <index>0</index>
+    </componentInstance>
+    <endToEndFlow xmi:id="_1g4j8ijaEeS3Hfx3YtyN2g" name="signal" flowElement="_1e8qQijaEeS3Hfx3YtyN2g _1gSuGijaEeS3Hfx3YtyN2g _1e8qRijaEeS3Hfx3YtyN2g _1gSuHCjaEeS3Hfx3YtyN2g _1e8qSSjaEeS3Hfx3YtyN2g">
+      <endToEndFlow href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.7/@ownedEndToEndFlow.0"/>
+    </endToEndFlow>
+    <connectionInstance xmi:id="_1gSuGijaEeS3Hfx3YtyN2g" name="task1.outp -> task2.inp" complete="true" kind="portConnection" destination="_1e8qRCjaEeS3Hfx3YtyN2g" source="_1e8qQSjaEeS3Hfx3YtyN2g">
+      <ownedPropertyAssociation xmi:id="_1kc1WyjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Timing"/>
+        <ownedValue xmi:id="_1kc1XCjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_1kc1XSjaEeS3Hfx3YtyN2g">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/Communication_Properties.aadl#//@ownedProperty.7/@ownedPropertyType/@ownedLiteral.2"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <connectionReference xmi:id="_1gSuGyjaEeS3Hfx3YtyN2g" context="_1ezgXyjaEeS3Hfx3YtyN2g" source="_1e8qQSjaEeS3Hfx3YtyN2g" destination="_1e8qRCjaEeS3Hfx3YtyN2g">
+        <connection xsi:type="aadl2:PortConnection" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.7/@ownedPortConnection.0"/>
+      </connectionReference>
+    </connectionInstance>
+    <connectionInstance xmi:id="_1gSuHCjaEeS3Hfx3YtyN2g" name="task2.outp -> task3.insink" complete="true" kind="portConnection" destination="_1e8qSCjaEeS3Hfx3YtyN2g" source="_1e8qRSjaEeS3Hfx3YtyN2g">
+      <ownedPropertyAssociation xmi:id="_1kc1XijaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Timing"/>
+        <ownedValue xmi:id="_1kc1XyjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_1kc1YCjaEeS3Hfx3YtyN2g">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/Communication_Properties.aadl#//@ownedProperty.7/@ownedPropertyType/@ownedLiteral.2"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <connectionReference xmi:id="_1gSuHSjaEeS3Hfx3YtyN2g" context="_1ezgXyjaEeS3Hfx3YtyN2g" source="_1e8qRSjaEeS3Hfx3YtyN2g" destination="_1e8qSCjaEeS3Hfx3YtyN2g">
+        <connection xsi:type="aadl2:PortConnection" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.7/@ownedPortConnection.1"/>
+      </connectionReference>
+    </connectionInstance>
+    <subcomponent xsi:type="aadl2:ProcessSubcomponent" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.14/@ownedProcessSubcomponent.3"/>
+    <index>0</index>
+  </componentInstance>
+  <componentInstance xmi:id="_1e8qSijaEeS3Hfx3YtyN2g" name="ImmDelay" category="process">
+    <componentInstance xmi:id="_1e8qSyjaEeS3Hfx3YtyN2g" name="task1" category="thread">
+      <ownedPropertyAssociation xmi:id="_1kc1YSjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Thread_Properties.aadl#Thread_Properties.Dispatch_Protocol"/>
+        <ownedValue xmi:id="_1kc1YijaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_1kc1YyjaEeS3Hfx3YtyN2g">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.3/@ownedLiteral.0"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_1kc1ZCjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Period"/>
+        <ownedValue xmi:id="_1kc1ZSjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_1kc1ZijaEeS3Hfx3YtyN2g" value="50">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_1kc1ZyjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Deadline"/>
+        <ownedValue xmi:id="_1kc1aCjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_1kc1aSjaEeS3Hfx3YtyN2g" value="5">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <featureInstance xmi:id="_1e8qTCjaEeS3Hfx3YtyN2g" name="outp" srcConnectionInstance="_1gSuHijaEeS3Hfx3YtyN2g" dstFlowSpec="_1e8qTSjaEeS3Hfx3YtyN2g" direction="out">
+        <feature xsi:type="aadl2:DataPort" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.0"/>
+      </featureInstance>
+      <flowSpecification xmi:id="_1e8qTSjaEeS3Hfx3YtyN2g" name="fsource" destination="_1e8qTCjaEeS3Hfx3YtyN2g">
+        <ownedPropertyAssociation xmi:id="_1kc1aijaEeS3Hfx3YtyN2g">
+          <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Latency"/>
+          <ownedValue xmi:id="_1kc1ayjaEeS3Hfx3YtyN2g">
+            <ownedValue xsi:type="aadl2:RangeValue" xmi:id="_1kc1bCjaEeS3Hfx3YtyN2g">
+              <minimum xsi:type="aadl2:IntegerLiteral" xmi:id="_1kc1bSjaEeS3Hfx3YtyN2g" value="4">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </minimum>
+              <maximum xsi:type="aadl2:IntegerLiteral" xmi:id="_1kc1bijaEeS3Hfx3YtyN2g" value="6">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </maximum>
+            </ownedValue>
+          </ownedValue>
+        </ownedPropertyAssociation>
+        <flowSpecification href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedFlowSpecification.0"/>
+      </flowSpecification>
+      <subcomponent xsi:type="aadl2:ThreadSubcomponent" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.8/@ownedThreadSubcomponent.0"/>
+      <index>0</index>
+    </componentInstance>
+    <componentInstance xmi:id="_1e8qTijaEeS3Hfx3YtyN2g" name="task2" category="thread">
+      <ownedPropertyAssociation xmi:id="_1kc1byjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Thread_Properties.aadl#Thread_Properties.Dispatch_Protocol"/>
+        <ownedValue xmi:id="_1kc1cCjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_1kc1cSjaEeS3Hfx3YtyN2g">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.3/@ownedLiteral.0"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_1kmmUCjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Period"/>
+        <ownedValue xmi:id="_1kmmUSjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_1kmmUijaEeS3Hfx3YtyN2g" value="50">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_1kmmUyjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Deadline"/>
+        <ownedValue xmi:id="_1kmmVCjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_1kmmVSjaEeS3Hfx3YtyN2g" value="35">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <featureInstance xmi:id="_1e8qTyjaEeS3Hfx3YtyN2g" name="inp" dstConnectionInstance="_1gSuHijaEeS3Hfx3YtyN2g" srcFlowSpec="_1e8qUSjaEeS3Hfx3YtyN2g">
+        <feature xsi:type="aadl2:DataPort" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedDataPort.0"/>
+      </featureInstance>
+      <featureInstance xmi:id="_1e8qUCjaEeS3Hfx3YtyN2g" name="outp" srcConnectionInstance="_1gSuICjaEeS3Hfx3YtyN2g" dstFlowSpec="_1e8qUSjaEeS3Hfx3YtyN2g" direction="out">
+        <feature xsi:type="aadl2:DataPort" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedDataPort.1"/>
+      </featureInstance>
+      <flowSpecification xmi:id="_1e8qUSjaEeS3Hfx3YtyN2g" name="fpath" source="_1e8qTyjaEeS3Hfx3YtyN2g" destination="_1e8qUCjaEeS3Hfx3YtyN2g">
+        <ownedPropertyAssociation xmi:id="_1kmmVijaEeS3Hfx3YtyN2g">
+          <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Latency"/>
+          <ownedValue xmi:id="_1kmmVyjaEeS3Hfx3YtyN2g">
+            <ownedValue xsi:type="aadl2:RangeValue" xmi:id="_1kmmWCjaEeS3Hfx3YtyN2g">
+              <minimum xsi:type="aadl2:IntegerLiteral" xmi:id="_1kmmWSjaEeS3Hfx3YtyN2g" value="20">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </minimum>
+              <maximum xsi:type="aadl2:IntegerLiteral" xmi:id="_1kmmWijaEeS3Hfx3YtyN2g" value="30">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </maximum>
+            </ownedValue>
+          </ownedValue>
+        </ownedPropertyAssociation>
+        <flowSpecification href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedFlowSpecification.0"/>
+      </flowSpecification>
+      <subcomponent xsi:type="aadl2:ThreadSubcomponent" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.8/@ownedThreadSubcomponent.1"/>
+      <index>0</index>
+    </componentInstance>
+    <componentInstance xmi:id="_1fGbQCjaEeS3Hfx3YtyN2g" name="task3" category="thread">
+      <ownedPropertyAssociation xmi:id="_1kmmWyjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Thread_Properties.aadl#Thread_Properties.Dispatch_Protocol"/>
+        <ownedValue xmi:id="_1kmmXCjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_1kmmXSjaEeS3Hfx3YtyN2g">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.3/@ownedLiteral.0"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_1kmmXijaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Period"/>
+        <ownedValue xmi:id="_1kmmXyjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_1kmmYCjaEeS3Hfx3YtyN2g" value="50">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_1kmmYSjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Deadline"/>
+        <ownedValue xmi:id="_1kmmYijaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_1kmmYyjaEeS3Hfx3YtyN2g" value="35">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <featureInstance xmi:id="_1fGbQSjaEeS3Hfx3YtyN2g" name="insink" dstConnectionInstance="_1gSuICjaEeS3Hfx3YtyN2g" srcFlowSpec="_1fGbQijaEeS3Hfx3YtyN2g">
+        <feature xsi:type="aadl2:DataPort" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedDataPort.0"/>
+      </featureInstance>
+      <flowSpecification xmi:id="_1fGbQijaEeS3Hfx3YtyN2g" name="fsink" source="_1fGbQSjaEeS3Hfx3YtyN2g">
+        <ownedPropertyAssociation xmi:id="_1kmmZCjaEeS3Hfx3YtyN2g">
+          <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Latency"/>
+          <ownedValue xmi:id="_1kmmZSjaEeS3Hfx3YtyN2g">
+            <ownedValue xsi:type="aadl2:RangeValue" xmi:id="_1kmmZijaEeS3Hfx3YtyN2g">
+              <minimum xsi:type="aadl2:IntegerLiteral" xmi:id="_1kmmZyjaEeS3Hfx3YtyN2g" value="2">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </minimum>
+              <maximum xsi:type="aadl2:IntegerLiteral" xmi:id="_1kmmaCjaEeS3Hfx3YtyN2g" value="3">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </maximum>
+            </ownedValue>
+          </ownedValue>
+        </ownedPropertyAssociation>
+        <flowSpecification href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedFlowSpecification.0"/>
+      </flowSpecification>
+      <subcomponent xsi:type="aadl2:ThreadSubcomponent" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.8/@ownedThreadSubcomponent.2"/>
+      <index>0</index>
+    </componentInstance>
+    <endToEndFlow xmi:id="_1g4j8yjaEeS3Hfx3YtyN2g" name="signal" flowElement="_1e8qTSjaEeS3Hfx3YtyN2g _1gSuHijaEeS3Hfx3YtyN2g _1e8qUSjaEeS3Hfx3YtyN2g _1gSuICjaEeS3Hfx3YtyN2g _1fGbQijaEeS3Hfx3YtyN2g">
+      <endToEndFlow href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.7/@ownedEndToEndFlow.0"/>
+    </endToEndFlow>
+    <connectionInstance xmi:id="_1gSuHijaEeS3Hfx3YtyN2g" name="task1.outp -> task2.inp" complete="true" kind="portConnection" destination="_1e8qTyjaEeS3Hfx3YtyN2g" source="_1e8qTCjaEeS3Hfx3YtyN2g">
+      <ownedPropertyAssociation xmi:id="_1kmmaSjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Timing"/>
+        <ownedValue xmi:id="_1kmmaijaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_1kmmayjaEeS3Hfx3YtyN2g">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/Communication_Properties.aadl#//@ownedProperty.7/@ownedPropertyType/@ownedLiteral.1"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <connectionReference xmi:id="_1gSuHyjaEeS3Hfx3YtyN2g" context="_1e8qSijaEeS3Hfx3YtyN2g" source="_1e8qTCjaEeS3Hfx3YtyN2g" destination="_1e8qTyjaEeS3Hfx3YtyN2g">
+        <connection xsi:type="aadl2:PortConnection" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.7/@ownedPortConnection.0"/>
+      </connectionReference>
+    </connectionInstance>
+    <connectionInstance xmi:id="_1gSuICjaEeS3Hfx3YtyN2g" name="task2.outp -> task3.insink" complete="true" kind="portConnection" destination="_1fGbQSjaEeS3Hfx3YtyN2g" source="_1e8qUCjaEeS3Hfx3YtyN2g">
+      <ownedPropertyAssociation xmi:id="_1kmmbCjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Timing"/>
+        <ownedValue xmi:id="_1kmmbSjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_1kmmbijaEeS3Hfx3YtyN2g">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/Communication_Properties.aadl#//@ownedProperty.7/@ownedPropertyType/@ownedLiteral.2"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <connectionReference xmi:id="_1gSuISjaEeS3Hfx3YtyN2g" context="_1e8qSijaEeS3Hfx3YtyN2g" source="_1e8qUCjaEeS3Hfx3YtyN2g" destination="_1fGbQSjaEeS3Hfx3YtyN2g">
+        <connection xsi:type="aadl2:PortConnection" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.7/@ownedPortConnection.1"/>
+      </connectionReference>
+    </connectionInstance>
+    <subcomponent xsi:type="aadl2:ProcessSubcomponent" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.14/@ownedProcessSubcomponent.4"/>
+    <index>0</index>
+  </componentInstance>
+  <componentInstance xmi:id="_1fGbQyjaEeS3Hfx3YtyN2g" name="DelayImM" category="process">
+    <componentInstance xmi:id="_1fGbRCjaEeS3Hfx3YtyN2g" name="task1" category="thread">
+      <ownedPropertyAssociation xmi:id="_1kmmbyjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Thread_Properties.aadl#Thread_Properties.Dispatch_Protocol"/>
+        <ownedValue xmi:id="_1kmmcCjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_1kmmcSjaEeS3Hfx3YtyN2g">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.3/@ownedLiteral.0"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_1kwXUCjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Period"/>
+        <ownedValue xmi:id="_1kwXUSjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_1kwXUijaEeS3Hfx3YtyN2g" value="50">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_1kwXUyjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Deadline"/>
+        <ownedValue xmi:id="_1kwXVCjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_1kwXVSjaEeS3Hfx3YtyN2g" value="5">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <featureInstance xmi:id="_1fGbRSjaEeS3Hfx3YtyN2g" name="outp" srcConnectionInstance="_1gSuIijaEeS3Hfx3YtyN2g" dstFlowSpec="_1fGbRijaEeS3Hfx3YtyN2g" direction="out">
+        <feature xsi:type="aadl2:DataPort" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.0"/>
+      </featureInstance>
+      <flowSpecification xmi:id="_1fGbRijaEeS3Hfx3YtyN2g" name="fsource" destination="_1fGbRSjaEeS3Hfx3YtyN2g">
+        <ownedPropertyAssociation xmi:id="_1kwXVijaEeS3Hfx3YtyN2g">
+          <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Latency"/>
+          <ownedValue xmi:id="_1kwXVyjaEeS3Hfx3YtyN2g">
+            <ownedValue xsi:type="aadl2:RangeValue" xmi:id="_1kwXWCjaEeS3Hfx3YtyN2g">
+              <minimum xsi:type="aadl2:IntegerLiteral" xmi:id="_1kwXWSjaEeS3Hfx3YtyN2g" value="4">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </minimum>
+              <maximum xsi:type="aadl2:IntegerLiteral" xmi:id="_1kwXWijaEeS3Hfx3YtyN2g" value="6">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </maximum>
+            </ownedValue>
+          </ownedValue>
+        </ownedPropertyAssociation>
+        <flowSpecification href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedFlowSpecification.0"/>
+      </flowSpecification>
+      <subcomponent xsi:type="aadl2:ThreadSubcomponent" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.8/@ownedThreadSubcomponent.0"/>
+      <index>0</index>
+    </componentInstance>
+    <componentInstance xmi:id="_1fGbRyjaEeS3Hfx3YtyN2g" name="task2" category="thread">
+      <ownedPropertyAssociation xmi:id="_1kwXWyjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Thread_Properties.aadl#Thread_Properties.Dispatch_Protocol"/>
+        <ownedValue xmi:id="_1kwXXCjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_1kwXXSjaEeS3Hfx3YtyN2g">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.3/@ownedLiteral.0"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_1kwXXijaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Period"/>
+        <ownedValue xmi:id="_1kwXXyjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_1kwXYCjaEeS3Hfx3YtyN2g" value="50">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_1kwXYSjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Deadline"/>
+        <ownedValue xmi:id="_1kwXYijaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_1kwXYyjaEeS3Hfx3YtyN2g" value="35">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <featureInstance xmi:id="_1fGbSCjaEeS3Hfx3YtyN2g" name="inp" dstConnectionInstance="_1gSuIijaEeS3Hfx3YtyN2g" srcFlowSpec="_1fGbSijaEeS3Hfx3YtyN2g">
+        <feature xsi:type="aadl2:DataPort" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedDataPort.0"/>
+      </featureInstance>
+      <featureInstance xmi:id="_1fGbSSjaEeS3Hfx3YtyN2g" name="outp" srcConnectionInstance="_1gb4ACjaEeS3Hfx3YtyN2g" dstFlowSpec="_1fGbSijaEeS3Hfx3YtyN2g" direction="out">
+        <feature xsi:type="aadl2:DataPort" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedDataPort.1"/>
+      </featureInstance>
+      <flowSpecification xmi:id="_1fGbSijaEeS3Hfx3YtyN2g" name="fpath" source="_1fGbSCjaEeS3Hfx3YtyN2g" destination="_1fGbSSjaEeS3Hfx3YtyN2g">
+        <ownedPropertyAssociation xmi:id="_1kwXZCjaEeS3Hfx3YtyN2g">
+          <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Latency"/>
+          <ownedValue xmi:id="_1kwXZSjaEeS3Hfx3YtyN2g">
+            <ownedValue xsi:type="aadl2:RangeValue" xmi:id="_1kwXZijaEeS3Hfx3YtyN2g">
+              <minimum xsi:type="aadl2:IntegerLiteral" xmi:id="_1kwXZyjaEeS3Hfx3YtyN2g" value="20">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </minimum>
+              <maximum xsi:type="aadl2:IntegerLiteral" xmi:id="_1kwXaCjaEeS3Hfx3YtyN2g" value="30">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </maximum>
+            </ownedValue>
+          </ownedValue>
+        </ownedPropertyAssociation>
+        <flowSpecification href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedFlowSpecification.0"/>
+      </flowSpecification>
+      <subcomponent xsi:type="aadl2:ThreadSubcomponent" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.8/@ownedThreadSubcomponent.1"/>
+      <index>0</index>
+    </componentInstance>
+    <componentInstance xmi:id="_1fGbSyjaEeS3Hfx3YtyN2g" name="task3" category="thread">
+      <ownedPropertyAssociation xmi:id="_1kwXaSjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Thread_Properties.aadl#Thread_Properties.Dispatch_Protocol"/>
+        <ownedValue xmi:id="_1kwXaijaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_1kwXayjaEeS3Hfx3YtyN2g">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.3/@ownedLiteral.0"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_1kwXbCjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Period"/>
+        <ownedValue xmi:id="_1kwXbSjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_1kwXbijaEeS3Hfx3YtyN2g" value="50">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_1k5hQCjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Deadline"/>
+        <ownedValue xmi:id="_1k5hQSjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_1k5hQijaEeS3Hfx3YtyN2g" value="35">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <featureInstance xmi:id="_1fGbTCjaEeS3Hfx3YtyN2g" name="insink" dstConnectionInstance="_1gb4ACjaEeS3Hfx3YtyN2g" srcFlowSpec="_1fGbTSjaEeS3Hfx3YtyN2g">
+        <feature xsi:type="aadl2:DataPort" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedDataPort.0"/>
+      </featureInstance>
+      <flowSpecification xmi:id="_1fGbTSjaEeS3Hfx3YtyN2g" name="fsink" source="_1fGbTCjaEeS3Hfx3YtyN2g">
+        <ownedPropertyAssociation xmi:id="_1k5hQyjaEeS3Hfx3YtyN2g">
+          <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Latency"/>
+          <ownedValue xmi:id="_1k5hRCjaEeS3Hfx3YtyN2g">
+            <ownedValue xsi:type="aadl2:RangeValue" xmi:id="_1k5hRSjaEeS3Hfx3YtyN2g">
+              <minimum xsi:type="aadl2:IntegerLiteral" xmi:id="_1k5hRijaEeS3Hfx3YtyN2g" value="2">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </minimum>
+              <maximum xsi:type="aadl2:IntegerLiteral" xmi:id="_1k5hRyjaEeS3Hfx3YtyN2g" value="3">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </maximum>
+            </ownedValue>
+          </ownedValue>
+        </ownedPropertyAssociation>
+        <flowSpecification href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedFlowSpecification.0"/>
+      </flowSpecification>
+      <subcomponent xsi:type="aadl2:ThreadSubcomponent" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.8/@ownedThreadSubcomponent.2"/>
+      <index>0</index>
+    </componentInstance>
+    <endToEndFlow xmi:id="_1g4j9CjaEeS3Hfx3YtyN2g" name="signal" flowElement="_1fGbRijaEeS3Hfx3YtyN2g _1gSuIijaEeS3Hfx3YtyN2g _1fGbSijaEeS3Hfx3YtyN2g _1gb4ACjaEeS3Hfx3YtyN2g _1fGbTSjaEeS3Hfx3YtyN2g">
+      <endToEndFlow href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.7/@ownedEndToEndFlow.0"/>
+    </endToEndFlow>
+    <connectionInstance xmi:id="_1gSuIijaEeS3Hfx3YtyN2g" name="task1.outp -> task2.inp" complete="true" kind="portConnection" destination="_1fGbSCjaEeS3Hfx3YtyN2g" source="_1fGbRSjaEeS3Hfx3YtyN2g">
+      <ownedPropertyAssociation xmi:id="_1k5hSCjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Timing"/>
+        <ownedValue xmi:id="_1k5hSSjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_1k5hSijaEeS3Hfx3YtyN2g">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/Communication_Properties.aadl#//@ownedProperty.7/@ownedPropertyType/@ownedLiteral.2"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <connectionReference xmi:id="_1gSuIyjaEeS3Hfx3YtyN2g" context="_1fGbQyjaEeS3Hfx3YtyN2g" source="_1fGbRSjaEeS3Hfx3YtyN2g" destination="_1fGbSCjaEeS3Hfx3YtyN2g">
+        <connection xsi:type="aadl2:PortConnection" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.7/@ownedPortConnection.0"/>
+      </connectionReference>
+    </connectionInstance>
+    <connectionInstance xmi:id="_1gb4ACjaEeS3Hfx3YtyN2g" name="task2.outp -> task3.insink" complete="true" kind="portConnection" destination="_1fGbTCjaEeS3Hfx3YtyN2g" source="_1fGbSSjaEeS3Hfx3YtyN2g">
+      <ownedPropertyAssociation xmi:id="_1k5hSyjaEeS3Hfx3YtyN2g">
+        <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Timing"/>
+        <ownedValue xmi:id="_1k5hTCjaEeS3Hfx3YtyN2g">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_1k5hTSjaEeS3Hfx3YtyN2g">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/Communication_Properties.aadl#//@ownedProperty.7/@ownedPropertyType/@ownedLiteral.1"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <connectionReference xmi:id="_1gb4ASjaEeS3Hfx3YtyN2g" context="_1fGbQyjaEeS3Hfx3YtyN2g" source="_1fGbSSjaEeS3Hfx3YtyN2g" destination="_1fGbTCjaEeS3Hfx3YtyN2g">
+        <connection xsi:type="aadl2:PortConnection" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.7/@ownedPortConnection.1"/>
+      </connectionReference>
+    </connectionInstance>
+    <subcomponent xsi:type="aadl2:ProcessSubcomponent" href="../SimpleThreadLatency.aadl#//@ownedPublicSection/@ownedClassifier.14/@ownedProcessSubcomponent.5"/>
+    <index>0</index>
+  </componentInstance>
+  <systemOperationMode xmi:id="_1fsRICjaEeS3Hfx3YtyN2g" name="No Modes"/>
+  <systemImplementation href="../SimpleThreadLatency.aadl#SimpleThreadLatency.s.i"/>
+</instance:SystemInstance>

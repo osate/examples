@@ -1,0 +1,11 @@
+package CarHardwarePlatform
+public
+with SEI;
+  system cc_mcu
+    properties
+    -- gross weight represents the total weight.
+    -- It will be refined to a net weight and the weight of its parts
+      SEI::GrossWeight => 15.7 kg;
+  end cc_mcu;
+  
+end CarHardwarePlatform;

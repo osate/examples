@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="ASCII"?>
+<instance:SystemInstance xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aadl2="http://aadl.info/AADL/2.0" xmlns:instance="http://aadl.info/AADL/2.0/instance" xmi:id="_iNwQ4CmfEeSzbqMV5-13Gg" name="stub_i_Instance" category="system">
+  <componentInstance xmi:id="_iQbKYCmfEeSzbqMV5-13Gg" name="prot" category="process">
+    <featureInstance xmi:id="_iQk7eCmfEeSzbqMV5-13Gg" name="SenderData" srcFlowSpec="_iQk7eimfEeSzbqMV5-13Gg">
+      <feature xsi:type="aadl2:DataPort" href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.1/@ownedDataPort.0"/>
+    </featureInstance>
+    <featureInstance xmi:id="_iQk7eSmfEeSzbqMV5-13Gg" name="ReceiverData" dstConnectionInstance="_iQ32VimfEeSzbqMV5-13Gg" dstFlowSpec="_iQk7eimfEeSzbqMV5-13Gg" direction="out">
+      <feature xsi:type="aadl2:DataPort" href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.1/@ownedDataPort.1"/>
+    </featureInstance>
+    <componentInstance xmi:id="_iQbKYSmfEeSzbqMV5-13Gg" name="sender" category="thread">
+      <ownedPropertyAssociation xmi:id="_iSEJICmfEeSzbqMV5-13Gg">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Period"/>
+        <ownedValue xmi:id="_iSEJISmfEeSzbqMV5-13Gg">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_iSEJIimfEeSzbqMV5-13Gg" value="100">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_iSEJIymfEeSzbqMV5-13Gg">
+        <property href="../../../Plugin_Resources/Thread_Properties.aadl#Thread_Properties.Dispatch_Protocol"/>
+        <ownedValue xmi:id="_iSEJJCmfEeSzbqMV5-13Gg">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_iSEJJSmfEeSzbqMV5-13Gg">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.3/@ownedLiteral.0"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <featureInstance xmi:id="_iQbKYimfEeSzbqMV5-13Gg" name="SenderData" srcFlowSpec="_iQk7ZimfEeSzbqMV5-13Gg">
+        <feature xsi:type="aadl2:DataPort" href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.5/@ownedDataPort.0"/>
+      </featureInstance>
+      <featureInstance xmi:id="_iQk7YCmfEeSzbqMV5-13Gg" name="SourceTracksRequest" dstConnectionInstance="_iQ32WCmfEeSzbqMV5-13Gg" srcFlowSpec="_iQk7aCmfEeSzbqMV5-13Gg">
+        <feature xsi:type="aadl2:DataPort" href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.5/@ownedDataPort.1"/>
+      </featureInstance>
+      <featureInstance xmi:id="_iQk7YSmfEeSzbqMV5-13Gg" name="SendSourceTrackSet" srcConnectionInstance="_iQ32UCmfEeSzbqMV5-13Gg" dstFlowSpec="_iQk7ZimfEeSzbqMV5-13Gg _iQk7ZymfEeSzbqMV5-13Gg _iQk7aCmfEeSzbqMV5-13Gg" direction="out">
+        <feature xsi:type="aadl2:DataPort" href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.5/@ownedDataPort.2"/>
+      </featureInstance>
+      <featureInstance xmi:id="_iQk7YimfEeSzbqMV5-13Gg" name="CorrelatedTracksRequest" dstConnectionInstance="_iQ32WimfEeSzbqMV5-13Gg" srcFlowSpec="_iQk7aSmfEeSzbqMV5-13Gg">
+        <feature xsi:type="aadl2:DataPort" href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.5/@ownedDataPort.3"/>
+      </featureInstance>
+      <featureInstance xmi:id="_iQk7YymfEeSzbqMV5-13Gg" name="SendCorrelatedTrackSet" srcConnectionInstance="_iQ32UimfEeSzbqMV5-13Gg" dstFlowSpec="_iQk7aSmfEeSzbqMV5-13Gg" direction="out">
+        <feature xsi:type="aadl2:DataPort" href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.5/@ownedDataPort.4"/>
+      </featureInstance>
+      <featureInstance xmi:id="_iQk7ZCmfEeSzbqMV5-13Gg" name="OwnAircraftPositionRequest" dstConnectionInstance="_iQ32XCmfEeSzbqMV5-13Gg" srcFlowSpec="_iQk7aimfEeSzbqMV5-13Gg">
+        <feature xsi:type="aadl2:DataPort" href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.5/@ownedDataPort.5"/>
+      </featureInstance>
+      <featureInstance xmi:id="_iQk7ZSmfEeSzbqMV5-13Gg" name="SendOwnAircraftPosition" srcConnectionInstance="_iQ32VCmfEeSzbqMV5-13Gg" dstFlowSpec="_iQk7aimfEeSzbqMV5-13Gg" direction="out">
+        <feature xsi:type="aadl2:DataPort" href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.5/@ownedDataPort.6"/>
+      </featureInstance>
+      <flowSpecification xmi:id="_iQk7ZimfEeSzbqMV5-13Gg" name="SenderDataSetFLow" source="_iQbKYimfEeSzbqMV5-13Gg" destination="_iQk7YSmfEeSzbqMV5-13Gg">
+        <flowSpecification href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.5/@ownedFlowSpecification.0"/>
+      </flowSpecification>
+      <flowSpecification xmi:id="_iQk7ZymfEeSzbqMV5-13Gg" name="SourceTrackFlow" destination="_iQk7YSmfEeSzbqMV5-13Gg">
+        <flowSpecification href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.5/@ownedFlowSpecification.1"/>
+      </flowSpecification>
+      <flowSpecification xmi:id="_iQk7aCmfEeSzbqMV5-13Gg" name="SourceTrackFlowpath" source="_iQk7YCmfEeSzbqMV5-13Gg" destination="_iQk7YSmfEeSzbqMV5-13Gg">
+        <flowSpecification href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.5/@ownedFlowSpecification.2"/>
+      </flowSpecification>
+      <flowSpecification xmi:id="_iQk7aSmfEeSzbqMV5-13Gg" name="CorrelatedFlow" source="_iQk7YimfEeSzbqMV5-13Gg" destination="_iQk7YymfEeSzbqMV5-13Gg">
+        <flowSpecification href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.5/@ownedFlowSpecification.3"/>
+      </flowSpecification>
+      <flowSpecification xmi:id="_iQk7aimfEeSzbqMV5-13Gg" name="AircraftPositionFlow" source="_iQk7ZCmfEeSzbqMV5-13Gg" destination="_iQk7ZSmfEeSzbqMV5-13Gg">
+        <flowSpecification href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.5/@ownedFlowSpecification.4"/>
+      </flowSpecification>
+      <subcomponent xsi:type="aadl2:ThreadSubcomponent" href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedThreadSubcomponent.0"/>
+      <index>0</index>
+    </componentInstance>
+    <componentInstance xmi:id="_iQk7aymfEeSzbqMV5-13Gg" name="requestor" category="thread">
+      <ownedPropertyAssociation xmi:id="_iSg1ECmfEeSzbqMV5-13Gg">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Period"/>
+        <ownedValue xmi:id="_iSg1ESmfEeSzbqMV5-13Gg">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_iSg1EimfEeSzbqMV5-13Gg" value="100">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_iSg1EymfEeSzbqMV5-13Gg">
+        <property href="../../../Plugin_Resources/Thread_Properties.aadl#Thread_Properties.Dispatch_Protocol"/>
+        <ownedValue xmi:id="_iSg1FCmfEeSzbqMV5-13Gg">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_iSg1FSmfEeSzbqMV5-13Gg">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.3/@ownedLiteral.0"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <featureInstance xmi:id="_iQk7bCmfEeSzbqMV5-13Gg" name="ReceiverData" srcConnectionInstance="_iQ32VimfEeSzbqMV5-13Gg" dstFlowSpec="_iQk7dymfEeSzbqMV5-13Gg" direction="out">
+        <feature xsi:type="aadl2:DataPort" href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.6/@ownedDataPort.0"/>
+      </featureInstance>
+      <featureInstance xmi:id="_iQk7bSmfEeSzbqMV5-13Gg" name="SourceTracksRequest" srcConnectionInstance="_iQ32WCmfEeSzbqMV5-13Gg" dstFlowSpec="_iQk7cymfEeSzbqMV5-13Gg" direction="out">
+        <feature xsi:type="aadl2:DataPort" href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.6/@ownedDataPort.1"/>
+      </featureInstance>
+      <featureInstance xmi:id="_iQk7bimfEeSzbqMV5-13Gg" name="ReceivedSourceTrackSet" dstConnectionInstance="_iQ32UCmfEeSzbqMV5-13Gg" srcFlowSpec="_iQk7dCmfEeSzbqMV5-13Gg">
+        <feature xsi:type="aadl2:DataPort" href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.6/@ownedDataPort.2"/>
+      </featureInstance>
+      <featureInstance xmi:id="_iQk7bymfEeSzbqMV5-13Gg" name="CorrelatedTracksRequest" srcConnectionInstance="_iQ32WimfEeSzbqMV5-13Gg" dstFlowSpec="_iQk7dCmfEeSzbqMV5-13Gg" direction="out">
+        <feature xsi:type="aadl2:DataPort" href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.6/@ownedDataPort.3"/>
+      </featureInstance>
+      <featureInstance xmi:id="_iQk7cCmfEeSzbqMV5-13Gg" name="ReceivedCorrelatedTrackSet" dstConnectionInstance="_iQ32UimfEeSzbqMV5-13Gg" srcFlowSpec="_iQk7dSmfEeSzbqMV5-13Gg">
+        <feature xsi:type="aadl2:DataPort" href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.6/@ownedDataPort.4"/>
+      </featureInstance>
+      <featureInstance xmi:id="_iQk7cSmfEeSzbqMV5-13Gg" name="OwnAircraftPositionRequest" srcConnectionInstance="_iQ32XCmfEeSzbqMV5-13Gg" dstFlowSpec="_iQk7dSmfEeSzbqMV5-13Gg" direction="out">
+        <feature xsi:type="aadl2:DataPort" href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.6/@ownedDataPort.5"/>
+      </featureInstance>
+      <featureInstance xmi:id="_iQk7cimfEeSzbqMV5-13Gg" name="ReceivedOwnAircraftPosition" dstConnectionInstance="_iQ32VCmfEeSzbqMV5-13Gg" srcFlowSpec="_iQk7dimfEeSzbqMV5-13Gg _iQk7dymfEeSzbqMV5-13Gg">
+        <feature xsi:type="aadl2:DataPort" href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.6/@ownedDataPort.6"/>
+      </featureInstance>
+      <flowSpecification xmi:id="_iQk7cymfEeSzbqMV5-13Gg" name="SourceTrackRequestFlow" destination="_iQk7bSmfEeSzbqMV5-13Gg">
+        <flowSpecification href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.6/@ownedFlowSpecification.0"/>
+      </flowSpecification>
+      <flowSpecification xmi:id="_iQk7dCmfEeSzbqMV5-13Gg" name="SourceTrackReceivedFlow" source="_iQk7bimfEeSzbqMV5-13Gg" destination="_iQk7bymfEeSzbqMV5-13Gg">
+        <flowSpecification href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.6/@ownedFlowSpecification.1"/>
+      </flowSpecification>
+      <flowSpecification xmi:id="_iQk7dSmfEeSzbqMV5-13Gg" name="CorrelatedTrackReceivedFlow" source="_iQk7cCmfEeSzbqMV5-13Gg" destination="_iQk7cSmfEeSzbqMV5-13Gg">
+        <flowSpecification href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.6/@ownedFlowSpecification.2"/>
+      </flowSpecification>
+      <flowSpecification xmi:id="_iQk7dimfEeSzbqMV5-13Gg" name="AircraftPositionReceivedFlow" source="_iQk7cimfEeSzbqMV5-13Gg">
+        <flowSpecification href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.6/@ownedFlowSpecification.3"/>
+      </flowSpecification>
+      <flowSpecification xmi:id="_iQk7dymfEeSzbqMV5-13Gg" name="ReceivedDataSetFlow" source="_iQk7cimfEeSzbqMV5-13Gg" destination="_iQk7bCmfEeSzbqMV5-13Gg">
+        <flowSpecification href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.6/@ownedFlowSpecification.4"/>
+      </flowSpecification>
+      <subcomponent xsi:type="aadl2:ThreadSubcomponent" href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedThreadSubcomponent.1"/>
+      <index>0</index>
+    </componentInstance>
+    <flowSpecification xmi:id="_iQk7eimfEeSzbqMV5-13Gg" name="Xfer" source="_iQk7eCmfEeSzbqMV5-13Gg" destination="_iQk7eSmfEeSzbqMV5-13Gg">
+      <flowSpecification href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.1/@ownedFlowSpecification.0"/>
+    </flowSpecification>
+    <endToEndFlow xmi:id="_iRBnUCmfEeSzbqMV5-13Gg" name="XferOnly" flowElement="_iQk7ZymfEeSzbqMV5-13Gg _iQ32UCmfEeSzbqMV5-13Gg _iQk7dCmfEeSzbqMV5-13Gg _iQ32WimfEeSzbqMV5-13Gg _iQk7aSmfEeSzbqMV5-13Gg _iQ32UimfEeSzbqMV5-13Gg _iQk7dSmfEeSzbqMV5-13Gg _iQ32XCmfEeSzbqMV5-13Gg _iQk7aimfEeSzbqMV5-13Gg _iQ32VCmfEeSzbqMV5-13Gg _iQk7dimfEeSzbqMV5-13Gg">
+      <endToEndFlow href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedEndToEndFlow.0"/>
+    </endToEndFlow>
+    <connectionInstance xmi:id="_iQ32UCmfEeSzbqMV5-13Gg" name="sender.SendSourceTrackSet -> requestor.ReceivedSourceTrackSet" complete="true" kind="portConnection" destination="_iQk7bimfEeSzbqMV5-13Gg" source="_iQk7YSmfEeSzbqMV5-13Gg">
+      <ownedPropertyAssociation xmi:id="_iSg1FimfEeSzbqMV5-13Gg">
+        <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Timing"/>
+        <ownedValue xmi:id="_iSg1FymfEeSzbqMV5-13Gg">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_iSg1GCmfEeSzbqMV5-13Gg">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/Communication_Properties.aadl#//@ownedProperty.7/@ownedPropertyType/@ownedLiteral.2"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <connectionReference xmi:id="_iQ32USmfEeSzbqMV5-13Gg" context="_iQbKYCmfEeSzbqMV5-13Gg" source="_iQk7YSmfEeSzbqMV5-13Gg" destination="_iQk7bimfEeSzbqMV5-13Gg">
+        <connection xsi:type="aadl2:PortConnection" href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedPortConnection.3"/>
+      </connectionReference>
+    </connectionInstance>
+    <connectionInstance xmi:id="_iQ32UimfEeSzbqMV5-13Gg" name="sender.SendCorrelatedTrackSet -> requestor.ReceivedCorrelatedTrackSet" complete="true" kind="portConnection" destination="_iQk7cCmfEeSzbqMV5-13Gg" source="_iQk7YymfEeSzbqMV5-13Gg">
+      <ownedPropertyAssociation xmi:id="_iSg1GSmfEeSzbqMV5-13Gg">
+        <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Timing"/>
+        <ownedValue xmi:id="_iSg1GimfEeSzbqMV5-13Gg">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_iSg1GymfEeSzbqMV5-13Gg">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/Communication_Properties.aadl#//@ownedProperty.7/@ownedPropertyType/@ownedLiteral.2"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <connectionReference xmi:id="_iQ32UymfEeSzbqMV5-13Gg" context="_iQbKYCmfEeSzbqMV5-13Gg" source="_iQk7YymfEeSzbqMV5-13Gg" destination="_iQk7cCmfEeSzbqMV5-13Gg">
+        <connection xsi:type="aadl2:PortConnection" href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedPortConnection.5"/>
+      </connectionReference>
+    </connectionInstance>
+    <connectionInstance xmi:id="_iQ32VCmfEeSzbqMV5-13Gg" name="sender.SendOwnAircraftPosition -> requestor.ReceivedOwnAircraftPosition" complete="true" kind="portConnection" destination="_iQk7cimfEeSzbqMV5-13Gg" source="_iQk7ZSmfEeSzbqMV5-13Gg">
+      <ownedPropertyAssociation xmi:id="_iSg1HCmfEeSzbqMV5-13Gg">
+        <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Timing"/>
+        <ownedValue xmi:id="_iSg1HSmfEeSzbqMV5-13Gg">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_iSg1HimfEeSzbqMV5-13Gg">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/Communication_Properties.aadl#//@ownedProperty.7/@ownedPropertyType/@ownedLiteral.2"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <connectionReference xmi:id="_iQ32VSmfEeSzbqMV5-13Gg" context="_iQbKYCmfEeSzbqMV5-13Gg" source="_iQk7ZSmfEeSzbqMV5-13Gg" destination="_iQk7cimfEeSzbqMV5-13Gg">
+        <connection xsi:type="aadl2:PortConnection" href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedPortConnection.7"/>
+      </connectionReference>
+    </connectionInstance>
+    <connectionInstance xmi:id="_iQ32WCmfEeSzbqMV5-13Gg" name="requestor.SourceTracksRequest -> sender.SourceTracksRequest" complete="true" kind="portConnection" destination="_iQk7YCmfEeSzbqMV5-13Gg" source="_iQk7bSmfEeSzbqMV5-13Gg">
+      <ownedPropertyAssociation xmi:id="_iSg1HymfEeSzbqMV5-13Gg">
+        <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Timing"/>
+        <ownedValue xmi:id="_iSg1ICmfEeSzbqMV5-13Gg">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_iSg1ISmfEeSzbqMV5-13Gg">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/Communication_Properties.aadl#//@ownedProperty.7/@ownedPropertyType/@ownedLiteral.1"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <connectionReference xmi:id="_iQ32WSmfEeSzbqMV5-13Gg" context="_iQbKYCmfEeSzbqMV5-13Gg" source="_iQk7bSmfEeSzbqMV5-13Gg" destination="_iQk7YCmfEeSzbqMV5-13Gg">
+        <connection xsi:type="aadl2:PortConnection" href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedPortConnection.2"/>
+      </connectionReference>
+    </connectionInstance>
+    <connectionInstance xmi:id="_iQ32WimfEeSzbqMV5-13Gg" name="requestor.CorrelatedTracksRequest -> sender.CorrelatedTracksRequest" complete="true" kind="portConnection" destination="_iQk7YimfEeSzbqMV5-13Gg" source="_iQk7bymfEeSzbqMV5-13Gg">
+      <ownedPropertyAssociation xmi:id="_iSg1IimfEeSzbqMV5-13Gg">
+        <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Timing"/>
+        <ownedValue xmi:id="_iSg1IymfEeSzbqMV5-13Gg">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_iSg1JCmfEeSzbqMV5-13Gg">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/Communication_Properties.aadl#//@ownedProperty.7/@ownedPropertyType/@ownedLiteral.1"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <connectionReference xmi:id="_iQ32WymfEeSzbqMV5-13Gg" context="_iQbKYCmfEeSzbqMV5-13Gg" source="_iQk7bymfEeSzbqMV5-13Gg" destination="_iQk7YimfEeSzbqMV5-13Gg">
+        <connection xsi:type="aadl2:PortConnection" href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedPortConnection.4"/>
+      </connectionReference>
+    </connectionInstance>
+    <connectionInstance xmi:id="_iQ32XCmfEeSzbqMV5-13Gg" name="requestor.OwnAircraftPositionRequest -> sender.OwnAircraftPositionRequest" complete="true" kind="portConnection" destination="_iQk7ZCmfEeSzbqMV5-13Gg" source="_iQk7cSmfEeSzbqMV5-13Gg">
+      <ownedPropertyAssociation xmi:id="_iSg1JSmfEeSzbqMV5-13Gg">
+        <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Timing"/>
+        <ownedValue xmi:id="_iSg1JimfEeSzbqMV5-13Gg">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_iSg1JymfEeSzbqMV5-13Gg">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/Communication_Properties.aadl#//@ownedProperty.7/@ownedPropertyType/@ownedLiteral.1"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <connectionReference xmi:id="_iQ32XSmfEeSzbqMV5-13Gg" context="_iQbKYCmfEeSzbqMV5-13Gg" source="_iQk7cSmfEeSzbqMV5-13Gg" destination="_iQk7ZCmfEeSzbqMV5-13Gg">
+        <connection xsi:type="aadl2:PortConnection" href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedPortConnection.6"/>
+      </connectionReference>
+    </connectionInstance>
+    <subcomponent xsi:type="aadl2:ProcessSubcomponent" href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedProcessSubcomponent.0"/>
+    <index>0</index>
+  </componentInstance>
+  <connectionInstance xmi:id="_iQ32VimfEeSzbqMV5-13Gg" name="prot.requestor.ReceiverData -> prot.ReceiverData" kind="portConnection" destination="_iQk7eSmfEeSzbqMV5-13Gg" source="_iQk7bCmfEeSzbqMV5-13Gg">
+    <connectionReference xmi:id="_iQ32VymfEeSzbqMV5-13Gg" context="_iQbKYCmfEeSzbqMV5-13Gg" source="_iQk7bCmfEeSzbqMV5-13Gg" destination="_iQk7eSmfEeSzbqMV5-13Gg">
+      <connection xsi:type="aadl2:PortConnection" href="../PullProtocols.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedPortConnection.1"/>
+    </connectionReference>
+  </connectionInstance>
+  <systemOperationMode xmi:id="_iQusYCmfEeSzbqMV5-13Gg" name="No Modes"/>
+  <systemImplementation href="../PullProtocols.aadl#PullProtocols.stub.i"/>
+</instance:SystemInstance>

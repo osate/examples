@@ -1,0 +1,20 @@
+Latency Analysis Report
+
+Flow analysis for end to end flow XferOnly
+Contributor,Min Expected,Min Value,Min Method,Max Expected,Max Value,Max Method,Comments,
+Thread sender,,100.0ms,deadline,,100.0ms,deadline,Time to take to send the data over the network,
+Delayed Connection sender.SendSourceTrackSet -> requestor.ReceivedSourceTrackSet,,0.0ms,period,,100.0ms,period,Data might arrive at dispatch time or next frame,
+Thread requestor,,0.0ms,immediate connection,,0.0ms,immediate connection,The connection is immediate and both parts are synchronized. Using either the min/max execution or assume execution time is negligible,
+Immediate Connection requestor.CorrelatedTracksRequest -> sender.CorrelatedTracksRequest,,0.0ms,unknown,,0.0ms,unknown,,
+Thread sender,,100.0ms,deadline,,100.0ms,deadline,Time to take to send the data over the network,
+Delayed Connection sender.SendCorrelatedTrackSet -> requestor.ReceivedCorrelatedTrackSet,,0.0ms,period,,100.0ms,period,Data might arrive at dispatch time or next frame,
+Thread requestor,,0.0ms,immediate connection,,0.0ms,immediate connection,The connection is immediate and both parts are synchronized. Using either the min/max execution or assume execution time is negligible,
+Immediate Connection requestor.OwnAircraftPositionRequest -> sender.OwnAircraftPositionRequest,,0.0ms,unknown,,0.0ms,unknown,,
+Thread sender,,100.0ms,deadline,,100.0ms,deadline,Time to take to send the data over the network,
+Delayed Connection sender.SendOwnAircraftPosition -> requestor.ReceivedOwnAircraftPosition,,0.0ms,period,,100.0ms,period,Data might arrive at dispatch time or next frame,
+Thread requestor,,100.0ms,deadline,,100.0ms,deadline,,
+Total,unspecified,400.0ms,,unspecified,700.0ms,,
+Total (Sync),unspecified,400.0ms,,unspecified,700.0ms,,
+
+
+

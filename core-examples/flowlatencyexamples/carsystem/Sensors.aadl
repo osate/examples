@@ -1,0 +1,36 @@
+package Sensors
+public
+with sei;
+  device WheelRotationSensor
+    features
+      wrs_cc: feature group wrs_cc_type;
+    flows
+      wrs_source: flow source wrs_cc {
+        Latency => 5 Ms .. 5 Ms;
+        };
+    properties
+      SEI::NetWeight => 0.5 kg;
+  end WheelRotationSensor;
+  
+  device BrakePedal
+    features
+      bp_cc: feature group bp_cc_Type;
+    flows
+      bp_source: flow source bp_cc {
+        Latency => 7 Ms .. 7 Ms;
+        };
+    properties
+      SEI::NetWeight => 0.5 kg;
+  end BrakePedal;
+
+-- feature group type is defined as a placeholder
+-- It can already be referenced by the feature group declaration
+-- later we just need to fill in its features here
+  feature group wrs_cc_type
+  end wrs_cc_type;
+  
+  feature group bp_cc_type
+  end bp_cc_type;
+
+
+end Sensors;

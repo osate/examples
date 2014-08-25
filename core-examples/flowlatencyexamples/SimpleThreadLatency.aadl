@@ -21,12 +21,9 @@ thread tp
 features
 inp: in data port;
 outp: out data port;
-insink: in data port;
 flows 
 fpath: flow path inp -> outp;
-fsink: flow sink insink ;
 properties
-latency => 2ms..3ms applies to fsink;
 latency => 20ms..30ms applies to fpath;
 end tp;
 
@@ -37,6 +34,22 @@ period => 50 ms;
 Deadline => 35ms ;-- This should generate a warning since its value is larger than the flow spec value and would be the worst case output time if schedulable.
 end tpp;
 
+thread tsk
+features
+insink: in data port;
+flows 
+fsink: flow sink insink ;
+properties
+latency => 2ms..3ms applies to fsink;
+end tsk;
+
+thread tskp extends tsk
+properties
+Dispatch_protocol => Periodic;
+period => 50 ms;
+Deadline => 35ms ; -- This will become the deadline 
+end tskp;
+
 process p
 end p;
 
@@ -44,7 +57,7 @@ process implementation p.i
 subcomponents
 	task1: thread ts;
 	task2: thread tp;
-	task3: thread tp;
+	task3: thread tsk;
 connections
 	c1: port task1.outp -> task2.inp;
 	c2: port task2.outp -> task3.insink;
@@ -56,7 +69,7 @@ process implementation p.sampled extends p.i
 subcomponents
 	task1: refined to thread tsp;
 	task2: refined to thread tpp;
-	task3: refined to thread tpp;
+	task3: refined to thread tskp;
 end p.sampled;
 
 process implementation p.immediate extends p.sampled
@@ -95,14 +108,14 @@ subcomponents
 									-- Note: Compute Deadline could be per port. We could have a separate deadline for inp and insink of tpp.
 									-- In asynchronous setting we cannot guarantee immediate connections and have to assume sampling
 									-- If we turn task2 an task3 into tasks with event data ports, then the tasks execute in order and the end to end latency is the sum of their deadlines. Best case, sum of min execution times. 
-	Delayed: process p.delayed;	-- Task1 + task2 period plus task three deadline. best: the periods plus min compute execution time.
+	Delayed: process p.delayed;	-- worst-case: Task1 + task2 period plus task three deadline: 135ms. best: the periods plus min compute execution time: .
 	ImmDelay: process p.mixed;  -- Immediate followed by Delayed: Task3 period plus Task3 deadline / min execution time
 	DelayImM: process p.mixed2;  -- Delayed followed by immediate: Task2 period plus task3 deadline (max) task2+3 min execution time (min)
 end s.i;
 
 annex description {**
 	This package contains a system with three periodic threads and an end-to-end flow
-	All three threads have flows with a specified flow latency.
+	All three threads have flows with a specified flow latency. 
 	The top level system contains several process subcomponents.
 	Each represents a different compute and communication timing behavior.
 	

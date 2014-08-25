@@ -1,0 +1,46 @@
+package SoftwareApps
+public
+with Sensors, Actuators, SoftwareParts;
+  system CruiseControl
+    features
+      cc_wrs: feature group inverse of Sensors::wrs_cc_type;
+      cc_bp: feature group inverse of Sensors::bp_cc_type;
+      cc_ui: feature group;
+      cc_ta: feature group inverse of Actuators::ta_cc_type;
+      cc_ud: feature group;
+    flows
+      Flow_W_T: flow path cc_wrs -> cc_ta{
+        Latency => 20 Ms .. 20 Ms;
+        };
+      Flow_B_T: flow path cc_bp -> cc_ta{
+        Latency => 15 Ms .. 15 Ms;
+        };
+  end CruiseControl;
+
+
+  system implementation CruiseControl.impl
+    subcomponents
+      sci: system SoftwareParts::ScanCCInputs;
+      cv: system SoftwareParts::ComputeVelocity;
+      scl: system SoftwareParts::SpeedControlLoop;
+      cts: system SoftwareParts::ComputeThrottleSetting;
+    connections
+      bp_sci_conn: feature group cc_bp <-> sci.brake_status;
+      wr_sci_conn: feature group cc_wrs <-> sci.wheel_pulse;
+      wr_cv_conn: feature group cc_wrs <-> cv.wheel_pulse;
+      cv_scl_conn: feature group cv.inst_velocity <-> scl.inst_velocity;
+      sci_scl_conn: feature group sci.run_cc <-> scl.run_cc;
+      scl_cts_conn: feature group scl.desired_speed <-> cts.desired_speed;
+      cts_ta_conn: feature group cts.throttle_setting <-> cc_ta;
+    flows
+      Flow_B_T: flow path cc_bp -> bp_sci_conn -> sci.Flow_B_T
+         -> sci_scl_conn -> scl.Flow_B_T
+         -> scl_cts_conn -> cts.Flow_1
+         -> cts_ta_conn -> cc_ta;
+      Flow_W_T: flow path cc_wrs -> wr_cv_conn -> cv.Flow_W_T
+         -> cv_scl_conn -> scl.Flow_W_T
+         -> scl_cts_conn -> cts.Flow_1
+         -> cts_ta_conn -> cc_ta;
+  end CruiseControl.impl;
+  
+end SoftwareApps;
