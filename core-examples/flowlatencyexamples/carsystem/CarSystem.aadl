@@ -8,66 +8,7 @@ with CarHardwarePlatform;
     SEI::WeightLimit => 57.0 kg;
   end MyCar;
 
-  system implementation MyCar.CruiseControl 
-    subcomponents
-      ecu: system CarHardwarePlatform::cc_mcu;
-      wrs: device Sensors::WheelRotationSensor;
-      bp: device Sensors::BrakePedal;
-      ui: device UserInterface::UserInput;
-      ta: device Actuators::ThrottleActuator;
-      ud: device UserInterface::UserDisplay;
-      cc: system SoftwareApps::CruiseControl;
-     connections
-     -- adding logical connections between cruise control and its context
-      wrs_cc_conn: feature group wrs.wrs_cc -> cc.cc_wrs;
-      bp_cc_conn: feature group bp.bp_cc -> cc.cc_bp;
-      ui_cc_conn: feature group ui.ui_cc -> cc.cc_ui;
-      cc_ta_conn: feature group cc.cc_ta -> ta.ta_cc;
-      cc_ud_conn: feature group cc.cc_ud -> ud.ud_cc;
-    flows
-      Flow_B_T: end to end flow bp.bp_source -> bp_cc_conn -> cc.Flow_B_T
-         -> cc_ta_conn -> ta.ta_sink
-         {
-          Latency => 50 ms .. 50 ms;
-          };
-      Flow_W_T: end to end flow wrs.wrs_source -> wrs_cc_conn -> cc.Flow_W_T
-         -> cc_ta_conn -> ta.ta_sink
-         {
-          Latency => 40 ms .. 40 ms;
-          };
-  end MyCar.CruiseControl;
 
-
-  system implementation MyCar.CruiseControlFunction 
-    subcomponents
-      ecu: system CarHardwarePlatform::cc_mcu;
-      wrs: device Sensors::WheelRotationSensor;
-      bp: device Sensors::BrakePedal;
-      ui: device UserInterface::UserInput;
-      ta: device Actuators::ThrottleActuator;
-      ud: device UserInterface::UserDisplay;
-      cc: system SoftwareApps::CruiseControl.impl;
-     connections
-     -- adding logical connections between cruise control and its context
-      wrs_cc_conn: feature group wrs.wrs_cc -> cc.cc_wrs;
-      bp_cc_conn: feature group bp.bp_cc -> cc.cc_bp;
-      ui_cc_conn: feature group ui.ui_cc -> cc.cc_ui;
-      cc_ta_conn: feature group cc.cc_ta -> ta.ta_cc;
-      cc_ud_conn: feature group cc.cc_ud -> ud.ud_cc;
-    flows
-      Flow_B_T: end to end flow bp.bp_source -> bp_cc_conn -> cc.Flow_B_T
-         -> cc_ta_conn -> ta.ta_sink
-         {
-          Latency => 50 ms .. 50 ms;
-          };
-      Flow_W_T: end to end flow wrs.wrs_source -> wrs_cc_conn -> cc.Flow_W_T
-         -> cc_ta_conn -> ta.ta_sink
-         {
-          Latency => 40 ms .. 40 ms;
-          };
-  end MyCar.CruiseControlFunction;
-  
-  
   system implementation MyCar.CruiseControlTasks 
     subcomponents
       ecu: system CarHardwarePlatform::cc_mcu;
@@ -88,14 +29,13 @@ with CarHardwarePlatform;
       Flow_B_T: end to end flow bp.bp_source -> bp_cc_conn -> cc.Flow_B_T
          -> cc_ta_conn -> ta.ta_sink
          {
-          Latency => 50 Ms .. 50 Ms;
+          Latency => 50 ms .. 50 ms;
           };
       Flow_W_T: end to end flow wrs.wrs_source -> wrs_cc_conn -> cc.Flow_W_T
          -> cc_ta_conn -> ta.ta_sink
          {
-          Latency => 40 Ms .. 40 Ms;
+          Latency => 40 ms .. 40 ms;
           };
   end MyCar.CruiseControlTasks;
-  
 
 end CarSystem;

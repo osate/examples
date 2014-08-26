@@ -21,5 +21,4 @@ with SEI;
       throttle_setting: in data port;
   end ta_cc_type;
 
-
 end Actuators;

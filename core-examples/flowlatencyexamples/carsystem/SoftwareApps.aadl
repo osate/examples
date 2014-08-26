@@ -1,7 +1,7 @@
 package SoftwareApps
 public
-with Sensors, Actuators, SoftwareParts;
-with CCThreads;
+with Sensors, Actuators, CCThreads;
+
   system CruiseControl
     features
       cc_wrs: feature group inverse of Sensors::wrs_cc_type;
@@ -11,41 +11,14 @@ with CCThreads;
       cc_ud: feature group;
     flows
       Flow_W_T: flow path cc_wrs -> cc_ta{
-        Latency => 20 ms .. 20 ms;
+        Latency => 20 Ms .. 20 Ms;
         };
       Flow_B_T: flow path cc_bp -> cc_ta{
-        Latency => 15 ms .. 15 ms;
+        Latency => 15 Ms .. 15 Ms;
         };
   end CruiseControl;
 
-
   system implementation CruiseControl.impl
-    subcomponents
-      sci: system SoftwareParts::ScanCCInputs;
-      cv: system SoftwareParts::ComputeVelocity;
-      scl: system SoftwareParts::SpeedControlLoop;
-      cts: system SoftwareParts::ComputeThrottleSetting;
-    connections
-      bp_sci_conn: feature group cc_bp <-> sci.brake_status;
-      wr_sci_conn: feature group cc_wrs <-> sci.wheel_pulse;
-      wr_cv_conn: feature group cc_wrs <-> cv.wheel_pulse;
-      cv_scl_conn: feature group cv.inst_velocity <-> scl.inst_velocity;
-      sci_scl_conn: feature group sci.run_cc <-> scl.run_cc;
-      scl_cts_conn: feature group scl.desired_speed <-> cts.desired_speed;
-      cts_ta_conn: feature group cts.throttle_setting <-> cc_ta;
-    flows
-      Flow_B_T: flow path cc_bp -> bp_sci_conn -> sci.Flow_B_T
-         -> sci_scl_conn -> scl.Flow_B_T
-         -> scl_cts_conn -> cts.Flow_1
-         -> cts_ta_conn -> cc_ta;
-      Flow_W_T: flow path cc_wrs -> wr_cv_conn -> cv.Flow_W_T
-         -> cv_scl_conn -> scl.Flow_W_T
-         -> scl_cts_conn -> cts.Flow_1
-         -> cts_ta_conn -> cc_ta;
-  end CruiseControl.impl;
-  
-  
-  system implementation CruiseControl.threads
     subcomponents
       cc_process: process CCThreads::CruiseControlProcess.impl;
     connections
@@ -53,11 +26,10 @@ with CCThreads;
       d2: port cc_bp.brake_pedal -> cc_process.brake_pedal;
       d3: port cc_process.throttle_setting -> cc_ta.throttle_setting;
     flows
-      Flow_W_T: flow path cc_wrs -> d1 -> cc_process.Flow_W_T
-         -> d3 -> cc_ta;
-      Flow_B_T: flow path cc_bp -> d2 -> cc_process.Flow_B_T
-         -> d3 -> cc_ta;
-  end CruiseControl.threads;
-  
+      Flow_W_T: flow path cc_wrs.wheel_pulses -> d1 -> cc_process.Flow_W_T
+         -> d3 -> cc_ta.throttle_setting;
+      Flow_B_T: flow path cc_bp.brake_pedal -> d2 -> cc_process.Flow_B_T
+         -> d3 -> cc_ta.throttle_setting;
+  end CruiseControl.impl;
   
 end SoftwareApps;
