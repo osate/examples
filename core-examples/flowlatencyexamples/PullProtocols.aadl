@@ -25,19 +25,19 @@ subcomponents
  connections
  	incoming: port SenderData -> sender.SenderData;
  	outgoing: port requestor.ReceiverData -> ReceiverData;
- 	STRequest: port requestor.SourceTracksRequest -> sender.SourceTracksRequest;
+ 	STRequest: port requestor.SourceTracksRequest -> sender.SourceTracksRequest ;--{Timing => Immediate;};
  	STReply: port sender.SendSourceTrackSet -> requestor.ReceivedSourceTrackSet
- 		{Required_Virtual_Bus_Class => (classifier (PullProtocols::DCFMInputPullProtocol));};
- 	CTRequest: port requestor.CorrelatedTracksRequest -> sender.CorrelatedTracksRequest;
- 	CTReply: port sender.SendCorrelatedTrackSet -> requestor.ReceivedCorrelatedTrackSet;
- 	APRequest: port requestor.OwnAircraftPositionRequest -> sender.OwnAircraftPositionRequest;
- 	APReply: port sender.SendOwnAircraftPosition -> requestor.ReceivedOwnAircraftPosition;
+ 		;--{Timing => Delayed;};
+ 	CTRequest: port requestor.CorrelatedTracksRequest -> sender.CorrelatedTracksRequest;--{Timing => Immediate;};
+ 	CTReply: port sender.SendCorrelatedTrackSet -> requestor.ReceivedCorrelatedTrackSet;-- {Timing => Delayed;};
+ 	APRequest: port requestor.OwnAircraftPositionRequest -> sender.OwnAircraftPositionRequest;--{Timing => Immediate;};
+ 	APReply: port sender.SendOwnAircraftPosition -> requestor.ReceivedOwnAircraftPosition;-- {Timing => Delayed;};
  flows
  -- flow to measure latency of protocol. The result is to be reflected in the latency property of the virtual bus it implements
  	XferOnly: end to end flow sender.SourceTrackFlow -> STReply -> requestor.SourceTrackReceivedFlow -> CTRequest ->
  		sender.CorrelatedFlow -> CTReply -> requestor.CorrelatedTrackReceivedFlow -> 
- 		APRequest -> sender.AircraftPositionFlow -> APReply -> requestor.AircraftPositionReceivedFlow
- 		;--{Latency => 10 ms .. 10 ms;};
+ 		APRequest -> sender.AircraftPositionFlow -> APReply -> requestor.AircraftPositionReceivedFlow;
+-- 		{Latency => 10 ms .. 10 ms;};
  -- flow to be used when abstract implementation is used in the transfer instead of a protocol binding 
  	Xfer: flow path SenderData -> incoming -> sender.SenderDataSetFLow -> STReply -> requestor.SourceTrackReceivedFlow -> CTRequest ->
  		sender.CorrelatedFlow -> CTReply -> requestor.CorrelatedTrackReceivedFlow -> APRequest -> sender.AircraftPositionFlow -> APReply -> requestor.ReceivedDataSetFlow
@@ -49,8 +49,9 @@ subcomponents
  	-- Alternatively we can use virtual processor and the ARINC653 properties or the period on the virtual processor
  		Timing => Immediate applies to STRequest,CTRequest,APRequest;
  		Timing => Delayed applies to STReply,CTReply,APReply;
- 		Latency => 10 ms .. 10 ms applies to XferOnly;
+ 		Latency => 300 ms .. 300 ms applies to XferOnly;
  		Period => 100 ms applies to sender, requestor;
+ 		Deadline => 1 ms applies to sender, requestor;
  		Dispatch_Protocol => Periodic applies to sender, requestor;
 end PullDCFMInputDataset.CrossPartition;
 
