@@ -13,9 +13,9 @@ end integration;
 
 system implementation integration.hardware extends latency_cs::integration_common::integration.common
 subcomponents
-	s1 : refined to device latency_cs::impl::sensing_hw;
-	s2 : refined to device  latency_cs::impl::sensing_hw;
-	a  : refined to device  latency_cs::impl::actuating_hw;
+	s1 : refined to device latency_cs::impl::sensing_hw.i {Classifier_Substitution_Rule => type_extension;};
+	s2 : refined to device  latency_cs::impl::sensing_hw.i {Classifier_Substitution_Rule => type_extension;};
+	a  : refined to device  latency_cs::impl::actuating_hw.i {Classifier_Substitution_Rule => type_extension;};
 end integration.hardware;
 
 end latency_cs::integration_hw;

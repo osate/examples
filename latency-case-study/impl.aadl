@@ -33,6 +33,18 @@ features
 	dataout : refined to out data port position.i;
 end sensing_sw;
 
+process implementation sensing_sw.i
+subcomponents
+	ts : thread thr_sensing;
+connections
+	c0 : port ts.dataout -> dataout;
+end sensing_sw.i;
+
+thread thr_sensing
+features
+	dataout : out data port position.i;
+end thr_sensing;
+
 --
 -- Realization of the sensing function in software
 --
@@ -41,6 +53,9 @@ device sensing_hw extends latency_cs::functional::sensing
 features
 	dataout : refined to out data port position.i;
 end sensing_hw;
+
+device implementation sensing_hw.i
+end sensing_hw.i;
 
 
 ---------------------------
@@ -143,6 +158,8 @@ features
 	datain : refined to in data port position.i;
 end actuating_hw;
 
+device implementation actuating_hw.i
+end actuating_hw.i;
 
 -------------------------------------
 --  Generic integration component  --

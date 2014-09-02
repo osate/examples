@@ -12,7 +12,7 @@ end integration;
 
 system implementation integration.common extends latency_cs::functional::integration.i
 subcomponents
-	p  		: refined to process  latency_cs::impl::processing;
+	p  		: refined to process  latency_cs::impl::processing.i {Classifier_Substitution_Rule => type_extension;};
 	p_cpu 	: processor latency_cs::platform::generic_cpu;
 	s_p_bus: bus latency_cs::platform::generic_bus;
 	p_a_bus : bus latency_cs::platform::generic_bus;
