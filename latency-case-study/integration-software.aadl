@@ -1,0 +1,22 @@
+package latency_cs::integration_sw
+
+
+public
+
+with latency_cs::functional;
+with latency_cs::impl;
+with latency_cs::integration_common;
+
+system integration extends latency_cs::integration_common::integration
+end integration;
+
+system implementation integration.software extends latency_cs::integration_common::integration.common
+subcomponents
+	s1 : refined to process latency_cs::impl::sensing_sw;
+	s2 : refined to process  latency_cs::impl::sensing_sw;
+	a  : refined to process  latency_cs::impl::actuating_sw;
+end integration.software;
+
+end latency_cs::integration_sw;
+
+

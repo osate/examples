@@ -1,0 +1,23 @@
+package latency_cs::integration_hw
+
+
+public
+
+with latency_cs::functional;
+with latency_cs::impl;
+with latency_cs::integration_common;
+
+
+system integration extends latency_cs::integration_common::integration
+end integration;
+
+system implementation integration.hardware extends latency_cs::integration_common::integration.common
+subcomponents
+	s1 : refined to device latency_cs::impl::sensing_hw;
+	s2 : refined to device  latency_cs::impl::sensing_hw;
+	a  : refined to device  latency_cs::impl::actuating_hw;
+end integration.hardware;
+
+end latency_cs::integration_hw;
+
+

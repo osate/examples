@@ -1,0 +1,14 @@
+package latency_cs::platform
+
+public
+
+processor generic_cpu
+end generic_cpu;
+
+bus generic_bus
+end generic_bus;
+
+virtual bus generic_protocol
+end generic_protocol;
+
+end latency_cs::platform;
