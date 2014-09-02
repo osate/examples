@@ -1,0 +1,51 @@
+package latency_cs::functional
+
+public
+
+abstract sensing
+features
+	dataout : out data port;
+flows
+	f0 : flow source dataout;
+end sensing;
+
+abstract processing
+features
+	datain1 : in data port;
+	datain2 : in data port;
+	dataout : out data port;
+flows
+	f0 : flow path datain1 -> dataout;
+	f1 : flow path datain2 -> dataout;
+end processing;
+
+abstract actuating
+features
+	datain : in data port;
+flows
+	f0 : flow sink datain;
+end actuating;
+
+system integration
+end integration;
+
+system implementation integration.i
+subcomponents
+	s1 : abstract sensing;
+	s2 : abstract sensing;
+	p  : abstract processing;
+	a  : abstract actuating;
+connections
+	c0 : port s1.dataout -> p.datain1;
+	c1 : port s2.dataout -> p.datain2;
+	c2 : port p.dataout -> a.datain;
+flows
+	etef0 : end to end flow s1.f0 -> c0 ->
+	                        p.f0  -> c2 ->
+	                        a.f0; 
+	etef1 : end to end flow s2.f0 -> c1 ->
+	                        p.f1  -> c2 ->
+	                        a.f0; 
+end integration.i;
+
+end latency_cs::functional;
