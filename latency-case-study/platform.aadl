@@ -27,9 +27,14 @@ end partition;
 
 
 bus generic_bus
+properties
+	Transmission_Time => [ Fixed => 10 ms .. 30ms;
+                          PerByte => 1 us .. 10 us; ];
 end generic_bus;
 
 virtual bus generic_protocol
+properties
+	latency => 1 ms .. 3 ms;
 end generic_protocol;
 
 end latency_cs::platform;

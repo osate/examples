@@ -27,9 +27,13 @@ subcomponents
 	p_a_bus : bus latency_cs::platform::generic_bus;
 properties
 	actual_processor_binding => (reference (p_cpu)) applies to p;
+	
 	actual_connection_binding => (reference (s_p_bus)) applies to c0;
 	actual_connection_binding => (reference (s_p_bus)) applies to c1;
 	actual_connection_binding => (reference (p_a_bus)) applies to c2;
+	
+	-- protocol that applies to the connections
+	required_virtual_bus_class => (classifier (latency_cs::platform::generic_protocol)) applies to c0, c1, c2;
 end integration.software_distributed;
 
 
@@ -49,20 +53,20 @@ end integration.software_integrated;
 
 system implementation integration.software_integrated1 extends integration.software_integrated
 properties
-	arinc653::module_schedule => ([Partition => reference (cpu.part1) ; Duration => 50 ms ; Periodic_Processing_Start => true;],
-		                          [Partition => reference (cpu.part2) ; Duration => 50 ms ; Periodic_Processing_Start => true;],
-		                          [Partition => reference (cpu.part3) ; Duration => 50 ms ; Periodic_Processing_Start => true;],
-		                          [Partition => reference (cpu.part4) ; Duration => 50 ms ; Periodic_Processing_Start => true;])
+	arinc653::module_schedule => ([Partition => reference (cpu.part1) ; Duration => 7 ms ; Periodic_Processing_Start => true;],
+		                          [Partition => reference (cpu.part2) ; Duration => 7 ms ; Periodic_Processing_Start => true;],
+		                          [Partition => reference (cpu.part3) ; Duration => 22 ms ; Periodic_Processing_Start => true;],
+		                          [Partition => reference (cpu.part4) ; Duration => 12 ms ; Periodic_Processing_Start => true;])
 		                         applies to cpu;
 end integration.software_integrated1;
 
 
 system implementation integration.software_integrated2 extends integration.software_integrated
 properties
-	arinc653::module_schedule => ([Partition => reference (cpu.part3) ; Duration => 50 ms ; Periodic_Processing_Start => true;],
-		                          [Partition => reference (cpu.part2) ; Duration => 50 ms ; Periodic_Processing_Start => true;],
-		                          [Partition => reference (cpu.part4) ; Duration => 50 ms ; Periodic_Processing_Start => true;],
-		                          [Partition => reference (cpu.part1) ; Duration => 50 ms ; Periodic_Processing_Start => true;])
+	arinc653::module_schedule => ([Partition => reference (cpu.part3) ; Duration => 22 ms ; Periodic_Processing_Start => true;],
+		                          [Partition => reference (cpu.part2) ; Duration => 7 ms ; Periodic_Processing_Start => true;],
+		                          [Partition => reference (cpu.part4) ; Duration => 12 ms ; Periodic_Processing_Start => true;],
+		                          [Partition => reference (cpu.part1) ; Duration => 7 ms ; Periodic_Processing_Start => true;])
 		                         applies to cpu;
 end integration.software_integrated2;
 

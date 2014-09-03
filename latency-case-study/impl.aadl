@@ -88,6 +88,10 @@ features
 flows
 	stats_sink0 : flow sink datain1;
 	stats_sink1 : flow sink datain2;
+properties
+	dispatch_protocol => periodic;
+	period            => 20 ms;
+	compute_execution_time => 1 ms .. 2 ms;
 end thr_stats;
 
 thread thr_filter
@@ -98,6 +102,10 @@ features
 flows
 	filter_path0 : flow path datain1 -> dataout;
 	filter_path1 : flow path datain2 -> dataout;
+properties
+	dispatch_protocol => periodic;
+	period            => 20 ms;
+	compute_execution_time => 5 ms .. 10 ms;
 end thr_filter;
 
 
@@ -115,6 +123,10 @@ features
 	dataout : out data port position.i;
 flows
 	collect_path : flow path datain -> dataout;
+properties
+	dispatch_protocol => periodic;
+	period            => 10 ms;
+	compute_execution_time => 1 ms .. 3 ms;
 end thr_collect;
 
 thread thr_display
@@ -122,6 +134,10 @@ features
 	datain : in data port position.i;
 flows
 	display_sink : flow sink datain;
+properties
+	dispatch_protocol => periodic;
+	period            => 10 ms;
+	compute_execution_time => 2 ms .. 4 ms;
 end thr_display;
 
 process actuating extends latency_cs::functional::actuating
