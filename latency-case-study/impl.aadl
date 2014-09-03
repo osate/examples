@@ -1,0 +1,159 @@
+package latency_cs::impl
+
+public
+
+with latency_cs::functional;
+with base_types;
+
+--
+-- position is the data to transport the
+-- GPS coordinates between the functions
+--
+
+data position
+end position;
+
+data implementation position.i
+subcomponents
+	x : data base_types::unsigned_64;
+	y : data base_types::unsigned_64;
+end position.i;
+
+
+------------------------
+--  Sensing function  --
+------------------------
+
+--
+-- Realization of the sensing function in software
+--
+
+process sensing extends latency_cs::functional::sensing
+features
+	dataout : refined to out data port position.i;
+end sensing;
+
+process implementation sensing.i
+subcomponents
+	ts : thread thr_sensing;
+connections
+	c0 : port ts.dataout -> dataout;
+flows
+	sensor_source : flow source ts.sensing_source -> c0 -> dataout;
+end sensing.i;
+
+thread thr_sensing
+features
+	dataout : out data port position.i;
+flows
+	sensing_source : flow source dataout;
+end thr_sensing;
+
+
+---------------------------
+--  Processing function  --
+---------------=-----------
+
+process processing extends latency_cs::functional::processing
+features
+	datain1 : refined to in data port position.i;
+	datain2 : refined to in data port position.i;
+	dataout : refined to out data port position.i;
+flows
+	sink0 : flow sink datain1;
+	sink1 : flow sink datain2;
+end processing;
+
+process implementation processing.i
+subcomponents
+	tf : thread thr_filter;
+	ts : thread thr_stats;
+connections
+	c0 : port datain1 -> tf.datain1;
+	c1 : port datain2 -> tf.datain2;
+	c2 : port datain1 -> ts.datain1;
+	c3 : port datain2 -> ts.datain2;
+	c4 : port tf.dataout -> dataout;
+flows
+	processing_path0 : flow path datain1 -> c0 -> tf.filter_path0 -> c4 -> dataout; 
+	processing_path1 : flow path datain2 -> c1 -> tf.filter_path1 -> c4 -> dataout; 
+	sink0 : flow sink datain1 -> c2 -> ts.stats_sink0; 
+	sink1 : flow sink datain2 -> c3 -> ts.stats_sink1; 
+end processing.i;
+
+thread thr_stats
+features
+	datain1 : in data port position.i;
+	datain2 : in data port position.i;
+flows
+	stats_sink0 : flow sink datain1;
+	stats_sink1 : flow sink datain2;
+properties
+	dispatch_protocol => periodic;
+	period            => 20 ms;
+	compute_execution_time => 1 ms .. 2 ms;
+end thr_stats;
+
+thread thr_filter
+features
+	datain1 : in data port position.i;
+	datain2 : in data port position.i;
+	dataout : out data port position.i;
+flows
+	filter_path0 : flow path datain1 -> dataout;
+	filter_path1 : flow path datain2 -> dataout;
+properties
+	dispatch_protocol => periodic;
+	period            => 20 ms;
+	compute_execution_time => 5 ms .. 10 ms;
+end thr_filter;
+
+
+--------------------------
+--  Actuating function  --
+--------------------------
+
+--
+-- Realization of the actuating function in software
+--
+
+thread thr_collect
+features
+	datain : in data port position.i;
+	dataout : out data port position.i;
+flows
+	collect_path : flow path datain -> dataout;
+properties
+	dispatch_protocol => periodic;
+	period            => 10 ms;
+	compute_execution_time => 1 ms .. 3 ms;
+end thr_collect;
+
+thread thr_display
+features
+	datain : in data port position.i;
+flows
+	display_sink : flow sink datain;
+properties
+	dispatch_protocol => periodic;
+	period            => 10 ms;
+	compute_execution_time => 2 ms .. 4 ms;
+end thr_display;
+
+process actuating extends latency_cs::functional::actuating
+features
+	datain : refined to in data port position.i;
+end actuating;
+
+process implementation actuating.i
+subcomponents
+	tc : thread thr_collect;
+	td : thread thr_display;
+connections
+	c0 : port datain -> tc.datain;
+	c1 : port tc.dataout -> td.datain;
+flows
+	actuating_sink : flow sink datain -> c0 -> tc.collect_path -> c1 -> td.display_sink;
+end actuating.i;
+
+end latency_cs::impl;

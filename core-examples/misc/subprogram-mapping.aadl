@@ -1,0 +1,70 @@
+package subprogram_mapping
+
+public
+
+with base_types;
+
+--int globalVariableA
+-- 
+-- 
+--funtion_A(inA,inB,inC) {
+-- 
+--int localVariableA = inA;
+--int localVariableB = inB;
+--int localVariableC = inC;
+--int localVariableD = 0;
+-- 
+--globalVariableA  = function_AddTogether ( localVariableA, localVariableB );
+-- 
+--localVariableD  = function_Multiply ( localVariableC, globalVariableA  );
+-- 
+--return localVariableD;
+--}
+
+
+
+subprogram function_a
+features
+    ga  : requires data access base_types::integer; -- global a, access to a data component located
+                                                    -- in the calling task or enclosed process
+	va  : in parameter base_types::integer;         -- local a
+	vb  : in parameter base_types::integer;         -- local b
+	vc  : in parameter base_types::integer;         -- local c 
+	res : out parameter base_types::integer;        -- the result
+end function_a;
+
+subprogram implementation function_a.impl
+subcomponents
+	local_a : data base_types::integer;
+	local_b : data base_types::integer;
+	local_c : data base_types::integer;
+	local_d : data base_types::integer;
+calls
+call : { add : subprogram function_addtogether;
+	     mult : subprogram function_multiply;
+};
+connections
+	c0 : parameter local_a -> add.va;
+	c1 : parameter local_b -> add.vb;
+	c2 : parameter add.res -> ga;
+	c3 : parameter local_c -> mult.vc;
+	c4 : parameter ga -> mult.va;
+	c5 : parameter mult.res -> local_d;
+end function_a.impl;
+
+
+subprogram function_addtogether
+features
+	va  : in parameter base_types::integer;
+	vb  : in parameter base_types::integer;
+	res : out parameter base_types::integer;
+end function_addtogether;
+
+subprogram function_multiply
+features
+	vc  : in parameter base_types::integer;
+	va  : in parameter base_types::integer;
+	res : out parameter base_types::integer;
+end function_multiply;
+
+end subprogram_mapping;

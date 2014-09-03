@@ -1,0 +1,59 @@
+package latency_cs::functional
+
+public
+
+abstract sensing
+features
+	dataout : out data port;
+flows
+	sensor_source : flow source dataout;
+properties
+	latency => 2 ms .. 5 ms applies to sensor_source;
+end sensing;
+
+abstract processing
+features
+	datain1 : in data port;
+	datain2 : in data port;
+	dataout : out data port;
+flows
+	processing_path0 : flow path datain1 -> dataout;
+	processing_path1 : flow path datain2 -> dataout;
+properties
+	latency => 18 ms .. 20 ms applies to processing_path0, processing_path1;
+end processing;
+
+abstract actuating
+features
+	datain : in data port;
+flows
+	actuating_sink : flow sink datain;
+properties
+	latency => 8 ms .. 10 ms applies to actuating_sink;
+end actuating;
+
+system integration
+end integration;
+
+system implementation integration.i
+subcomponents
+	s1 : abstract sensing;
+	s2 : abstract sensing;
+	p  : abstract processing;
+	a  : abstract actuating;
+connections
+	c0 : port s1.dataout -> p.datain1;
+	c1 : port s2.dataout -> p.datain2;
+	c2 : port p.dataout -> a.datain;
+flows
+	etef0 : end to end flow s1.sensor_source -> c0 ->
+	                        p.processing_path0  -> c2 ->
+	                        a.actuating_sink; 
+	etef1 : end to end flow s2.sensor_source -> c1 ->
+	                        p.processing_path1  -> c2 ->
+	                        a.actuating_sink; 
+properties
+	latency => 80 ms .. 100 ms applies to etef0, etef1;
+end integration.i;
+
+end latency_cs::functional;

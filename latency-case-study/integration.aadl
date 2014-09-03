@@ -1,0 +1,87 @@
+package latency_cs::integration
+
+
+public
+
+with latency_cs::functional;
+with latency_cs::impl;
+with latency_cs::platform;
+with arinc653;
+
+system integration extends latency_cs::functional::integration
+end integration;
+
+system implementation integration.software_generic extends latency_cs::functional::integration.i
+subcomponents
+	p  		: refined to process  latency_cs::impl::processing.i {Classifier_Substitution_Rule => Type_Extension;};
+	s1 		: refined to process latency_cs::impl::sensing.i {Classifier_Substitution_Rule => Type_Extension;};
+	s2 		: refined to process  latency_cs::impl::sensing.i {Classifier_Substitution_Rule => Type_Extension;};
+	a  		: refined to process  latency_cs::impl::actuating.i {Classifier_Substitution_Rule => Type_Extension;};
+end integration.software_generic;
+
+
+system implementation integration.software_distributed extends integration.software_generic
+subcomponents
+	s1_cpu 	: processor latency_cs::platform::generic_cpu;
+	s2_cpu 	: processor latency_cs::platform::generic_cpu;
+	p_cpu 	: processor latency_cs::platform::generic_cpu;
+	a_cpu 	: processor latency_cs::platform::generic_cpu;
+	s_p_bus: bus latency_cs::platform::generic_bus;
+	p_a_bus : bus latency_cs::platform::generic_bus;
+connections
+	b0 : bus access s1_cpu.net <-> s_p_bus;
+	b1 : bus access s2_cpu.net <-> s_p_bus;
+	b2 : bus access p_cpu.net <-> s_p_bus;
+	b3 : bus access p_cpu.net <-> p_a_bus;
+	b4 : bus access a_cpu.net <-> p_a_bus;
+properties
+	actual_processor_binding => (reference (s1_cpu)) applies to s1;
+	actual_processor_binding => (reference (s2_cpu)) applies to s2;
+	actual_processor_binding => (reference (p_cpu)) applies to p;
+	actual_processor_binding => (reference (a_cpu)) applies to a;
+	
+	actual_connection_binding => (reference (s_p_bus)) applies to c0;
+	actual_connection_binding => (reference (s_p_bus)) applies to c1;
+	actual_connection_binding => (reference (p_a_bus)) applies to c2;
+	
+	-- protocol that applies to the connections
+	required_virtual_bus_class => (classifier (latency_cs::platform::generic_protocol)) applies to c0, c1, c2;
+end integration.software_distributed;
+
+
+system implementation integration.software_integrated extends integration.software_generic
+subcomponents
+	s1 		: refined to process latency_cs::impl::sensing.i {Classifier_Substitution_Rule => Type_Extension;};
+	s2 		: refined to process  latency_cs::impl::sensing.i {Classifier_Substitution_Rule => Type_Extension;};
+	a  		: refined to process  latency_cs::impl::actuating.i {Classifier_Substitution_Rule => Type_Extension;};
+	cpu 	: processor latency_cs::platform::ima_cpu.i;
+properties
+	actual_processor_binding => (reference (cpu.part1)) applies to s1;
+	actual_processor_binding => (reference (cpu.part2)) applies to s2;
+	actual_processor_binding => (reference (cpu.part3)) applies to p;
+	actual_processor_binding => (reference (cpu.part4)) applies to a;
+end integration.software_integrated;
+
+
+system implementation integration.software_integrated1 extends integration.software_integrated
+properties
+	arinc653::module_schedule => ([Partition => reference (cpu.part1) ; Duration => 7 ms ; Periodic_Processing_Start => true;],
+		                          [Partition => reference (cpu.part2) ; Duration => 7 ms ; Periodic_Processing_Start => true;],
+		                          [Partition => reference (cpu.part3) ; Duration => 22 ms ; Periodic_Processing_Start => true;],
+		                          [Partition => reference (cpu.part4) ; Duration => 12 ms ; Periodic_Processing_Start => true;])
+		                         applies to cpu;
+end integration.software_integrated1;
+
+
+system implementation integration.software_integrated2 extends integration.software_integrated
+properties
+	arinc653::module_schedule => ([Partition => reference (cpu.part3) ; Duration => 22 ms ; Periodic_Processing_Start => true;],
+		                          [Partition => reference (cpu.part2) ; Duration => 7 ms ; Periodic_Processing_Start => true;],
+		                          [Partition => reference (cpu.part4) ; Duration => 12 ms ; Periodic_Processing_Start => true;],
+		                          [Partition => reference (cpu.part1) ; Duration => 7 ms ; Periodic_Processing_Start => true;])
+		                         applies to cpu;
+end integration.software_integrated2;
+
+end latency_cs::integration;
+
+
