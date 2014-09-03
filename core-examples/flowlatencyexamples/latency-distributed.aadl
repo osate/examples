@@ -134,9 +134,9 @@ flows
 	etef1 : end to end flow s2.fsource -> c2 -> r2.fsink {Latency => 7 ms .. 15 ms;};
 properties
 	actual_processor_binding => (reference (module1.part1)) applies to s;
-	actual_processor_binding => (reference (module1.part2)) applies to r;
+	actual_processor_binding => (reference (module2.part2)) applies to r;
 	actual_processor_binding => (reference (module2.part1)) applies to s2;
-	actual_processor_binding => (reference (module2.part2)) applies to r2;
+	actual_processor_binding => (reference (module1.part2)) applies to r2;
 	actual_connection_binding => (reference (b)) applies to c0;
 	actual_connection_binding => (reference (b)) applies to c2;
 end latencytest.partitioned_distributed;

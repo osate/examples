@@ -1,0 +1,70 @@
+Latency Analysis Report
+
+Flow analysis for end to end flow etef0 (Async)
+Contributor,Min Specified,Min Value,Min Method    ,Max Specified,Max Value,Max Method    ,Comments             ,
+Component part1,,20.0ms,partition schedule,,20.0ms,partition schedule,Initial 50.0ms partition latency not added,
+Thread task1,,0.0ms,first sampling,,0.0ms,first sampling,Initial 50.0ms sampling latency not added,
+Thread task1,4.0ms,3.0ms,processing time,6.0ms,7.0ms,processing time,max actual latency exceeds max flow latency,
+Sampled Connection s.task1.outp -> r.task1.inp,,0.0ms,no latency,,0.0ms,no latency,
+Bus b,1.0ms,10.001ms,transmission time,1.0ms,30.01ms,transmission time,Max Data transfer time,Min Data transfer time,
+Component part2,,20.0ms,partition schedule,,20.0ms,partition schedule,
+Thread task1,,50.0ms,sampling,,50.0ms,sampling,Min: Added 30.0ms,Max: Added 30.0ms,
+Thread task1,2.0ms,3.0ms,processing time,3.0ms,7.0ms,processing time,max actual latency exceeds max flow latency,min actual latency exceeds min flow latency,
+Latency Total,7.0ms,66.001ms,,10.0ms,94.01ms,,
+End to End Latency,,5.0ms,,,10.0ms,,
+End to end Latency Summary,
+ERROR,Sum of maximum actual latencies (94.01ms) exceeds end to end latency (10.0ms),
+
+
+
+Flow analysis for end to end flow etef0 (Sync)
+Contributor,Min Specified,Min Value,Min Method    ,Max Specified,Max Value,Max Method    ,Comments             ,
+Component part1,,20.0ms,partition schedule,,20.0ms,partition schedule,Initial 50.0ms partition latency not added,
+Thread task1,,0.0ms,first sampling,,0.0ms,first sampling,Initial 50.0ms sampling latency not added,
+Thread task1,4.0ms,3.0ms,processing time,6.0ms,7.0ms,processing time,max actual latency exceeds max flow latency,
+Sampled Connection s.task1.outp -> r.task1.inp,,0.0ms,no latency,,0.0ms,no latency,
+Bus b,1.0ms,10.001ms,transmission time,1.0ms,30.01ms,transmission time,Max Data transfer time,Min Data transfer time,
+Component part2,,20.0ms,partition schedule,,20.0ms,partition schedule,
+Thread task1,,50.0ms,sampling,,50.0ms,sampling,Min: Added 30.0ms,Max: Added 30.0ms,Min: Added 30.0ms,Max: Added 30.0ms,
+Thread task1,2.0ms,3.0ms,processing time,3.0ms,7.0ms,processing time,max actual latency exceeds max flow latency,min actual latency exceeds min flow latency,
+Latency Total,7.0ms,66.001ms,,10.0ms,94.01ms,,
+End to End Latency,,5.0ms,,,10.0ms,,
+End to end Latency Summary,
+ERROR,Sum of maximum actual latencies (94.01ms) exceeds end to end latency (10.0ms),
+
+
+
+Flow analysis for end to end flow etef1 (Async)
+Contributor,Min Specified,Min Value,Min Method    ,Max Specified,Max Value,Max Method    ,Comments             ,
+Component part1,,20.0ms,partition schedule,,20.0ms,partition schedule,Initial 50.0ms partition latency not added,
+Thread task1,,0.0ms,first sampling,,0.0ms,first sampling,Initial 50.0ms sampling latency not added,
+Thread task1,4.0ms,3.0ms,processing time,6.0ms,7.0ms,processing time,max actual latency exceeds max flow latency,
+Sampled Connection s2.task1.outp -> r2.task1.inp,,0.0ms,no latency,,0.0ms,no latency,
+Bus b,1.0ms,10.001ms,transmission time,1.0ms,30.01ms,transmission time,Max Data transfer time,Min Data transfer time,
+Component part2,,20.0ms,partition schedule,,20.0ms,partition schedule,
+Thread task1,,50.0ms,sampling,,50.0ms,sampling,Min: Added 30.0ms,Max: Added 30.0ms,
+Thread task1,2.0ms,3.0ms,processing time,3.0ms,7.0ms,processing time,max actual latency exceeds max flow latency,min actual latency exceeds min flow latency,
+Latency Total,7.0ms,66.001ms,,10.0ms,94.01ms,,
+End to End Latency,,7.0ms,,,15.0ms,,
+End to end Latency Summary,
+ERROR,Sum of maximum actual latencies (94.01ms) exceeds end to end latency (15.0ms),
+
+
+
+Flow analysis for end to end flow etef1 (Sync)
+Contributor,Min Specified,Min Value,Min Method    ,Max Specified,Max Value,Max Method    ,Comments             ,
+Component part1,,20.0ms,partition schedule,,20.0ms,partition schedule,Initial 50.0ms partition latency not added,
+Thread task1,,0.0ms,first sampling,,0.0ms,first sampling,Initial 50.0ms sampling latency not added,
+Thread task1,4.0ms,3.0ms,processing time,6.0ms,7.0ms,processing time,max actual latency exceeds max flow latency,
+Sampled Connection s2.task1.outp -> r2.task1.inp,,0.0ms,no latency,,0.0ms,no latency,
+Bus b,1.0ms,10.001ms,transmission time,1.0ms,30.01ms,transmission time,Max Data transfer time,Min Data transfer time,
+Component part2,,20.0ms,partition schedule,,20.0ms,partition schedule,
+Thread task1,,50.0ms,sampling,,50.0ms,sampling,Min: Added 30.0ms,Max: Added 30.0ms,Min: Added 30.0ms,Max: Added 30.0ms,
+Thread task1,2.0ms,3.0ms,processing time,3.0ms,7.0ms,processing time,max actual latency exceeds max flow latency,min actual latency exceeds min flow latency,
+Latency Total,7.0ms,66.001ms,,10.0ms,94.01ms,,
+End to End Latency,,7.0ms,,,15.0ms,,
+End to end Latency Summary,
+ERROR,Sum of maximum actual latencies (94.01ms) exceeds end to end latency (15.0ms),
+
+
+

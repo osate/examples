@@ -1,0 +1,30 @@
+Latency Analysis Report
+
+Flow analysis for end to end flow etef0 (Async)
+Contributor,Min Specified,Min Value,Min Method,Max Specified,Max Value,Max Method,Comments,Issues,
+Thread task1,,0.0ms,first sampling,,0.0ms,first sampling,Initial 50.0ms sampling latency not added,
+Thread task1,4.0ms,3.0ms,processing time,6.0ms,7.0ms,processing time,,max actual latency exceeds max flow latency,
+Sampled Connection s.task1.outp -> r.task1.inp,,0.0ms,no latency,,0.0ms,no latency,,
+Thread task1,,50.0ms,sampling,,50.0ms,sampling,,
+Thread task1,2.0ms,3.0ms,processing time,3.0ms,7.0ms,processing time,,max actual latency exceeds max flow latency,min actual latency exceeds min flow latency,
+Latency Total,6.0ms,56.0ms,,9.0ms,64.0ms,,
+End to End Latency,,5.0ms,,,10.0ms,,
+End to end Latency Summary,
+ERROR,Sum of maximum actual latencies (64.0ms) exceeds end to end latency (10.0ms),
+
+
+
+Flow analysis for end to end flow etef0 (Sync)
+Contributor,Min Specified,Min Value,Min Method,Max Specified,Max Value,Max Method,Comments,Issues,
+Thread task1,,0.0ms,first sampling,,0.0ms,first sampling,Initial 50.0ms sampling latency not added,
+Thread task1,4.0ms,3.0ms,processing time,6.0ms,7.0ms,processing time,,max actual latency exceeds max flow latency,
+Sampled Connection s.task1.outp -> r.task1.inp,,0.0ms,no latency,,0.0ms,no latency,,
+Thread task1,,50.0ms,sampling,,50.0ms,sampling,Added 43.0ms,
+Thread task1,2.0ms,3.0ms,processing time,3.0ms,7.0ms,processing time,,max actual latency exceeds max flow latency,min actual latency exceeds min flow latency,
+Latency Total,6.0ms,53.0ms,,9.0ms,57.0ms,,
+End to End Latency,,5.0ms,,,10.0ms,,
+End to end Latency Summary,
+ERROR,Sum of maximum actual latencies (57.0ms) exceeds end to end latency (10.0ms),
+
+
+

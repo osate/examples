@@ -51,7 +51,7 @@ subcomponents
  		Timing => Delayed applies to STReply,CTReply,APReply;
  		Latency => 300 ms .. 300 ms applies to XferOnly;
  		Period => 100 ms applies to sender, requestor;
- 		Deadline => 1 ms applies to sender, requestor;
+-- 		Deadline => 1 ms applies to sender, requestor;
  		Dispatch_Protocol => Periodic applies to sender, requestor;
 end PullDCFMInputDataset.CrossPartition;
 
@@ -82,6 +82,7 @@ flows
 	AircraftPositionFlow: flow path OwnAircraftPositionRequest -> SendOwnAircraftPosition;
 properties
 	Dispatch_Protocol => Periodic;
+	Latency => 1ms..1ms applies to SourceTrackFlowpath, CorrelatedFlow, AircraftPositionFlow;
 end PullDCFMDataSetSender;
 
 thread PullDCFMDataSetRequestor
@@ -103,6 +104,8 @@ flows
 	ReceivedDataSetFlow: flow path ReceivedOwnAircraftPosition -> ReceiverData;
 properties
 	Dispatch_Protocol => Periodic;
-end PullDCFMDataSetRequestor;
+	Latency => 1ms..1ms applies to SourceTrackReceivedFlow, CorrelatedTrackReceivedFlow;
+	Latency => 0ms..0ms applies to SourceTracksRequest, AircraftPositionReceivedFlow;
+	end PullDCFMDataSetRequestor;
 
 end PullProtocols;
