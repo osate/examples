@@ -28,34 +28,22 @@ end position.i;
 -- Realization of the sensing function in software
 --
 
-process sensing_sw extends latency_cs::functional::sensing
+process sensing extends latency_cs::functional::sensing
 features
 	dataout : refined to out data port position.i;
-end sensing_sw;
+end sensing;
 
-process implementation sensing_sw.i
+process implementation sensing.i
 subcomponents
 	ts : thread thr_sensing;
 connections
 	c0 : port ts.dataout -> dataout;
-end sensing_sw.i;
+end sensing.i;
 
 thread thr_sensing
 features
 	dataout : out data port position.i;
 end thr_sensing;
-
---
--- Realization of the sensing function in software
---
-
-device sensing_hw extends latency_cs::functional::sensing
-features
-	dataout : refined to out data port position.i;
-end sensing_hw;
-
-device implementation sensing_hw.i
-end sensing_hw.i;
 
 
 ---------------------------
@@ -132,12 +120,12 @@ flows
 	f0 : flow sink datain;
 end thr_display;
 
-process actuating_sw extends latency_cs::functional::actuating
+process actuating extends latency_cs::functional::actuating
 features
 	datain : refined to in data port position.i;
-end actuating_sw;
+end actuating;
 
-process implementation actuating_sw.i
+process implementation actuating.i
 subcomponents
 	tc : thread thr_collect;
 	tp : thread thr_display;
@@ -146,27 +134,6 @@ connections
 	c1 : port tc.dataout -> tp.datain;
 flows
 	f0 : flow sink datain -> c0 -> tc.f0 -> c1 -> tp.f0;
-end actuating_sw.i;
-
-
---
--- Realization of the actuating function in hardware
---
-
-device actuating_hw extends latency_cs::functional::actuating
-features
-	datain : refined to in data port position.i;
-end actuating_hw;
-
-device implementation actuating_hw.i
-end actuating_hw.i;
-
--------------------------------------
---  Generic integration component  --
--------------------------------------
-
-system integration extends latency_cs::functional::integration
-end integration;
-
+end actuating.i;
 
 end latency_cs::impl;

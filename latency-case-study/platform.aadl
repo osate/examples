@@ -1,9 +1,30 @@
 package latency_cs::platform
 
 public
+with arinc653;
 
 processor generic_cpu
 end generic_cpu;
+
+processor ima_cpu
+end ima_cpu;
+
+processor implementation ima_cpu.i
+subcomponents
+	part1 : virtual processor partition;
+	part2 : virtual processor partition;
+	part3 : virtual processor partition;
+	part4 : virtual processor partition;
+properties
+	arinc653::module_schedule => ([Partition => reference (part1) ; Duration => 50 ms ; Periodic_Processing_Start => true;],
+		                          [Partition => reference (part2) ; Duration => 50 ms ; Periodic_Processing_Start => true;],
+		                          [Partition => reference (part3) ; Duration => 50 ms ; Periodic_Processing_Start => true;],
+		                          [Partition => reference (part4) ; Duration => 50 ms ; Periodic_Processing_Start => true;]);
+	end ima_cpu.i;
+
+virtual processor partition
+end partition;
+
 
 bus generic_bus
 end generic_bus;
