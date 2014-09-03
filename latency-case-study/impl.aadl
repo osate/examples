@@ -38,11 +38,15 @@ subcomponents
 	ts : thread thr_sensing;
 connections
 	c0 : port ts.dataout -> dataout;
+flows
+	sensor_source : flow source ts.sensing_source -> c0 -> dataout;
 end sensing.i;
 
 thread thr_sensing
 features
 	dataout : out data port position.i;
+flows
+	sensing_source : flow source dataout;
 end thr_sensing;
 
 
@@ -56,8 +60,8 @@ features
 	datain2 : refined to in data port position.i;
 	dataout : refined to out data port position.i;
 flows
-	f2 : flow sink datain1;
-	f3 : flow sink datain2;
+	sink0 : flow sink datain1;
+	sink1 : flow sink datain2;
 end processing;
 
 process implementation processing.i
@@ -71,10 +75,10 @@ connections
 	c3 : port datain2 -> ts.datain2;
 	c4 : port tf.dataout -> dataout;
 flows
-	f0 : flow path datain1 -> c0 -> tf.f0 -> c4 -> dataout; 
-	f1 : flow path datain2 -> c1 -> tf.f1 -> c4 -> dataout; 
-	f2 : flow sink datain1 -> c2 -> ts.f0; 
-	f3 : flow sink datain2 -> c3 -> ts.f1; 
+	processing_path0 : flow path datain1 -> c0 -> tf.filter_path0 -> c4 -> dataout; 
+	processing_path1 : flow path datain2 -> c1 -> tf.filter_path1 -> c4 -> dataout; 
+	sink0 : flow sink datain1 -> c2 -> ts.stats_sink0; 
+	sink1 : flow sink datain2 -> c3 -> ts.stats_sink1; 
 end processing.i;
 
 thread thr_stats
@@ -82,8 +86,8 @@ features
 	datain1 : in data port position.i;
 	datain2 : in data port position.i;
 flows
-	f0 : flow sink datain1;
-	f1 : flow sink datain2;
+	stats_sink0 : flow sink datain1;
+	stats_sink1 : flow sink datain2;
 end thr_stats;
 
 thread thr_filter
@@ -92,8 +96,8 @@ features
 	datain2 : in data port position.i;
 	dataout : out data port position.i;
 flows
-	f0 : flow path datain1 -> dataout;
-	f1 : flow path datain2 -> dataout;
+	filter_path0 : flow path datain1 -> dataout;
+	filter_path1 : flow path datain2 -> dataout;
 end thr_filter;
 
 
@@ -110,14 +114,14 @@ features
 	datain : in data port position.i;
 	dataout : out data port position.i;
 flows
-	f0 : flow path datain -> dataout;
+	collect_path : flow path datain -> dataout;
 end thr_collect;
 
 thread thr_display
 features
 	datain : in data port position.i;
 flows
-	f0 : flow sink datain;
+	display_sink : flow sink datain;
 end thr_display;
 
 process actuating extends latency_cs::functional::actuating
@@ -128,12 +132,12 @@ end actuating;
 process implementation actuating.i
 subcomponents
 	tc : thread thr_collect;
-	tp : thread thr_display;
+	td : thread thr_display;
 connections
 	c0 : port datain -> tc.datain;
-	c1 : port tc.dataout -> tp.datain;
+	c1 : port tc.dataout -> td.datain;
 flows
-	f0 : flow sink datain -> c0 -> tc.f0 -> c1 -> tp.f0;
+	actuating_sink : flow sink datain -> c0 -> tc.collect_path -> c1 -> td.display_sink;
 end actuating.i;
 
 end latency_cs::impl;

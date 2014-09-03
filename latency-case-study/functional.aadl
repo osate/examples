@@ -6,7 +6,7 @@ abstract sensing
 features
 	dataout : out data port;
 flows
-	f0 : flow source dataout;
+	sensor_source : flow source dataout;
 end sensing;
 
 abstract processing
@@ -15,15 +15,15 @@ features
 	datain2 : in data port;
 	dataout : out data port;
 flows
-	f0 : flow path datain1 -> dataout;
-	f1 : flow path datain2 -> dataout;
+	processing_path0 : flow path datain1 -> dataout;
+	processing_path1 : flow path datain2 -> dataout;
 end processing;
 
 abstract actuating
 features
 	datain : in data port;
 flows
-	f0 : flow sink datain;
+	actuating_sink : flow sink datain;
 end actuating;
 
 system integration
@@ -40,12 +40,12 @@ connections
 	c1 : port s2.dataout -> p.datain2;
 	c2 : port p.dataout -> a.datain;
 flows
-	etef0 : end to end flow s1.f0 -> c0 ->
-	                        p.f0  -> c2 ->
-	                        a.f0; 
-	etef1 : end to end flow s2.f0 -> c1 ->
-	                        p.f1  -> c2 ->
-	                        a.f0; 
+	etef0 : end to end flow s1.sensor_source -> c0 ->
+	                        p.processing_path0  -> c2 ->
+	                        a.actuating_sink; 
+	etef1 : end to end flow s2.sensor_source -> c1 ->
+	                        p.processing_path1  -> c2 ->
+	                        a.actuating_sink; 
 end integration.i;
 
 end latency_cs::functional;

@@ -14,9 +14,9 @@ end integration;
 system implementation integration.software_generic extends latency_cs::functional::integration.i
 subcomponents
 	p  		: refined to process  latency_cs::impl::processing.i {Classifier_Substitution_Rule => Type_Extension;};
-	s1 : refined to process latency_cs::impl::sensing.i {Classifier_Substitution_Rule => Type_Extension;};
-	s2 : refined to process  latency_cs::impl::sensing.i {Classifier_Substitution_Rule => Type_Extension;};
-	a  : refined to process  latency_cs::impl::actuating.i {Classifier_Substitution_Rule => Type_Extension;};
+	s1 		: refined to process latency_cs::impl::sensing.i {Classifier_Substitution_Rule => Type_Extension;};
+	s2 		: refined to process  latency_cs::impl::sensing.i {Classifier_Substitution_Rule => Type_Extension;};
+	a  		: refined to process  latency_cs::impl::actuating.i {Classifier_Substitution_Rule => Type_Extension;};
 end integration.software_generic;
 
 
