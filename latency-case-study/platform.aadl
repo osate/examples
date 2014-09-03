@@ -4,6 +4,8 @@ public
 with arinc653;
 
 processor generic_cpu
+features
+	net : requires bus access generic_bus;
 end generic_cpu;
 
 processor ima_cpu

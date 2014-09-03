@@ -22,11 +22,23 @@ end integration.software_generic;
 
 system implementation integration.software_distributed extends integration.software_generic
 subcomponents
+	s1_cpu 	: processor latency_cs::platform::generic_cpu;
+	s2_cpu 	: processor latency_cs::platform::generic_cpu;
 	p_cpu 	: processor latency_cs::platform::generic_cpu;
+	a_cpu 	: processor latency_cs::platform::generic_cpu;
 	s_p_bus: bus latency_cs::platform::generic_bus;
 	p_a_bus : bus latency_cs::platform::generic_bus;
+connections
+	b0 : bus access s1_cpu.net <-> s_p_bus;
+	b1 : bus access s2_cpu.net <-> s_p_bus;
+	b2 : bus access p_cpu.net <-> s_p_bus;
+	b3 : bus access p_cpu.net <-> p_a_bus;
+	b4 : bus access a_cpu.net <-> p_a_bus;
 properties
+	actual_processor_binding => (reference (s1_cpu)) applies to s1;
+	actual_processor_binding => (reference (s2_cpu)) applies to s2;
 	actual_processor_binding => (reference (p_cpu)) applies to p;
+	actual_processor_binding => (reference (a_cpu)) applies to a;
 	
 	actual_connection_binding => (reference (s_p_bus)) applies to c0;
 	actual_connection_binding => (reference (s_p_bus)) applies to c1;
