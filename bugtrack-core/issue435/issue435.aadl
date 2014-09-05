@@ -3,30 +3,15 @@ public
 
 system syst
   prototypes
-    SensorSetOutput : feature group ;
+    SensorSetOutput : feature group;
   features
     SensorSetReadings : feature group SensorSetOutput;
 end syst;
 
-system implementation syst.i(SensorSetOutput => feature group fgt1)
-end syst.i ;
-
-system sys
-  prototypes
-    SensorSetOutput : feature group fgt;
-  features
-    SensorSetReadings : feature group SensorSetOutput;
-end sys;
-
-system implementation sys.i(SensorSetOutput => feature group fgt1)
-end sys.i ;
+system implementation syst.i(SensorSetOutput => feature group fgt)
+end syst.i;
 
 feature group fgt
 end fgt;
-
-feature group fgt1 extends fgt
-  features
-    p1: out event port;
-end fgt1;
 
 end issue435;
