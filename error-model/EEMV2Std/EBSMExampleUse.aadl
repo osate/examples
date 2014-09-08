@@ -1,0 +1,35 @@
+package EBSMExampleUse
+public
+with EMV2;
+device sensor
+features
+	sensorReading: out data port;
+annex EMV2 {**
+use behavior ErrorLibrary::PermanentTransientFailure;
+properties
+   EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.0e-4; 
+                       Distribution => fixed; ] applies to Failure;
+**};
+end sensor;
+
+
+device actuator
+features
+	sensorReading: out data port;
+annex EMV2 {**
+use behavior ErrorLibrary::PermanentTransientFailure;
+component error behavior
+events
+	OverHeated: error event;
+transitions
+	overHeat: Operational -[Overheated]-> FailedTransient;
+end component;
+properties
+   EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.0e-4; 
+                       Distribution => fixed; ] applies to Failure;
+   EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.0e-2; 
+                       Distribution => fixed; ] applies to OverHeated;
+**};
+end actuator;
+
+end EBSMExampleUse;
