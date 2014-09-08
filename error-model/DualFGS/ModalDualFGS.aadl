@@ -14,7 +14,7 @@ annex emv2 {**
 	
 component error behavior
     propagations  
-       Failed-[]->Outport(NoValue);
+       Failed-[]->Outport{NoValue};
    end component; 
 	**};
 end FG;
@@ -32,8 +32,8 @@ annex emv2 {**
 	
 component error behavior
     propagations  
-      Failed-[]->Outport(NoValue);
-      Operational -[Inport{NoValue}]-> OutPort(NoValue);
+      Failed-[]->Outport{NoValue};
+      Operational -[Inport{NoValue}]-> OutPort{NoValue};
    end component; 
 	**};
 end AP;
@@ -57,8 +57,8 @@ annex emv2 {**
 	
 component error behavior
     propagations  
-      Failed-[]->Outport(NoValue);
-      Operational -[FromAP1Port{NoValue} and FromAP2Port{NoValue}]-> OutPort(NoValue);
+      Failed-[]->Outport{NoValue};
+      Operational -[FromAP1Port{NoValue} and FromAP2Port{NoValue}]-> OutPort{NoValue};
   end component;
 	**};
 annex emv2 {**
@@ -66,7 +66,7 @@ annex emv2 {**
   use behavior ErrorModelLibrary::Simple; 
 component error behavior
     propagations  
-      Operational -[FromAP1Port{NoValue} and FromAP2Port{NoValue}]-> OutPort(NoValue);
+      Operational -[FromAP1Port{NoValue} and FromAP2Port{NoValue}]-> OutPort{NoValue};
   end component;
 	**} in modes (noncritical);
 annex emv2 {**
@@ -74,7 +74,7 @@ annex emv2 {**
   use behavior ErrorModelLibrary::Simple; 
 component error behavior
     propagations  
-      Operational -[FromAP1Port{NoValue} and FromAP2Port{NoValue}]-> OutPort(NoValue);
+      Operational -[FromAP1Port{NoValue} and FromAP2Port{NoValue}]-> OutPort{NoValue};
   end component;
 	**} in modes (critical);
 end AC;
@@ -97,8 +97,8 @@ annex emv2 {**
 	powersupply: in propagation {NoService};
 	flows
 	esource: error source outport{NoValue} when Failed;
-	ePath: error path inport{NoValue} -> outport(NoValue);
-	epPower: error path powersupply{NoService} -> outport(NoValue);
+	ePath: error path inport{NoValue} -> outport{NoValue};
+	epPower: error path powersupply{NoService} -> outport{NoValue};
 	end propagations;
 	**};
 end FGS;
@@ -163,7 +163,7 @@ annex emv2 {**
 	
 component error behavior
     propagations  
-      Failed-[]->access(NoService);
+      Failed-[]->access{NoService};
    end component; 
 	**};
 end PowerSupply;
@@ -180,7 +180,7 @@ annex emv2 {**
 	
 component error behavior
     propagations  
-      Failed-[]->bindings(NoService);
+      Failed-[]->bindings{NoService};
    end component; 
 	**};
 end EtherSwitch;
