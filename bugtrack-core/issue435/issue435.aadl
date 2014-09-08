@@ -1,0 +1,17 @@
+package issue435
+public
+
+system syst
+  prototypes
+    SensorSetOutput : feature group;
+  features
+    SensorSetReadings : feature group SensorSetOutput;
+end syst;
+
+system implementation syst.i(SensorSetOutput => feature group fgt)
+end syst.i;
+
+feature group fgt
+end fgt;
+
+end issue435;
