@@ -29,6 +29,8 @@ properties
                        Distribution => fixed; ] applies to Failure;
    EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.0e-2; 
                        Distribution => fixed; ] applies to OverHeated;
+   EMV2::DurationDistribution => [ Duration => 10 ms .. 200 ms; 
+                       Distribution => fixed; ] applies to Recovery;
 **};
 end actuator;
 
