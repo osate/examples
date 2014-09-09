@@ -1,0 +1,52 @@
+
+
+package test_queuing
+public
+with POK, Data_Model, ARINC653, common_pkg;
+
+  system root
+  end root;
+
+  system implementation root.impl
+  subcomponents
+    the_cpu: processor common_pkg::cpu.two_partitions;
+    the_proc1: process proc1.impl;
+    the_proc2: process proc2.impl;
+    the_mem: memory common_pkg::mem.two_partitions;
+  connections
+    cnx: port the_proc1.p_out -> the_proc2.p_in;
+  properties
+    actual_processor_binding => (reference (the_cpu.the_part1)) applies to the_proc1;
+    actual_processor_binding => (reference (the_cpu.the_part2)) applies to the_proc2;
+    actual_memory_binding => (reference (the_mem.part1_mem)) applies to the_proc1;
+    actual_memory_binding => (reference (the_mem.part2_mem)) applies to the_proc2;
+  end root.impl;
+
+  process proc1
+  features
+    p_out: out event data port common_pkg::Integer {	Queue_Size => 5; 
+    							          				Queue_Processing_Protocol => FIFO;};
+  end proc1;
+
+  process implementation proc1.impl
+  subcomponents
+    the_sender: thread common_pkg::eventdata_sender.impl;
+  connections
+    cnx: port the_sender.p_out -> p_out;
+  end proc1.impl;
+
+  process proc2
+  features
+    p_in: in event data port common_pkg::Integer{ Queue_Size => 10; 
+    							    				Queue_Processing_Protocol => FIFO;};
+  end proc2;
+
+  process implementation proc2.impl
+  subcomponents
+    the_receiver: thread common_pkg::eventdata_receiver.impl;
+  connections
+    cnx: port p_in -> the_receiver.p_in;
+  end proc2.impl;
+
+
+end test_queuing;

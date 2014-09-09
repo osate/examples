@@ -1,0 +1,363 @@
+
+
+package common_pkg
+public
+with Data_Model,ARINC653,POK,RAMSES_processors,RAMSES_buses;
+
+  --------------------------------------------------
+  --- PROCESSOR COMPONENTS
+  --------------------------------------------------
+  
+  processor cpu extends RAMSES_processors::cpu_x86
+  properties
+    ARINC653::HM_Error_ID_Levels => (
+    	[ErrorIdentifier => 1; Description => "Numeric error"; ErrorLevel=>Module_Level;ErrorCode=>Numeric_Error;],
+    	[ErrorIdentifier => 2; Description => "Illegal request"; ErrorLevel=>Module_Level;ErrorCode=>Illegal_Request;],
+    	[ErrorIdentifier => 3; Description => "Numeric error"; ErrorLevel=>Partition_Level;ErrorCode=>Numeric_Error;],
+    	[ErrorIdentifier => 4; Description => "Illegal request"; ErrorLevel=>Partition_Level;ErrorCode=>Illegal_Request;],
+    	[ErrorIdentifier => 5; Description => "Numeric error"; ErrorLevel=>Process_Level;ErrorCode=>Numeric_Error;],
+    	[ErrorIdentifier => 6; Description => "Illegal request"; ErrorLevel=>Process_Level;ErrorCode=>Illegal_Request;]
+    );
+    ARINC653::HM_Error_ID_Actions => (
+    	[ErrorIdentifier => 1; Description => "Restart partition"; Action => "Stop";],
+    	[ErrorIdentifier => 2; Description => "Warm partition restart"; Action => "Reset";]
+    );
+  end cpu;
+
+  processor implementation cpu.single_partition
+  subcomponents
+    the_part:  virtual processor part;
+  properties
+    ARINC653::Module_Major_Frame => 2000 ms;
+    POK::Scheduler => static;
+    	arinc653::module_schedule => ([Partition => reference (the_part) ; Duration => 2000 ms ; Periodic_Processing_Start => true;]);
+  end cpu.single_partition;
+
+  processor implementation cpu.two_partitions
+  subcomponents
+    the_part1:  virtual processor part;
+    the_part2:  virtual processor part;
+  properties
+    ARINC653::Module_Major_Frame => 4000 ms;
+    POK::Scheduler => static;
+    	arinc653::module_schedule => ([Partition => reference (the_part1) ; Duration => 2000 ms ; Periodic_Processing_Start => true;],
+		                          [Partition => reference (the_part1) ; Duration => 1000 ms ; Periodic_Processing_Start => true;],
+		                          [Partition => reference (the_part2) ; Duration => 1000 ms ; Periodic_Processing_Start => true;]);
+   
+    POK::Ports_Flush_Time => Partition_Slot_Switch;
+  end cpu.two_partitions;
+
+  processor connected_cpu extends cpu
+  features
+    bus_access: requires bus access RAMSES_buses::rtl8029;
+  end connected_cpu;
+
+  processor implementation connected_cpu.with_system_partition
+  subcomponents
+    the_part:  virtual processor part;
+    system_part:  virtual processor part;
+  properties
+    ARINC653::System_Partition => true applies to system_part;
+    ARINC653::Module_Major_Frame => 2000 ms;
+    POK::Scheduler => static;
+    	arinc653::module_schedule => ([Partition => reference (the_part) ; Duration => 1000 ms ; Periodic_Processing_Start => true;],
+		                          [Partition => reference (system_part) ; Duration => 1000 ms ; Periodic_Processing_Start => true;]);
+   
+    POK::Ports_Flush_Time => Partition_Slot_Switch;
+  end connected_cpu.with_system_partition;
+  --------------------------------------------------
+  --- VIRTUAL PROCESSOR COMPONENTS
+  --------------------------------------------------
+
+  virtual processor part
+  properties
+    ARINC653::Partition_Identifier => 1;
+    POK::Additional_Features => (libc_stdio, console);
+    POK::Scheduler => RR;
+    Period => 1000 Ms;
+    ARINC653::HM_Error_ID_Actions => (
+    	[ErrorIdentifier => 3; Description => "Restart process"; Action => "Cold_Restart";],
+    	[ErrorIdentifier => 4; Description => "Warm partition restart"; Action => "Warm_Restart";]
+    );
+  end part;
+  
+
+  --------------------------------------------------
+  --- MEMORY COMPONENTS
+  --------------------------------------------------
+
+  memory mem
+  properties
+    Memory_Size => 200000 bytes;
+  end mem;
+
+  memory implementation mem.impl
+  properties
+    Memory_Protocol => read_write;
+    ARINC653::Memory_Type => (Data_Memory);
+  end mem.impl;
+
+  memory implementation mem.two_partitions
+  subcomponents
+    part1_mem: memory part_mem;
+    part2_mem: memory part_mem;
+  end mem.two_partitions;
+  
+
+  memory part_mem
+  properties
+    Memory_Size => 150000 bytes;
+    Memory_Protocol => read_write;
+    ARINC653::Memory_Type => (Data_Memory);
+  end part_mem;
+  
+
+  --------------------------------------------------
+  --- THREADS
+  --------------------------------------------------
+
+  thread data_sender
+  features
+    p_out: out data port Integer;
+  properties
+    Dispatch_Protocol => Periodic;
+    Compute_Execution_Time => 0 ms .. 1 ms;
+    Period => 2000 Ms;
+    Priority => 5;
+    Data_Size => 40000 bytes;
+    Stack_Size => 40000 bytes;
+    Code_Size => 40 bytes;
+    ARINC653::HM_Error_ID_Actions => (
+    	[ErrorIdentifier => 5; Description => "Restart process"; Action => "Process_Restart";],
+    	[ErrorIdentifier => 6; Description => "Warm partition restart"; Action => "Warm_Restart";]
+    );
+  end data_sender;
+
+  thread implementation data_sender.impl
+  calls
+    call : { c : subprogram sender_spg;};
+  connections
+    cnx: parameter c.result -> p_out;
+  properties
+    Compute_Entrypoint_Call_Sequence => reference (call);
+  end data_sender.impl;
+
+  thread data_receiver
+  features
+    p_in: in data port Integer;
+  properties
+    Dispatch_Protocol => Periodic;
+    Compute_Execution_Time => 0 ms .. 1 ms;
+    Period => 1000 Ms;
+    Priority => 10;
+    Data_Size => 40000 bytes;
+    Stack_Size => 40000 bytes;
+    Code_Size => 40 bytes;
+    ARINC653::HM_Error_ID_Actions => (
+    	[ErrorIdentifier => 3; Description => "Restart process"; Action => "Process_Restart";],
+    	[ErrorIdentifier => 4; Description => "Warm partition restart"; Action => "Warm_Restart";]
+    );
+  end data_receiver;
+
+  thread implementation data_receiver.impl
+  calls
+    call : { c : subprogram receiver_spg;};
+  connections
+    cnx: parameter p_in -> c.input;
+  properties
+    Compute_Entrypoint_Call_Sequence => reference (call);
+  end data_receiver.impl;
+
+  thread eventdata_sender
+  features
+    p_out: out event data port Integer;
+  properties
+    Dispatch_Protocol => Periodic;
+    Compute_Execution_Time => 0 ms .. 1 ms;
+    Period => 2000 Ms;
+    Priority => 5;
+    Data_Size => 40000 bytes;
+    Stack_Size => 40000 bytes;
+    Code_Size => 40 bytes;
+  end eventdata_sender;
+
+  thread implementation eventdata_sender.impl
+  calls
+    call : { c : subprogram sender_spg;};
+  connections
+    cnx: parameter c.result -> p_out;
+  properties
+    Compute_Entrypoint_Call_Sequence => reference (call);
+  end eventdata_sender.impl; 
+
+  thread eventdata_receiver
+  features
+    p_in: in event data port Integer;
+  properties
+    Dispatch_Protocol => Periodic;
+    Compute_Execution_Time => 0 ms .. 1 ms;
+    Period => 1000 Ms;
+    Priority => 10;
+    Data_Size => 40000 bytes;
+    Stack_Size => 40000 bytes;
+    Code_Size => 40 bytes;
+  end eventdata_receiver;
+
+  thread implementation eventdata_receiver.impl
+  calls
+    call : { c : subprogram receiver_spg;};
+  connections
+    cnx: parameter p_in -> c.input;
+  properties
+    Compute_Entrypoint_Call_Sequence => reference (call);
+  end eventdata_receiver.impl;
+
+  
+  thread event_sender
+  features
+    p_out: out event port;
+  properties
+    Dispatch_Protocol => Periodic;
+    Compute_Execution_Time => 0 ms .. 1 ms;
+    Period => 1000 Ms;
+    Priority => 5;
+    Data_Size => 40000 bytes;
+    Stack_Size => 40000 bytes;
+    Code_Size => 40 bytes;
+  end event_sender;
+
+  thread implementation event_sender.impl
+  calls
+    call : { c : subprogram event_sender_spg;};
+  connections
+  	cnx: port c.e -> p_out;
+  properties
+    Compute_Entrypoint_Call_Sequence => reference (call);
+  end event_sender.impl;
+
+  thread event_receiver
+  features
+    p_in: in event port;
+  properties
+    Dispatch_Protocol => Timed;
+    Period => 200 Ms;
+    Priority => 10;
+    Data_Size => 40000 bytes;
+    Stack_Size => 40000 bytes;
+    Code_Size => 40 bytes;
+  end event_receiver;
+
+  thread implementation event_receiver.impl
+  calls
+    call : { c : subprogram event_receiver_spg;}; 
+    call_nothing : { c2 : subprogram nothing_received; }; 
+  properties
+    Compute_Entrypoint_Call_Sequence => reference (call) applies to p_in;
+    Compute_Entrypoint_Call_Sequence => reference (call_nothing);
+  end event_receiver.impl;
+  
+    thread periodic
+  properties
+    Dispatch_Protocol => Periodic;
+    Compute_Execution_Time => 0 ms .. 1 ms;
+    Period => 500 Ms;
+    Priority => 20;
+    Data_Size => 40000 bytes;
+    Stack_Size => 40000 bytes;
+    Code_Size => 40 bytes;
+  end periodic;
+  
+  thread implementation periodic.impl
+  calls
+    call : { c : subprogram periodic_spg;};
+  properties
+    Compute_Entrypoint_Call_Sequence => reference (call);
+  end periodic.impl;
+
+    thread sporadic_receiver
+  features
+    p_in: in event data port Integer;
+  properties
+    Dispatch_Protocol => Sporadic;
+    Compute_Execution_Time => 0 ms .. 1 ms;
+    Period => 1000 Ms;
+    Priority => 15;
+    Data_Size => 40000 bytes;
+    Stack_Size => 40000 bytes;
+    Code_Size => 40 bytes;
+  end sporadic_receiver;
+
+  thread implementation sporadic_receiver.impl
+  calls
+    call : { c : subprogram receiver_spg;};
+  connections
+    cnx: parameter p_in -> c.input;
+  properties
+    Compute_Entrypoint_Call_Sequence => reference (call);
+  end sporadic_receiver.impl;
+  
+  --------------------------------------------------
+  --- SUBPROGRAMS
+  --------------------------------------------------
+
+  subprogram periodic_spg
+  properties
+    source_name => "periodic";
+    source_language => (C);
+    source_text => ("user_code.h","user_code.c");
+  end periodic_spg;
+  
+
+  subprogram receiver_spg
+  features
+    input : in parameter Integer;
+  properties
+    source_name => "receive";
+    source_language => (C);
+    source_text => ("user_code.h","user_code.c");
+  end receiver_spg;
+
+  subprogram sender_spg
+  features
+    result : out parameter Integer;
+  properties
+    source_name => "send";
+    source_language => (C);
+    source_text => ("user_code.h","user_code.c");
+  end sender_spg;
+
+  subprogram event_receiver_spg
+  properties
+    source_name => "event_received";
+    source_language => (C);
+    source_text => ("event_code.h","event_code.c");
+  end event_receiver_spg;
+
+  subprogram event_sender_spg
+  features
+    e: out event port;
+  properties
+    source_name => "send_event";
+    source_language => (C);
+    source_text => ("event_code.h","event_code.c");
+  end event_sender_spg;
+
+  subprogram nothing_received
+  properties
+    source_name => "nothing_received";
+    source_language => (C);
+    source_text => ("event_code.h","event_code.c");
+  end nothing_received;
+
+
+  --------------------------------------------------
+  --- DATA TYPES
+  --------------------------------------------------
+  
+  data Integer
+  properties
+    Data_Model::Data_Representation => integer;
+    Data_Size => 4 Bytes;
+  end Integer;
+
+end common_pkg;

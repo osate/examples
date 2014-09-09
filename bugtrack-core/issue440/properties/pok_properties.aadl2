@@ -1,0 +1,99 @@
+property set POK is
+
+  Security_Level : aadlinteger applies to
+         (virtual processor, virtual bus, process, bus, event data port, event port, data port);
+  -- Means two things :
+  --   * security_level that a partition is allowed to access
+  --   * security_level provided by a virtual bus : ensure that
+  --     the virtual bus can transport data from and/or to partitions
+  --     that have this security level.
+
+  Criticality : aadlinteger applies to
+         (virtual processor);
+  --  Represent the criticality level of a partition.
+
+  Handler : aadlstring applies to
+         (virtual processor);
+  -- Error handler for each partition
+  -- By default, the code generator can create a function
+  -- which name derives from the partition name. Instead, the
+  -- model can provide the name of the handler with this property.
+
+  Topics : list of aadlstring applies to
+         (virtual processor, virtual bus);
+  -- Means two things :
+  --   * The topics allowed on a specific virtual processor
+  --   * Topics allowed on a virtual bus.
+
+  Needed_Memory_Size : Size applies to (process);
+  -- Specify the amount of memory needed for a partition
+  -- We apply it to process component because we don't
+  -- isolate virtual processor, only processes
+
+  Available_Schedulers : type enumeration (RMS, EDF, LLF, RR, TIMESLICE, STATIC);
+
+  Timeslice : Time applies to (virtual processor);
+  -- DEPRECATED at this time
+
+  Scheduler : POK::Available_Schedulers
+      applies to (processor, virtual processor);
+
+  --  List available schedulers
+  --  When we use the STATIC scheduler in the virtual processor
+  --  The Slots and Slots_Allocation properties are used to determine when
+  --  partitions are activated and the timeslice they have for their execution.
+
+  Available_BSP : type enumeration
+  (
+      x86_qemu,
+      prep,
+      leon3
+  );
+
+  BSP : POK::Available_BSP applies to (processor, system);
+
+  Available_Architectures : type enumeration
+  (
+      x86, ppc, sparc
+  );
+
+  Architecture : POK::Available_Architectures applies to (processor, system);
+
+  -- Deployment properties
+  -- Indicate which architecture we use and which bsp
+
+  MILS_Verified : aadlboolean applies to (system, process, device, thread, processor, data);
+  --  For verification purpose
+
+  Refresh_Time : Time applies to (data port);
+
+  Address : aadlstring applies to (device, processor);
+
+  PCI_Vendor_Id : aadlstring applies to (device);
+
+  PCI_Device_ID : aadlstring applies to (device);
+
+  Device_Name : aadlstring applies to (device);
+
+  Additional_Features : list of POK::Supported_Additional_Features applies to (virtual processor, processor);
+
+  Supported_Additional_Features: type enumeration (libmath, libc_stdlib, libc_stdio, libc_string, io, pci, console, libc);
+
+  Des_Key : aadlstring applies to (virtual bus);
+
+  Des_Init : aadlstring applies to (virtual bus);
+
+  Blowfish_Key : aadlstring applies to (virtual bus);
+
+  Blowfish_Init : aadlstring applies to (virtual bus);
+
+  Supported_POK_Protocols: type enumeration (ceasar,des,blowfish,unknown);
+
+  Protocol : POK::Supported_POK_Protocols applies to (virtual bus);
+  
+  Supported_Ports_Flush_Time: type enumeration (Major_Frame_Switch, Minor_Frame_Switch, Partition_Slot_Switch);
+
+  Ports_Flush_Time: POK::Supported_Ports_Flush_Time => Major_Frame_Switch applies to (processor);
+
+  Module_Minor_Frame: Time applies to (processor);
+end POK;
