@@ -1,0 +1,875 @@
+<?xml version="1.0" encoding="ASCII"?>
+<instance:SystemInstance xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aadl2="http://aadl.info/AADL/2.0" xmlns:instance="http://aadl.info/AADL/2.0/instance" xmi:id="_pTa8kDp1EeSgt7IjqMRaLg" name="root_impl_Instance" category="system">
+  <componentInstance xmi:id="_pTq0MDp1EeSgt7IjqMRaLg" name="the_mem" category="memory">
+    <ownedPropertyAssociation xmi:id="_pWvWUDp1EeSgt7IjqMRaLg">
+      <property href="../../../Plugin_Resources/Memory_Properties.aadl#Memory_Properties.Memory_Size"/>
+      <ownedValue xmi:id="_pWxykDp1EeSgt7IjqMRaLg">
+        <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pWxykTp1EeSgt7IjqMRaLg" value="200000">
+          <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.11/@ownedLiteral.1"/>
+        </ownedValue>
+      </ownedValue>
+    </ownedPropertyAssociation>
+    <componentInstance xmi:id="_pUG5EDp1EeSgt7IjqMRaLg" name="part1_mem" category="memory">
+      <ownedPropertyAssociation xmi:id="_pW8xsDp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Memory_Properties.aadl#Memory_Properties.Memory_Size"/>
+        <ownedValue xmi:id="_pW8xsTp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pW8xsjp1EeSgt7IjqMRaLg" value="150000">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.11/@ownedLiteral.1"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pW9YwDp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Deployment_Properties.aadl#Deployment_Properties.Memory_Protocol"/>
+        <ownedValue xmi:id="_pW9YwTp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_pW9Ywjp1EeSgt7IjqMRaLg">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/Deployment_Properties.aadl#//@ownedProperty.25/@ownedPropertyType/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pW9Ywzp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/ARINC653.aadl#ARINC653.Memory_Type"/>
+        <ownedValue xmi:id="_pW9_0Dp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:ListValue" xmi:id="_pW9_0Tp1EeSgt7IjqMRaLg">
+            <ownedListElement xsi:type="aadl2:NamedValue" xmi:id="_pW9_0jp1EeSgt7IjqMRaLg">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.1/@ownedLiteral.0"/>
+            </ownedListElement>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <subcomponent xsi:type="aadl2:MemorySubcomponent" href="../common-pkg.aadl2#//@ownedPublicSection/@ownedClassifier.8/@ownedMemorySubcomponent.0"/>
+      <index>0</index>
+    </componentInstance>
+    <componentInstance xmi:id="_pUIHMDp1EeSgt7IjqMRaLg" name="part2_mem" category="memory">
+      <ownedPropertyAssociation xmi:id="_pXGisDp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Memory_Properties.aadl#Memory_Properties.Memory_Size"/>
+        <ownedValue xmi:id="_pXGisTp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pXGisjp1EeSgt7IjqMRaLg" value="150000">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.11/@ownedLiteral.1"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pXGiszp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Deployment_Properties.aadl#Deployment_Properties.Memory_Protocol"/>
+        <ownedValue xmi:id="_pXGitDp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_pXGitTp1EeSgt7IjqMRaLg">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/Deployment_Properties.aadl#//@ownedProperty.25/@ownedPropertyType/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pXHJwDp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/ARINC653.aadl#ARINC653.Memory_Type"/>
+        <ownedValue xmi:id="_pXHJwTp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:ListValue" xmi:id="_pXHJwjp1EeSgt7IjqMRaLg">
+            <ownedListElement xsi:type="aadl2:NamedValue" xmi:id="_pXHJwzp1EeSgt7IjqMRaLg">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.1/@ownedLiteral.0"/>
+            </ownedListElement>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <subcomponent xsi:type="aadl2:MemorySubcomponent" href="../common-pkg.aadl2#//@ownedPublicSection/@ownedClassifier.8/@ownedMemorySubcomponent.1"/>
+      <index>0</index>
+    </componentInstance>
+    <subcomponent xsi:type="aadl2:MemorySubcomponent" href="../test_queuing.aadl2#//@ownedPublicSection/@ownedClassifier.1/@ownedMemorySubcomponent.0"/>
+    <index>0</index>
+  </componentInstance>
+  <componentInstance xmi:id="_pUIuQDp1EeSgt7IjqMRaLg" name="the_proc1" category="process">
+    <ownedPropertyAssociation xmi:id="_pXNQYDp1EeSgt7IjqMRaLg">
+      <property href="../../../Plugin_Resources/Deployment_Properties.aadl#Deployment_Properties.Actual_Processor_Binding"/>
+      <ownedValue xmi:id="_pXN3cDp1EeSgt7IjqMRaLg">
+        <ownedValue xsi:type="aadl2:ListValue" xmi:id="_pXN3cTp1EeSgt7IjqMRaLg">
+          <ownedListElement xsi:type="instance:InstanceReferenceValue" xmi:id="_pXN3cjp1EeSgt7IjqMRaLg" referencedInstanceObject="_pUbCIDp1EeSgt7IjqMRaLg"/>
+        </ownedValue>
+      </ownedValue>
+    </ownedPropertyAssociation>
+    <ownedPropertyAssociation xmi:id="_pXOegDp1EeSgt7IjqMRaLg">
+      <property href="../../../Plugin_Resources/Deployment_Properties.aadl#Deployment_Properties.Actual_Memory_Binding"/>
+      <ownedValue xmi:id="_pXOegTp1EeSgt7IjqMRaLg">
+        <ownedValue xsi:type="aadl2:ListValue" xmi:id="_pXOegjp1EeSgt7IjqMRaLg">
+          <ownedListElement xsi:type="instance:InstanceReferenceValue" xmi:id="_pXOegzp1EeSgt7IjqMRaLg" referencedInstanceObject="_pUG5EDp1EeSgt7IjqMRaLg"/>
+        </ownedValue>
+      </ownedValue>
+    </ownedPropertyAssociation>
+    <featureInstance xmi:id="_pUNmwDp1EeSgt7IjqMRaLg" name="p_out" category="eventDataPort" direction="out">
+      <ownedPropertyAssociation xmi:id="_pXXocDp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Deployment_Properties.aadl#Deployment_Properties.Actual_Memory_Binding"/>
+        <ownedValue xmi:id="_pXXocTp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:ListValue" xmi:id="_pXXocjp1EeSgt7IjqMRaLg">
+            <ownedListElement xsi:type="instance:InstanceReferenceValue" xmi:id="_pXXoczp1EeSgt7IjqMRaLg" referencedInstanceObject="_pUG5EDp1EeSgt7IjqMRaLg"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pXXodDp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Queue_Size"/>
+        <ownedValue xmi:id="_pXXodTp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pXXodjp1EeSgt7IjqMRaLg" value="5"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pXaEsDp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Queue_Processing_Protocol"/>
+        <ownedValue xmi:id="_pXaEsTp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_pXaEsjp1EeSgt7IjqMRaLg">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.4/@ownedLiteral.0"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pXarwDp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Data_Model.aadl#Data_Model.Data_Representation"/>
+        <ownedValue xmi:id="_pXarwTp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_pXarwjp1EeSgt7IjqMRaLg">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/Data_Model.aadl#//@ownedProperty.4/@ownedPropertyType/@ownedLiteral.6"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pXarwzp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Memory_Properties.aadl#Memory_Properties.Data_Size"/>
+        <ownedValue xmi:id="_pXarxDp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pXarxTp1EeSgt7IjqMRaLg" value="4">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.11/@ownedLiteral.1"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <feature xsi:type="aadl2:EventDataPort" href="../test_queuing.aadl2#//@ownedPublicSection/@ownedClassifier.2/@ownedEventDataPort.0"/>
+    </featureInstance>
+    <componentInstance xmi:id="_pUJ8YDp1EeSgt7IjqMRaLg" name="the_sender" category="thread">
+      <ownedPropertyAssociation xmi:id="_pXe9MDp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Deployment_Properties.aadl#Deployment_Properties.Actual_Processor_Binding"/>
+        <ownedValue xmi:id="_pXe9MTp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:ListValue" xmi:id="_pXe9Mjp1EeSgt7IjqMRaLg">
+            <ownedListElement xsi:type="instance:InstanceReferenceValue" xmi:id="_pXe9Mzp1EeSgt7IjqMRaLg" referencedInstanceObject="_pUbCIDp1EeSgt7IjqMRaLg"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pXgyYDp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Deployment_Properties.aadl#Deployment_Properties.Actual_Memory_Binding"/>
+        <ownedValue xmi:id="_pXgyYTp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:ListValue" xmi:id="_pXgyYjp1EeSgt7IjqMRaLg">
+            <ownedListElement xsi:type="instance:InstanceReferenceValue" xmi:id="_pXgyYzp1EeSgt7IjqMRaLg" referencedInstanceObject="_pUG5EDp1EeSgt7IjqMRaLg"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pXkcwDp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Memory_Properties.aadl#Memory_Properties.Data_Size"/>
+        <ownedValue xmi:id="_pXkcwTp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pXkcwjp1EeSgt7IjqMRaLg" value="40000">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.11/@ownedLiteral.1"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pXlD0Dp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Programming_Properties.aadl#Programming_Properties.Compute_Entrypoint_Call_Sequence"/>
+        <ownedValue xmi:id="_pXlD0Tp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:ReferenceValue" xmi:id="_pXlD0jp1EeSgt7IjqMRaLg">
+            <containmentPathElement xmi:id="_pXlD0zp1EeSgt7IjqMRaLg">
+              <namedElement xsi:type="aadl2:SubprogramCallSequence" href="../common-pkg.aadl2#//@ownedPublicSection/@ownedClassifier.15/@ownedSubprogramCallSequence.0"/>
+            </containmentPathElement>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pXmR8Dp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Thread_Properties.aadl#Thread_Properties.Dispatch_Protocol"/>
+        <ownedValue xmi:id="_pXmR8Tp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_pXmR8jp1EeSgt7IjqMRaLg">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.3/@ownedLiteral.0"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pXouMDp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Compute_Execution_Time"/>
+        <ownedValue xmi:id="_pXouMTp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:RangeValue" xmi:id="_pXouMjp1EeSgt7IjqMRaLg">
+            <minimum xsi:type="aadl2:IntegerLiteral" xmi:id="_pXouMzp1EeSgt7IjqMRaLg">
+              <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+            </minimum>
+            <maximum xsi:type="aadl2:IntegerLiteral" xmi:id="_pXouNDp1EeSgt7IjqMRaLg" value="1">
+              <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+            </maximum>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pXqjYDp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Period"/>
+        <ownedValue xmi:id="_pXqjYTp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pXqjYjp1EeSgt7IjqMRaLg" value="2000">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pXsYkDp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Thread_Properties.aadl#Thread_Properties.Priority"/>
+        <ownedValue xmi:id="_pXsYkTp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pXsYkjp1EeSgt7IjqMRaLg" value="5"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pXtmsDp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Memory_Properties.aadl#Memory_Properties.Stack_Size"/>
+        <ownedValue xmi:id="_pXtmsTp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pXtmsjp1EeSgt7IjqMRaLg" value="40000">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.11/@ownedLiteral.1"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pXuNwDp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Memory_Properties.aadl#Memory_Properties.Code_Size"/>
+        <ownedValue xmi:id="_pXuNwTp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pXuNwjp1EeSgt7IjqMRaLg" value="40">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.11/@ownedLiteral.1"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <featureInstance xmi:id="_pUM_sDp1EeSgt7IjqMRaLg" name="p_out" srcConnectionInstance="_pUqSsDp1EeSgt7IjqMRaLg" category="eventDataPort" direction="out">
+        <ownedPropertyAssociation xmi:id="_pX07cDp1EeSgt7IjqMRaLg">
+          <property href="../../../Plugin_Resources/Deployment_Properties.aadl#Deployment_Properties.Actual_Memory_Binding"/>
+          <ownedValue xmi:id="_pX07cTp1EeSgt7IjqMRaLg">
+            <ownedValue xsi:type="aadl2:ListValue" xmi:id="_pX07cjp1EeSgt7IjqMRaLg">
+              <ownedListElement xsi:type="instance:InstanceReferenceValue" xmi:id="_pX07czp1EeSgt7IjqMRaLg" referencedInstanceObject="_pUG5EDp1EeSgt7IjqMRaLg"/>
+            </ownedValue>
+          </ownedValue>
+        </ownedPropertyAssociation>
+        <ownedPropertyAssociation xmi:id="_pX1igDp1EeSgt7IjqMRaLg">
+          <property href="../../../Plugin_Resources/Data_Model.aadl#Data_Model.Data_Representation"/>
+          <ownedValue xmi:id="_pX2JkDp1EeSgt7IjqMRaLg">
+            <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_pX2JkTp1EeSgt7IjqMRaLg">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/Data_Model.aadl#//@ownedProperty.4/@ownedPropertyType/@ownedLiteral.6"/>
+            </ownedValue>
+          </ownedValue>
+        </ownedPropertyAssociation>
+        <ownedPropertyAssociation xmi:id="_pX2Jkjp1EeSgt7IjqMRaLg">
+          <property href="../../../Plugin_Resources/Memory_Properties.aadl#Memory_Properties.Data_Size"/>
+          <ownedValue xmi:id="_pX2Jkzp1EeSgt7IjqMRaLg">
+            <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pX2JlDp1EeSgt7IjqMRaLg" value="4">
+              <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.11/@ownedLiteral.1"/>
+            </ownedValue>
+          </ownedValue>
+        </ownedPropertyAssociation>
+        <ownedPropertyAssociation xmi:id="_pX2woDp1EeSgt7IjqMRaLg">
+          <property href="../../../Plugin_Resources/Thread_Properties.aadl#Thread_Properties.Priority"/>
+          <ownedValue xmi:id="_pX2woTp1EeSgt7IjqMRaLg">
+            <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pX2wojp1EeSgt7IjqMRaLg" value="5"/>
+          </ownedValue>
+        </ownedPropertyAssociation>
+        <feature xsi:type="aadl2:EventDataPort" href="../common-pkg.aadl2#//@ownedPublicSection/@ownedClassifier.14/@ownedEventDataPort.0"/>
+      </featureInstance>
+      <subcomponent xsi:type="aadl2:ThreadSubcomponent" href="../test_queuing.aadl2#//@ownedPublicSection/@ownedClassifier.3/@ownedThreadSubcomponent.0"/>
+      <index>0</index>
+    </componentInstance>
+    <subcomponent xsi:type="aadl2:ProcessSubcomponent" href="../test_queuing.aadl2#//@ownedPublicSection/@ownedClassifier.1/@ownedProcessSubcomponent.0"/>
+    <index>0</index>
+  </componentInstance>
+  <componentInstance xmi:id="_pURRIDp1EeSgt7IjqMRaLg" name="the_proc2" category="process">
+    <ownedPropertyAssociation xmi:id="_pX3-wDp1EeSgt7IjqMRaLg">
+      <property href="../../../Plugin_Resources/Deployment_Properties.aadl#Deployment_Properties.Actual_Processor_Binding"/>
+      <ownedValue xmi:id="_pX3-wTp1EeSgt7IjqMRaLg">
+        <ownedValue xsi:type="aadl2:ListValue" xmi:id="_pX4l0Dp1EeSgt7IjqMRaLg">
+          <ownedListElement xsi:type="instance:InstanceReferenceValue" xmi:id="_pX4l0Tp1EeSgt7IjqMRaLg" referencedInstanceObject="_pUcQQDp1EeSgt7IjqMRaLg"/>
+        </ownedValue>
+      </ownedValue>
+    </ownedPropertyAssociation>
+    <ownedPropertyAssociation xmi:id="_pX5M4Dp1EeSgt7IjqMRaLg">
+      <property href="../../../Plugin_Resources/Deployment_Properties.aadl#Deployment_Properties.Actual_Memory_Binding"/>
+      <ownedValue xmi:id="_pX5M4Tp1EeSgt7IjqMRaLg">
+        <ownedValue xsi:type="aadl2:ListValue" xmi:id="_pX5M4jp1EeSgt7IjqMRaLg">
+          <ownedListElement xsi:type="instance:InstanceReferenceValue" xmi:id="_pX5M4zp1EeSgt7IjqMRaLg" referencedInstanceObject="_pUIHMDp1EeSgt7IjqMRaLg"/>
+        </ownedValue>
+      </ownedValue>
+    </ownedPropertyAssociation>
+    <featureInstance xmi:id="_pUWJoDp1EeSgt7IjqMRaLg" name="p_in" category="eventDataPort">
+      <ownedPropertyAssociation xmi:id="_pYFaIDp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Deployment_Properties.aadl#Deployment_Properties.Actual_Memory_Binding"/>
+        <ownedValue xmi:id="_pYFaITp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:ListValue" xmi:id="_pYFaIjp1EeSgt7IjqMRaLg">
+            <ownedListElement xsi:type="instance:InstanceReferenceValue" xmi:id="_pYFaIzp1EeSgt7IjqMRaLg" referencedInstanceObject="_pUIHMDp1EeSgt7IjqMRaLg"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pYFaJDp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Queue_Size"/>
+        <ownedValue xmi:id="_pYFaJTp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pYFaJjp1EeSgt7IjqMRaLg" value="10"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pYFaJzp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Communication_Properties.aadl#Communication_Properties.Queue_Processing_Protocol"/>
+        <ownedValue xmi:id="_pYFaKDp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_pYFaKTp1EeSgt7IjqMRaLg">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.4/@ownedLiteral.0"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pYGBMDp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Data_Model.aadl#Data_Model.Data_Representation"/>
+        <ownedValue xmi:id="_pYGBMTp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_pYGBMjp1EeSgt7IjqMRaLg">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/Data_Model.aadl#//@ownedProperty.4/@ownedPropertyType/@ownedLiteral.6"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pYGoQDp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Memory_Properties.aadl#Memory_Properties.Data_Size"/>
+        <ownedValue xmi:id="_pYGoQTp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pYGoQjp1EeSgt7IjqMRaLg" value="4">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.11/@ownedLiteral.1"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <feature xsi:type="aadl2:EventDataPort" href="../test_queuing.aadl2#//@ownedPublicSection/@ownedClassifier.4/@ownedEventDataPort.0"/>
+    </featureInstance>
+    <componentInstance xmi:id="_pUSfQDp1EeSgt7IjqMRaLg" name="the_receiver" category="thread">
+      <ownedPropertyAssociation xmi:id="_pYJrkDp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Deployment_Properties.aadl#Deployment_Properties.Actual_Processor_Binding"/>
+        <ownedValue xmi:id="_pYKSoDp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:ListValue" xmi:id="_pYKSoTp1EeSgt7IjqMRaLg">
+            <ownedListElement xsi:type="instance:InstanceReferenceValue" xmi:id="_pYKSojp1EeSgt7IjqMRaLg" referencedInstanceObject="_pUcQQDp1EeSgt7IjqMRaLg"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pYLgwDp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Deployment_Properties.aadl#Deployment_Properties.Actual_Memory_Binding"/>
+        <ownedValue xmi:id="_pYMH0Dp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:ListValue" xmi:id="_pYMH0Tp1EeSgt7IjqMRaLg">
+            <ownedListElement xsi:type="instance:InstanceReferenceValue" xmi:id="_pYMH0jp1EeSgt7IjqMRaLg" referencedInstanceObject="_pUIHMDp1EeSgt7IjqMRaLg"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pYPLIDp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Memory_Properties.aadl#Memory_Properties.Data_Size"/>
+        <ownedValue xmi:id="_pYPLITp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pYPLIjp1EeSgt7IjqMRaLg" value="40000">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.11/@ownedLiteral.1"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pYPyMDp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Programming_Properties.aadl#Programming_Properties.Compute_Entrypoint_Call_Sequence"/>
+        <ownedValue xmi:id="_pYPyMTp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:ReferenceValue" xmi:id="_pYPyMjp1EeSgt7IjqMRaLg">
+            <containmentPathElement xmi:id="_pYPyMzp1EeSgt7IjqMRaLg">
+              <namedElement xsi:type="aadl2:SubprogramCallSequence" href="../common-pkg.aadl2#//@ownedPublicSection/@ownedClassifier.17/@ownedSubprogramCallSequence.0"/>
+            </containmentPathElement>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pYRAUDp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Thread_Properties.aadl#Thread_Properties.Dispatch_Protocol"/>
+        <ownedValue xmi:id="_pYRAUTp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_pYRAUjp1EeSgt7IjqMRaLg">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.3/@ownedLiteral.0"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pYRnYDp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Compute_Execution_Time"/>
+        <ownedValue xmi:id="_pYSOcDp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:RangeValue" xmi:id="_pYSOcTp1EeSgt7IjqMRaLg">
+            <minimum xsi:type="aadl2:IntegerLiteral" xmi:id="_pYSOcjp1EeSgt7IjqMRaLg">
+              <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+            </minimum>
+            <maximum xsi:type="aadl2:IntegerLiteral" xmi:id="_pYSOczp1EeSgt7IjqMRaLg" value="1">
+              <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+            </maximum>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pYTckDp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Period"/>
+        <ownedValue xmi:id="_pYTckTp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pYUDoDp1EeSgt7IjqMRaLg" value="1000">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pYVRwDp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Thread_Properties.aadl#Thread_Properties.Priority"/>
+        <ownedValue xmi:id="_pYVRwTp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pYVRwjp1EeSgt7IjqMRaLg" value="10"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pYWf4Dp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Memory_Properties.aadl#Memory_Properties.Stack_Size"/>
+        <ownedValue xmi:id="_pYWf4Tp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pYWf4jp1EeSgt7IjqMRaLg" value="40000">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.11/@ownedLiteral.1"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pYXG8Dp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Memory_Properties.aadl#Memory_Properties.Code_Size"/>
+        <ownedValue xmi:id="_pYXG8Tp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pYXG8jp1EeSgt7IjqMRaLg" value="40">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.11/@ownedLiteral.1"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <featureInstance xmi:id="_pUVikDp1EeSgt7IjqMRaLg" name="p_in" dstConnectionInstance="_pUqSsDp1EeSgt7IjqMRaLg" category="eventDataPort">
+        <ownedPropertyAssociation xmi:id="_pYd0oDp1EeSgt7IjqMRaLg">
+          <property href="../../../Plugin_Resources/Deployment_Properties.aadl#Deployment_Properties.Actual_Memory_Binding"/>
+          <ownedValue xmi:id="_pYebsDp1EeSgt7IjqMRaLg">
+            <ownedValue xsi:type="aadl2:ListValue" xmi:id="_pYebsTp1EeSgt7IjqMRaLg">
+              <ownedListElement xsi:type="instance:InstanceReferenceValue" xmi:id="_pYebsjp1EeSgt7IjqMRaLg" referencedInstanceObject="_pUIHMDp1EeSgt7IjqMRaLg"/>
+            </ownedValue>
+          </ownedValue>
+        </ownedPropertyAssociation>
+        <ownedPropertyAssociation xmi:id="_pYebszp1EeSgt7IjqMRaLg">
+          <property href="../../../Plugin_Resources/Data_Model.aadl#Data_Model.Data_Representation"/>
+          <ownedValue xmi:id="_pYfCwDp1EeSgt7IjqMRaLg">
+            <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_pYfCwTp1EeSgt7IjqMRaLg">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/Data_Model.aadl#//@ownedProperty.4/@ownedPropertyType/@ownedLiteral.6"/>
+            </ownedValue>
+          </ownedValue>
+        </ownedPropertyAssociation>
+        <ownedPropertyAssociation xmi:id="_pYfCwjp1EeSgt7IjqMRaLg">
+          <property href="../../../Plugin_Resources/Memory_Properties.aadl#Memory_Properties.Data_Size"/>
+          <ownedValue xmi:id="_pYfCwzp1EeSgt7IjqMRaLg">
+            <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pYfCxDp1EeSgt7IjqMRaLg" value="4">
+              <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.11/@ownedLiteral.1"/>
+            </ownedValue>
+          </ownedValue>
+        </ownedPropertyAssociation>
+        <ownedPropertyAssociation xmi:id="_pYfp0Dp1EeSgt7IjqMRaLg">
+          <property href="../../../Plugin_Resources/Thread_Properties.aadl#Thread_Properties.Priority"/>
+          <ownedValue xmi:id="_pYfp0Tp1EeSgt7IjqMRaLg">
+            <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pYfp0jp1EeSgt7IjqMRaLg" value="10"/>
+          </ownedValue>
+        </ownedPropertyAssociation>
+        <feature xsi:type="aadl2:EventDataPort" href="../common-pkg.aadl2#//@ownedPublicSection/@ownedClassifier.16/@ownedEventDataPort.0"/>
+      </featureInstance>
+      <subcomponent xsi:type="aadl2:ThreadSubcomponent" href="../test_queuing.aadl2#//@ownedPublicSection/@ownedClassifier.5/@ownedThreadSubcomponent.0"/>
+      <index>0</index>
+    </componentInstance>
+    <subcomponent xsi:type="aadl2:ProcessSubcomponent" href="../test_queuing.aadl2#//@ownedPublicSection/@ownedClassifier.1/@ownedProcessSubcomponent.1"/>
+    <index>0</index>
+  </componentInstance>
+  <componentInstance xmi:id="_pUWwsDp1EeSgt7IjqMRaLg" name="the_cpu" category="processor">
+    <ownedPropertyAssociation xmi:id="_pYqB4Dp1EeSgt7IjqMRaLg">
+      <property href="../../../Plugin_Resources/ARINC653.aadl#ARINC653.Module_Major_Frame"/>
+      <ownedValue xmi:id="_pYqo8Dp1EeSgt7IjqMRaLg">
+        <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pYqo8Tp1EeSgt7IjqMRaLg" value="4000">
+          <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+        </ownedValue>
+      </ownedValue>
+    </ownedPropertyAssociation>
+    <ownedPropertyAssociation xmi:id="_pYqo8jp1EeSgt7IjqMRaLg">
+      <property href="../properties/pok_properties.aadl2#POK.Scheduler"/>
+      <ownedValue xmi:id="_pYrQADp1EeSgt7IjqMRaLg">
+        <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_pYrQATp1EeSgt7IjqMRaLg">
+          <namedValue xsi:type="aadl2:EnumerationLiteral" href="../properties/pok_properties.aadl2#//@ownedPropertyType.0/@ownedLiteral.5"/>
+        </ownedValue>
+      </ownedValue>
+    </ownedPropertyAssociation>
+    <ownedPropertyAssociation xmi:id="_pYr3EDp1EeSgt7IjqMRaLg">
+      <property href="../../../Plugin_Resources/ARINC653.aadl#ARINC653.Module_Schedule"/>
+      <ownedValue xmi:id="_pYtsQDp1EeSgt7IjqMRaLg">
+        <ownedValue xsi:type="aadl2:ListValue" xmi:id="_pYtsQTp1EeSgt7IjqMRaLg">
+          <ownedListElement xsi:type="aadl2:RecordValue" xmi:id="_pYtsQjp1EeSgt7IjqMRaLg">
+            <ownedFieldValue xmi:id="_pYtsQzp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.8/@ownedField.0"/>
+              <ownedValue xsi:type="instance:InstanceReferenceValue" xmi:id="_pYuTUDp1EeSgt7IjqMRaLg" referencedInstanceObject="_pUbCIDp1EeSgt7IjqMRaLg"/>
+            </ownedFieldValue>
+            <ownedFieldValue xmi:id="_pYtsRjp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.8/@ownedField.1"/>
+              <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pYtsRzp1EeSgt7IjqMRaLg" value="2000">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </ownedValue>
+            </ownedFieldValue>
+            <ownedFieldValue xmi:id="_pYtsSDp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.8/@ownedField.2"/>
+              <ownedValue xsi:type="aadl2:BooleanLiteral" xmi:id="_pYtsSTp1EeSgt7IjqMRaLg" value="true"/>
+            </ownedFieldValue>
+          </ownedListElement>
+          <ownedListElement xsi:type="aadl2:RecordValue" xmi:id="_pYtsSjp1EeSgt7IjqMRaLg">
+            <ownedFieldValue xmi:id="_pYtsSzp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.8/@ownedField.0"/>
+              <ownedValue xsi:type="instance:InstanceReferenceValue" xmi:id="_pYuTUTp1EeSgt7IjqMRaLg" referencedInstanceObject="_pUbCIDp1EeSgt7IjqMRaLg"/>
+            </ownedFieldValue>
+            <ownedFieldValue xmi:id="_pYtsTjp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.8/@ownedField.1"/>
+              <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pYtsTzp1EeSgt7IjqMRaLg" value="1000">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </ownedValue>
+            </ownedFieldValue>
+            <ownedFieldValue xmi:id="_pYtsUDp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.8/@ownedField.2"/>
+              <ownedValue xsi:type="aadl2:BooleanLiteral" xmi:id="_pYtsSTp1EeSgt7IjqMRaLg" value="true"/>
+            </ownedFieldValue>
+          </ownedListElement>
+          <ownedListElement xsi:type="aadl2:RecordValue" xmi:id="_pYtsUTp1EeSgt7IjqMRaLg">
+            <ownedFieldValue xmi:id="_pYtsUjp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.8/@ownedField.0"/>
+              <ownedValue xsi:type="instance:InstanceReferenceValue" xmi:id="_pYuTUjp1EeSgt7IjqMRaLg" referencedInstanceObject="_pUcQQDp1EeSgt7IjqMRaLg"/>
+            </ownedFieldValue>
+            <ownedFieldValue xmi:id="_pYtsVTp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.8/@ownedField.1"/>
+              <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pYtsVjp1EeSgt7IjqMRaLg" value="1000">
+                <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+              </ownedValue>
+            </ownedFieldValue>
+            <ownedFieldValue xmi:id="_pYtsVzp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.8/@ownedField.2"/>
+              <ownedValue xsi:type="aadl2:BooleanLiteral" xmi:id="_pYtsSTp1EeSgt7IjqMRaLg" value="true"/>
+            </ownedFieldValue>
+          </ownedListElement>
+        </ownedValue>
+      </ownedValue>
+    </ownedPropertyAssociation>
+    <ownedPropertyAssociation xmi:id="_pYu6YDp1EeSgt7IjqMRaLg">
+      <property href="../properties/pok_properties.aadl2#POK.Ports_Flush_Time"/>
+      <ownedValue xmi:id="_pYu6YTp1EeSgt7IjqMRaLg">
+        <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_pYu6Yjp1EeSgt7IjqMRaLg">
+          <namedValue xsi:type="aadl2:EnumerationLiteral" href="../properties/pok_properties.aadl2#//@ownedPropertyType.5/@ownedLiteral.2"/>
+        </ownedValue>
+      </ownedValue>
+    </ownedPropertyAssociation>
+    <ownedPropertyAssociation xmi:id="_pYvhcDp1EeSgt7IjqMRaLg">
+      <property href="../../../Plugin_Resources/ARINC653.aadl#ARINC653.HM_Error_ID_Levels"/>
+      <ownedValue xmi:id="_pYykwDp1EeSgt7IjqMRaLg">
+        <ownedValue xsi:type="aadl2:ListValue" xmi:id="_pYykwTp1EeSgt7IjqMRaLg">
+          <ownedListElement xsi:type="aadl2:RecordValue" xmi:id="_pYykwjp1EeSgt7IjqMRaLg">
+            <ownedFieldValue xmi:id="_pYykwzp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.4/@ownedField.0"/>
+              <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pYykxDp1EeSgt7IjqMRaLg" value="1"/>
+            </ownedFieldValue>
+            <ownedFieldValue xmi:id="_pYykxTp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.4/@ownedField.1"/>
+              <ownedValue xsi:type="aadl2:StringLiteral" xmi:id="_pYykxjp1EeSgt7IjqMRaLg" value="Numeric error"/>
+            </ownedFieldValue>
+            <ownedFieldValue xmi:id="_pYykxzp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.4/@ownedField.2"/>
+              <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_pYykyDp1EeSgt7IjqMRaLg">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.3/@ownedLiteral.0"/>
+              </ownedValue>
+            </ownedFieldValue>
+            <ownedFieldValue xmi:id="_pYykyTp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.4/@ownedField.3"/>
+              <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_pYykyjp1EeSgt7IjqMRaLg">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.0/@ownedLiteral.9"/>
+              </ownedValue>
+            </ownedFieldValue>
+          </ownedListElement>
+          <ownedListElement xsi:type="aadl2:RecordValue" xmi:id="_pYykyzp1EeSgt7IjqMRaLg">
+            <ownedFieldValue xmi:id="_pYykzDp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.4/@ownedField.0"/>
+              <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pYykzTp1EeSgt7IjqMRaLg" value="2"/>
+            </ownedFieldValue>
+            <ownedFieldValue xmi:id="_pYykzjp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.4/@ownedField.1"/>
+              <ownedValue xsi:type="aadl2:StringLiteral" xmi:id="_pYykzzp1EeSgt7IjqMRaLg" value="Illegal request"/>
+            </ownedFieldValue>
+            <ownedFieldValue xmi:id="_pYyk0Dp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.4/@ownedField.2"/>
+              <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_pYyk0Tp1EeSgt7IjqMRaLg">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.3/@ownedLiteral.0"/>
+              </ownedValue>
+            </ownedFieldValue>
+            <ownedFieldValue xmi:id="_pYyk0jp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.4/@ownedField.3"/>
+              <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_pYyk0zp1EeSgt7IjqMRaLg">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.0/@ownedLiteral.10"/>
+              </ownedValue>
+            </ownedFieldValue>
+          </ownedListElement>
+          <ownedListElement xsi:type="aadl2:RecordValue" xmi:id="_pYyk1Dp1EeSgt7IjqMRaLg">
+            <ownedFieldValue xmi:id="_pYyk1Tp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.4/@ownedField.0"/>
+              <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pYyk1jp1EeSgt7IjqMRaLg" value="3"/>
+            </ownedFieldValue>
+            <ownedFieldValue xmi:id="_pYyk1zp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.4/@ownedField.1"/>
+              <ownedValue xsi:type="aadl2:StringLiteral" xmi:id="_pYykxjp1EeSgt7IjqMRaLg" value="Numeric error"/>
+            </ownedFieldValue>
+            <ownedFieldValue xmi:id="_pYyk2Dp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.4/@ownedField.2"/>
+              <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_pYyk2Tp1EeSgt7IjqMRaLg">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.3/@ownedLiteral.1"/>
+              </ownedValue>
+            </ownedFieldValue>
+            <ownedFieldValue xmi:id="_pYyk2jp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.4/@ownedField.3"/>
+              <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_pYyk2zp1EeSgt7IjqMRaLg">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.0/@ownedLiteral.9"/>
+              </ownedValue>
+            </ownedFieldValue>
+          </ownedListElement>
+          <ownedListElement xsi:type="aadl2:RecordValue" xmi:id="_pYyk3Dp1EeSgt7IjqMRaLg">
+            <ownedFieldValue xmi:id="_pYyk3Tp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.4/@ownedField.0"/>
+              <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pYyk3jp1EeSgt7IjqMRaLg" value="4"/>
+            </ownedFieldValue>
+            <ownedFieldValue xmi:id="_pYyk3zp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.4/@ownedField.1"/>
+              <ownedValue xsi:type="aadl2:StringLiteral" xmi:id="_pYykzzp1EeSgt7IjqMRaLg" value="Illegal request"/>
+            </ownedFieldValue>
+            <ownedFieldValue xmi:id="_pYyk4Dp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.4/@ownedField.2"/>
+              <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_pYyk4Tp1EeSgt7IjqMRaLg">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.3/@ownedLiteral.1"/>
+              </ownedValue>
+            </ownedFieldValue>
+            <ownedFieldValue xmi:id="_pYyk4jp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.4/@ownedField.3"/>
+              <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_pYyk4zp1EeSgt7IjqMRaLg">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.0/@ownedLiteral.10"/>
+              </ownedValue>
+            </ownedFieldValue>
+          </ownedListElement>
+          <ownedListElement xsi:type="aadl2:RecordValue" xmi:id="_pYyk5Dp1EeSgt7IjqMRaLg">
+            <ownedFieldValue xmi:id="_pYyk5Tp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.4/@ownedField.0"/>
+              <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pYyk5jp1EeSgt7IjqMRaLg" value="5"/>
+            </ownedFieldValue>
+            <ownedFieldValue xmi:id="_pYyk5zp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.4/@ownedField.1"/>
+              <ownedValue xsi:type="aadl2:StringLiteral" xmi:id="_pYykxjp1EeSgt7IjqMRaLg" value="Numeric error"/>
+            </ownedFieldValue>
+            <ownedFieldValue xmi:id="_pYyk6Dp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.4/@ownedField.2"/>
+              <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_pYyk6Tp1EeSgt7IjqMRaLg">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.3/@ownedLiteral.2"/>
+              </ownedValue>
+            </ownedFieldValue>
+            <ownedFieldValue xmi:id="_pYyk6jp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.4/@ownedField.3"/>
+              <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_pYyk6zp1EeSgt7IjqMRaLg">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.0/@ownedLiteral.9"/>
+              </ownedValue>
+            </ownedFieldValue>
+          </ownedListElement>
+          <ownedListElement xsi:type="aadl2:RecordValue" xmi:id="_pYyk7Dp1EeSgt7IjqMRaLg">
+            <ownedFieldValue xmi:id="_pYyk7Tp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.4/@ownedField.0"/>
+              <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pYyk7jp1EeSgt7IjqMRaLg" value="6"/>
+            </ownedFieldValue>
+            <ownedFieldValue xmi:id="_pYyk7zp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.4/@ownedField.1"/>
+              <ownedValue xsi:type="aadl2:StringLiteral" xmi:id="_pYykzzp1EeSgt7IjqMRaLg" value="Illegal request"/>
+            </ownedFieldValue>
+            <ownedFieldValue xmi:id="_pYyk8Dp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.4/@ownedField.2"/>
+              <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_pYyk8Tp1EeSgt7IjqMRaLg">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.3/@ownedLiteral.2"/>
+              </ownedValue>
+            </ownedFieldValue>
+            <ownedFieldValue xmi:id="_pYyk8jp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.4/@ownedField.3"/>
+              <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_pYyk8zp1EeSgt7IjqMRaLg">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.0/@ownedLiteral.10"/>
+              </ownedValue>
+            </ownedFieldValue>
+          </ownedListElement>
+        </ownedValue>
+      </ownedValue>
+    </ownedPropertyAssociation>
+    <ownedPropertyAssociation xmi:id="_pYzy4Dp1EeSgt7IjqMRaLg">
+      <property href="../../../Plugin_Resources/ARINC653.aadl#ARINC653.HM_Error_ID_Actions"/>
+      <ownedValue xmi:id="_pY0Z8Dp1EeSgt7IjqMRaLg">
+        <ownedValue xsi:type="aadl2:ListValue" xmi:id="_pY0Z8Tp1EeSgt7IjqMRaLg">
+          <ownedListElement xsi:type="aadl2:RecordValue" xmi:id="_pY0Z8jp1EeSgt7IjqMRaLg">
+            <ownedFieldValue xmi:id="_pY0Z8zp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.5/@ownedField.0"/>
+              <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pY0Z9Dp1EeSgt7IjqMRaLg" value="1"/>
+            </ownedFieldValue>
+            <ownedFieldValue xmi:id="_pY0Z9Tp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.5/@ownedField.1"/>
+              <ownedValue xsi:type="aadl2:StringLiteral" xmi:id="_pY0Z9jp1EeSgt7IjqMRaLg" value="Restart partition"/>
+            </ownedFieldValue>
+            <ownedFieldValue xmi:id="_pY0Z9zp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.5/@ownedField.2"/>
+              <ownedValue xsi:type="aadl2:StringLiteral" xmi:id="_pY0Z-Dp1EeSgt7IjqMRaLg" value="Stop"/>
+            </ownedFieldValue>
+          </ownedListElement>
+          <ownedListElement xsi:type="aadl2:RecordValue" xmi:id="_pY0Z-Tp1EeSgt7IjqMRaLg">
+            <ownedFieldValue xmi:id="_pY0Z-jp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.5/@ownedField.0"/>
+              <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pY0Z-zp1EeSgt7IjqMRaLg" value="2"/>
+            </ownedFieldValue>
+            <ownedFieldValue xmi:id="_pY0Z_Dp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.5/@ownedField.1"/>
+              <ownedValue xsi:type="aadl2:StringLiteral" xmi:id="_pY0Z_Tp1EeSgt7IjqMRaLg" value="Warm partition restart"/>
+            </ownedFieldValue>
+            <ownedFieldValue xmi:id="_pY0Z_jp1EeSgt7IjqMRaLg">
+              <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.5/@ownedField.2"/>
+              <ownedValue xsi:type="aadl2:StringLiteral" xmi:id="_pY0Z_zp1EeSgt7IjqMRaLg" value="Reset"/>
+            </ownedFieldValue>
+          </ownedListElement>
+        </ownedValue>
+      </ownedValue>
+    </ownedPropertyAssociation>
+    <ownedPropertyAssociation xmi:id="_pY1oEDp1EeSgt7IjqMRaLg">
+      <property href="../properties/pok_properties.aadl2#POK.Architecture"/>
+      <ownedValue xmi:id="_pY1oETp1EeSgt7IjqMRaLg">
+        <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_pY1oEjp1EeSgt7IjqMRaLg">
+          <namedValue xsi:type="aadl2:EnumerationLiteral" href="../properties/pok_properties.aadl2#//@ownedPropertyType.2/@ownedLiteral.0"/>
+        </ownedValue>
+      </ownedValue>
+    </ownedPropertyAssociation>
+    <ownedPropertyAssociation xmi:id="_pY22MDp1EeSgt7IjqMRaLg">
+      <property href="../properties/pok_properties.aadl2#POK.BSP"/>
+      <ownedValue xmi:id="_pY22MTp1EeSgt7IjqMRaLg">
+        <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_pY22Mjp1EeSgt7IjqMRaLg">
+          <namedValue xsi:type="aadl2:EnumerationLiteral" href="../properties/pok_properties.aadl2#//@ownedPropertyType.1/@ownedLiteral.0"/>
+        </ownedValue>
+      </ownedValue>
+    </ownedPropertyAssociation>
+    <componentInstance xmi:id="_pUbCIDp1EeSgt7IjqMRaLg" name="the_part1" category="virtual processor">
+      <ownedPropertyAssociation xmi:id="_pZDDcDp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Period"/>
+        <ownedValue xmi:id="_pZDDcTp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pZDDcjp1EeSgt7IjqMRaLg" value="1000">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pZGGwDp1EeSgt7IjqMRaLg">
+        <property href="../properties/pok_properties.aadl2#POK.Scheduler"/>
+        <ownedValue xmi:id="_pZGGwTp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_pZGGwjp1EeSgt7IjqMRaLg">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../properties/pok_properties.aadl2#//@ownedPropertyType.0/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pZH78Dp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/ARINC653.aadl#ARINC653.HM_Error_ID_Actions"/>
+        <ownedValue xmi:id="_pZIjADp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:ListValue" xmi:id="_pZIjATp1EeSgt7IjqMRaLg">
+            <ownedListElement xsi:type="aadl2:RecordValue" xmi:id="_pZIjAjp1EeSgt7IjqMRaLg">
+              <ownedFieldValue xmi:id="_pZIjAzp1EeSgt7IjqMRaLg">
+                <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.5/@ownedField.0"/>
+                <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pZIjBDp1EeSgt7IjqMRaLg" value="3"/>
+              </ownedFieldValue>
+              <ownedFieldValue xmi:id="_pZJKEDp1EeSgt7IjqMRaLg">
+                <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.5/@ownedField.1"/>
+                <ownedValue xsi:type="aadl2:StringLiteral" xmi:id="_pZJKETp1EeSgt7IjqMRaLg" value="Restart process"/>
+              </ownedFieldValue>
+              <ownedFieldValue xmi:id="_pZJKEjp1EeSgt7IjqMRaLg">
+                <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.5/@ownedField.2"/>
+                <ownedValue xsi:type="aadl2:StringLiteral" xmi:id="_pZJKEzp1EeSgt7IjqMRaLg" value="Cold_Restart"/>
+              </ownedFieldValue>
+            </ownedListElement>
+            <ownedListElement xsi:type="aadl2:RecordValue" xmi:id="_pZJKFDp1EeSgt7IjqMRaLg">
+              <ownedFieldValue xmi:id="_pZJKFTp1EeSgt7IjqMRaLg">
+                <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.5/@ownedField.0"/>
+                <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pZJKFjp1EeSgt7IjqMRaLg" value="4"/>
+              </ownedFieldValue>
+              <ownedFieldValue xmi:id="_pZJKFzp1EeSgt7IjqMRaLg">
+                <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.5/@ownedField.1"/>
+                <ownedValue xsi:type="aadl2:StringLiteral" xmi:id="_pY0Z_Tp1EeSgt7IjqMRaLg" value="Warm partition restart"/>
+              </ownedFieldValue>
+              <ownedFieldValue xmi:id="_pZJKGDp1EeSgt7IjqMRaLg">
+                <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.5/@ownedField.2"/>
+                <ownedValue xsi:type="aadl2:StringLiteral" xmi:id="_pZJKGTp1EeSgt7IjqMRaLg" value="Warm_Restart"/>
+              </ownedFieldValue>
+            </ownedListElement>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pZK_QDp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/ARINC653.aadl#ARINC653.Partition_Identifier"/>
+        <ownedValue xmi:id="_pZK_QTp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pZK_Qjp1EeSgt7IjqMRaLg" value="1"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pZLmUDp1EeSgt7IjqMRaLg">
+        <property href="../properties/pok_properties.aadl2#POK.Additional_Features"/>
+        <ownedValue xmi:id="_pZLmUTp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:ListValue" xmi:id="_pZLmUjp1EeSgt7IjqMRaLg">
+            <ownedListElement xsi:type="aadl2:NamedValue" xmi:id="_pZLmUzp1EeSgt7IjqMRaLg">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../properties/pok_properties.aadl2#//@ownedPropertyType.3/@ownedLiteral.2"/>
+            </ownedListElement>
+            <ownedListElement xsi:type="aadl2:NamedValue" xmi:id="_pZLmVDp1EeSgt7IjqMRaLg">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../properties/pok_properties.aadl2#//@ownedPropertyType.3/@ownedLiteral.6"/>
+            </ownedListElement>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <subcomponent xsi:type="aadl2:VirtualProcessorSubcomponent" href="../common-pkg.aadl2#//@ownedPublicSection/@ownedClassifier.2/@ownedVirtualProcessorSubcomponent.0"/>
+      <index>0</index>
+    </componentInstance>
+    <componentInstance xmi:id="_pUcQQDp1EeSgt7IjqMRaLg" name="the_part2" category="virtual processor">
+      <ownedPropertyAssociation xmi:id="_pZVXUDp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/Timing_Properties.aadl#Timing_Properties.Period"/>
+        <ownedValue xmi:id="_pZVXUTp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pZVXUjp1EeSgt7IjqMRaLg" value="1000">
+            <unit href="../../../Plugin_Resources/AADL_Project.aadl#//@ownedPropertyType.12/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pZYaoDp1EeSgt7IjqMRaLg">
+        <property href="../properties/pok_properties.aadl2#POK.Scheduler"/>
+        <ownedValue xmi:id="_pZYaoTp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:NamedValue" xmi:id="_pZYaojp1EeSgt7IjqMRaLg">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../properties/pok_properties.aadl2#//@ownedPropertyType.0/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pZa24Dp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/ARINC653.aadl#ARINC653.HM_Error_ID_Actions"/>
+        <ownedValue xmi:id="_pZa24Tp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:ListValue" xmi:id="_pZa24jp1EeSgt7IjqMRaLg">
+            <ownedListElement xsi:type="aadl2:RecordValue" xmi:id="_pZa24zp1EeSgt7IjqMRaLg">
+              <ownedFieldValue xmi:id="_pZa25Dp1EeSgt7IjqMRaLg">
+                <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.5/@ownedField.0"/>
+                <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pZa25Tp1EeSgt7IjqMRaLg" value="3"/>
+              </ownedFieldValue>
+              <ownedFieldValue xmi:id="_pZa25jp1EeSgt7IjqMRaLg">
+                <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.5/@ownedField.1"/>
+                <ownedValue xsi:type="aadl2:StringLiteral" xmi:id="_pZJKETp1EeSgt7IjqMRaLg" value="Restart process"/>
+              </ownedFieldValue>
+              <ownedFieldValue xmi:id="_pZa25zp1EeSgt7IjqMRaLg">
+                <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.5/@ownedField.2"/>
+                <ownedValue xsi:type="aadl2:StringLiteral" xmi:id="_pZJKEzp1EeSgt7IjqMRaLg" value="Cold_Restart"/>
+              </ownedFieldValue>
+            </ownedListElement>
+            <ownedListElement xsi:type="aadl2:RecordValue" xmi:id="_pZa26Dp1EeSgt7IjqMRaLg">
+              <ownedFieldValue xmi:id="_pZa26Tp1EeSgt7IjqMRaLg">
+                <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.5/@ownedField.0"/>
+                <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pZa26jp1EeSgt7IjqMRaLg" value="4"/>
+              </ownedFieldValue>
+              <ownedFieldValue xmi:id="_pZa26zp1EeSgt7IjqMRaLg">
+                <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.5/@ownedField.1"/>
+                <ownedValue xsi:type="aadl2:StringLiteral" xmi:id="_pY0Z_Tp1EeSgt7IjqMRaLg" value="Warm partition restart"/>
+              </ownedFieldValue>
+              <ownedFieldValue xmi:id="_pZa27Dp1EeSgt7IjqMRaLg">
+                <property href="../../../Plugin_Resources/ARINC653.aadl#//@ownedPropertyType.5/@ownedField.2"/>
+                <ownedValue xsi:type="aadl2:StringLiteral" xmi:id="_pZJKGTp1EeSgt7IjqMRaLg" value="Warm_Restart"/>
+              </ownedFieldValue>
+            </ownedListElement>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pZcsEDp1EeSgt7IjqMRaLg">
+        <property href="../../../Plugin_Resources/ARINC653.aadl#ARINC653.Partition_Identifier"/>
+        <ownedValue xmi:id="_pZcsETp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:IntegerLiteral" xmi:id="_pZcsEjp1EeSgt7IjqMRaLg" value="1"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xmi:id="_pZdTIDp1EeSgt7IjqMRaLg">
+        <property href="../properties/pok_properties.aadl2#POK.Additional_Features"/>
+        <ownedValue xmi:id="_pZd6MDp1EeSgt7IjqMRaLg">
+          <ownedValue xsi:type="aadl2:ListValue" xmi:id="_pZd6MTp1EeSgt7IjqMRaLg">
+            <ownedListElement xsi:type="aadl2:NamedValue" xmi:id="_pZd6Mjp1EeSgt7IjqMRaLg">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../properties/pok_properties.aadl2#//@ownedPropertyType.3/@ownedLiteral.2"/>
+            </ownedListElement>
+            <ownedListElement xsi:type="aadl2:NamedValue" xmi:id="_pZd6Mzp1EeSgt7IjqMRaLg">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../properties/pok_properties.aadl2#//@ownedPropertyType.3/@ownedLiteral.6"/>
+            </ownedListElement>
+          </ownedValue>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <subcomponent xsi:type="aadl2:VirtualProcessorSubcomponent" href="../common-pkg.aadl2#//@ownedPublicSection/@ownedClassifier.2/@ownedVirtualProcessorSubcomponent.1"/>
+      <index>0</index>
+    </componentInstance>
+    <subcomponent xsi:type="aadl2:ProcessorSubcomponent" href="../test_queuing.aadl2#//@ownedPublicSection/@ownedClassifier.1/@ownedProcessorSubcomponent.0"/>
+    <index>0</index>
+  </componentInstance>
+  <connectionInstance xmi:id="_pUqSsDp1EeSgt7IjqMRaLg" name="the_proc1.the_sender.p_out -> the_proc2.the_receiver.p_in" complete="true" kind="portConnection" destination="_pUVikDp1EeSgt7IjqMRaLg" source="_pUM_sDp1EeSgt7IjqMRaLg">
+    <connectionReference xmi:id="_pUqSsTp1EeSgt7IjqMRaLg" context="_pUIuQDp1EeSgt7IjqMRaLg" source="_pUM_sDp1EeSgt7IjqMRaLg" destination="_pUNmwDp1EeSgt7IjqMRaLg">
+      <connection xsi:type="aadl2:PortConnection" href="../test_queuing.aadl2#//@ownedPublicSection/@ownedClassifier.3/@ownedPortConnection.0"/>
+    </connectionReference>
+    <connectionReference xmi:id="_pUqSsjp1EeSgt7IjqMRaLg" context="_pTa8kDp1EeSgt7IjqMRaLg" source="_pUNmwDp1EeSgt7IjqMRaLg" destination="_pUWJoDp1EeSgt7IjqMRaLg">
+      <connection xsi:type="aadl2:PortConnection" href="../test_queuing.aadl2#//@ownedPublicSection/@ownedClassifier.1/@ownedPortConnection.0"/>
+    </connectionReference>
+    <connectionReference xmi:id="_pUqSszp1EeSgt7IjqMRaLg" context="_pURRIDp1EeSgt7IjqMRaLg" source="_pUWJoDp1EeSgt7IjqMRaLg" destination="_pUVikDp1EeSgt7IjqMRaLg">
+      <connection xsi:type="aadl2:PortConnection" href="../test_queuing.aadl2#//@ownedPublicSection/@ownedClassifier.5/@ownedPortConnection.0"/>
+    </connectionReference>
+  </connectionInstance>
+  <systemOperationMode xmi:id="_pUf6oDp1EeSgt7IjqMRaLg" name="No Modes"/>
+  <systemImplementation href="../test_queuing.aadl2#test_queuing.root.impl"/>
+</instance:SystemInstance>
