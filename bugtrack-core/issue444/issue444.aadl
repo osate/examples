@@ -1,0 +1,36 @@
+package issue444
+public
+	system test_system
+	end test_system;
+
+	system implementation test_system.impl
+		subcomponents
+			p1: process test_process.impl;
+	end test_system.impl;
+
+	process test_process
+	end test_process;
+
+	process implementation test_process.impl
+		subcomponents
+			t1: thread test_thread.impl;
+	end test_process.impl;
+
+	thread test_thread
+		features
+			idp: in event data port;
+	end test_thread;
+
+	thread implementation test_thread.impl
+		calls
+			cseq: {
+						sp: subprogram test_subprogram;
+					};
+		properties
+			Compute_Entrypoint_Call_Sequence => reference (cseq) applies to idp;
+	end test_thread.impl;
+
+	subprogram test_subprogram
+	end test_subprogram;
+
+end issue444;
