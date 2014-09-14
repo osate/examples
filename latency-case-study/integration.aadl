@@ -51,9 +51,6 @@ end integration.software_distributed;
 
 system implementation integration.software_integrated extends integration.software_generic
 subcomponents
-	s1 		: refined to process latency_cs::impl::sensing.i {Classifier_Substitution_Rule => Type_Extension;};
-	s2 		: refined to process  latency_cs::impl::sensing.i {Classifier_Substitution_Rule => Type_Extension;};
-	a  		: refined to process  latency_cs::impl::actuating.i {Classifier_Substitution_Rule => Type_Extension;};
 	cpu 	: processor latency_cs::platform::ima_cpu.i;
 properties
 	actual_processor_binding => (reference (cpu.part1)) applies to s1;
@@ -65,6 +62,7 @@ end integration.software_integrated;
 
 system implementation integration.software_integrated1 extends integration.software_integrated
 properties
+	arinc653::module_major_frame => 48 ms applies to cpu;
 	arinc653::module_schedule => ([Partition => reference (cpu.part1) ; Duration => 7 ms ; Periodic_Processing_Start => true;],
 		                          [Partition => reference (cpu.part2) ; Duration => 7 ms ; Periodic_Processing_Start => true;],
 		                          [Partition => reference (cpu.part3) ; Duration => 22 ms ; Periodic_Processing_Start => true;],
@@ -75,6 +73,7 @@ end integration.software_integrated1;
 
 system implementation integration.software_integrated2 extends integration.software_integrated
 properties
+	arinc653::module_major_frame => 48 ms applies to cpu;
 	arinc653::module_schedule => ([Partition => reference (cpu.part3) ; Duration => 22 ms ; Periodic_Processing_Start => true;],
 		                          [Partition => reference (cpu.part2) ; Duration => 7 ms ; Periodic_Processing_Start => true;],
 		                          [Partition => reference (cpu.part4) ; Duration => 12 ms ; Periodic_Processing_Start => true;],
