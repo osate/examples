@@ -3,6 +3,7 @@ public
 
 with base_types;
 with ARINC653;
+with SEI;
 
 data int extends base_types::integer_8
 end int;
@@ -110,6 +111,14 @@ connections
 flows
 	etef0 : end to end flow s.fsource -> c0 -> r.fsink {Latency => 5 ms .. 10 ms;};
 end latencytest.generic;
+
+system implementation latencytest.partitioned_sei extends latencytest.generic
+properties
+	SEI::Is_Partition => true applies to s;
+	SEI::Is_Partition => true applies to r;
+	SEI::Partition_Latency => 100ms applies to s;
+	SEI::Partition_Latency => 100ms applies to r;
+end latencytest.partitioned_sei;
 
 system implementation latencytest.partitioned_local extends latencytest.generic
 subcomponents
