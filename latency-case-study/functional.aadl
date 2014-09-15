@@ -8,7 +8,7 @@ features
 flows
 	sensor_source : flow source dataout;
 properties
-	latency => 2 ms .. 5 ms applies to sensor_source;
+	latency => 1 ms .. 3 ms applies to sensor_source;
 end sensing;
 
 abstract processing
@@ -20,7 +20,7 @@ flows
 	processing_path0 : flow path datain1 -> dataout;
 	processing_path1 : flow path datain2 -> dataout;
 properties
-	latency => 18 ms .. 20 ms applies to processing_path0, processing_path1;
+	latency => 3 ms .. 4 ms applies to processing_path0, processing_path1;
 end processing;
 
 abstract actuating
@@ -29,7 +29,7 @@ features
 flows
 	actuating_sink : flow sink datain;
 properties
-	latency => 8 ms .. 10 ms applies to actuating_sink;
+	latency => 5 ms .. 7 ms applies to actuating_sink;
 end actuating;
 
 system integration
@@ -53,7 +53,7 @@ flows
 	                        p.processing_path1  -> c2 ->
 	                        a.actuating_sink; 
 properties
-	latency => 80 ms .. 100 ms applies to etef0, etef1;
+	latency => 20 ms .. 30 ms applies to etef0, etef1;
 end integration.i;
 
 end latency_cs::functional;

@@ -62,22 +62,22 @@ end integration.software_integrated;
 
 system implementation integration.software_integrated1 extends integration.software_integrated
 properties
-	arinc653::module_major_frame => 48 ms applies to cpu;
-	arinc653::module_schedule => ([Partition => reference (cpu.part1) ; Duration => 7 ms ; Periodic_Processing_Start => true;],
-		                          [Partition => reference (cpu.part2) ; Duration => 7 ms ; Periodic_Processing_Start => true;],
-		                          [Partition => reference (cpu.part3) ; Duration => 22 ms ; Periodic_Processing_Start => true;],
-		                          [Partition => reference (cpu.part4) ; Duration => 12 ms ; Periodic_Processing_Start => true;])
+	arinc653::module_major_frame => 20 ms applies to cpu;
+	arinc653::module_schedule => ([Partition => reference (cpu.part1) ; Duration => 3 ms ; Periodic_Processing_Start => true;],
+		                          [Partition => reference (cpu.part2) ; Duration => 3 ms ; Periodic_Processing_Start => true;],
+		                          [Partition => reference (cpu.part3) ; Duration => 8 ms ; Periodic_Processing_Start => true;],
+		                          [Partition => reference (cpu.part4) ; Duration => 6 ms ; Periodic_Processing_Start => true;])
 		                         applies to cpu;
 end integration.software_integrated1;
 
 
 system implementation integration.software_integrated2 extends integration.software_integrated
 properties
-	arinc653::module_major_frame => 48 ms applies to cpu;
-	arinc653::module_schedule => ([Partition => reference (cpu.part3) ; Duration => 22 ms ; Periodic_Processing_Start => true;],
-		                          [Partition => reference (cpu.part2) ; Duration => 7 ms ; Periodic_Processing_Start => true;],
-		                          [Partition => reference (cpu.part4) ; Duration => 12 ms ; Periodic_Processing_Start => true;],
-		                          [Partition => reference (cpu.part1) ; Duration => 7 ms ; Periodic_Processing_Start => true;])
+	arinc653::module_major_frame => 20 ms applies to cpu;
+	arinc653::module_schedule => ([Partition => reference (cpu.part3) ; Duration => 8 ms ; Periodic_Processing_Start => true;],
+		                          [Partition => reference (cpu.part2) ; Duration => 3 ms ; Periodic_Processing_Start => true;],
+		                          [Partition => reference (cpu.part4) ; Duration => 6 ms ; Periodic_Processing_Start => true;],
+		                          [Partition => reference (cpu.part1) ; Duration => 3 ms ; Periodic_Processing_Start => true;])
 		                         applies to cpu;
 end integration.software_integrated2;
 

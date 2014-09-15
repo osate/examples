@@ -47,6 +47,9 @@ features
 	dataout : out data port position.i;
 flows
 	sensing_source : flow source dataout;
+properties
+	period => 20ms;
+	compute_execution_time => 1 ms .. 2 ms;
 end thr_sensing;
 
 
@@ -91,7 +94,7 @@ flows
 properties
 	dispatch_protocol => periodic;
 	period            => 20 ms;
-	compute_execution_time => 1 ms .. 2 ms;
+	compute_execution_time => 3 ms .. 4 ms;
 end thr_stats;
 
 thread thr_filter
@@ -105,7 +108,7 @@ flows
 properties
 	dispatch_protocol => periodic;
 	period            => 20 ms;
-	compute_execution_time => 5 ms .. 10 ms;
+	compute_execution_time => 2 ms .. 3 ms;
 end thr_filter;
 
 
@@ -125,7 +128,7 @@ flows
 	collect_path : flow path datain -> dataout;
 properties
 	dispatch_protocol => periodic;
-	period            => 10 ms;
+	period            => 20 ms;
 	compute_execution_time => 1 ms .. 3 ms;
 end thr_collect;
 
@@ -136,8 +139,8 @@ flows
 	display_sink : flow sink datain;
 properties
 	dispatch_protocol => periodic;
-	period            => 10 ms;
-	compute_execution_time => 2 ms .. 4 ms;
+	period            => 20 ms;
+	compute_execution_time => 1 ms .. 2 ms;
 end thr_display;
 
 process actuating extends latency_cs::functional::actuating
@@ -151,7 +154,7 @@ subcomponents
 	td : thread thr_display;
 connections
 	c0 : port datain -> tc.datain;
-	c1 : port tc.dataout -> td.datain;
+	c1 : port tc.dataout -> td.datain {timing => immediate;};
 flows
 	actuating_sink : flow sink datain -> c0 -> tc.collect_path -> c1 -> td.display_sink;
 end actuating.i;
