@@ -48,6 +48,7 @@ features
 flows
 	sensing_source : flow source dataout;
 properties
+	dispatch_protocol => periodic;
 	period => 20ms;
 	compute_execution_time => 1 ms .. 2 ms;
 end thr_sensing;
