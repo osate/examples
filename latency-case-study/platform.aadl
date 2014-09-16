@@ -31,7 +31,7 @@ end partition;
 
 bus generic_bus
 properties
-	Transmission_Time => [ Fixed => 10 ms .. 30ms;
+	Transmission_Time => [ Fixed => 2 ms .. 3ms;
                           PerByte => 1 us .. 10 us; ];
 end generic_bus;
 
