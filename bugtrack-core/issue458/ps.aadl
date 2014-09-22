@@ -1,0 +1,3 @@
+property set ps is
+	def1: aadlboolean applies to (all);
+end ps;
