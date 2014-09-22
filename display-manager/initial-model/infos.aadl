@@ -17,6 +17,9 @@ properties
 	period => 200 ms;
 end gps_simulator;
 
+thread implementation gps_simulator.i
+end gps_simulator.i;
+
 thread speed_calculator
 features
 	pos : in data port dm::legacy::types::gps_position.i;
@@ -26,6 +29,9 @@ properties
 	period => 2 sec;
 end speed_calculator;
 
+
+thread implementation speed_calculator.i
+end speed_calculator.i;
 
 --
 --  The altitude_sensor receives data from a sensor
@@ -39,11 +45,17 @@ features
 	alt : out data port dm::legacy::types::altitude_sensed;
 end altitude_sensor;
 
+thread implementation altitude_sensor.i
+end altitude_sensor.i;
+
 thread altitude_processing
 features 
 	sensed_value : in data port dm::legacy::types::altitude_sensed;
 	altitude     : out data port dm::legacy::types::altitude_meter;
 end altitude_processing;
+
+thread implementation altitude_processing.i
+end altitude_processing.i;
 
 --
 --  The wind speed is calculated from a sensor
@@ -56,11 +68,16 @@ features
 	speed : out data port dm::legacy::types::speed;
 end wind_processing;
 
+thread implementation wind_processing.i
+end wind_processing.i;
 
 thread wind_sensor
 features
 	sensed : out data port dm::legacy::types::wind_sensed;
 end wind_sensor;
+
+thread implementation wind_sensor.i
+end wind_sensor.i;
 
 
 --
@@ -76,12 +93,12 @@ end infos;
 
 process implementation infos.i
 subcomponents
-	gps_sensor : thread gps_simulator;
-	speed_processing : thread speed_calculator;
-	altitude_sensor : thread altitude_sensor;
-	altitude_processing : thread altitude_processing;
-	wind_sensor : thread wind_sensor;
-	wind_processing : thread wind_processing;
+	gps_sensor : thread gps_simulator.i;
+	speed_processing : thread speed_calculator.i;
+	altitude_sensor : thread altitude_sensor.i;
+	altitude_processing : thread altitude_processing.i;
+	wind_sensor : thread wind_sensor.i;
+	wind_processing : thread wind_processing.i;
 connections
 	c0 : port gps_sensor.pos -> speed_processing.pos;
 	c1 : port speed_processing.speed -> aircraft_speed;

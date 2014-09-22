@@ -8,6 +8,8 @@ with dm::legacy::manager;
 with dm::legacy::renderer;
 with dm::legacy::platform;
 
+with arinc653;
+
 system display_manager
 end display_manager;
 
@@ -34,6 +36,28 @@ properties
 	actual_processor_binding => (reference (platform.part2)) applies to monitor;
 	actual_processor_binding => (reference (platform.part3)) applies to manager;
 	actual_processor_binding => (reference (platform.part4)) applies to renderer;	
+
+	arinc653::dal => level_c applies to platform.part1;
+	arinc653::dal => level_a applies to platform.part2;
+	arinc653::dal => level_a applies to platform.part3;
+	arinc653::dal => level_c applies to platform.part4;
+
+	arinc653::module_major_frame => 40ms applies to platform;
+
+	arinc653::module_schedule => 
+	    ( [Partition => reference (platform.part1);
+	      Duration  => 10 ms;
+	      Periodic_Processing_Start => false;],
+	      [Partition => reference (platform.part2);
+	      Duration  => 10 ms;
+	      Periodic_Processing_Start => false;],
+	      [Partition => reference (platform.part3);
+	      Duration  => 10 ms;
+	      Periodic_Processing_Start => false;],
+	      [Partition => reference (platform.part4);
+	      Duration  => 10 ms;
+	      Periodic_Processing_Start => false;]
+	    ) applies to platform;
 end display_manager.i;
 
 end dm::legacy::integration;
