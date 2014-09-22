@@ -3,6 +3,52 @@ public
 
 with dm::legacy::types;
 
+
+
+thread filter_critical
+features
+	engines_status 	: in data port dm::legacy::types::engines_status;
+	pitot_status   	: in data port dm::legacy::types::pitot_status;
+	fuel_status    	: in data port dm::legacy::types::fuel_status.i;
+	aircraft_speed 	: in data port dm::legacy::types::speed;
+	wind_speed 		: in data port dm::legacy::types::speed;
+	altitude     	: in data port dm::legacy::types::altitude_meter;
+	page   			: out data port dm::legacy::types::page.i;
+end filter_critical;
+
+thread implementation filter_critical.i
+end filter_critical.i;
+
+thread filter_warning
+features
+	engines_status 	: in data port dm::legacy::types::engines_status;
+	pitot_status   	: in data port dm::legacy::types::pitot_status;
+	fuel_status    	: in data port dm::legacy::types::fuel_status.i;
+	aircraft_speed 	: in data port dm::legacy::types::speed;
+	wind_speed 		: in data port dm::legacy::types::speed;
+	altitude     	: in data port dm::legacy::types::altitude_meter;
+	page    		: out data port dm::legacy::types::page.i;
+end filter_warning;
+
+thread implementation filter_warning.i
+end filter_warning.i;
+
+
+thread filter_infos
+features
+	engines_status 	: in data port dm::legacy::types::engines_status;
+	pitot_status   	: in data port dm::legacy::types::pitot_status;
+	fuel_status    	: in data port dm::legacy::types::fuel_status.i;
+	aircraft_speed 	: in data port dm::legacy::types::speed;
+	wind_speed 		: in data port dm::legacy::types::speed;
+	altitude     	: in data port dm::legacy::types::altitude_meter;
+	page       		: out data port dm::legacy::types::page.i;
+end filter_infos;
+
+
+thread implementation filter_infos.i
+end filter_infos.i;
+
 process manager
 features
 	engines_status 	: in data port dm::legacy::types::engines_status;
@@ -17,6 +63,36 @@ features
 end manager;
 
 process implementation manager.i
+subcomponents
+	critical : thread filter_critical.i;
+	infos    : thread filter_infos.i;
+	warning  : thread filter_warning.i;
+connections
+	critical_engines_status 	: port engines_status -> critical.engines_status;
+	critical_pitot_status 	: port pitot_status -> critical.pitot_status;
+	critical_fuel_status 	: port fuel_status -> critical.fuel_status;
+	critical_aircraft_speed 	: port aircraft_speed -> critical.aircraft_speed;
+	critical_wind_speed 	: port wind_speed -> critical.wind_speed;
+	critical_altitude 	: port altitude -> critical.altitude;
+	critical_page : port critical.page -> page_critical;	 
+	
+	
+	warning_engines_status 	: port engines_status -> warning.engines_status;
+	warning_pitot_status 	: port pitot_status -> warning.pitot_status;
+	warning_fuel_status 	: port fuel_status -> warning.fuel_status;
+	warning_aircraft_speed 	: port aircraft_speed -> warning.aircraft_speed;
+	warning_wind_speed 	: port wind_speed -> warning.wind_speed;
+	warning_altitude 	: port altitude -> warning.altitude;
+	warning_page : port warning.page -> page_warning;	 
+	
+	
+	infos_engines_status 	: port engines_status -> infos.engines_status;
+	infos_pitot_status 	: port pitot_status -> infos.pitot_status;
+	infos_fuel_status 	: port fuel_status -> infos.fuel_status;
+	infos_aircraft_speed 	: port aircraft_speed -> infos.aircraft_speed;
+	infos_wind_speed 	: port wind_speed -> infos.wind_speed;
+	infos_altitude 	: port altitude -> infos.altitude;
+	infos_page : port infos.page -> page_info;	 
 end manager.i;
 
 

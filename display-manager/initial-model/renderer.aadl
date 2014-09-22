@@ -2,6 +2,38 @@ package dm::legacy::renderer
 public
 	with dm::legacy::types;
 
+thread render
+features
+	page : in data port dm::legacy::types::page.i;
+properties
+	dispatch_protocol => periodic;
+	period => 100 ms;
+	
+end render;
+
+thread render_critical extends render
+properties
+	period => 500 ms;
+end render_critical;
+
+thread implementation render_critical.i
+end render_critical.i;
+
+thread render_warning extends render
+properties
+	period => 1 sec;
+end render_warning;
+
+thread implementation render_warning.i
+end render_warning.i;
+
+thread render_infos extends render
+properties
+	period => 5 sec;
+end render_infos;
+
+thread implementation render_infos.i
+end render_infos.i;
 
 process renderer
 features
@@ -11,6 +43,14 @@ features
 end renderer;
 
 process implementation renderer.i
+subcomponents
+	critical : thread render_critical.i;
+	warning  : thread render_warning.i;
+	infos    : thread render_infos.i;
+connections
+	c0 : port page_critical -> critical.page;
+	c1 : port page_warning -> warning.page;
+	c2 : port page_info -> infos.page;
 end renderer.i;
 
 end dm::legacy::renderer;

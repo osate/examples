@@ -1,0 +1,22 @@
+package dm::legacy::platform
+
+public
+
+virtual processor partition
+end partition;
+
+virtual processor implementation partition.i
+end partition.i;
+
+processor execution_platform
+end execution_platform;
+
+processor implementation execution_platform.i
+subcomponents
+	part1 : virtual processor partition.i;
+	part2 : virtual processor partition.i;
+	part3 : virtual processor partition.i;
+	part4 : virtual processor partition.i;
+end execution_platform.i;
+
+end dm::legacy::platform;

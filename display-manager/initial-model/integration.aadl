@@ -6,6 +6,7 @@ with dm::legacy::infos;
 with dm::legacy::monitor;
 with dm::legacy::manager;
 with dm::legacy::renderer;
+with dm::legacy::platform;
 
 system display_manager
 end display_manager;
@@ -17,6 +18,7 @@ subcomponents
 	monitor : process dm::legacy::monitor::monitor.i;
 	manager : process dm::legacy::manager::manager.i;
 	renderer : process dm::legacy::renderer::renderer.i;
+	platform : processor dm::legacy::platform::execution_platform.i;
 connections
 	c0 : port infos.aircraft_speed -> manager.aircraft_speed;
 	c1 : port infos.altitude -> manager.altitude;
@@ -27,6 +29,11 @@ connections
 	c6 : port manager.page_info -> renderer.page_info;
 	c7 : port manager.page_warning -> renderer.page_warning;
 	c8 : port manager.page_critical -> renderer.page_critical;
+properties
+	actual_processor_binding => (reference (platform.part1)) applies to infos;
+	actual_processor_binding => (reference (platform.part2)) applies to monitor;
+	actual_processor_binding => (reference (platform.part3)) applies to manager;
+	actual_processor_binding => (reference (platform.part4)) applies to renderer;	
 end display_manager.i;
 
 end dm::legacy::integration;
