@@ -1,0 +1,32 @@
+package dm::legacy::integration
+
+public
+
+with dm::legacy::infos;
+with dm::legacy::monitor;
+with dm::legacy::manager;
+with dm::legacy::renderer;
+
+system display_manager
+end display_manager;
+
+
+system implementation display_manager.i
+subcomponents
+	infos : process dm::legacy::infos::infos.i;
+	monitor : process dm::legacy::monitor::monitor.i;
+	manager : process dm::legacy::manager::manager.i;
+	renderer : process dm::legacy::renderer::renderer.i;
+connections
+	c0 : port infos.aircraft_speed -> manager.aircraft_speed;
+	c1 : port infos.altitude -> manager.altitude;
+	c2 : port infos.wind_speed -> manager.wind_speed;
+	c3 : port monitor.engines_status -> manager.engines_status;
+	c4 : port monitor.pitot_status -> manager.pitot_status;
+	c5 : port monitor.fuel_status -> manager.fuel_status;
+	c6 : port manager.page_info -> renderer.page_info;
+	c7 : port manager.page_warning -> renderer.page_warning;
+	c8 : port manager.page_critical -> renderer.page_critical;
+end display_manager.i;
+
+end dm::legacy::integration;

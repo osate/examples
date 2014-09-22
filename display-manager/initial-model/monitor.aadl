@@ -2,7 +2,87 @@ package dm::legacy::monitor
 
 public
 
-process equipment_monitor
-end equipment_monitor;
+
+with dm::legacy::types;
+
+--
+--  Each engine reports a value from a sensor
+--  and a voter check for a potential inconsistency
+--  and output an appropriate value.
+
+thread engine_sensor
+features
+	status : out data port dm::legacy::types::engine_status;
+end engine_sensor;
+
+thread engines_status
+features
+	engine1 : in data port dm::legacy::types::engine_status;
+	engine2 : in data port dm::legacy::types::engine_status;
+	status  : out data port dm::legacy::types::engines_status;
+end engines_status;
+
+-- 
+--  A pitot sensor is 
+
+thread pitot_sensor
+features
+	pitot_value : out data port dm::legacy::types::pitot_val;
+end pitot_sensor;
+
+thread pitot_status
+features
+ 	pitot1_sensed : in data port dm::legacy::types::pitot_val;
+ 	pitot2_sensed : in data port dm::legacy::types::pitot_val;
+	status : out data port  dm::legacy::types::pitot_status.i;
+end pitot_status;
+
+
+
+thread fuel_gauge
+features
+	level : out data port dm::legacy::types::fuel_level;
+end fuel_gauge;
+
+thread fuel_status 
+features
+ 	level1 : in data port dm::legacy::types::fuel_level;
+ 	level2 : in data port dm::legacy::types::fuel_level;
+	status : out data port  dm::legacy::types::fuel_status.i;
+end fuel_status;
+
+
+process monitor
+features
+	engines_status : out data port dm::legacy::types::engines_status;
+	pitot_status   : out data port dm::legacy::types::pitot_status;
+	fuel_status    : out data port dm::legacy::types::fuel_status.i;
+end monitor;
+
+process implementation monitor.i
+subcomponents
+	engine1 : thread engine_sensor;
+	engine2 : thread engine_sensor;
+	pitot1  : thread pitot_sensor;
+	pitot2  : thread pitot_sensor;
+	fuel1   : thread fuel_gauge;
+	fuel2   : thread fuel_gauge;
+	engines : thread engines_status;
+	pitots  : thread pitot_status; 
+	fuels   : thread  fuel_status;
+connections
+	cin0 : port engine1.status -> engines.engine1;
+	cin1 : port engine2.status -> engines.engine2;
+	
+	cin2 : port pitot1.pitot_value -> pitots.pitot1_sensed;
+	cin3 : port pitot2.pitot_value -> pitots.pitot2_sensed;
+	
+	cin4 : port fuel1.level -> fuels.level1;
+	cin5 : port fuel2.level -> fuels.level2;
+	
+	cout0 : port engines.status -> engines_status;
+	cout1 : port pitots.status -> pitot_status;
+	cout2 : port fuels.status -> fuel_status;
+end monitor.i;
 
 end dm::legacy::monitor;

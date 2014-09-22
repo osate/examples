@@ -3,22 +3,21 @@ public
 
 with dm::legacy::types;
 
-thread engine
+process manager
 features
-	active : out data port dm::legacy::types::boolean;
-	--  cmode can be either 0 (off), 1 (nominal) or 2 (degraded)
-	cmode  : out data port dm::legacy::types::integer;
-	speed  : out data port dm::legacy::types::integer;
-end engine;
+	engines_status 	: in data port dm::legacy::types::engines_status;
+	pitot_status   	: in data port dm::legacy::types::pitot_status;
+	fuel_status    	: in data port dm::legacy::types::fuel_status.i;
+	aircraft_speed 	: in data port dm::legacy::types::speed;
+	wind_speed 		: in data port dm::legacy::types::speed;
+	altitude     	: in data port dm::legacy::types::altitude_meter;
+	page_critical   : out data port dm::legacy::types::page.i;
+	page_warning    : out data port dm::legacy::types::page.i;
+	page_info       : out data port dm::legacy::types::page.i;
+end manager;
 
-thread brake
-features
-	--  current channel can be either 0 (off), 1 (nominal) or 2 (alternate)
-	channel  : out data port dm::legacy::types::integer;
-	--  current mode can be either 1 (nominal) or (2) degraded
-	cmode  : out data port dm::legacy::types::integer;
-	
-end brake;
+process implementation manager.i
+end manager.i;
 
 
 end dm::legacy::manager;

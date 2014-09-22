@@ -1,5 +1,16 @@
 package dm::legacy::renderer
 public
+	with dm::legacy::types;
 
+
+process renderer
+features
+	page_critical   : in data port dm::legacy::types::page.i;
+	page_warning    : in data port dm::legacy::types::page.i;
+	page_info       : in data port dm::legacy::types::page.i;
+end renderer;
+
+process implementation renderer.i
+end renderer.i;
 
 end dm::legacy::renderer;

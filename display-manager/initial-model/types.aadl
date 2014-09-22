@@ -47,4 +47,72 @@ subcomponents
 	coord_y : data integer;
 end flight_informations.i;
 
+data engine_status
+end engine_status;
+
+--
+--  engines_status is an integer with the following codes
+--  0 for everything is ok
+--  1 for left engine not working
+--  2 for right engine not working
+--  3 for both engines not working
+--  in the refined version, we will then use an enumeration.
+--
+data engines_status extends Base_Types::Unsigned_8
+end engines_status;
+
+
+--
+--  The fuel_level gives you a value for how much
+--  fuel is available for the plane.
+--
+data fuel_level extends Base_Types::Unsigned_8
+end fuel_level;
+
+--
+--  The fuel status consists in seeing if one
+--  gauge is working or not and if they are 
+--  working or not.
+--
+data fuel_status
+end fuel_status;
+
+data implementation fuel_status.i
+subcomponents
+	level : data fuel_level;
+	--
+	--  0 is for everything works well
+	--  1 is for one sensor is not working
+	--  2 is for both sensors are not working
+	--  in the refined implementation, we will then use
+	--  an enumeration for this type.
+	status : data base_types::unsigned_8;
+end fuel_status.i;
+
+data pitot_val extends Base_Types::Unsigned_8
+end pitot_val;
+
+data pitot_status
+end pitot_status;
+
+data implementation pitot_status.i
+subcomponents
+	speed : data speed;
+	--
+	--  0 is for everything works well
+	--  1 is for one sensor is not working
+	--  2 is for both sensors are not working
+	--  in the refined implementation, we will then use
+	--  an enumeration for this type.
+	status : data base_types::unsigned_8;
+end pitot_status.i;
+
+data page
+end page;
+
+data implementation page.i
+subcomponents
+	line : data Base_Types::String[10];
+end page.i;
+
 end dm::legacy::types;
