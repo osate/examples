@@ -16,6 +16,14 @@ end time;
 data speed extends Base_Types::Unsigned_16
 end speed;
 
+data wind_sensed extends Base_Types::Unsigned_16
+end wind_sensed;
+
+data altitude_sensed extends Base_Types::Unsigned_16
+end altitude_sensed;
+
+data altitude_meter extends Base_Types::Unsigned_16
+end altitude_meter;
 
 data pos extends Base_Types::Unsigned_64
 end pos;

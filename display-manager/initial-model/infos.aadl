@@ -20,15 +20,76 @@ end gps_simulator;
 thread speed_calculator
 features
 	pos : in data port dm::legacy::types::gps_position.i;
+	speed : out data port dm::legacy::types::speed;
 properties
 	dispatch_protocol => periodic;
 	period => 2 sec;
 end speed_calculator;
 
+
+--
+--  The altitude_sensor receives data from a sensor
+--  and sends it to a task to transform it into
+--  a suitable data to evaluate the distance
+--  to the ground.
+--
+
+thread altitude_sensor
+features
+	alt : out data port dm::legacy::types::altitude_sensed;
+end altitude_sensor;
+
+thread altitude_processing
+features 
+	sensed_value : in data port dm::legacy::types::altitude_sensed;
+	altitude     : out data port dm::legacy::types::altitude_meter;
+end altitude_processing;
+
+--
+--  The wind speed is calculated from a sensor
+--  that takes a value while a processing
+--  function transforms it into a suitable speed. 
+--
+thread wind_processing
+features
+	sensed : in data port dm::legacy::types::wind_sensed;
+	speed : out data port dm::legacy::types::speed;
+end wind_processing;
+
+
+thread wind_sensor
+features
+	sensed : out data port dm::legacy::types::wind_sensed;
+end wind_sensor;
+
+
+--
+--  The process infos contains all the functions necessary
+--  to process non-critical flight data information
+--
 process infos
 features
-	speed : out data port dm::legacy::types::speed;
+	aircraft_speed : out data port dm::legacy::types::speed;
+	wind_speed : out data port dm::legacy::types::speed;
+	altitude     : out data port dm::legacy::types::altitude_meter;
 end infos;
+
+process implementation infos.i
+subcomponents
+	gps_sensor : thread gps_simulator;
+	speed_processing : thread speed_calculator;
+	altitude_sensor : thread altitude_sensor;
+	altitude_processing : thread altitude_processing;
+	wind_sensor : thread wind_sensor;
+	wind_processing : thread wind_processing;
+connections
+	c0 : port gps_sensor.pos -> speed_processing.pos;
+	c1 : port speed_processing.speed -> aircraft_speed;
+	c2 : port altitude_sensor.alt -> altitude_processing.sensed_value;
+	c3 : port altitude_processing.altitude -> altitude;
+	c4 : port wind_sensor.sensed -> wind_processing.sensed;
+	c5 : port wind_processing.speed -> wind_speed;
+end infos.i;
 
 
 
