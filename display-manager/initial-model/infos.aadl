@@ -1,0 +1,37 @@
+package dm::legacy::infos
+public
+
+with dm::legacy::types;
+
+
+--
+--  This thread will fake a GPS simulator and outputs
+--  the position of the plane. The position will then
+--  be used to compute the speed of the plane
+--
+thread gps_simulator
+features
+	pos : out data port dm::legacy::types::gps_position.i;
+properties
+	dispatch_protocol => periodic;
+	period => 200 ms;
+end gps_simulator;
+
+thread speed_calculator
+features
+	pos : in data port dm::legacy::types::gps_position.i;
+properties
+	dispatch_protocol => periodic;
+	period => 2 sec;
+end speed_calculator;
+
+process infos
+features
+	speed : out data port dm::legacy::types::speed;
+end infos;
+
+
+
+
+
+end dm::legacy::infos;

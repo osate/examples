@@ -1,0 +1,42 @@
+package dm::legacy::types
+
+public
+
+with base_types;
+
+data boolean extends Base_Types::Boolean
+end boolean;
+
+data integer extends Base_Types::Integer
+end integer;
+
+data time extends Base_Types::Unsigned_64
+end time;
+
+data speed extends Base_Types::Unsigned_16
+end speed;
+
+
+data pos extends Base_Types::Unsigned_64
+end pos;
+
+data gps_position
+end gps_position;
+
+data implementation gps_position.i
+subcomponents
+	pos_x : data pos;
+	pos_y : data pos;
+end gps_position.i;
+
+data flight_informations
+end flight_informations;
+
+data implementation flight_informations.i
+subcomponents
+	speed : data integer;
+	coord_x : data integer;
+	coord_y : data integer;
+end flight_informations.i;
+
+end dm::legacy::types;

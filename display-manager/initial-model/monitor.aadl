@@ -1,0 +1,8 @@
+package dm::legacy::monitor
+
+public
+
+process equipment_monitor
+end equipment_monitor;
+
+end dm::legacy::monitor;

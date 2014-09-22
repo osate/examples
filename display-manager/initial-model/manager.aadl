@@ -1,0 +1,24 @@
+package dm::legacy::manager
+public
+
+with dm::legacy::types;
+
+thread engine
+features
+	active : out data port dm::legacy::types::boolean;
+	--  cmode can be either 0 (off), 1 (nominal) or 2 (degraded)
+	cmode  : out data port dm::legacy::types::integer;
+	speed  : out data port dm::legacy::types::integer;
+end engine;
+
+thread brake
+features
+	--  current channel can be either 0 (off), 1 (nominal) or 2 (alternate)
+	channel  : out data port dm::legacy::types::integer;
+	--  current mode can be either 1 (nominal) or (2) degraded
+	cmode  : out data port dm::legacy::types::integer;
+	
+end brake;
+
+
+end dm::legacy::manager;
