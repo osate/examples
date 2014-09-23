@@ -115,4 +115,11 @@ subcomponents
 	line : data Base_Types::String[10];
 end page.i;
 
+-- 
+--  The severity is just an integer coded with the following values
+--  0 = critical ; 1 = warning ; 2 = infos
+--
+data severity extends Base_Types::Unsigned_8
+end severity;
+
 end dm::legacy::types;

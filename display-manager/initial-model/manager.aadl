@@ -2,39 +2,15 @@ package dm::legacy::manager
 public
 
 with dm::legacy::types;
+with data_model;
 
+--
+--  The filter thread takes as input the different informations
+--  from the monitor and infos partitions and produces a page
+--  to be displayed on the screen.
+--
 
-
-thread filter_critical
-features
-	engines_status 	: in data port dm::legacy::types::engines_status;
-	pitot_status   	: in data port dm::legacy::types::pitot_status;
-	fuel_status    	: in data port dm::legacy::types::fuel_status.i;
-	aircraft_speed 	: in data port dm::legacy::types::speed;
-	wind_speed 		: in data port dm::legacy::types::speed;
-	altitude     	: in data port dm::legacy::types::altitude_meter;
-	page   			: out data port dm::legacy::types::page.i;
-end filter_critical;
-
-thread implementation filter_critical.i
-end filter_critical.i;
-
-thread filter_warning
-features
-	engines_status 	: in data port dm::legacy::types::engines_status;
-	pitot_status   	: in data port dm::legacy::types::pitot_status;
-	fuel_status    	: in data port dm::legacy::types::fuel_status.i;
-	aircraft_speed 	: in data port dm::legacy::types::speed;
-	wind_speed 		: in data port dm::legacy::types::speed;
-	altitude     	: in data port dm::legacy::types::altitude_meter;
-	page    		: out data port dm::legacy::types::page.i;
-end filter_warning;
-
-thread implementation filter_warning.i
-end filter_warning.i;
-
-
-thread filter_infos
+thread filter
 features
 	engines_status 	: in data port dm::legacy::types::engines_status;
 	pitot_status   	: in data port dm::legacy::types::pitot_status;
@@ -43,11 +19,58 @@ features
 	wind_speed 		: in data port dm::legacy::types::speed;
 	altitude     	: in data port dm::legacy::types::altitude_meter;
 	page       		: out data port dm::legacy::types::page.i;
-end filter_infos;
+end filter;
+
+thread implementation filter.i
+subcomponents
+	severity_level : data dm::legacy::types::severity;
+calls
+	call : { c : subprogram spg_filter;};
+connections
+	conn_engines_status 	: parameter engines_status -> c.engines_status;
+	conn_pitot_status 		: parameter pitot_status -> c.pitot_status;
+	conn_fuel_status 		: parameter fuel_status -> c.fuel_status;
+	conn_aircraft_speed 	: parameter aircraft_speed -> c.aircraft_speed;
+	conn_wind_speed 		: parameter wind_speed -> c.wind_speed;
+	conn_altitude 			: parameter altitude -> c.altitude;
+	conn_page 				: parameter c.page -> page;
+	
+	severity_da				: data access c.filter_severity -> severity_level;
+end filter.i;
+
+--
+--  We have one implementation for each level that will
+--  filter the information.
+--
+
+subprogram spg_filter
+features
+	filter_severity	: requires data access dm::legacy::types::severity;
+	
+	engines_status 	: in parameter dm::legacy::types::engines_status;
+	pitot_status   	: in parameter dm::legacy::types::pitot_status;
+	fuel_status    	: in parameter dm::legacy::types::fuel_status.i;
+	aircraft_speed 	: in parameter dm::legacy::types::speed;
+	wind_speed 		: in parameter dm::legacy::types::speed;
+	altitude     	: in parameter dm::legacy::types::altitude_meter;
+	page       		: out parameter dm::legacy::types::page.i;
+end spg_filter;
 
 
-thread implementation filter_infos.i
-end filter_infos.i;
+
+--
+--  The filter_infos thread filters only non critical informations
+--
+
+thread implementation filter.infos extends filter.i
+end filter.infos;
+
+
+--
+--  The manager process integrates all the filtering tasks
+--  and produces different pages to be displayed on the VR
+--  driver (screens).
+--
 
 process manager
 features
@@ -64,9 +87,9 @@ end manager;
 
 process implementation manager.i
 subcomponents
-	critical : thread filter_critical.i;
-	infos    : thread filter_infos.i;
-	warning  : thread filter_warning.i;
+	critical : thread filter.i;
+	infos    : thread filter.i;
+	warning  : thread filter.i;
 connections
 	critical_engines_status 	: port engines_status -> critical.engines_status;
 	critical_pitot_status 	: port pitot_status -> critical.pitot_status;
@@ -93,6 +116,13 @@ connections
 	infos_wind_speed 	: port wind_speed -> infos.wind_speed;
 	infos_altitude 	: port altitude -> infos.altitude;
 	infos_page : port infos.page -> page_info;	 
+properties
+    --
+    --  This is how we distinguishes the different filter types
+    --
+    data_model::initial_value => ("0") applies to critical.severity_level;
+	data_model::initial_value => ("1") applies to warning.severity_level;
+	data_model::initial_value => ("2") applies to infos.severity_level;
 end manager.i;
 
 
