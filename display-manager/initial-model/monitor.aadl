@@ -35,7 +35,7 @@ thread engines_status
 features
 	engine1 : in data port dm::legacy::types::engine_status;
 	engine2 : in data port dm::legacy::types::engine_status;
-	status  : out data port dm::legacy::types::engines_status;
+	status  : out data port dm::legacy::types::engines_status.i;
 end engines_status;
 
 thread implementation engines_status.i
@@ -51,7 +51,7 @@ subprogram engines_status_voter
 features
 	engine1 : in parameter dm::legacy::types::engine_status;
 	engine2 : in parameter dm::legacy::types::engine_status;
-	status  : out parameter dm::legacy::types::engines_status;
+	status  : out parameter dm::legacy::types::engines_status.i;
 end engines_status_voter;
 
 -- 
@@ -143,7 +143,7 @@ end fuel_status_calculate;
 
 process monitor
 features
-	engines_status : out data port dm::legacy::types::engines_status;
+	engines_status : out data port dm::legacy::types::engines_status.i;
 	pitot_status   : out data port dm::legacy::types::pitot_status;
 	fuel_status    : out data port dm::legacy::types::fuel_status.i;
 end monitor;

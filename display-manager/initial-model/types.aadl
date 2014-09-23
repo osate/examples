@@ -3,70 +3,109 @@ package dm::legacy::types
 public
 
 with base_types;
-
+with data_model;
 data boolean extends Base_Types::Boolean
 end boolean;
 
 data integer extends Base_Types::Integer
 end integer;
 
+--
+--  Time is characterized by the number of seconds
+--  elapsed after a given episode.
+--
 data time extends Base_Types::Unsigned_64
 end time;
 
+--
+--  The speed type represents the speed of the wind
+--  or the plane. The selected unit is Km per hour.
+--  The max value is 1200 Km/h, most aircraft
+--  does not go above 1000 Km/h.
+--
 data speed extends Base_Types::Unsigned_16
 end speed;
 
+
+--
+--  The device-specific format for the sensed wind speed.
+--  This is eventually converted into a suitable speed in Km/h.
+--
 data wind_sensed extends Base_Types::Unsigned_16
 end wind_sensed;
+
+--
+--  Altitude sensed is the one returned by the sensors
+--  when trying to get the altitude. It returns a specific
+--  data structure with the appropriate value sensed that will
+--  be eventually converted into a value in the metric system.
 
 data altitude_sensed extends Base_Types::Unsigned_16
 end altitude_sensed;
 
+--
+--  Represent the altitude in meters.
+--  A reasonable value is below 16000m for all planes
+--  See http://en.wikipedia.org/wiki/Ceiling_%28aeronautics%29
+--
+
 data altitude_meter extends Base_Types::Unsigned_16
+properties
+	data_model::integer_range => 0 .. 16000;
 end altitude_meter;
 
-data pos extends Base_Types::Unsigned_64
-end pos;
-
+--
+--  The GPS position type is a simplified representation
+--  of GPS coordinates, representing an X and Y axis.
+--  Of course, this example does not represent the real
+--  GPS data type.
+--
 data gps_position
 end gps_position;
 
 data implementation gps_position.i
 subcomponents
-	pos_x : data pos;
-	pos_y : data pos;
+	pos_x : data base_types::unsigned_64;
+	pos_y : data base_types::unsigned_64;
 end gps_position.i;
 
-data flight_informations
-end flight_informations;
 
-data implementation flight_informations.i
-subcomponents
-	speed : data integer;
-	coord_x : data integer;
-	coord_y : data integer;
-end flight_informations.i;
-
+--
+--  engine_status is an integer with the following codes
+--  0 = engine on, everything is ok
+--  1 = engine off, everything is ok
+--  2 = engine failure
+--
 data engine_status
 end engine_status;
 
+
+data engines_status
+end engines_status;
+
+data implementation engines_status.i
+subcomponents
 --
---  engines_status is an integer with the following codes
+--  status is an integer with the following codes
 --  0 for everything is ok
 --  1 for left engine not working
 --  2 for right engine not working
 --  3 for both engines not working
 --  in the refined version, we will then use an enumeration.
 --
-data engines_status extends Base_Types::Unsigned_8
-end engines_status;
+	status  : data base_types::unsigned_8;
+	engines : data engine_status[2];
+end engines_status.i;
 
 
 --
 --  The fuel_level gives you a value for how much
---  fuel is available for the plane.
+--  fuel is available for the plane. The value is
+--  a percentage.
 --
 data fuel_level extends Base_Types::Unsigned_8
+properties
+	Data_Model::Integer_Range => 0 .. 100;
 end fuel_level;
 
 --
@@ -89,15 +128,33 @@ subcomponents
 	status : data base_types::unsigned_8;
 end fuel_status.i;
 
-data pitot_val extends Base_Types::Unsigned_8
+
+--
+--  The pitot_val value represents the value of the sensor
+--  that can be used to compute the aircraft speed.
+--
+
+data pitot_val extends Base_Types::Unsigned_16
 end pitot_val;
 
+
+--
+--  The pitot_status is a data structure that contains
+--  the speed of the aircraft but also includes 
+--  information about the status of the device itself.
+--
 data pitot_status
 end pitot_status;
 
 data implementation pitot_status.i
 subcomponents
+    --
+    --  The actual speed of the pitot status
+    --  This corresponds to a good value selected
+    --  by the voter.
+    --
 	speed : data speed;
+	
 	--
 	--  0 is for everything works well
 	--  1 is for one sensor is not working
@@ -107,6 +164,13 @@ subcomponents
 	status : data base_types::unsigned_8;
 end pitot_status.i;
 
+--
+--  A page corresponds to what is written on a screen.
+--  In our case, a page corresponds to a list of strings
+--  displayed on the screen. Each manager filter
+--  informations and produces a list of string to
+--  display.
+--
 data page
 end page;
 
