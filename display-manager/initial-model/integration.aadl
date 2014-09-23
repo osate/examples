@@ -19,7 +19,7 @@ subcomponents
 	infos : process dm::legacy::infos::infos.i;
 	monitor : process dm::legacy::monitor::monitor.i;
 	manager : process dm::legacy::manager::manager.i;
-	renderer : process dm::legacy::renderer::renderer.i;
+	renderer : process dm::legacy::renderer::renderer.i; 
 	platform : processor dm::legacy::platform::execution_platform.i;
 connections
 	c0 : port infos.aircraft_speed -> manager.aircraft_speed;

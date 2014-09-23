@@ -13,7 +13,23 @@ with dm::legacy::types;
 thread engine_sensor
 features
 	status : out data port dm::legacy::types::engine_status;
+properties
+	dispatch_protocol => periodic;
+	period => 100 ms;
 end engine_sensor;
+
+thread implementation engine_sensor.i
+calls
+	call : { c : subprogram engine_sensor_simulate;};
+connections
+	c0 : parameter c.status -> status;
+end engine_sensor.i;
+
+subprogram engine_sensor_simulate
+features 
+	status : out parameter dm::legacy::types::engine_status;
+end engine_sensor_simulate;
+
 
 thread engines_status
 features
@@ -21,6 +37,22 @@ features
 	engine2 : in data port dm::legacy::types::engine_status;
 	status  : out data port dm::legacy::types::engines_status;
 end engines_status;
+
+thread implementation engines_status.i
+calls
+	call : { c : subprogram engines_status_voter;};
+connections
+	c0 : parameter c.engine1 -> engine1;
+	c1 : parameter c.engine2 -> engine2;
+	c2 : parameter status -> c.status;
+end engines_status.i;
+
+subprogram engines_status_voter
+features
+	engine1 : in parameter dm::legacy::types::engine_status;
+	engine2 : in parameter dm::legacy::types::engine_status;
+	status  : out parameter dm::legacy::types::engines_status;
+end engines_status_voter;
 
 -- 
 --  A pitot sensor is 
@@ -30,6 +62,19 @@ features
 	pitot_value : out data port dm::legacy::types::pitot_val;
 end pitot_sensor;
 
+subprogram pitot_simulate
+features 
+	pitot_value : out parameter dm::legacy::types::pitot_val;
+end pitot_simulate;
+
+thread implementation pitot_sensor.i
+calls
+	call : { c : subprogram pitot_simulate;};
+connections
+	c0 : parameter c.pitot_value -> pitot_value;
+end pitot_sensor.i;
+
+
 thread pitot_status
 features
  	pitot1_sensed : in data port dm::legacy::types::pitot_val;
@@ -38,11 +83,40 @@ features
 end pitot_status;
 
 
+thread implementation pitot_status.i
+calls
+	call : { c : subprogram pitot_status_compute;};
+connections
+	c0 : parameter c.status -> status;
+	c1 : parameter pitot1_sensed -> c.pitot1_sensed;
+	c2 : parameter pitot2_sensed -> c.pitot2_sensed;
+end pitot_status.i;
+
+subprogram pitot_status_compute
+features
+ 	pitot1_sensed : in parameter dm::legacy::types::pitot_val;
+ 	pitot2_sensed : in parameter dm::legacy::types::pitot_val;
+	status : out parameter  dm::legacy::types::pitot_status.i;
+end pitot_status_compute;
+
 
 thread fuel_gauge
 features
 	level : out data port dm::legacy::types::fuel_level;
 end fuel_gauge;
+
+thread implementation fuel_gauge.i
+calls
+	call : { c : subprogram fuel_gauge_simulate;};
+connections
+	c0 : parameter c.level -> level;
+end fuel_gauge.i;
+
+subprogram fuel_gauge_simulate
+features
+	level : out parameter  dm::legacy::types::fuel_level;
+end fuel_gauge_simulate;
+
 
 thread fuel_status 
 features
@@ -51,6 +125,21 @@ features
 	status : out data port  dm::legacy::types::fuel_status.i;
 end fuel_status;
 
+thread implementation fuel_status.i
+calls
+	call : { c : subprogram fuel_status_calculate;};
+connections
+	c0 : parameter c.status -> status;
+	c1 : parameter level1 -> c.level1;
+	c2 : parameter level2 -> c.level2;
+end fuel_status.i;
+
+subprogram fuel_status_calculate
+features
+ 	level1 : in parameter dm::legacy::types::fuel_level;
+ 	level2 : in parameter dm::legacy::types::fuel_level;
+	status : out parameter dm::legacy::types::fuel_status.i;
+end fuel_status_calculate;
 
 process monitor
 features
@@ -61,15 +150,15 @@ end monitor;
 
 process implementation monitor.i
 subcomponents
-	engine1 : thread engine_sensor;
-	engine2 : thread engine_sensor;
-	pitot1  : thread pitot_sensor;
-	pitot2  : thread pitot_sensor;
-	fuel1   : thread fuel_gauge;
-	fuel2   : thread fuel_gauge;
-	engines : thread engines_status;
-	pitots  : thread pitot_status; 
-	fuels   : thread  fuel_status;
+	engine1 : thread engine_sensor.i;
+	engine2 : thread engine_sensor.i;
+	pitot1  : thread pitot_sensor.i;
+	pitot2  : thread pitot_sensor.i;
+	fuel1   : thread fuel_gauge.i;
+	fuel2   : thread fuel_gauge.i;
+	engines : thread engines_status.i;
+	pitots  : thread pitot_status.i; 
+	fuels   : thread  fuel_status.i;
 connections
 	cin0 : port engine1.status -> engines.engine1;
 	cin1 : port engine2.status -> engines.engine2;
