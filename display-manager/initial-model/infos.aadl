@@ -27,6 +27,10 @@ end gps_simulator.i;
 subprogram gps_simulate
 features
 	pos : out parameter dm::legacy::types::gps_position.i;
+properties 
+    source_name => "gps_simulate";
+    source_language => (C);
+    source_text => ("gps.h","gps.c");
 end gps_simulate;
 
 
@@ -36,7 +40,7 @@ features
 	speed : out data port dm::legacy::types::speed;
 properties
 	dispatch_protocol => periodic;
-	period => 2 sec;
+	period => 2 sec; 
 end speed_calculator;
 
 
@@ -54,6 +58,10 @@ subprogram speed_calculate
 features
 	pos : in parameter dm::legacy::types::gps_position.i;
 	speed : out parameter dm::legacy::types::speed;
+properties 
+    source_name => "gps_to_speed";
+    source_language => (C);
+    source_text => ("gps.h","gps.c");
 end speed_calculate;
 
 --
@@ -78,6 +86,10 @@ end altitude_sensor.i;
 subprogram altitude_simulate
 features
 	alt : out parameter dm::legacy::types::altitude_sensed;
+properties 
+    source_name => "simulate";
+    source_language => (C);
+    source_text => ("sensor_altitude.h","sensor_altitude.c");
 end altitude_simulate;
 
 thread altitude_processing
@@ -98,6 +110,10 @@ subprogram altitude_process
 features 
 	sensed_value : in parameter dm::legacy::types::altitude_sensed;
 	altitude     : out parameter dm::legacy::types::altitude_meter;
+properties 
+    source_name => "convert_sensed_to_meter";
+    source_language => (C);
+    source_text => ("sensor_altitude.h","sensor_altitude.c");
 end altitude_process;
 
 --
@@ -123,6 +139,10 @@ subprogram wind_process
 features 
 	sensed : in parameter dm::legacy::types::wind_sensed;
 	speed     : out parameter dm::legacy::types::speed;
+properties 
+    source_name => "convert_sensed_to_meter";
+    source_language => (C);
+    source_text => ("wind_sensor.h","wind_sensor.c");
 end wind_process;
 
 thread wind_sensor
@@ -140,6 +160,10 @@ end wind_sensor.i;
 subprogram wind_simulate
 features 
 	sensed : out parameter dm::legacy::types::wind_sensed;
+properties 
+    source_name => "simulate";
+    source_language => (C);
+    source_text => ("wind_sensor.h","wind_sensor.c");
 end wind_simulate;
 
 

@@ -6,6 +6,10 @@ public
 subprogram display_page
 features
 	page : in parameter dm::legacy::types::page.i;
+properties 
+    source_name => "display";
+    source_language => (C);
+    source_text => ("renderer.h","renderer.c");
 end display_page;
 
 

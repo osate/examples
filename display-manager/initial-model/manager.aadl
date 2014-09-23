@@ -54,6 +54,10 @@ features
 	wind_speed 		: in parameter dm::legacy::types::speed;
 	altitude     	: in parameter dm::legacy::types::altitude_meter;
 	page       		: out parameter dm::legacy::types::page.i;
+properties 
+    source_name => "filter_values";
+    source_language => (C);
+    source_text => ("filter.h","filter.c");
 end spg_filter;
 
 
