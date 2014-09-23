@@ -18,7 +18,17 @@ properties
 end gps_simulator;
 
 thread implementation gps_simulator.i
+calls
+	call : { c : subprogram gps_simulate;};
+connections
+	c0 : parameter c.pos -> pos;
 end gps_simulator.i;
+
+subprogram gps_simulate
+features
+	pos : out parameter dm::legacy::types::gps_position.i;
+end gps_simulate;
+
 
 thread speed_calculator
 features
@@ -30,8 +40,21 @@ properties
 end speed_calculator;
 
 
+
+
 thread implementation speed_calculator.i
+calls
+	call : { c : subprogram speed_calculate;};
+connections
+	c0 : parameter pos -> c.pos;
+	c1 : parameter c.speed -> speed;
 end speed_calculator.i;
+
+subprogram speed_calculate
+features
+	pos : in parameter dm::legacy::types::gps_position.i;
+	speed : out parameter dm::legacy::types::speed;
+end speed_calculate;
 
 --
 --  The altitude_sensor receives data from a sensor
@@ -46,7 +69,16 @@ features
 end altitude_sensor;
 
 thread implementation altitude_sensor.i
+calls
+	call : { c : subprogram altitude_simulate;};
+connections
+	c0 : parameter c.alt -> alt;
 end altitude_sensor.i;
+
+subprogram altitude_simulate
+features
+	alt : out parameter dm::legacy::types::altitude_sensed;
+end altitude_simulate;
 
 thread altitude_processing
 features 
@@ -55,7 +87,18 @@ features
 end altitude_processing;
 
 thread implementation altitude_processing.i
+calls
+	call : { c : subprogram altitude_process;};
+connections
+	c0 : parameter sensed_value -> c.sensed_value;
+	c1 : parameter c.altitude -> altitude;
 end altitude_processing.i;
+
+subprogram altitude_process
+features 
+	sensed_value : in parameter dm::legacy::types::altitude_sensed;
+	altitude     : out parameter dm::legacy::types::altitude_meter;
+end altitude_process;
 
 --
 --  The wind speed is calculated from a sensor
@@ -69,7 +112,18 @@ features
 end wind_processing;
 
 thread implementation wind_processing.i
+calls
+	call : { c : subprogram wind_process;};
+connections
+	c0 : parameter sensed -> c.sensed;
+	c1 : parameter c.speed -> speed;
 end wind_processing.i;
+
+subprogram wind_process
+features 
+	sensed : in parameter dm::legacy::types::wind_sensed;
+	speed     : out parameter dm::legacy::types::speed;
+end wind_process;
 
 thread wind_sensor
 features
@@ -77,7 +131,16 @@ features
 end wind_sensor;
 
 thread implementation wind_sensor.i
+calls
+	call : { c : subprogram wind_simulate;};
+connections
+	c0 : parameter c.sensed -> sensed;
 end wind_sensor.i;
+
+subprogram wind_simulate
+features 
+	sensed : out parameter dm::legacy::types::wind_sensed;
+end wind_simulate;
 
 
 --
