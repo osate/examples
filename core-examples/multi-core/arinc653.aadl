@@ -31,9 +31,12 @@ modes
 	normal : initial mode;
 	redundant : mode;
 properties
-	ARINC653::Partition_Slots => (100 ms);
-	ARINC653::Slots_Allocation => (reference (runtimes[0])) in modes (normal);
-	ARINC653::Slots_Allocation => (reference (runtimes[1])) in modes (redundant);
+--	ARINC653::Partition_Slots => (100 ms);
+--	ARINC653::Slots_Allocation => (reference (runtimes[0])) in modes (normal);
+--	ARINC653::Slots_Allocation => (reference (runtimes[1])) in modes (redundant);
+ARINC653::Module_Major_Frame => 100 ms;
+ARINC653::Module_Schedule => ([Partition => reference (runtimes[0]) ; Duration => 100 ms ; Periodic_Processing_Start => true;]) in modes (normal);
+ARINC653::Module_Schedule => ([Partition => reference (runtimes[1]) ; Duration => 100 ms ; Periodic_Processing_Start => true;]) in modes (redundant);
 end core.i;
 
 system multi_core
