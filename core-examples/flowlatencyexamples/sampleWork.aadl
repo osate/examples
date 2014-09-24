@@ -1,0 +1,149 @@
+package sampleWork
+public
+	with Data_Model;
+
+data samples12
+properties
+Data_Size => 50 Bytes; -- size of an individual data element. This will be used in transmission time calculations.
+Data_Model::Dimension => (12); -- size of the data set
+end samples12;
+
+thread threadA
+	features
+		--SamplesIn: in event data port;
+		samplesIn: in event data port samples12;
+		samplesOut : out event data port samples12;
+	flows
+		flowThruThreadA : flow path samplesIn -> samplesOut;
+	properties
+		latency => 400 ms .. 500 ms applies to flowThruThreadA; -- latency for processing the data set. This number is used if there is no execution time.
+		Compute_Execution_Time => 40 ms .. 50 ms; -- compute execution time per element (or for whole set)
+		-- either we set the queue size to the data set size 
+		-- or we set queue size to zero and set the dimension of the data type and select the appropriate preference
+		-- or we set the compute execution time to be the total for the data set rather than for one element
+		Queue_Size => 12 applies to samplesIn; -- sample size
+end threadA; 
+
+thread threadB
+	features
+		samplesIn: in event data port samples12;
+		samplesOut : out event data port samples12;
+	flows
+		flowThruThreadB : flow path samplesIn -> samplesOut;
+	properties
+		latency => 200 ms .. 300 ms applies to flowThruThreadB;
+		Compute_Execution_Time => 20 ms .. 30 ms;
+		Queue_Size => 12 applies to samplesIn; -- sample size
+end threadB; 
+
+thread threadC
+	features
+		samplesIn: in event data port samples12;
+		samplesOut : out event data port samples12;
+	flows
+		flowThruThreadC : flow path samplesIn -> samplesOut;
+	properties
+		latency => 100 ms .. 200 ms applies to flowThruThreadC;
+		Compute_Execution_Time => 10 ms .. 20 ms;
+		Queue_Size => 12 applies to samplesIn; -- sample size
+end threadC; 
+
+thread threadD
+	features
+		samplesIn: in event data port samples12;
+		samplesOut : out event data port samples12;
+	flows
+		flowThruThreadD : flow path samplesIn -> samplesOut;
+	properties
+		latency => 200 ms .. 300 ms applies to flowThruThreadD;
+		Compute_Execution_Time => 20 ms .. 30 ms;
+		Queue_Size => 12 applies to samplesIn; -- sample size
+end threadD; 
+
+
+thread group threadGroupA
+	features
+		SamplesIn : in event data port samples12;
+		samplesOut: out event data port  samples12;
+	flows
+		flowThruThreadGroupA : flow path samplesIn -> samplesOut;
+end threadGroupA; 
+
+
+thread group implementation threadGroupA.signal
+	subcomponents
+		taskA : thread threadA;
+		taskB : thread threadB;
+		taskC : thread threadC;
+		taskD : thread threadD;
+	connections
+		C1: port samplesIn -> taskA.samplesIn;
+		C2: port taskA.samplesOut -> taskB.samplesIn;
+		C3: port taskB.samplesOut -> taskC.samplesIn;
+		C4: port taskC.samplesOut -> taskD.samplesIn;
+		C5: port taskD.samplesOut -> samplesOut;
+	flows
+		flowThruThreadGroupA : flow path samplesIn -> C1 ->
+								taskA.flowThruThreadA -> C2 ->
+								taskB.flowThruThreadB -> C3 ->
+								taskC.flowThruThreadC -> C4 ->
+								taskD.flowThruThreadD -> C5 ->
+								samplesOut;
+end threadGroupA.signal; 
+
+process processing
+end processing;
+
+process implementation processing.completeset
+-- each thread is processing the complete data set before passing it on.
+-- this corresponds to all threads running on the same processor 
+subcomponents
+	dsrc: thread dataSource;
+	dsnk: thread dataSink;
+	tg: thread group threadGroupA.signal; 
+connections
+	incoming: port dsrc.SamplesOut -> tg.SamplesIn;
+	outgoing: port tg.samplesOut -> dsnk.samplesIn;
+flows
+	processingflow: end to end flow dsrc.fromSource -> incoming -> tg.flowThruThreadGroupA -> outgoing -> dsnk.toSink;
+properties
+	latency => 1500 ms .. 2000 ms applies to processingflow;
+	
+end processing.completeset;
+
+process implementation processing.pipeline extends processing.completeset
+-- pipeline processing assumes that each thread is on a separate processor thus can execute at the same time.
+-- the data set is only queued at the first thread.
+properties
+	Queue_Size => 1 applies to tg.taskB.samplesIn, tg.taskC.samplesIn, tg.taskD.samplesIn;
+end processing.pipeline;
+
+thread dataSource
+	features
+		samplesOut : out event data port samples12;
+	flows
+		fromSource : flow source  samplesOut;
+	properties
+		latency => 0 ms .. 0 ms applies to fromSource;
+end dataSource;
+
+thread dataSink
+	features
+		samplesIn : in event data port samples12;
+	flows
+		toSink : flow sink  samplesIn;
+	properties
+		latency => 0 ms .. 0 ms applies to toSink;
+end dataSink;
+
+system SensorProcessing
+end SensorProcessing;
+
+system implementation SensorProcessing.impl
+subcomponents
+	datasetProcessing1: process processing.completeset;
+	datasetProcessing2: process processing.completeset;
+--	pipelineProcessing: process processing.pipeline;
+end SensorProcessing.impl;
+
+end sampleWork;
