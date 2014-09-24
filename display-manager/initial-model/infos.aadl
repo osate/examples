@@ -22,6 +22,8 @@ calls
 	call : { c : subprogram gps_simulate;};
 connections
 	c0 : parameter c.pos -> pos;
+properties
+	Compute_Entrypoint_Call_Sequence => reference (call);
 end gps_simulator.i;
 
 subprogram gps_simulate
@@ -52,6 +54,8 @@ calls
 connections
 	c0 : parameter pos -> c.pos;
 	c1 : parameter c.speed -> speed;
+properties
+	Compute_Entrypoint_Call_Sequence => reference (call);
 end speed_calculator.i;
 
 subprogram speed_calculate
@@ -74,6 +78,9 @@ end speed_calculate;
 thread altitude_sensor
 features
 	alt : out data port dm::legacy::types::altitude_sensed;
+properties
+	dispatch_protocol => periodic;
+	period => 200 ms;
 end altitude_sensor;
 
 thread implementation altitude_sensor.i
@@ -81,6 +88,8 @@ calls
 	call : { c : subprogram altitude_simulate;};
 connections
 	c0 : parameter c.alt -> alt;
+properties
+	Compute_Entrypoint_Call_Sequence => reference (call);
 end altitude_sensor.i;
 
 subprogram altitude_simulate
@@ -96,6 +105,9 @@ thread altitude_processing
 features 
 	sensed_value : in data port dm::legacy::types::altitude_sensed;
 	altitude     : out data port dm::legacy::types::altitude_meter;
+properties
+	dispatch_protocol => periodic;
+	period => 200 ms;
 end altitude_processing;
 
 thread implementation altitude_processing.i
@@ -104,6 +116,8 @@ calls
 connections
 	c0 : parameter sensed_value -> c.sensed_value;
 	c1 : parameter c.altitude -> altitude;
+properties
+	Compute_Entrypoint_Call_Sequence => reference (call);
 end altitude_processing.i;
 
 subprogram altitude_process
@@ -125,6 +139,9 @@ thread wind_processing
 features
 	sensed : in data port dm::legacy::types::wind_sensed;
 	speed : out data port dm::legacy::types::speed;
+properties
+	dispatch_protocol => periodic;
+	period => 200 ms;
 end wind_processing;
 
 thread implementation wind_processing.i
@@ -133,6 +150,8 @@ calls
 connections
 	c0 : parameter sensed -> c.sensed;
 	c1 : parameter c.speed -> speed;
+properties
+	Compute_Entrypoint_Call_Sequence => reference (call);
 end wind_processing.i;
 
 subprogram wind_process
@@ -148,6 +167,9 @@ end wind_process;
 thread wind_sensor
 features
 	sensed : out data port dm::legacy::types::wind_sensed;
+properties
+	dispatch_protocol => periodic;
+	period => 200 ms;
 end wind_sensor;
 
 thread implementation wind_sensor.i
@@ -155,6 +177,8 @@ calls
 	call : { c : subprogram wind_simulate;};
 connections
 	c0 : parameter c.sensed -> sensed;
+properties
+	Compute_Entrypoint_Call_Sequence => reference (call);
 end wind_sensor.i;
 
 subprogram wind_simulate
@@ -173,19 +197,19 @@ end wind_simulate;
 --
 process infos
 features
-	aircraft_speed : out data port dm::legacy::types::speed;
-	wind_speed : out data port dm::legacy::types::speed;
-	altitude     : out data port dm::legacy::types::altitude_meter;
+	aircraft_speed 		: out data port dm::legacy::types::speed;
+	wind_speed 			: out data port dm::legacy::types::speed;
+	altitude     		: out data port dm::legacy::types::altitude_meter;
 end infos;
 
 process implementation infos.i
 subcomponents
-	gps_sensor : thread gps_simulator.i;
-	speed_processing : thread speed_calculator.i;
-	altitude_sensor : thread altitude_sensor.i;
+	gps_sensor 			: thread gps_simulator.i;
+	speed_processing 	: thread speed_calculator.i;
+	altitude_sensor 	: thread altitude_sensor.i;
 	altitude_processing : thread altitude_processing.i;
-	wind_sensor : thread wind_sensor.i;
-	wind_processing : thread wind_processing.i;
+	wind_sensor 		: thread wind_sensor.i;
+	wind_processing 	: thread wind_processing.i;
 connections
 	c0 : port gps_sensor.pos -> speed_processing.pos;
 	c1 : port speed_processing.speed -> aircraft_speed;

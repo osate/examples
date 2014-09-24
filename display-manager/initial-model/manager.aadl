@@ -19,13 +19,16 @@ features
 	wind_speed 		: in data port dm::legacy::types::speed;
 	altitude     	: in data port dm::legacy::types::altitude_meter;
 	page       		: out data port dm::legacy::types::page.i;
+properties
+	dispatch_protocol => periodic;
+	period => 200 ms;
 end filter;
 
 thread implementation filter.i
 subcomponents
 	severity_level : data dm::legacy::types::severity;
 calls
-	call : { c : subprogram spg_filter;};
+	call : { c : subprogram spg_filter;}; 
 connections
 	conn_engines_status 	: parameter engines_status -> c.engines_status;
 	conn_pitot_status 		: parameter pitot_status -> c.pitot_status;
@@ -36,6 +39,8 @@ connections
 	conn_page 				: parameter c.page -> page;
 	
 	severity_da				: data access c.filter_severity -> severity_level;
+properties
+	Compute_Entrypoint_Call_Sequence => reference (call);
 end filter.i;
 
 --
@@ -59,15 +64,6 @@ properties
     source_language => (C);
     source_text => ("filter.h","filter.c");
 end spg_filter;
-
-
-
---
---  The filter_infos thread filters only non critical informations
---
-
-thread implementation filter.infos extends filter.i
-end filter.infos;
 
 
 --

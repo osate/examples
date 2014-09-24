@@ -27,6 +27,8 @@ calls
 	call : { c : subprogram display_page;};
 connections
 	c0 : parameter page -> c.page;
+properties
+	Compute_Entrypoint_Call_Sequence => reference (call);
 end render.i;
 
 
