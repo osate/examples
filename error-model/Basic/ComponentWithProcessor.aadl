@@ -25,9 +25,9 @@ component error behavior
 		Operational -[inport1{ BadValue }]-> BadValueState;
 		Operational -[inport1 {NoValue} or processor {NoService}]-> NoValueState;
 	propagations
-		BadValueState -[ ]-> outport2 ( BadValue);
-		NoValueState -[ ]-> outport2 ( NoValue);
-		LateValueState -[ ]-> outport2 (LateValue);
+		BadValueState -[ ]-> outport2 { BadValue};
+		NoValueState -[ ]-> outport2 { NoValue};
+		LateValueState -[ ]-> outport2 {LateValue};
 end component;
 **};
 end sys;
