@@ -12,8 +12,8 @@ subcomponents
     s1: system bug155Plat::SysPlat.Imp;   
     b: bus bug155Plat::BBusPlat.Imp;  
 connections
-    bus access b <-> s1.p;  -- both b and s1.p have classifier Plat::BBusPlat.Imp
-    bus access b <-> s1.q;      
+    c1:bus access b <-> s1.p;  -- both b and s1.p have classifier Plat::BBusPlat.Imp
+    c2: bus access b <-> s1.q;      
 end Foo.Imp;
 
 end bug155PlatSys; 

@@ -8,8 +8,8 @@ with ErrorLibrary;
 		hello
 	**};
 		annex emv2 {**
-		error propagations
 		use types ErrorLibrary;
+		error propagations
 		p1: in propagation {ServiceOmission};
 		end propagations;
 	**};

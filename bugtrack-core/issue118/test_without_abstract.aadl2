@@ -50,8 +50,8 @@ subcomponents
 	p1: process P.impl;
 	p2: process P.impl;
 connections
-	port p1.output -> p2.input;
-	port p2.output -> p1.input;
+	c1:port p1.output -> p2.input;
+	c2:port p2.output -> p1.input;
 end S.impl;
 
 end Without_Abstract;

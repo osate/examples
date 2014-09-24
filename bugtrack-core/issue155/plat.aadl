@@ -27,7 +27,7 @@ system implementation SysPlat.Imp extends bug155Logi::SysLog.Imp
 subcomponents
     c : system SysComp.Imp;
 connections   
-    bus access p <-> c.p;                -- Both p and c.p have classifier BBusPlat.Imp
+    c1:bus access p <-> c.p;                -- Both p and c.p have classifier BBusPlat.Imp
 end SysPlat.Imp;  
 
 end bug155Plat;
