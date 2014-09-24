@@ -94,6 +94,8 @@ calls
 	call : { c : subprogram pitot_simulate;};
 connections
 	c0 : parameter c.pitot_value -> pitot_value;
+properties
+	Compute_Entrypoint_Call_Sequence => reference (call);
 end pitot_sensor.i;
 
 
@@ -115,6 +117,8 @@ connections
 	c0 : parameter c.status -> status;
 	c1 : parameter pitot1_sensed -> c.pitot1_sensed;
 	c2 : parameter pitot2_sensed -> c.pitot2_sensed;
+properties
+	Compute_Entrypoint_Call_Sequence => reference (call);
 end pitot_status.i;
 
 subprogram pitot_status_compute
