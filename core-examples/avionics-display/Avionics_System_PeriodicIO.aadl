@@ -34,8 +34,7 @@ system implementation Flight_System.noPIO
   connections
     menu_cmd_to_DM: port Pilot_Display.Menu_Cmd_Pushed -> Pilot_DM.Menu_selection_from_Display {
       Timing => Immediate;
-      Allowed_Connection_Binding => ( reference( myvme ) );
-      };
+        };
     menu_cmd_to_PCM: port Pilot_DM.New_Page_Request_To_PCM -> PCM.New_Page_Request_From_DM {
       Timing => Immediate;
       };
@@ -72,6 +71,9 @@ system implementation Flight_System.noPIO
        {
         Latency => 350 Ms .. 350 Ms;
         };
+  properties
+    Allowed_Connection_Binding => ( reference( myvme ) ) applies to  menu_cmd_to_DM;
+  
 end Flight_System.noPIO;
 
 system implementation Flight_System.PIO
@@ -92,7 +94,6 @@ system implementation Flight_System.PIO
   connections
     menu_cmd_to_DM: port Pilot_Display.Menu_Cmd_Pushed -> Pilot_DM.Menu_selection_from_Display {
       Timing => Immediate;
-      Allowed_Connection_Binding => ( reference( myvme ) );
       };
     menu_cmd_to_PCM: port Pilot_DM.New_Page_Request_To_PCM -> PCM.New_Page_Request_From_DM {
       Timing => Immediate;
@@ -130,5 +131,8 @@ system implementation Flight_System.PIO
        {
         Latency => 350 Ms .. 350 Ms;
         };
+   properties
+         Allowed_Connection_Binding => ( reference( myvme ) ) applies to menu_cmd_to_DM;
+   
 end Flight_System.PIO;
 end Avionics_System_PeriodicIO;

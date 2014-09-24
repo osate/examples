@@ -57,7 +57,7 @@ with avionics_subsystems, avionics_datatypes, SEI;
     subcomponents
       flash1: memory Flashmemory {
         Word_Size => 8 Bits;
-        Byte_Count => 700;
+        Memory_Size => 700 Bytes;
         };
   end hardware_system.impl;
   
