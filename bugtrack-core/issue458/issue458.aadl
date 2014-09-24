@@ -1,0 +1,19 @@
+package issue458
+public
+	with ps;
+
+	system s1
+		features
+		--What should the value of the property be when instantiated?
+			dp1: in data port d1 {ps::def1 => true applies to af1;};
+			dp2: in data port d1 {ps::def1 => false applies to af1;};
+	end s1;
+
+	system implementation s1.i1
+	end s1.i1;
+
+	data d1
+		features
+			af1: feature;
+	end d1;
+end issue458;

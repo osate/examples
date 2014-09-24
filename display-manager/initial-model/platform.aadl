@@ -1,0 +1,56 @@
+package dm::legacy::platform
+
+public
+
+with arinc653;
+
+virtual processor partition
+end partition;
+
+virtual processor implementation partition.i
+end partition.i;
+
+processor execution_platform
+end execution_platform;
+
+processor implementation execution_platform.i
+subcomponents
+	part1 : virtual processor partition.i;
+	part2 : virtual processor partition.i;
+	part3 : virtual processor partition.i;
+	part4 : virtual processor partition.i;
+end execution_platform.i;
+
+memory segment
+end segment;
+
+memory implementation segment.i
+  properties
+    Memory_Size => 150000 bytes;
+    Memory_Protocol => read_write;
+    arinc653::memory_type => (data_memory);
+end segment.i;
+
+memory ram
+properties
+    Memory_Size => 200000 bytes;
+end ram;
+
+memory implementation ram.i
+subcomponents
+	s1 : memory segment.i;
+	s2 : memory segment.i;
+	s3 : memory segment.i;
+	s4 : memory segment.i;
+end ram.i;
+
+system platform
+end platform;
+
+system implementation platform.i
+subcomponents
+	cpu : processor dm::legacy::platform::execution_platform.i;
+	mem : memory dm::legacy::platform::ram.i;
+end platform.i;
+
+end dm::legacy::platform;

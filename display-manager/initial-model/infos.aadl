@@ -1,0 +1,222 @@
+package dm::legacy::infos
+public
+
+with dm::legacy::types;
+
+
+--
+--  This thread will fake a GPS simulator and outputs
+--  the position of the plane. The position will then
+--  be used to compute the speed of the plane
+--
+thread gps_simulator
+features
+	pos : out data port dm::legacy::types::gps_position.i;
+properties
+	dispatch_protocol => periodic;
+	period => 200 ms;
+end gps_simulator;
+
+thread implementation gps_simulator.i
+calls
+	call : { c : subprogram gps_simulate;};
+connections
+	c0 : parameter c.pos -> pos;
+properties
+	Compute_Entrypoint_Call_Sequence => reference (call);
+end gps_simulator.i;
+
+subprogram gps_simulate
+features
+	pos : out parameter dm::legacy::types::gps_position.i;
+properties 
+    source_name => "gps_simulate";
+    source_language => (C);
+    source_text => ("gps.h","gps.c");
+end gps_simulate;
+
+
+thread speed_calculator
+features
+	pos : in data port dm::legacy::types::gps_position.i;
+	speed : out data port dm::legacy::types::speed;
+properties
+	dispatch_protocol => periodic;
+	period => 2 sec; 
+end speed_calculator;
+
+
+
+
+thread implementation speed_calculator.i
+calls
+	call : { c : subprogram speed_calculate;};
+connections
+	c0 : parameter pos -> c.pos;
+	c1 : parameter c.speed -> speed;
+properties
+	Compute_Entrypoint_Call_Sequence => reference (call);
+end speed_calculator.i;
+
+subprogram speed_calculate
+features
+	pos : in parameter dm::legacy::types::gps_position.i;
+	speed : out parameter dm::legacy::types::speed;
+properties 
+    source_name => "gps_to_speed";
+    source_language => (C);
+    source_text => ("gps.h","gps.c");
+end speed_calculate;
+
+--
+--  The altitude_sensor receives data from a sensor
+--  and sends it to a task to transform it into
+--  a suitable data to evaluate the distance
+--  to the ground.
+--
+
+thread altitude_sensor
+features
+	alt : out data port dm::legacy::types::altitude_sensed;
+properties
+	dispatch_protocol => periodic;
+	period => 200 ms;
+end altitude_sensor;
+
+thread implementation altitude_sensor.i
+calls
+	call : { c : subprogram altitude_simulate;};
+connections
+	c0 : parameter c.alt -> alt;
+properties
+	Compute_Entrypoint_Call_Sequence => reference (call);
+end altitude_sensor.i;
+
+subprogram altitude_simulate
+features
+	alt : out parameter dm::legacy::types::altitude_sensed;
+properties 
+    source_name => "simulate";
+    source_language => (C);
+    source_text => ("sensor_altitude.h","sensor_altitude.c");
+end altitude_simulate;
+
+thread altitude_processing
+features 
+	sensed_value : in data port dm::legacy::types::altitude_sensed;
+	altitude     : out data port dm::legacy::types::altitude_meter;
+properties
+	dispatch_protocol => periodic;
+	period => 200 ms;
+end altitude_processing;
+
+thread implementation altitude_processing.i
+calls
+	call : { c : subprogram altitude_process;};
+connections
+	c0 : parameter sensed_value -> c.sensed_value;
+	c1 : parameter c.altitude -> altitude;
+properties
+	Compute_Entrypoint_Call_Sequence => reference (call);
+end altitude_processing.i;
+
+subprogram altitude_process
+features 
+	sensed_value : in parameter dm::legacy::types::altitude_sensed;
+	altitude     : out parameter dm::legacy::types::altitude_meter;
+properties 
+    source_name => "convert_sensed_to_meter";
+    source_language => (C);
+    source_text => ("sensor_altitude.h","sensor_altitude.c");
+end altitude_process;
+
+--
+--  The wind speed is calculated from a sensor
+--  that takes a value while a processing
+--  function transforms it into a suitable speed. 
+--
+thread wind_processing
+features
+	sensed : in data port dm::legacy::types::wind_sensed;
+	speed : out data port dm::legacy::types::speed;
+properties
+	dispatch_protocol => periodic;
+	period => 200 ms;
+end wind_processing;
+
+thread implementation wind_processing.i
+calls
+	call : { c : subprogram wind_process;};
+connections
+	c0 : parameter sensed -> c.sensed;
+	c1 : parameter c.speed -> speed;
+properties
+	Compute_Entrypoint_Call_Sequence => reference (call);
+end wind_processing.i;
+
+subprogram wind_process
+features 
+	sensed : in parameter dm::legacy::types::wind_sensed;
+	speed     : out parameter dm::legacy::types::speed;
+properties 
+    source_name => "convert_sensed_to_meter";
+    source_language => (C);
+    source_text => ("wind_sensor.h","wind_sensor.c");
+end wind_process;
+
+thread wind_sensor
+features
+	sensed : out data port dm::legacy::types::wind_sensed;
+properties
+	dispatch_protocol => periodic;
+	period => 200 ms;
+end wind_sensor;
+
+thread implementation wind_sensor.i
+calls
+	call : { c : subprogram wind_simulate;};
+connections
+	c0 : parameter c.sensed -> sensed;
+properties
+	Compute_Entrypoint_Call_Sequence => reference (call);
+end wind_sensor.i;
+
+subprogram wind_simulate
+features 
+	sensed : out parameter dm::legacy::types::wind_sensed;
+properties 
+    source_name => "simulate";
+    source_language => (C);
+    source_text => ("wind_sensor.h","wind_sensor.c");
+end wind_simulate;
+
+
+--
+--  The process infos contains all the functions necessary
+--  to process non-critical flight data information
+--
+process infos
+features
+	aircraft_speed 		: out data port dm::legacy::types::speed;
+	wind_speed 			: out data port dm::legacy::types::speed;
+	altitude     		: out data port dm::legacy::types::altitude_meter;
+end infos;
+
+process implementation infos.i
+subcomponents
+	gps_sensor 			: thread gps_simulator.i;
+	speed_processing 	: thread speed_calculator.i;
+	altitude_sensor 	: thread altitude_sensor.i;
+	altitude_processing : thread altitude_processing.i;
+	wind_sensor 		: thread wind_sensor.i;
+	wind_processing 	: thread wind_processing.i;
+connections
+	c0 : port gps_sensor.pos -> speed_processing.pos;
+	c1 : port speed_processing.speed -> aircraft_speed;
+	c2 : port altitude_sensor.alt -> altitude_processing.sensed_value;
+	c3 : port altitude_processing.altitude -> altitude;
+	c4 : port wind_sensor.sensed -> wind_processing.sensed;
+	c5 : port wind_processing.speed -> wind_speed;
+end infos.i;
+
+end dm::legacy::infos;

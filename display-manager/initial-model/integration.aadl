@@ -1,0 +1,79 @@
+package dm::legacy::integration
+
+public
+
+with dm::legacy::infos;
+with dm::legacy::monitor;
+with dm::legacy::manager;
+with dm::legacy::renderer;
+with dm::legacy::platform;
+
+with arinc653;
+
+with pok;
+
+system display_manager
+end display_manager;
+
+
+system implementation display_manager.i
+subcomponents
+	infos : process dm::legacy::infos::infos.i;
+	monitor : process dm::legacy::monitor::monitor.i;
+	manager : process dm::legacy::manager::manager.i;
+	renderer : process dm::legacy::renderer::renderer.i; 
+	platform : system dm::legacy::platform::platform.i;
+connections
+	c0 : port infos.aircraft_speed -> manager.aircraft_speed;
+	c1 : port infos.altitude -> manager.altitude;
+	c2 : port infos.wind_speed -> manager.wind_speed;
+	c3 : port monitor.engines_status -> manager.engines_status;
+	c4 : port monitor.pitot_status -> manager.pitot_status;
+	c5 : port monitor.fuel_status -> manager.fuel_status;
+	c6 : port manager.page_info -> renderer.page_info;
+	c7 : port manager.page_warning -> renderer.page_warning;
+	c8 : port manager.page_critical -> renderer.page_critical;
+properties
+	actual_processor_binding => (reference (platform.cpu.part1)) applies to infos;
+	actual_processor_binding => (reference (platform.cpu.part2)) applies to monitor;
+	actual_processor_binding => (reference (platform.cpu.part3)) applies to manager;
+	actual_processor_binding => (reference (platform.cpu.part4)) applies to renderer;
+
+	actual_memory_binding => (reference (platform.mem.s1)) applies to infos;
+	actual_memory_binding => (reference (platform.mem.s2)) applies to monitor;
+	actual_memory_binding => (reference (platform.mem.s3)) applies to manager;
+	actual_memory_binding => (reference (platform.mem.s4)) applies to renderer;
+		
+
+	arinc653::dal => level_c applies to platform.cpu.part1;
+	arinc653::dal => level_a applies to platform.cpu.part2;
+	arinc653::dal => level_a applies to platform.cpu.part3;
+	arinc653::dal => level_c applies to platform.cpu.part4;
+
+
+	period => 40 ms applies to platform.cpu.part1, platform.cpu.part2, platform.cpu.part3, platform.cpu.part4;
+	
+	arinc653::module_major_frame => 40ms applies to platform.cpu;
+
+	arinc653::module_schedule => 
+	    ( [Partition => reference (platform.cpu.part1);
+	      Duration  => 10 ms;
+	      Periodic_Processing_Start => false;],
+	      [Partition => reference (platform.cpu.part2);
+	      Duration  => 10 ms;
+	      Periodic_Processing_Start => false;],
+	      [Partition => reference (platform.cpu.part3);
+	      Duration  => 10 ms;
+	      Periodic_Processing_Start => false;],
+	      [Partition => reference (platform.cpu.part4);
+	      Duration  => 10 ms;
+	      Periodic_Processing_Start => false;]
+	    ) applies to platform.cpu;
+end display_manager.i;
+
+
+system implementation display_manager.pok extends display_manager.i
+properties
+	pok::scheduler => static applies to platform.cpu.part1, platform.cpu.part2, platform.cpu.part3, platform.cpu.part4;
+end display_manager.pok;
+end dm::legacy::integration;

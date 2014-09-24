@@ -1,0 +1,70 @@
+package dm::legacy::renderer
+public
+	with dm::legacy::types;
+
+
+subprogram display_page
+features
+	page : in parameter dm::legacy::types::page.i;
+properties 
+    source_name => "display";
+    source_language => (C);
+    source_text => ("renderer.h","renderer.c");
+end display_page;
+
+
+thread render
+features
+	page : in data port dm::legacy::types::page.i;
+properties
+	dispatch_protocol => periodic;
+	period => 100 ms;
+end render;
+
+
+thread implementation render.i
+calls
+	call : { c : subprogram display_page;};
+connections
+	c0 : parameter page -> c.page;
+properties
+	Compute_Entrypoint_Call_Sequence => reference (call);
+end render.i;
+
+
+thread implementation render.critical extends render.i
+properties
+	period => 500 ms;
+end render.critical;
+
+
+thread implementation render.warning extends render.i
+properties
+	period => 1 sec;
+end render.warning;
+
+thread implementation render.infos extends render.i
+properties
+	period => 5 sec;
+end render.infos;
+
+
+process renderer
+features
+	page_critical   : in data port dm::legacy::types::page.i;
+	page_warning    : in data port dm::legacy::types::page.i;
+	page_info       : in data port dm::legacy::types::page.i;
+end renderer;
+
+process implementation renderer.i
+subcomponents
+	critical : thread render.critical;
+	warning  : thread render.warning;
+	infos    : thread render.infos;
+connections
+	c0 : port page_critical -> critical.page;
+	c1 : port page_warning -> warning.page;
+	c2 : port page_info -> infos.page;
+end renderer.i;
+
+end dm::legacy::renderer;
