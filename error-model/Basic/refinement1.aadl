@@ -16,7 +16,7 @@ annex EMV2 {**
 		eout : out propagation {ServiceOmission,ValueError};
 	flows
 		f1 : error sink ein {ServiceOmission, ValueError};
-		f2 : error path ein {ValueError} -> eout (ValueError);
+		f2 : error path ein {ValueError} -> eout {ValueError};
 		f3 : error source eout{ServiceOmission};
 	end propagations;
 	
