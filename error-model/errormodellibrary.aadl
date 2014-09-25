@@ -1,5 +1,6 @@
 package ErrorModelLibrary
 public
+	with EMV2;
 annex EMV2 {**
 	error types
 		NoValue : type;
@@ -58,6 +59,18 @@ end behavior;
 	transitions
 		BadValueTransition : Operational -[ Failure ]-> Failed ;
 	end behavior ;
+		-- simple error model
+	error behavior Basic
+	events
+	    Failure : error event;
+	states
+	    Operational: initial state;
+	    Failed: state;
+	transitions
+	     Operational -[Failure]-> Failed;
+	properties
+	     EMV2::OccurrenceDistribution => [ProbabilityValue => 25.0E-4; Distribution => Poisson;] applies to Failure;
+	end behavior;
 	
 **};
 end ErrorModelLibrary;

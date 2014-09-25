@@ -7,7 +7,7 @@ with EMV2;
 system component
 annex EMV2 {**
 	use types ErrorLibrary;
-	use behavior composite_model::basic;
+	use behavior errormodellibrary::basic;
 **};
 end component;
 
@@ -24,28 +24,11 @@ subcomponents
 	sub2 : system component.impl;
 annex EMV2 {**
 	use types ErrorLibrary;
-	use behavior composite_model::basic;
+	use behavior errormodellibrary::Basic;
 	composite error behavior
 	states
 		[sub1.Failed and sub2.Failed]->Failed;
 	end composite;
 **};
 end toplevel.i;
-
-
-annex EMV2 {**
-		-- simple error model
-	error behavior Basic
-	events
-	    Failure : error event;
-	states
-	    Operational: initial state;
-	    Failed: state;
-	transitions
-	     Operational -[Failure]-> Failed;
-	properties
-	     EMV2::OccurrenceDistribution => [ProbabilityValue => 25.0E-4; Distribution => Poisson;] applies to Failure;
-	end behavior;
-**};
-
 end composite_model;
