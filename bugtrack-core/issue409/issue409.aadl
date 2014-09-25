@@ -1,0 +1,11 @@
+package issue409
+public
+	system s
+	features
+		f: out feature;
+		p: in out data port;
+	flows
+		fs1: flow source f;
+end s;
+ 
+end issue409;
