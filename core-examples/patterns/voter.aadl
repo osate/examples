@@ -259,12 +259,9 @@ subcomponents
 	voter_prs : process voter.i;
 	eth       : bus ethernet;
 connections
-	producer0_to_voter : port producer0_prs.dataout -> voter_prs.datain0
-		{Actual_Connection_Binding => (reference (eth));};
-	producer1_to_voter : port producer1_prs.dataout -> voter_prs.datain1
-		{Actual_Connection_Binding => (reference (eth));};
-	producer2_to_voter : port producer2_prs.dataout -> voter_prs.datain2
-		{Actual_Connection_Binding => (reference (eth));};
+	producer0_to_voter : port producer0_prs.dataout -> voter_prs.datain0;
+	producer1_to_voter : port producer1_prs.dataout -> voter_prs.datain1;
+	producer2_to_voter : port producer2_prs.dataout -> voter_prs.datain2;
 flows
 	f0 : end to end flow producer0_prs.f0 -> producer0_to_voter -> voter_prs.f0
 	 	{Latency => 20ms .. 50 ms;};
@@ -281,6 +278,7 @@ properties
 	actual_memory_binding    => (reference (producer_ram)) applies to producer1_prs;
 	actual_memory_binding    => (reference (producer_ram)) applies to producer2_prs;
 	actual_memory_binding    => (reference (producer_ram)) applies to producer0_prs;
+	Actual_Connection_Binding => (reference (eth)) applies to producer0_to_voter,producer1_to_voter,producer2_to_voter;
 annex EMV2 {**
 	use types ErrorLibrary;
     use behavior voter::simple;

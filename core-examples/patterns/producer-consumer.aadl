@@ -181,8 +181,7 @@ subcomponents
 	consumer_prs : process consumer.i;
 	eth       	 : bus ethernet;
 connections
-	producer_to_consumer : port producer_prs.dataout -> consumer_prs.datain
-		{Actual_Connection_Binding => (reference (eth));};
+	producer_to_consumer : port producer_prs.dataout -> consumer_prs.datain;
 flows
 	f0 : end to end flow producer_prs.f0 -> producer_to_consumer -> consumer_prs.f0
 	 	{Latency => 20ms .. 50 ms;};
@@ -191,6 +190,7 @@ properties
 	actual_processor_binding => (reference (consumer_cpu)) applies to consumer_prs;
 	actual_memory_binding    => (reference (consumer_ram)) applies to consumer_prs;
 	actual_memory_binding    => (reference (producer_ram)) applies to producer_prs;
+	Actual_Connection_Binding => (reference (eth)) applies to producer_to_consumer;
 end producer_consumer_example.i;
 
 end producer_consumer;
