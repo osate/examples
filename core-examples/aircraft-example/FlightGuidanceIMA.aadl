@@ -39,7 +39,7 @@ with AircraftSubsystems, HardwarePlatform, AppSystems;
       Platform: system HardwarePlatform::ComputingPlatform.ThreeProcessor;
       ApplicationSystem: system AppSystems::EmbeddedApp.Topology;
     connections
-      BusAccessConnection1: bus access Platform.BusAccess1 -> ApplicationSystem.EtherAccess;
+      BusAccessConnection1: bus access Platform.BusAccess1 -> ApplicationSystem.EtherAccess ;
   end FlightGuidance.communication;
   
   --        the system with subsystems and their communication

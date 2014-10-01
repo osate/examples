@@ -29,8 +29,7 @@ end Network;
 system implementation Network.Imp
 subcomponents
     cab: bus Cable.Imp;
-    s 
-connections
+    connections
     -- Why an error that cont.cabl can't be resolved?
     c: bus access  cont.cabl -> cab ;
 end Network.Imp;
