@@ -26,7 +26,7 @@ thread implementation render.i
 calls
 	call : { c : subprogram display_page;};
 connections
-	c0 : parameter page -> c.page;
+	c0 : parameter c.page -> page;
 properties
 	Compute_Entrypoint_Call_Sequence => reference (call);
 end render.i;

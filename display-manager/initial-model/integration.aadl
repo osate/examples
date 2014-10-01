@@ -71,9 +71,4 @@ properties
 	    ) applies to platform.cpu;
 end display_manager.i;
 
-
-system implementation display_manager.pok extends display_manager.i
---properties
---	pok::scheduler => static applies to platform.cpu.part1, platform.cpu.part2, platform.cpu.part3, platform.cpu.part4;
-end display_manager.pok;
 end dm::legacy::integration;
