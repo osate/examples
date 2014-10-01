@@ -141,8 +141,7 @@ end SensorProcessing;
 
 system implementation SensorProcessing.impl
 subcomponents
-	datasetProcessing1: process processing.completeset;
-	datasetProcessing2: process processing.completeset;
+	datasetProcessing: process processing.completeset;
 --	pipelineProcessing: process processing.pipeline;
 end SensorProcessing.impl;
 

@@ -44,12 +44,12 @@ subcomponents
 	b : bus mybus;
 connections
 	c : port s.dout -> r.din {  
-				Actual_Connection_Binding => (reference(b));
 				SEI::BandWidthBudget => 50.0 Kbytesps;                             
 			}; 
 	a1: bus access b <-> s.b;
 	a2: bus access b <-> r.b;
-
+properties
+	Actual_Connection_Binding => (reference(b)) applies to c;
 end main.i;
 
 end fta_sample;

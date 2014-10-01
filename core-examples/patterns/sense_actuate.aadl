@@ -204,10 +204,8 @@ subcomponents
 	eth0       	 	: bus ethernet;
 	eth1       	 	: bus ethernet;
 connections
-	c0 : port sensor.sensing_val -> processing.sensing_value
-		{actual_connection_binding => (reference (eth0));};
-	c1 : port processing.command_value -> actuate.command_val
-		{actual_connection_binding => (reference (eth1));};
+	c0 : port sensor.sensing_val -> processing.sensing_value;
+	c1 : port processing.command_value -> actuate.command_val;
 	b0 : bus access eth0 <-> sensor.eth;
 	b1 : bus access eth0 <-> cpu.eth0;
 	b2 : bus access eth1 <-> actuate.eth;
@@ -218,6 +216,7 @@ flows
 properties
 	actual_processor_binding => (reference (cpu)) applies to processing;
 	actual_memory_binding    => (reference (ram)) applies to processing;
+	actual_connection_binding => (reference (eth0)) applies to c0, c1;
 	sei::weightlimit 		 => 10.0 kg;
 annex EMV2 {**
 	use types ErrorLibrary;

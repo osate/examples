@@ -26,7 +26,6 @@ annex EMV2 {**
 	propagations
 		p0 : Failed -[]-> powerout{ServiceError};
 	end component;
-	
 	properties
 		EMV2::severity => ARP4761::Hazardous applies to powerout.ServiceError;
 **};

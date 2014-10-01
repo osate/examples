@@ -60,7 +60,7 @@ with ErrorLibrary, ErrorModelLibrary;
     		ActCmd: in propagation  {ServiceOmission,ValueError,ItemOmission};
     	flows
 		 ef1:error sink ActCmd{ValueError};
-		 ef2:error source operation {ServiceOmission} ;
+		 ef2:error source operation {ServiceOmission} when Failed;
 	
  		end propagations;
 	  	propagation paths
@@ -109,8 +109,8 @@ annex EMV2 {**
 	-- here the hazard property is associated with the error behavior state in an error source of a subcomponent.
 	-- In this case the path starts out within the core model (subcomponent)
 	-- It overrides the Hazard property assocaited in the component classifier of the subcomponent.
-		EMV2::severity => MILSTD882::Critical applies to Actuator2.ef2.Failed;
-		EMV2::likelihood => MILSTD882::Remote applies to Actuator2.ef2.Failed;
+		EMV2::severity => MILSTD882::Critical applies to Actuator2.ef2.ServiceOmission;
+		EMV2::likelihood => MILSTD882::Remote applies to Actuator2.ef2.ServiceOmission;
 		EMV2::hazards => 
 	([	crossreference => "1.1.3";
 		failure => "Loss of actuator action";
@@ -121,7 +121,7 @@ annex EMV2 {**
 		comment => "Becomes major hazard, if no rdeundant sensor";
 			])
 			applies to Actuator2.ef2.Failed;
-	
 	**}; 
+
   end AircraftFMS.i;
 end FHAExample;

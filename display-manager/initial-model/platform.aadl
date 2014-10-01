@@ -5,6 +5,8 @@ public
 with arinc653;
 
 virtual processor partition
+properties
+	Scheduling_Protocol => (Round_Robin_Protocol);
 end partition;
 
 virtual processor implementation partition.i
