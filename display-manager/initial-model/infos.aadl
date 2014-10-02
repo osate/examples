@@ -32,7 +32,7 @@ features
 properties 
     source_name => "gps_simulate";
     source_language => (C);
-    source_text => ("gps.h","gps.c");
+    source_text => ("../../../functional-code/gps.h","../../../functional-code/gps.c");
 end gps_simulate;
 
 
@@ -65,7 +65,7 @@ features
 properties 
     source_name => "gps_to_speed";
     source_language => (C);
-    source_text => ("gps.h","gps.c");
+    source_text => ("../../../functional-code/gps.h","../../../functional-code/gps.c");
 end speed_calculate;
 
 --
@@ -98,7 +98,7 @@ features
 properties 
     source_name => "simulate";
     source_language => (C);
-    source_text => ("sensor_altitude.h","sensor_altitude.c");
+    source_text => ("../../../functional-code/sensor_altitude.h","../../../functional-code/sensor_altitude.c");
 end altitude_simulate;
 
 thread altitude_processing
@@ -127,7 +127,7 @@ features
 properties 
     source_name => "convert_sensed_to_meter";
     source_language => (C);
-    source_text => ("sensor_altitude.h","sensor_altitude.c");
+    source_text => ("../../../functional-code/sensor_altitude.h","../../../functional-code/sensor_altitude.c");
 end altitude_process;
 
 --
@@ -161,7 +161,7 @@ features
 properties 
     source_name => "convert_sensed_to_meter";
     source_language => (C);
-    source_text => ("wind_sensor.h","wind_sensor.c");
+    source_text => ("../../../functional-code/wind_sensor.h","../../../functional-code/wind_sensor.c");
 end wind_process;
 
 thread wind_sensor
@@ -187,7 +187,7 @@ features
 properties 
     source_name => "simulate";
     source_language => (C);
-    source_text => ("wind_sensor.h","wind_sensor.c");
+    source_text => ("../../../functional-code/wind_sensor.h","../../../functional-code/wind_sensor.c");
 end wind_simulate;
 
 

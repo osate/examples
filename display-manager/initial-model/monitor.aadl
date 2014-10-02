@@ -33,7 +33,7 @@ features
 properties 
     source_name => "simulate";
     source_language => (C);
-    source_text => ("engine.h","engine.c");
+    source_text => ("../../../functional-code/engine.h","../../../functional-code/engine.c");
 end engine_sensor_simulate;
 
 
@@ -66,7 +66,7 @@ features
 properties 
     source_name => "voter";
     source_language => (C);
-    source_text => ("engine.h","engine.c");
+    source_text => ("../../../functional-code/engine.h","../../../functional-code/engine.c");
 end engines_status_voter;
 
 -- 
@@ -86,7 +86,7 @@ features
 properties 
     source_name => "simulate";
     source_language => (C);
-    source_text => ("pitot.h","pitot.c");
+    source_text => ("../../../functional-code/pitot.h","../../../functional-code/pitot.c");
 end pitot_simulate;
 
 thread implementation pitot_sensor.i
@@ -129,7 +129,7 @@ features
 properties 
     source_name => "voter";
     source_language => (C);
-    source_text => ("pitot.h","pitot.c");
+    source_text => ("../../../functional-code/pitot.h","../../../functional-code/pitot.c");
 end pitot_status_compute;
 
 
@@ -156,7 +156,7 @@ features
 properties 
     source_name => "simulate";
     source_language => (C);
-    source_text => ("fuel_gauge.h","fuel_gauge.c");
+    source_text => ("../../../functional-code/fuel_gauge.h","../../../functional-code/fuel_gauge.c");
 end fuel_gauge_simulate;
 
 
@@ -189,7 +189,7 @@ features
 properties 
     source_name => "voter";
     source_language => (C);
-    source_text => ("fuel_gauge.h","fuel_gauge.c");
+    source_text => ("../../../functional-code/fuel_gauge.h","../../../functional-code/fuel_gauge.c");
 end fuel_status_calculate;
 
 process monitor
