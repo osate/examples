@@ -1,0 +1,147 @@
+-- See the comment on the last system implementation at the very end.
+-- (There are extraneous experimental declarations declared
+-- while trying to recreate this, but I'm leaving them
+-- there in case you want to add this to a test suite.  This was
+-- a little tricky to track down.  It involves interactions
+-- between inheritance, flows, and feature groups; which is
+-- likely to be common in large real-world specifications.)
+package issue471
+public
+
+	feature group RequestResponse
+		features
+			request: out event port;
+			response: in event port;
+	end RequestResponse;
+
+	thread ClientThread
+		features
+			request: out event port;
+			response: in event port;
+		flows
+			reqSrc: flow source request;
+			resSink: flow sink response;
+	end ClientThread;
+
+	process ClientProc
+		features
+			interface: feature group RequestResponse;
+		flows
+			reqSrc: flow source interface.request;
+			resSink: flow sink interface.response;
+	end ClientProc;
+
+	process implementation ClientProc.Imp
+		subcomponents
+			clientThread: thread ClientThread;
+		connections
+			c_request: port clientThread.request -> interface.request;
+			c_response: port interface.response -> clientThread.response;
+		flows
+		-- Two alternative forms to play with.
+		--reqSrc: flow source clientThread -> c_request -> interface.request;
+			reqSrc: flow source clientThread.reqSrc -> c_request -> interface.request;
+			resSink: flow sink interface.response -> c_response -> clientThread;
+	end ClientProc.Imp;
+
+	system ClientSys
+		features 
+			interface: feature group RequestResponse;
+		flows
+			reqSrc: flow source interface.request;
+			resSink: flow sink interface.response;
+	end ClientSys;
+
+	system implementation ClientSys.Imp
+		subcomponents
+			client: process ClientProc.Imp;
+		connections
+			c: feature group interface <-> client.interface;
+		flows
+			reqSrc: flow source client.reqSrc -> c -> interface.request;
+			resSink: flow sink interface.response -> c -> client.resSink;
+	end ClientSys.Imp;
+
+	thread ServerThread
+		features
+			request: in event port;
+			response: out event port;
+		flows
+			serverPath: flow path request -> response;
+	end ServerThread;
+
+	process ServerProc
+		features
+			interface: feature group inverse of RequestResponse;
+		flows
+			serverPath: flow path interface.request -> interface.response;
+	end ServerProc;
+
+	process implementation ServerProc.Imp
+		subcomponents
+			serverThread: thread ServerThread;
+		connections
+			c_request: port interface.request -> serverThread.request;
+			c_response: port serverThread.response -> interface.response;
+		flows
+			serverPath: flow path interface.request -> c_request -> serverThread.serverPath -> c_response -> interface.response;
+	end ServerProc.Imp;
+
+	system ServerSys
+		features
+			interface: feature group inverse of RequestResponse;
+		flows
+			serverPath: flow path interface.request -> interface.response;
+	end ServerSys;
+
+	system implementation ServerSys.Imp
+		subcomponents
+			server: process ServerProc.Imp;
+		connections
+			c: feature group interface <-> server.interface;
+		flows
+			serverPath: flow path interface.request -> c -> server.serverPath -> c -> interface.response;
+	end ServerSys.Imp;
+
+	system ClientServer
+	end ClientServer;
+
+	system implementation ClientServer.Sys
+		subcomponents
+			client: system ClientSys.Imp;
+			server: system ServerSys.Imp;
+		connections 
+			c_cli_serv: feature group client.interface <-> server.interface;
+		flows
+			reqResp: end to end flow client.reqSrc -> c_cli_serv -> server.serverPath -> c_cli_serv -> client.resSink;
+	end ClientServer.Sys;
+
+	system implementation ClientServer.ParentSys
+		subcomponents
+			client: system ClientSys.Imp;
+			server: system ServerSys.Imp;
+		connections
+		-- If you comment out this connection, the instantiation error disappears.
+			c_cli_serv: feature group client.interface <-> server.interface;
+	end ClientServer.ParentSys;
+
+	-- Instantiating the following system results in an error in the aaxl2 file.
+	-- The odd thing that seems to trigger this is that there are two connections
+	-- declared, one inherited and one explicitly below, that happen to have the
+	-- same semantic meaning.  There is no warning or error message generated
+	-- directly from that, just the failure to instantiate a flow spec due to
+	-- a missing connection instance (when in fact there are two).  See above
+	-- comment about how removing the inherited connection eliminates the
+	-- instantiation error.
+	system implementation ClientServer.ChildSys extends ClientServer.ParentSys
+		connections
+			c_cli_serv_dup: feature group client.interface <-> server.interface;
+			-- The following generates an error if substituted for above (in the presence
+					-- of the inherited connection), but may not be legal anyway.
+					--c_cli_serv: refined to feature group client.interface <-> server.interface;		
+
+		flows
+			reqResp: end to end flow client.reqSrc -> c_cli_serv_dup -> server.serverPath -> c_cli_serv_dup -> client.resSink;
+	end ClientServer.ChildSys;
+
+end issue471;

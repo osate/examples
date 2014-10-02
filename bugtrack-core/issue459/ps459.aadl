@@ -1,0 +1,6 @@
+property set MyProperty is
+	-- No errors in the property set declarations.
+	My_Data_Property: Size applies to (data);
+	My_Group_Property: Size applies to (feature group);
+	My_FG_Type_Property: size applies to (feature group type);
+end MyProperty;

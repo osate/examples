@@ -1,0 +1,78 @@
+package issue464
+public
+	with Data_Model;
+
+	system SensorProcessing
+	end SensorProcessing;
+
+	system implementation SensorProcessing.impl
+		subcomponents
+			datasetProcessing: process processing.completeset;
+	end SensorProcessing.impl;
+
+	system implementation SensorProcessing.impl2
+		subcomponents
+			datasetProcessing: process processing.completeset;
+			datasetProcessing2: process processing.completeset;
+	end SensorProcessing.impl2;
+
+	data samples
+	end samples;
+
+	thread threadA
+		features
+			samplesIn: in event data port samples;
+			samplesOut: out event data port samples;
+		flows
+			flowThruThreadA: flow path samplesIn -> samplesOut;
+	end threadA;
+
+	thread group threadGroupA
+		features
+			SamplesIn: in event data port samples;
+			samplesOut: out event data port samples;
+		flows
+			flowThruThreadGroupA: flow path samplesIn -> samplesOut;
+	end threadGroupA;
+
+	thread group implementation threadGroupA.signal
+		subcomponents
+			taskA: thread threadA;
+		connections
+			C1: port samplesIn -> taskA.samplesIn;
+			C2: port taskA.samplesOut -> samplesOut;
+		flows
+			flowThruThreadGroupA: flow path samplesIn -> C1 ->
+					taskA.flowThruThreadA -> C2 -> samplesOut;
+	end threadGroupA.signal;
+
+	process processing
+	end processing;
+
+	process implementation processing.completeset
+		subcomponents
+			dsrc: thread dataSource;
+			dsnk: thread dataSink;
+			tg: thread group threadGroupA.signal;
+		connections
+			incoming: port dsrc.SamplesOut -> tg.SamplesIn;
+			outgoing: port tg.samplesOut -> dsnk.samplesIn;
+		flows
+			processingflow: end to end flow dsrc.fromSource -> incoming -> tg.flowThruThreadGroupA -> outgoing -> dsnk.toSink;
+	end processing.completeset;
+
+	thread dataSource
+		features
+			samplesOut: out event data port samples;
+		flows
+			fromSource: flow source samplesOut;
+	end dataSource;
+
+	thread dataSink
+		features
+			samplesIn: in event data port samples;
+		flows
+			toSink: flow sink samplesIn;
+	end dataSink;
+
+end issue464;
