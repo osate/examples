@@ -235,9 +235,9 @@ annex EMV2
   heat_control: out propagation {HeatControlError};
   flows
     ct_uve_dt: error path current_temperature{UndetectableValueError}
-      ->display_temperature(UndetectableValueError);
+      ->display_temperature{UndetectableValueError};
     ct_uve_rs: error path current_temperature{UndetectableValueError}
-      ->regulator_status(RegulatorStatusError);
+      ->regulator_status{RegulatorStatusError};
   end propagations;
   **};
 end thermostat_single_sensor;

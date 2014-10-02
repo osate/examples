@@ -104,11 +104,11 @@ annex EMV2
     irs: error source regulator_status{ItemOmission} when Failed;
     ekoor: error sink current_temperature{OutOfRange};  --detects out-of-range
     epsve: error path current_temperature{UndetectableValueError} 
-      -> displayed_temp(UndetectableValueError);
+      -> displayed_temp{UndetectableValueError};
     rmrs: error path regulator_mode{RegulatorModeError} 
-      -> regulator_status(RegulatorStatusError);
+      -> regulator_status{RegulatorStatusError};
     uvers: error path current_temperature{UndetectableValueError}
-      -> regulator_status(RegulatorStatusError);
+      -> regulator_status{RegulatorStatusError};
   end propagations;
   component error behavior
     detections  --in "failed" state put value on port interface_failure
@@ -166,11 +166,11 @@ annex EMV2
   flows  --model error in detection and reporting
     mrmoor: error sink current_temperature{OutOfRange};
     mrmsve: error path current_temperature{UndetectableValueError} 
-      -> regulator_mode (RegulatorModeError);  --bad temp causes bad mode
+      -> regulator_mode {RegulatorModeError};  --bad temp causes bad mode
     mrmif: error path interface_failure{ItemOmission,ItemCommission} 
-      -> regulator_mode (RegulatorModeError);  --missing interface failure signal causes bad mode
+      -> regulator_mode {RegulatorModeError};  --missing interface failure signal causes bad mode
     mrmin: error path internal_failure{ItemOmission,ItemCommission} 
-      -> regulator_mode (RegulatorModeError);  --missing internal failure signal causes bad mode
+      -> regulator_mode {RegulatorModeError};  --missing internal failure signal causes bad mode
    end propagations;
   component error behavior
     detections  --in "failed" state put value on port interface_failure
@@ -288,9 +288,9 @@ annex EMV2
   flows  --model error in detection and reporting
     mrmoor: error sink current_temperature{OutOfRange};
     mrmsve: error path current_temperature{UndetectableValueError} 
-      -> heat_control(HeatControlError);  --bad temp causes bad heat control
+      -> heat_control{HeatControlError};  --bad temp causes bad heat control
     mrmif: error path regulator_mode{RegulatorModeError} 
-      -> heat_control(HeatControlError);  --bad mode causes bad heat control
+      -> heat_control{HeatControlError};  --bad mode causes bad heat control
   end propagations;
   properties  --set failure rate for manage_heat_source_mhs
     EMV2::OccurrenceDistribution => Iso_Properties::MHSFailureRate 
