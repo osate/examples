@@ -96,8 +96,8 @@ component error behavior
 transitions
     Operational -[ba{NoService}]-> Failed;
 propagations
-   pp1 : TransientFailure -[]->ba(NoService);
-   pp2 : Failed -[]->ba(NoService);
+   pp1 : TransientFailure -[]->ba{NoService};
+   pp2 : Failed -[]->ba{NoService};
 end component; 
 properties
     --  The following properties are used to fill the PRISM model
@@ -187,9 +187,9 @@ transitions
     t3 : Operational -[bpm{NoService}]->    Failed;
     t4 : Failed      -[bpm{NoError} and bpout{NoError} and bpin{NoError}]-> Operational;
 propagations
-    bp1: Failed -[]->bpout(NoService);
-    bp2: Failed -[]->bpin(NoService);
-    bp3: Failed -[]->bpm(NoService);
+    bp1: Failed -[]->bpout{NoService};
+    bp2: Failed -[]->bpin{NoService};
+    bp3: Failed -[]->bpm{NoService};
 end component;
 
 **};
