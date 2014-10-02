@@ -12,8 +12,8 @@ modes
 	medium: mode;
 	fast: mode;
 properties
-Source_Code_Size => 2 Bytes in modes (fast, slow);
-Source_Code_Size => 4 Bytes in modes (medium);
+Code_Size => 2 Bytes in modes (fast, slow);
+Code_Size => 4 Bytes in modes (medium);
 end top.impl;
 
 end  issue214;

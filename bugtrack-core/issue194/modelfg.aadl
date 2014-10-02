@@ -79,12 +79,12 @@ end Datatype3;
 
 data implementation Datatype3.impl3
 properties
-Source_Data_Size => 0 Bytes;
+Data_Size => 0 Bytes;
 end Datatype3.impl3;
 
 data implementation Datatype3.impl33
 properties
-Source_Data_Size => 0 Bytes;
+Data_Size => 0 Bytes;
 end Datatype3.impl33;
 
 data DatatypeOut
@@ -92,7 +92,7 @@ end DatatypeOut;
 
 data implementation DatatypeOut.impl
 properties
-Source_Data_Size => 1 Bytes;
+Data_Size => 1 Bytes;
 end DatatypeOut.impl;
 
 data DatatypeIn
@@ -100,7 +100,7 @@ end DatatypeIn;
 
 data implementation DatatypeIn.impl
 properties
-Source_Data_Size => 2 Bytes;
+Data_Size => 2 Bytes;
 end DatatypeIn.impl;
 
 end issue194;

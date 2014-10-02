@@ -45,9 +45,9 @@ Compute_Execution_time => 0 ms .. 1 Ms;
 Priority => 5;
 Period => 100 Ms;
 Deadline => 100 Ms;
-Source_Data_Size => 40000 Bytes;
-Source_Stack_Size => 40000 Bytes;
-Source_Code_Size => 40 Bytes;
+Data_Size => 40000 Bytes;
+Stack_Size => 40000 Bytes;
+Code_Size => 40 Bytes;
 };
 
 the_sender_2: thread proc_the_sender_2.impl {
@@ -58,9 +58,9 @@ Compute_Execution_time => 0 ms .. 1 Ms;
 Priority => 7;
 Period => 300 Ms;
 Deadline => 300 Ms;
-Source_Data_Size => 40000 Bytes;
-Source_Stack_Size => 40000 Bytes;
-Source_Code_Size => 40 Bytes;
+Data_Size => 40000 Bytes;
+Stack_Size => 40000 Bytes;
+Code_Size => 40 Bytes;
 };
 
 the_receiver: thread proc_the_receiver.impl {
@@ -71,9 +71,9 @@ Compute_Execution_time => 0 ms .. 1 Ms;
 Priority => 10;
 Period => 200 Ms;
 Deadline => 200 Ms;
-Source_Data_Size => 40000 Bytes;
-Source_Stack_Size => 40000 Bytes;
-Source_Code_Size => 40 Bytes;
+Data_Size => 40000 Bytes;
+Stack_Size => 40000 Bytes;
+Code_Size => 40 Bytes;
 };
 
 the_receiver_2: thread proc_the_receiver_2.impl {
@@ -84,9 +84,9 @@ Compute_Execution_time => 0 ms .. 1 Ms;
 Priority => 15;
 Period => 400 Ms;
 Deadline => 400 Ms;
-Source_Data_Size => 40000 Bytes;
-Source_Stack_Size => 40000 Bytes;
-Source_Code_Size => 40 Bytes;
+Data_Size => 40000 Bytes;
+Stack_Size => 40000 Bytes;
+Code_Size => 40 Bytes;
 };
 
 connections

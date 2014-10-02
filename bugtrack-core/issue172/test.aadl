@@ -67,9 +67,9 @@ Dispatch_Protocol => Periodic;
 Compute_Execution_Time => 0 ms .. 1 ms;
 Period => 1000 Ms;
 Priority => 5;
-Source_Data_Size => 40000 bytes;
-Source_Stack_Size => 40000 bytes;
-Source_Code_Size => 40 bytes;
+Data_Size => 40000 bytes;
+Stack_Size => 40000 bytes;
+Code_Size => 40 bytes;
 end sender;
 
 thread implementation sender.impl
