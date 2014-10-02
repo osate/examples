@@ -10,7 +10,7 @@ with dm::legacy::platform;
 
 with arinc653;
 
---with pok;
+with pok;
 
 system display_manager
 end display_manager;
@@ -69,11 +69,17 @@ properties
 	      Duration  => 10 ms;
 	      Periodic_Processing_Start => false;]
 	    ) applies to platform.cpu;
-end display_manager.i;
+end display_manager.i; 
 
 
 system implementation display_manager.pok extends display_manager.i
---properties
---	pok::scheduler => static applies to platform.cpu.part1, platform.cpu.part2, platform.cpu.part3, platform.cpu.part4;
+properties
+	POK::BSP => x86_qemu applies to platform.cpu;
+	POK::Architecture => x86 applies to platform.cpu;
 end display_manager.pok;
+
+system implementation display_manager.bla extends display_manager.i
+end display_manager.bla;
+
+
 end dm::legacy::integration;

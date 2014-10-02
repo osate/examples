@@ -61,6 +61,8 @@ end altitude_meter;
 --  GPS data type.
 --
 data gps_position
+properties
+  Data_Model::Data_Representation => Struct;
 end gps_position;
 
 data implementation gps_position.i
@@ -77,10 +79,15 @@ end gps_position.i;
 --  2 = engine failure
 --
 data engine_status
+properties
+  Data_Model::Data_Representation => Enum;
+  Data_Model::Enumerators => ("on", "off", "failure");
 end engine_status;
 
 
 data engines_status
+properties
+  Data_Model::Data_Representation => Struct;
 end engines_status;
 
 data implementation engines_status.i
@@ -114,6 +121,8 @@ end fuel_level;
 --  working or not.
 --
 data fuel_status
+properties
+  Data_Model::Data_Representation => Struct;
 end fuel_status;
 
 data implementation fuel_status.i
@@ -144,6 +153,8 @@ end pitot_val;
 --  information about the status of the device itself.
 --
 data pitot_status
+properties
+  Data_Model::Data_Representation => Struct;
 end pitot_status;
 
 data implementation pitot_status.i
@@ -172,6 +183,8 @@ end pitot_status.i;
 --  display.
 --
 data page
+properties
+  Data_Model::Data_Representation => Struct;
 end page;
 
 data implementation page.i

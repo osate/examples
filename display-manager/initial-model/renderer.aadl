@@ -9,7 +9,7 @@ features
 properties 
     source_name => "display";
     source_language => (C);
-    source_text => ("renderer.h","renderer.c");
+    source_text => ("../../../functional-code/renderer.h","../../../functional-code/renderer.c");
 end display_page;
 
 
@@ -26,7 +26,7 @@ thread implementation render.i
 calls
 	call : { c : subprogram display_page;};
 connections
-	c0 : parameter page -> c.page;
+	c0 : parameter c.page -> page;
 properties
 	Compute_Entrypoint_Call_Sequence => reference (call);
 end render.i;

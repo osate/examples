@@ -10,6 +10,8 @@ properties
 end partition;
 
 virtual processor implementation partition.i
+properties
+  Scheduling_Protocol => (Round_Robin_Protocol);
 end partition.i;
 
 processor execution_platform
@@ -21,6 +23,8 @@ subcomponents
 	part2 : virtual processor partition.i;
 	part3 : virtual processor partition.i;
 	part4 : virtual processor partition.i;
+properties
+  Scheduling_Protocol => (ARINC653);
 end execution_platform.i;
 
 memory segment

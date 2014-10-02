@@ -62,7 +62,7 @@ features
 properties 
     source_name => "filter_values";
     source_language => (C);
-    source_text => ("filter.h","filter.c");
+    source_text => ("../../../functional-code/filter.h","../../../functional-code/filter.c");
 end spg_filter;
 
 
