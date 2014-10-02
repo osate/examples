@@ -90,7 +90,7 @@ annex EMV2
     interface_failure: out propagation {ItemOmission};
     monitor_status: out propagation {MonitorStatusError};
   flows  
-    fl0: error path monitor_mode {MonitorModeError} -> monitor_status(MonitorStatusError);
+    fl0: error path monitor_mode {MonitorModeError} -> monitor_status{MonitorStatusError};
     ifif: error source interface_failure{ItemOmission} when failed;
   end propagations;
   properties  --"fail" is the internal event that cause
