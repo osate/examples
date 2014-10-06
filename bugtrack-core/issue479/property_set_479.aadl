@@ -1,0 +1,3 @@
+property set property_set_479 is
+	c: constant aadlinteger => 5;
+end property_set_479;
