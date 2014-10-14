@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aadl2:Package xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aadl2="http://aadl.info/AADL/2.0" xmi:id="_YHv_AENuEeSogMbTIC0JtQ" name="issue409" publicSection="#_YHv_AUNuEeSogMbTIC0JtQ">
+  <ownedPublicSection xmi:id="_YHv_AUNuEeSogMbTIC0JtQ">
+    <ownedClassifier xsi:type="aadl2:SystemType" xmi:id="_YHv_AkNuEeSogMbTIC0JtQ" name="s">
+      <ownedAbstractFeature xmi:id="_YHv_A0NuEeSogMbTIC0JtQ" name="f" out="true"/>
+    </ownedClassifier>
+  </ownedPublicSection>
+</aadl2:Package>

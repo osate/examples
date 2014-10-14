@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aadl2:PropertySet xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aadl2="http://aadl.info/AADL/2.0" xmi:id="_g4eB8D81EeSUzN3vAaAzpg" name="JMRMIS">
+  <ownedPropertyType xsi:type="aadl2:AadlInteger" xmi:id="_g4eB8T81EeSUzN3vAaAzpg" name="NauticalDistance">
+    <ownedUnitsType xmi:id="_g4eB8j81EeSUzN3vAaAzpg">
+      <ownedLiteral xsi:type="aadl2:UnitLiteral" xmi:id="_g4eB8z81EeSUzN3vAaAzpg" name="m"/>
+      <ownedLiteral xsi:type="aadl2:UnitLiteral" xmi:id="_g4eB9D81EeSUzN3vAaAzpg" name="km" baseUnit="#_g4eB8z81EeSUzN3vAaAzpg">
+        <factor xsi:type="aadl2:IntegerLiteral" xmi:id="_g4eB9T81EeSUzN3vAaAzpg" value="1000"/>
+      </ownedLiteral>
+      <ownedLiteral xsi:type="aadl2:UnitLiteral" xmi:id="_g4eB9j81EeSUzN3vAaAzpg" name="NM" baseUnit="#_g4eB8z81EeSUzN3vAaAzpg">
+        <factor xsi:type="aadl2:IntegerLiteral" xmi:id="_g4eB9z81EeSUzN3vAaAzpg" value="1852"/>
+      </ownedLiteral>
+    </ownedUnitsType>
+  </ownedPropertyType>
+  <ownedProperty xmi:id="_ua3FaD80EeSUzN3vAaAzpg" name="ObservationRadius" referencedPropertyType="#_g4eB8T81EeSUzN3vAaAzpg">
+    <appliesTo xsi:type="aadl2:MetaclassReference" xmi:id="_g4eB-D81EeSUzN3vAaAzpg">
+      <metaclassName>all</metaclassName>
+    </appliesTo>
+  </ownedProperty>
+</aadl2:PropertySet>

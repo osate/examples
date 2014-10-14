@@ -1,0 +1,4 @@
+property set JMRMIS is
+	ObservationRadius: JMRMIS::NauticalDistance applies to (all);
+	NauticalDistance: type aadlinteger units (m, km => m * 1000, NM => m * 1852); 
+end JMRMIS;

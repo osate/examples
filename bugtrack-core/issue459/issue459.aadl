@@ -1,0 +1,17 @@
+package MyFeatures
+public
+	with MyProperty;
+
+	data MyData
+		properties
+			MyProperty::My_Data_Property => 64 Bytes;
+	end MyData;
+
+	feature group MyGroup
+		properties
+		-- The above is accepted but this produces an error.
+			MyProperty::My_Group_Property => 64 Bytes;
+			MyProperty::My_FG_Type_Property => 64 Bytes;
+	end MyGroup;
+
+end MyFeatures;

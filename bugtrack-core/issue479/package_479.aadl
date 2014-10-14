@@ -1,0 +1,9 @@
+package package_479
+public
+	with property_set_479;
+	
+	thread t
+	properties
+		Period => property_set_479::c;
+	end t;
+end package_479;

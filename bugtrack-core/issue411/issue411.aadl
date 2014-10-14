@@ -1,0 +1,10 @@
+package testPA
+public
+	with jmrmis;
+
+	system s
+		properties
+			JMRMIS::ObservationRadius => 12 m;
+	end s;
+
+end testPA;
