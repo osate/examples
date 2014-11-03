@@ -24,10 +24,10 @@ annex behavior_specification {**
 		Closed : initial state;
 		Opened : state;
 	transitions
-		t1 : Doors_Closed -[opem_cmd? = false]-> Doors_Closed;
-		t2 : Doors_Closed -[opem_cmd? = true]-> Doors_Open;
-		t3 : Doors_Open -[opem_cmd? = true]-> Doors_Open;
-		t4 : Doors_Open -[opem_cmd? = false]-> Doors_Close;
+		t1 : Closed -[open_cmd? = false]-> Closed;
+		t2 : Closed -[open_cmd? = true]-> Opened;
+		t3 : Opened -[open_cmd? = true]-> Opened;
+		t4 : Opened -[open_cmd? = false]-> Closed;
 **};	
 annex EMV2 {**
 	use types ErrorLibrary;
