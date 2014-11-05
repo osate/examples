@@ -1,0 +1,43 @@
+package agree_basic1
+public
+	with Base_Types;
+	system sender
+		features
+			dataout: out data port Base_Types::Integer;
+			annex agree {**
+
+    guarantee "data sent is between 0 and 100": dataout < 100 and dataout > 0;
+**};
+	end sender;
+
+	system implementation sender.i annex agree {**
+	eq k : int = 1 -> if (pre(k) > 90) then 10 else pre(k) + 1;
+	assert (dataout = k);
+**};
+	end sender.i;
+
+	system receiver
+		features
+			datain: in data port Base_Types::Integer;
+			annex agree {**
+	assume "data produced between 0 and 100": (datain < 100) and (datain > 0);
+**};
+	end receiver;
+
+	system implementation receiver.i
+	end receiver.i;
+
+	system integration annex agree {**
+	guarantee "dummy" : true;
+**};
+	end integration;
+
+	system implementation integration.i
+		subcomponents
+			snd: system sender.i;
+			rcv: system receiver.i;
+		connections
+			c0: port snd.dataout -> rcv.datain {Timing => immediate;};
+	end integration.i;
+
+end agree_basic1;

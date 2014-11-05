@@ -39,9 +39,11 @@ annex agree {**
 end integration; 
 
 system implementation integration.i
-subcomponents
-	snd : system sender.i;
+subcomponents 
+	-- The ordering matters, add the rcv before the snd component
+	-- This is a constraint of AGREE.
 	rcv : system receiver.i;
+	snd : system sender.i;
 connections
 	c0 : port snd.dataout -> rcv.datain {Communication_Properties::timing => immediate;};
 end integration.i;

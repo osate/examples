@@ -1,5 +1,58 @@
 package resolute_check_fanin
 public
+with base_types;
+
+system sender
+features
+	dataout : out data port base_types::integer;
+end sender;
+
+system implementation sender.i
+annex agree {**
+	eq k : int = 1 -> if (pre(k) > 90) then 10 else pre(k) + 1;
+	assert (dataout = k);
+**};
+end sender.i;
+
+system receiver
+features
+	datain : in data port base_types::integer;
+end receiver;
+
+
+system implementation receiver.i
+end receiver.i;	
+
+system integration
+end integration; 
+
+system implementation integration.i
+subcomponents 
+	rcv : system receiver.i;
+	snd1 : system sender.i;
+	snd2 : system sender.i;
+connections
+	c0 : port snd1.dataout -> rcv.datain {Communication_Properties::timing => immediate;};
+	c1 : port snd2.dataout -> rcv.datain {Communication_Properties::timing => immediate;};
+
+annex resolute {**
+	prove no_double_fanin()
+**};
+end integration.i; 
+
+annex resolute {**
 	
+	no_double_fanin() <=
+  		** " All incoming feature have only one connection" **
+		forall (c : component) . true => has_single_fanin (c)
+ 
+
+	has_single_fanin (comp : component) <=
+		** " All incoming feature have only one connection on " comp **
+		forall (f : features (comp)) . (direction(f) = "in") => (length (connections (f)) = 1) 
+--		exists (f : features (comp) . length (connections))
+--	  forall (f : features (comp)) (conn : connections (comp)) . (source(conn) = f) => true
+**}; 
+ 
 	
 end resolute_check_fanin;
