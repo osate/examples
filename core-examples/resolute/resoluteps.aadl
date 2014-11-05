@@ -1,0 +1,5 @@
+property set resoluteps is
+	foobar : aadlinteger applies to (thread);
+	
+	required_foobar : constant aadlinteger => 15;
+end resoluteps;   
