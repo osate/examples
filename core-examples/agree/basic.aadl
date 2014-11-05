@@ -24,7 +24,7 @@ system receiver
 features
 	datain : in data port base_types::integer;
 annex agree {**
-	assume "data produced between 0 and 100": datain < 100 and datain > 0;
+	assume "data produced between 0 and 100": (datain < 100) and (datain > 0);
 **};
 end receiver;
 
