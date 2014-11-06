@@ -19,10 +19,8 @@ annex resolute {**
 
 	has_single_fanin (comp : component) <=
 		** " All incoming feature have only one connection on " comp **
-		true
---		forall (f : features (comp)) . (direction(f) = "in") => (length (connections (f)) = 1) 
---		exists (f : features (comp) . length (connections))
---	  forall (f : features (comp)) (conn : connections (comp)) . (source(conn) = f) => true
+		forall (f : features (comp)) . (direction(f) = "in") => (length (connections (f)) = 1) 
+
 
 	minfoobarvalue(c : component) <=
   		** " Check the minimum foobar for features on " c  **
@@ -31,7 +29,7 @@ annex resolute {**
 		(property(source(conn), resoluteps::foobar) < property(destination(conn), resoluteps::foobar))
 
 
-
+ 
 	check_arinc653_compliance () <=
 		** "Check compliance of the model with ARINC653 annex" **
 		check_arinc653_processes() and
@@ -81,7 +79,8 @@ annex resolute {**
 	   ** "All processes are bound to a memory segment and a virtual processor" **
 	   forall (p : process) . true =>  check_arinc653_process_memory (p) and 
 	                                   check_interfaces (p) and
-	                                   check_tasks (p) and check_arinc653_process_virtual_processor (p)
+	                                   check_tasks (p) and 
+	                                   check_arinc653_process_virtual_processor (p)
 
 	check_tasks (p : process) <=
 	   ** "Check tasks from process " p **
@@ -91,7 +90,7 @@ annex resolute {**
 		** "Check that component " comp " declares all necessary properties on its ports" **
 		forall (poevent : features (comp)) . is_event_port (poevent) and (direction(poevent) = "in") => has_property (poevent, ARINC653::Queueing_Discipline)
 		and
-		forall (pononevent : features (comp)) . is_event_port (pononevent) and (direction(pononevent) = "in") => has_property (pononevent, ARINC653::Sampling_Refresh_Period)
+		forall (pononevent : features (comp)) . (is_event_port (pononevent) = false) and (direction(pononevent) = "in") => has_property (pononevent, ARINC653::Sampling_Refresh_Period)
 
 
 	check_arinc653_process_memory (p : process) <=

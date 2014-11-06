@@ -11,10 +11,6 @@ features
 end sender;
 
 system implementation sender.i
-annex agree {**
-	eq k : int = 1 -> if (pre(k) > 90) then 10 else pre(k) + 1;
-	assert (dataout = k);
-**};
 end sender.i;
 
 system filter
@@ -51,7 +47,7 @@ connections
 annex resolute {**
 	prove minfoobarvalue(this.snd)
 	prove minfoobarvalue(this.mid)
- 	prove minfoobarvalue(this.rcv)
+ 	prove minfoobarvalue(this.rcv) 
 **};
 end integration.i;
 	
