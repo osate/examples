@@ -1,8 +1,6 @@
 package resolute_check_arinc653_compliance
 public
 
-
-
 with ARINC653;
 
 data integer

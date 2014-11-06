@@ -6,7 +6,7 @@ with base_types;
 with resoluteps;
 
 system sender
-features
+features 
 	dataout : out data port base_types::integer {resoluteps::foobar => 5;};
 end sender;
 

@@ -19,7 +19,8 @@ annex resolute {**
 
 	has_single_fanin (comp : component) <=
 		** " All incoming feature have only one connection on " comp **
-		forall (f : features (comp)) . (direction(f) = "in") => (length (connections (f)) = 1) 
+		true
+--		forall (f : features (comp)) . (direction(f) = "in") => (length (connections (f)) = 1) 
 --		exists (f : features (comp) . length (connections))
 --	  forall (f : features (comp)) (conn : connections (comp)) . (source(conn) = f) => true
 
@@ -37,12 +38,25 @@ annex resolute {**
 		check_arinc653_processes() and
 		check_arinc653_virtual_processors ()
 
+
 	check_arinc653_processors () <=
-		** "Check compliance of the model with ARINC653 annex" **
-		forall (cpu : processor) . true => has_property (cpu, ARINC653::Module_Schedule) and
-		                                   has_property (cpu, ARINC653::Module_Major_Frame) and
-		                                   has_property (cpu, ARINC653::HM_Error_ID_Levels) and
-		                                   has_property (cpu, ARINC653::HM_Error_ID_Actions)
+		** "Check compliance of the processors" **
+		forall (cpu : processor) . true => check_arinc653_procesor (cpu)
+
+	check_arinc653_procesor (cpu : processor) <=
+		** "Check compliance of processor " cpu **
+		 check_arinc653_procesor_scheduling (cpu) and
+		 check_arinc653_procesor_hm (cpu)
+		 
+	check_arinc653_procesor_hm (cpu : processor) <=
+		** "Check compliance of processor " cpu " for Health-Monitoring properties" **
+		 has_property (cpu, ARINC653::HM_Error_ID_Levels) and
+		 has_property (cpu, ARINC653::HM_Error_ID_Actions)
+
+	check_arinc653_procesor_scheduling (cpu : processor) <=
+		** "Check compliance of processor " cpu " for scheduling properties" **
+		 has_property (cpu, ARINC653::Module_Schedule) and
+		 has_property (cpu, ARINC653::Module_Major_Frame)
 
 	check_arinc653_virtual_processors () <=
 		** "Virtual Processors are in processors" **
