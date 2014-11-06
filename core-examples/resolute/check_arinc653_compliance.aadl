@@ -15,7 +15,7 @@ properties
 end protected_data;
 
 
--- Now, declare the virtual processors that model
+-- Now, declare the virtual processors that model 
 -- partition runtime.
 
 virtual processor partition1_rt
