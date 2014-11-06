@@ -29,22 +29,10 @@ end integration;
 system implementation integration.i
 subcomponents
 	p : process p.i;
-annex resolute {**
-	prove have_non_null_period(this.p)
+annex resolute {** 
+	prove have_good_foobar(this.p)
 **};
 end integration.i;
 
 
-annex resolute {**
-	
-	have_non_null_period(p : component) <=
-  		** " All threads has a foobar bigger than 15" **
-		forall(t : thread). contained(t, p) => check_thread (t)
-
-	check_thread(t : thread) <=
-  	** "The thread " t " as a foobar bigger than 15"  **
-  		(has_property (t, resoluteps::foobar)) and 
-  		(property (t, resoluteps::foobar) > 15)
-**}; 
- 
 end resolute_property_evaluation;
