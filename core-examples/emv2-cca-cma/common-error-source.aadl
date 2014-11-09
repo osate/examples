@@ -6,6 +6,9 @@ with EMV2;
 with ARP4761;
 with cma_cca_errlib;
 
+processor cpu
+end cpu;
+
 device battery
 features
 	powerout : requires bus access power;
@@ -110,7 +113,7 @@ annex EMV2 {**
 	end composite;	
 	properties
 		EMV2::severity => ARP4761::Hazardous applies to Failed;
-**};
+**}; 
 end assembly.i;
 
 system implementation assembly.i1 extends assembly.i
@@ -144,6 +147,22 @@ connections
 	bp1 : bus access p1 -> bat1.powerout;
 	bp2 : bus access p2 -> bat2.powerout;
 end assembly.i3;
+
+
+system implementation assembly.i4 extends assembly.i
+subcomponents
+    s2 : refined to device sensor.i2;
+    p2   : bus power.i2;
+	bat2 : device battery.i2;
+	mycpu : processor cpu; 
+connections
+	s1p : bus access p1 -> s1.powerin;
+	s2p : bus access p2 -> s2.powerin;
+	bp1 : bus access p1 -> bat1.powerout;
+	bp2 : bus access p2 -> bat2.powerout;
+properties
+	actual_processor_binding => (reference (mycpu)) applies to s1, s2;
+end assembly.i4;
 
 
 end example_cca_cma1;
