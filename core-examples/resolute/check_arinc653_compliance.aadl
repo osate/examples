@@ -178,7 +178,7 @@ end partition2_process.impl;
 -- Main runtime
 
 processor powerpc
-properties
+--properties
 --	ARINC653::HM_Error_ID_Levels => 
 --		([ErrorIdentifier => 1;
 --		  Description     => "Module Config Error";
