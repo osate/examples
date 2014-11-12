@@ -1,0 +1,31 @@
+package physical_data_port
+
+public
+with base_types;
+
+data power extends base_types::unsigned_8
+end power;
+
+abstract battery
+features
+	powerout : out data port power;
+end battery;
+
+abstract sensor
+features
+	powerin : in data port power;
+end sensor;
+
+system integration
+
+end integration;
+
+system implementation integration.impl
+subcomponents 
+	batt : abstract battery;
+	sens : abstract sensor;
+connections
+	c0 : port batt.powerout -> sens.powerin;
+end integration.impl;
+
+end physical_data_port;

@@ -1,0 +1,30 @@
+package physical_abstract_feature
+
+public
+	
+abstract power
+end power;
+
+abstract battery
+features
+	powerout : out feature;
+end battery;
+
+abstract sensor
+features
+	powerin : in feature;
+end sensor;
+
+system integration
+
+end integration;
+
+system implementation integration.impl
+subcomponents
+	batt : abstract battery;
+	sens : abstract sensor;
+connections
+	c0 : feature batt.powerout -> sens.powerin;
+end integration.impl;
+
+end physical_abstract_feature;
