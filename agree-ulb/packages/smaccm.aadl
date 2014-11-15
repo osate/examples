@@ -1,0 +1,9 @@
+property set SMACCM is
+-- Writes_to_buffers: list of aadlstring applies to (thread, thread group, process, system);
+  OS: aadlstring applies to (process);
+  Language: aadlstring applies to (thread, process);
+  Encryption_Algorthim: aadlstring applies to (system, process, thread, device);
+  Always_Sends_Message: aadlboolean applies to (system, process, thread, device);
+  WC_Execution_Time: Time applies to (thread);
+  WC_Wait_Time: Time applies to (thread);
+end SMACCM;

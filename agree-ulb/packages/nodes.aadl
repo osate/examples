@@ -1,0 +1,62 @@
+package nodes
+public
+
+annex agree {**
+	node tWithin_10(cond : bool) returns (ret : bool);
+    var
+     step0 : bool;
+     step1 : bool;
+     step2 : bool;
+     step3 : bool;
+     step4 : bool;
+     step5 : bool;
+     step6 : bool;
+     step7 : bool;
+     step8 : bool;
+     step9 : bool;
+     step10: bool;
+	let
+	  step0 = cond -> cond or pre(step1);
+	  step1 = cond -> cond or pre(step2);
+	  step2 = cond -> cond or pre(step3);
+	  step3 = cond -> cond or pre(step4);
+	  step4 = cond -> cond or pre(step5);
+	  step5 = cond -> cond or pre(step6);
+	  step6 = cond -> cond or pre(step7);
+	  step7 = cond -> cond or pre(step8);
+	  step8 = cond -> cond or pre(step9);
+	  step9 = cond -> cond or pre(step10);
+	  step10 = cond -> false;
+	  ret = step0;
+	tel;
+	
+	
+	node tAgo_10(cond : bool) returns (ret : bool);
+    var
+     step0 : bool;
+     step1 : bool;
+     step2 : bool;
+     step3 : bool;
+     step4 : bool;
+     step5 : bool;
+     step6 : bool;
+     step7 : bool;
+     step8 : bool;
+     step9 : bool;
+     step10: bool;
+	let
+	  step0 = false -> pre(step1);
+	  step1 = false -> pre(step2);
+	  step2 = false -> pre(step3);
+	  step3 = false -> pre(step4);
+	  step4 = false -> pre(step5);
+	  step5 = false -> pre(step6);
+	  step6 = false -> pre(step7);
+	  step7 = false -> pre(step8);
+	  step8 = false -> pre(step9);
+	  step9 = false -> pre(step10);
+	  step10 = cond -> cond;
+	  ret = step0;
+	tel;
+**};
+end nodes;

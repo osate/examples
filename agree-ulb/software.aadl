@@ -1,0 +1,410 @@
+package ULB_Software
+public
+with ULB_aircraft;
+with SMACCM;
+with Base_Types;
+
+with ULB_Device_Types, ULB_Hardware, ULB_Threads;
+renames ULB_Device_Types::all;
+renames ULB_Hardware::all;
+renames ULB_Threads::all;
+
+process authenticated_communications
+  features
+    stanag_offboard: in out event data port Authenticated_STANAG_4586_message;
+    stanag_onboard_in: in event data port STANAG_4586_message.i;
+    stanag_onboard_out: out event data port STANAG_4586_message.i;
+    
+  annex agree {**
+  	    
+  	eq auth_in : ULB_Device_Types::STANAG_4586_message.cucs_auth_req = stanag_onboard_out.m_data.cucs_auth_req;
+  	
+  	initially:
+  	   not event(stanag_onboard_out);
+  	   
+  	guarantee "valid auth data" :
+  	   0 < auth_in.rloi and auth_in.rloi <= 5 and
+  	   0 <= auth_in.csm and auth_in.csm <= 2 and
+  	   0 < auth_in.cucsid and auth_in.cucsid < 255 and
+  	   --right now we model just two control stations 
+  	   0 <= auth_in.cs and auth_in.cs <= 1;
+  	
+  **};
+end authenticated_communications;
+
+process implementation authenticated_communications.baseline
+  subcomponents
+    authentication_thread: thread authentication_stanag;
+  connections
+    onboard_stanag_connection_in: port stanag_onboard_in -> authentication_thread.stanag_onboard_in;
+    onboard_stanag_connection_out: port authentication_thread.stanag_onboard_out -> stanag_onboard_out;
+    offboard_stanag_connection: port stanag_offboard <-> authentication_thread.stanag_offboard;
+  properties
+    -- really Ivory
+    Source_Language => (C);
+    SMACCM::OS => "SeL4";
+end authenticated_communications.baseline;
+
+process vsm_software
+  features
+    radio_commands: out event data port miniTCDL_command;
+    stanag_in: in event data port STANAG_4586_message.i;
+    stanag_out: out event data port STANAG_4586_message.i;
+    egi_port: in data port Position_data;
+    fcc_port_in: in event data port ULB_message;
+    fcc_port_out: out event data port ULB_message;
+end vsm_software;
+
+
+process implementation vsm_software.baseline
+  subcomponents
+    fcc_thread: thread vsm_fcc;
+    radio_thread: thread vsm_radio;
+    stanag_thread: thread vsm_stanag;
+
+  connections
+    radio_connection: port radio_thread.radio_commands -> radio_commands;
+    stanag_in_connection: port stanag_in -> stanag_thread.stanag_in;
+    stanag_out_connection: port stanag_thread.stanag_out -> stanag_out;
+    
+    position_connection: port egi_port -> fcc_thread.egi_port;
+    fcc_connection_in: port fcc_port_in -> fcc_thread.fcc_port_in;
+    fcc_connection_out: port fcc_thread.fcc_port_out -> fcc_port_out;
+    
+    internal_connection_1: port fcc_thread.stanag_fcc_port_out -> stanag_thread.stanag_fcc_port_in;
+    internal_connection_2: port stanag_thread.stanag_fcc_port_out -> fcc_thread.stanag_fcc_port_in;
+    
+  properties
+    -- really CPP
+    Source_Language => (C);
+    SMACCM::OS => "SeL4";
+
+end vsm_software.baseline;
+
+process camera_vsm_software
+  features
+    stanag_in: in event data port STANAG_4586_message.i;
+    stanag_out: out event data port STANAG_4586_message.i;
+    camera_commands: out event data port camera_command.i;
+  annex agree {**
+  	
+  	initially: 
+  	  not event(camera_commands) and
+  	  camera_commands.tstamp = 0 and
+      camera_commands.vid = 0 and
+      camera_commands.cucsid = 0 and
+      camera_commands.station_num = 0 and
+      camera_commands.azimuth = 0.0 and
+      camera_commands.elevation = 0.0 and
+      camera_commands.hfov = 0.0 and
+      camera_commands.vfov = 0.0 and
+      camera_commands.hsr = 0.0 and
+      camera_commands.vsr = 0.0 and
+      camera_commands.lati = 0.0 and
+      camera_commands.long = 0.0 and
+      camera_commands.alti = 0 and
+  	  not event_in_past;
+
+  	guarantee "initial state" :  
+  	  (camera_commands.tstamp = 0 and
+      camera_commands.vid = 0 and
+      camera_commands.cucsid = 0 and
+      camera_commands.station_num = 0 and
+      camera_commands.azimuth = 0.0 and
+      camera_commands.elevation = 0.0 and
+      camera_commands.hfov = 0.0 and
+      camera_commands.vfov = 0.0 and
+      camera_commands.hsr = 0.0 and
+      camera_commands.vsr = 0.0 and
+      camera_commands.lati = 0.0 and
+      camera_commands.long = 0.0 and
+      camera_commands.alti = 0) -> true;
+  	  	
+  	eq received_stanag_past : bool = event(stanag_in) -> pre(received_stanag_past) or event(stanag_in);
+  	--if we never received a stanag message, then the camera state never changes
+  	guarantee "no stanag means no camera" : true ->
+  	  not received_stanag_past => (camera_commands = pre(camera_commands));
+  	
+  	eq event_in_past : bool = event(stanag_in) -> pre(event_in_past) or event(stanag_in);
+  	
+  	guarantee "If the camera moves, it is because it received a message": true ->
+ 	  camera_commands != pre(camera_commands) => event_in_past;
+  	
+  **};
+end camera_vsm_software;
+
+
+process implementation camera_vsm_software.baseline
+  subcomponents
+    camera_thread: thread vsm_camera;
+    stanag_thread: thread camera_vsm_stanag;
+  connections
+    stanag_connection_in: port stanag_in -> stanag_thread.stanag_in;
+    stanag_connection_out: port stanag_thread.stanag_out -> stanag_out;
+    stanag_to_camera: port stanag_thread.camera_state_out -> camera_thread.camera_commands_in;
+    camera_connection: port camera_thread.camera_commands_out -> camera_commands;
+  properties
+    -- really CPP
+    Source_Language => (C);
+    SMACCM::OS => "SeL4";
+    
+  annex agree {**
+  	synchrony: 1 no_simult;
+  **};
+
+end camera_vsm_software.baseline;
+
+process datalogger
+  features
+    login: in event data port;
+    logout: out event data port;
+end datalogger;
+
+
+process implementation datalogger.baseline
+  subcomponents
+    log_thread: thread vsm_logger;
+  connections
+    log_in_connection: port login -> log_thread.login;
+    log_out_connection: port  log_thread.logout -> logout;
+  properties
+    -- really CPP
+    Source_Language => (C);
+    SMACCM::OS => "Linux";
+end datalogger.baseline;
+
+process fcc_software
+  features
+    egi_port: in data port Position_data;
+    secondaryGPS_port: in data port Position_data;
+    altimeter_port: in data port Altimeter_data;
+    adc_port: in data port Air_data;
+    pilotinput: in event data port pilot_command;
+    vid_port: out event data port;
+    diu_port: out event data port;
+    vsm_port_in: in event data port ULB_message;
+    vsm_port_out: out event data port ULB_message;
+    logout: out event data port;
+  Properties
+    SMACCM::OS => "SeL4";
+end fcc_software;
+
+
+process loi_manager
+  features
+    outside_stanag_in : in event data port STANAG_4586_message.i;
+    outside_stanag_out : out event data port STANAG_4586_message.i;
+    wescam_vsm_stanag_in : in event data port STANAG_4586_message.i;
+    wescam_vsm_stanag_out : out event data port STANAG_4586_message.i;
+    vsm_stanag_in : in event data port STANAG_4586_message.i;
+    vsm_stanag_out : out event data port STANAG_4586_message.i;    
+        
+  annex agree {**
+  	
+  	eq loi : int;
+  	eq auth_in : ULB_Device_Types::STANAG_4586_message.cucs_auth_req 
+  	  = outside_stanag_in.m_data.cucs_auth_req; 
+  	eq id_in_control : int; 
+  	eq override_control : bool;
+  	eq none_in_control : bool; 
+  	eq control_station : int;
+  	--in the actual implementation this should be ascertained
+  	--by checking to see if the CUCS is in the auth_map with
+  	--a specified loi
+  	eq is_auth_loi : bool;
+  	
+  	eq mid : int = outside_stanag_in.m_id;
+  	
+  	eq loi2 : bool = loi = 2;
+  	eq loi3 : bool = loi = 3;
+  	eq loi45 : bool = loi = 4 or loi = 5;
+  	  	
+  	eq loi_approved_for_message : bool = (
+  	  if(mid = 1) then --note that this is an auth request, so we don't route it
+  	    false
+  	  else if(mid = 20 or mid = 21) then
+  	    loi2 or loi3 or loi45
+  	  else if(40 <= mid and mid <= 46) then
+  	    loi45
+  	  else if(mid = 47) then
+  	    loi3 or loi45
+  	  else if(mid = 100) then
+  	    loi45
+  	  else if(mid = 101) then
+  	    loi2 or loi3 or loi45
+  	  else if(102 <= mid and mid <= 108) then
+  	    loi45
+  	  else if(200 <= mid and mid <= 206) then
+  	    loi3
+  	  else if(mid = 207) then
+  	    loi3 or loi45
+  	  else if(300 <= mid and mid <= 306) then
+  	    loi2 or loi3
+  	  else if(mid = 307 or mid = 308) then
+  	    loi3
+  	  else if(400 <= mid and mid <= 404) then
+  	    loi2 or loi3 or loi45
+  	  else if(500 <= mid and mid <= 503) then
+  	    loi2 or loi3 or loi45
+  	  else if(mid = 600) then
+  	    loi3 or loi45
+  	  else if(mid = 700) then
+  	    loi3 or loi45
+  	  else if(mid = 800) then
+  	    loi45
+  	  else if(801 <= mid and mid <= 803) then
+  	    loi3 or loi45
+  	  else if(mid = 804) then
+  	    loi3
+  	  else if(mid = 805 or mid = 806) then 
+  	    loi3 or loi45
+  	  else if(mid = 900) then
+  	    loi3 or loi45
+  	  else if(mid = 1000 or mid = 1001) then
+  	    loi3 or loi45
+  	  else if(mid = 1100 or mid = 1101) then
+  	    loi3 or loi45
+  	  else if(1200 <= mid and mid <= 1203) then 
+  	    loi2 or loi3 or loi45
+  	  else if(1300 <= mid and mid <= 1303) then
+  	    loi2 or loi3 or loi45
+  	  else if(1400 <= mid and mid <= 1402) then
+  	    loi2 or loi3 or loi45
+  	  else if(mid = 1403) then
+  	    loi3 or loi45
+  	  else if(mid = 1500 or mid = 1501) then
+  	    loi45
+  	  else if(mid = 1600) then
+  	    loi45
+  	  else 
+  	    false);
+  	  
+  	  
+  	eq initial_state : bool =   
+  	  loi = 0 and
+  	  override_control = false and
+  	  none_in_control = true and
+  	  control_station = 0;  
+  	
+  	initially:
+      not event(wescam_vsm_stanag_out) and
+  	  not event(vsm_stanag_out);
+  	
+  	initially:
+  	  initial_state;
+
+  	guarantee "No message recieved behavior": 
+  	  --keep this up to date as new message types are implemented
+  	  (not event(outside_stanag_in) or outside_stanag_in.m_id != 1) => (
+  	  	initial_state ->  
+  	  	loi = pre(loi) and
+  	  	override_control = pre(override_control) and
+  	  	id_in_control = pre(id_in_control) and
+  	  	none_in_control = pre(none_in_control) and 
+  	  	control_station = pre(control_station)
+  	  );
+  	  
+  	
+  	guarantee "CUCS Authorisation Requestion Behavior" :
+  	  event(outside_stanag_in) and outside_stanag_in.m_id = 1 => (
+  	    --auth request is message #1
+  	    if(auth_in.csm = 0 and id_in_control = auth_in.cucsid) then --relenquish control
+  	      override_control = false and
+  	      none_in_control = true and
+  	      loi = 0
+  	    else if ((auth_in.csm = 1 or auth_in.csm = 2) and prev(loi = 3,true) and auth_in.rloi > 3) then --request control w/ greater loi
+  	      override_control = (auth_in.csm = 2) and
+  	      id_in_control = auth_in.cucsid and
+  	      none_in_control = false and
+  	      control_station = auth_in.cs and
+  	      loi = auth_in.rloi
+  	    else if(auth_in.csm = 1 and not prev(override_control,false)) then --request control
+  	      override_control = false and
+  	      id_in_control = auth_in.cucsid and
+  	      none_in_control = false and
+  	      control_station = auth_in.cs and
+  	      loi = auth_in.rloi
+  	    else if(auth_in.csm = 2 and not prev(override_control,false)) then --override control
+  	      override_control = true and
+          id_in_control = auth_in.cucsid and
+          none_in_control = false and
+          control_station = auth_in.cs and
+          loi = auth_in.rloi
+  	    else
+  	      initial_state ->
+  	      override_control = pre(override_control) and
+  	      id_in_control = pre(id_in_control) and
+  	      none_in_control = pre(none_in_control) and
+  	      loi = pre(loi) and
+  	  	  control_station = pre(control_station)
+  	    );
+  	    
+  	guarantee "message routing" :
+  	   if(event(outside_stanag_in) and loi_approved_for_message) then 
+  	     if(control_station = 1 and loi = 3) then
+  	       wescam_vsm_stanag_out = outside_stanag_in and
+  	       event(wescam_vsm_stanag_out) and
+  	       not event(vsm_stanag_out)
+  	     else
+  	       vsm_stanag_out = outside_stanag_in and
+  	       not event(wescam_vsm_stanag_out) and
+  	       event(vsm_stanag_out)
+  	   else
+  	      not event(wescam_vsm_stanag_out) and
+  	      not event(vsm_stanag_out);
+  	    
+  	   
+  	 assume "valid auth data" :
+  	   event(outside_stanag_in) =>
+  	     (0 < auth_in.rloi and auth_in.rloi <= 5 and
+  	     0 <= auth_in.csm and auth_in.csm <= 2 and 
+  	     0 < auth_in.cucsid and auth_in.cucsid < 255 and
+  	     --right now we model just two control stations 
+  	     0 <= auth_in.cs and auth_in.cs <= 1); 
+
+  **};
+    
+end loi_manager;
+
+process implementation loi_manager.baseline
+end loi_manager.baseline;
+
+process implementation fcc_software.baseline
+  subcomponents
+    main: thread fcc_thread;
+  connections
+    pos1: port egi_port -> main.pos1_in;
+    pos2: port secondaryGPS_port -> main.pos2_in; 
+    alt: port altimeter_port -> main.altimeter_in;
+    adc: port adc_port -> main.adc_in;
+    vid: port main.vid_out -> vid_port;
+    diu: port main.diu_out -> diu_port;
+    vsm_in: port vsm_port_in -> main.vsm_port_in;
+    vsm_out: port main.vsm_port_out -> vsm_port_out;
+    log: port main.log_out -> logout;
+    pilot: port pilotinput -> main.pilotinput;
+
+  properties
+    Source_Language => (C);
+    SMACCM::OS => "SeL4";
+
+  annex resolute {** 
+    	--prove no_external_commands(this.SN, this) modes: Defensive 
+    	-- This property should fail:
+    	-- prove no_external_commands(this.SN, this) modes: Normal
+    	
+    	--prove schedulable(this) modes: Normal
+    	--prove schedulable(this) modes: Defensive 
+    	 
+    	--prove no_radio_commands(this.SN) modes: Defensive
+    	
+    	--prove receives_mavlink(this.SN) modes: Defensive
+    	--prove receives_mavlink(this.SN) modes: Normal
+    	      
+    	prove only_receive_gs(this.main)
+    **};
+
+
+end fcc_software.baseline;
+
+end ULB_Software;

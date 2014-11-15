@@ -1,0 +1,58 @@
+package uas
+public
+
+with ULB_aircraft, ULB_Device_Types;
+renames ULB_aircraft::all;
+renames ULB_Device_Types::all;
+
+
+system UAS
+  end UAS;
+  
+  system implementation UAS.ulb
+    subcomponents 
+    
+    downlink: bus TCDL.RF;
+
+      UAV: system ulb.impl;
+      GS: system COMC2.Impl;
+      
+      connections
+    
+
+      tcdl_downlink: bus access UAV.datalink <-> downlink;
+      tcdl_uplink: bus access GS.radio_access <-> downlink;
+      
+      gs_commands_in: port UAV.comlink_out -> GS.comlink_in;
+      gs_commands_out: port GS.comlink_out ->  UAV.comlink_in;
+
+  end UAS.ulb;
+
+  system Ground_Station
+    features
+      radio_access: requires bus access ;
+      comlink_in: in data port ;
+      comlink_out: out data port ;
+  end Ground_Station;
+  
+    system COMC2 extends Ground_Station
+    features
+      radio_access: refined to  requires bus access TCDL;
+      comlink_in: refined to in data port Authenticated_STANAG_4586_message;
+      comlink_out: refined to out data port Authenticated_STANAG_4586_message;
+  end COMC2;
+  
+  
+  
+  system implementation COMC2.Impl
+  end COMC2.Impl;
+
+
+ bus implementation TCDL.RF
+ end TCDL.RF;
+  
+
+
+
+
+end uas;
