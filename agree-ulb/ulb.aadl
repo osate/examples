@@ -1,0 +1,206 @@
+package ULB_aircraft
+public
+
+with ULB_Device_Types, ULB_Hardware, ULB_Software;
+renames ULB_Device_Types::all;
+renames ULB_Hardware::all;
+renames ULB_Software::all;
+
+
+
+system aircraft
+
+features
+datalink: requires bus access ;
+comlink_in: in event data port ;
+comlink_out: out event data port ;
+end aircraft;
+
+
+
+system ulb extends aircraft
+
+features
+datalink: refined to requires bus access TCDL;
+comlink_in: refined to in event data port Authenticated_STANAG_4586_message;
+comlink_out: refined to out event data port Authenticated_STANAG_4586_message;
+
+annex agree {**
+		
+	--points to the decrypted stanag messages
+	eq auth_in : ULB_Device_Types::STANAG_4586_message.cucs_auth_req;
+	eq stanag_in : ULB_Device_Types::STANAG_4586_message.i;
+
+  	eq loi : int;
+  	eq override_control : bool;
+  	eq cucs_id : int;
+  	eq camera_commands : ULB_Device_Types::camera_command.i;
+  	eq stanag_received : bool; 
+
+  	guarantee "allowed to override" : true ->
+  	  stanag_received and  
+  	  stanag_in.m_id = 1 and 
+  	  not pre(override_control) and 
+  	  auth_in.csm = 2 
+  	    => cucs_id = auth_in.cucsid;
+  	
+  	eq message_with_loi_gt_3 : bool = 
+      stanag_received and stanag_in.m_id = 1 and (auth_in.csm = 1 or auth_in.csm = 2) and auth_in.rloi > 3;
+      
+  	guarantee "loi greater than three always gets control" :
+  	  message_with_loi_gt_3 and (false -> pre(loi = 3)) =>
+  	    loi = auth_in.rloi and cucs_id = auth_in.cucsid;
+
+    eq loi_was_3 : bool = loi = 3 -> loi = 3 or pre(loi_was_3);
+
+    guarantee "if the camera moved, then loi was three": true ->
+      camera_commands != pre(camera_commands) => loi_was_3;
+
+**};
+
+end ulb;
+
+system implementation ulb.impl
+  subcomponents
+    -- sensors
+    altimeter: device Altimeter.radar;
+    adc: device Air_Data_Computer.Harco;
+    egi: device M1553_Position_Sensor.LN251_egi;
+    secondaryGPS: device Position_Sensor_DualBus.Novatel_gps;
+    camera: device WesCam.MX15;
+ 
+    -- displays
+    vid: device A429_Display.enginedisplay;
+    diu: device Control_Display.Display_Interface_Unit;
+    avalex: device Camera_Display.Avalex;
+
+    -- communication
+    --  tcdl_radio: device TCDL_Radio;
+    tcdl_radio: device TCDL_Radio.miniTCDL;
+
+    -- storage
+    thumb: device flashdrive.external;
+
+    -- busses
+    fcc232: bus  RS232.fcc; 
+    vehiclebus: bus  MIL1553.vehiclebus;
+    sensorbus: bus ARINC429.fccsensors;
+    onboardvideo: bus RS170.Video;
+    offboardvideo: bus RS170.Video;
+    ipnet: bus ethernet.frontend;
+    vmebus: bus VME.vme64;
+    storage: bus usb.datarecorder;
+
+    -- camera bus sequence
+    converter: bus ethernet2serial.esr904;
+    camerabus: bus RS422.wescam;
+ 
+    -- processors
+    fcc: processor PPC.DY4_2828;
+    vms: processor Pentium_Core_i7.AiTech_C162;
+
+    -- software
+    fcc_sw: process fcc_software.baseline;
+    vsm_sw: process vsm_software.baseline;
+
+    auth_sw: process authenticated_communications;
+    wescam_vsm_sw: process camera_vsm_software.baseline;
+    vsm_logger: process datalogger.baseline;
+    
+    --note that the loi manager should be listed last to prove
+    --assumptions in AGREE. The order in which subcomponents
+    --are listed dictates the partial order for proving assumptions
+    loi_sw: process loi_manager;
+
+  connections
+    -- bus connections
+    altimeter_connection: bus access altimeter.busout <-> sensorbus;
+    adc_connection: bus access adc.busout <-> sensorbus;
+    vid_connection: bus access vid.busin <-> sensorbus;
+    fcc_connection: bus access fcc.sensordata <-> sensorbus;
+    fcc_1553: bus access fcc.vehicle <-> vehiclebus;
+    egi_1553: bus access egi.busout <-> vehiclebus;
+    fcc_vme: bus access fcc.vme <-> vmebus;
+    vms_vme: bus access vms.vme <-> vmebus;
+    vms_usb: bus access vms.logging <-> storage;
+    usb_thumb: bus access storage <-> thumb.busin;
+    diu_fcc232: bus access diu.busin <-> fcc232;
+    secondaryGPS_fc232: bus access secondaryGPS.busout <-> fcc232;
+    fcc_fcc232: bus access fcc.display<-> fcc232;
+    vms_ethernet: bus access vms.c2 <-> ipnet;
+    converter_ethernet: bus access converter.ethernetside <-> ipnet;
+    tcdl_ethernet: bus access tcdl_radio.onboard <-> ipnet;
+    converter_camera: bus access converter.serialside <-> camerabus;
+    camera_bus: bus access camera.busin <-> camerabus;
+    secondaryGPS_camera: bus access secondaryGPS.busout2 <-> camerabus;
+    camera_vid1: bus access camera.videobus <-> offboardvideo;
+    tcdl_vid: bus access tcdl_radio.streamin <-> offboardvideo;
+    camera_vid2: bus access camera.video2bus <-> onboardvideo;
+    avalex_camera: bus access avalex.busin <-> onboardvideo;
+
+  --port connections
+    vsm_radio: port vsm_sw.radio_commands -> tcdl_radio.commands;
+    auth_stanag: port auth_sw.stanag_offboard <-> tcdl_radio.stanag;
+    
+    stanag_to_loi_in : port auth_sw.stanag_onboard_out -> loi_sw.outside_stanag_in;
+    stanag_to_loi_out : port loi_sw.outside_stanag_out -> auth_sw.stanag_onboard_in;
+    
+    auth_vehicle_in: port loi_sw.vsm_stanag_out -> vsm_sw.stanag_in;
+    auth_vehicle_out: port vsm_sw.stanag_out -> loi_sw.vsm_stanag_in;
+    
+    auth_camera_in: port loi_sw.wescam_vsm_stanag_out -> wescam_vsm_sw.stanag_in;
+    auth_camera_out: port wescam_vsm_sw.stanag_out -> loi_sw.wescam_vsm_stanag_in;
+    
+    vsm_egi: port egi.position -> vsm_sw.egi_port;
+    vsm_fcc_out: port vsm_sw.fcc_port_out -> fcc_sw.vsm_port_in;
+    vsm_fcc_in: port fcc_sw.vsm_port_out -> vsm_sw.fcc_port_in;
+    vsm_login: port fcc_sw.logout <-> vsm_logger.login;
+    vsm_logout: port vsm_logger.logout <-> thumb.inport;
+    vsm_camera: port wescam_vsm_sw.camera_commands -> camera.cmd; 
+    fcc_egi: port egi.position -> fcc_sw.egi_port;
+    fcc_secondaryGPS: port secondaryGPS.position -> fcc_sw.secondaryGPS_port;
+    fcc_altimeter: port altimeter.altitude -> fcc_sw.altimeter_port;
+    fcc_adc: port adc.airdata -> fcc_sw.adc_port;
+    fcc_vid: port fcc_sw.vid_port -> vid.displaydata;
+    fcc_diu: port fcc_sw.diu_port -> diu.displaydata;
+    fcc_pilot: port diu.pilotinput -> fcc_sw.pilotinput;
+    camera_video1: port camera.video -> tcdl_radio.video;
+    camera_video2: port camera.video2 ->avalex.displaydata;
+    camera_position: port secondaryGPS.position2 -> camera.position;
+    command_link_in: port comlink_in -> tcdl_radio.rf_in;
+    command_link_out: port tcdl_radio.rf_out -> comlink_out; 
+    
+  annex agree {**
+
+  	synchrony: 5 no_simult;
+
+	eq loi_clk : bool;
+    eq cam_clk : bool;
+  	assert loi_clk = loi_sw._CLK;
+  	assert cam_clk = wescam_vsm_sw._CLK;
+
+    --grabbing variables out of subcomponents
+  	assert loi_sw.id_in_control = cucs_id;
+  	assert loi_sw.override_control = override_control;
+  	assert loi_sw.loi = loi;
+  	assert loi_sw.outside_stanag_in = stanag_in;
+  	assert loi_sw.outside_stanag_in.m_data.cucs_auth_req = auth_in;
+  	assert wescam_vsm_sw.camera_commands = camera_commands;
+  	assert stanag_received = (event(loi_sw.outside_stanag_in) and loi_clk);   
+    --need to make a constraint that the loi manager always processes each stanag message received
+    --wescam vsm sees all messages sent to it
+    assert (true -> (pre(event(wescam_vsm_sw.stanag_in)) and not pre(cam_clk))
+      => (wescam_vsm_sw.stanag_in = pre(wescam_vsm_sw.stanag_in) and 
+         event(wescam_vsm_sw.stanag_in) = true));
+        
+    lemma "if the wescam gets a message, then the loi is 3" :
+      event(wescam_vsm_sw.stanag_in) => loi = 3;
+    
+    lemma "if the loi was never 3, then an event was never sent to the wescam" :
+      not loi_was_3 => not wescam_vsm_sw.event_in_past; 
+     
+  **};
+    
+end ulb.impl;
+
+end ULB_aircraft;

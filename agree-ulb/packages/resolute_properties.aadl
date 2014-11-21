@@ -1,0 +1,129 @@
+package Execute_Soundness
+  public 
+    with SMACCM;
+    with UAS;
+    
+    annex resolute {**
+only_receive_gs(x : component) <=
+  ** x " only receives messages from the Ground Station" **
+  only_gs_encrypt() and only_receive_decrypt(x)
+
+only_gs_encrypt() <=
+  ** "Only the Ground Station can send messages that pass Decrypt" ** 
+  authenticated_encryption(encrypt_algorithm) and private_key()
+
+-- The encryption algorithm used by the Ground Station and Decrypt is e.
+encrypt_algorithm : string =
+  property_lookup(ULB_SOFTWARE::vsm_radio, SMACCM::Encryption_Algorthim) 
+
+authenticated_encryption(e : string) <=
+  ** "The encryption algorithm " e " is strong and authenticated. "
+     "Messages cannot be forged or manipulated" **
+  e = "AES-128-GCM" or e = "AES-128-CTR-HMAC-SHA1"
+
+private_key() <=
+  ** "The encryption key is private to the UAV and Ground Station" **
+  key_randomly_generated() and gs_private_key() and transmit_private_key() and uav_private_key()
+
+key_randomly_generated() <=
+  ** "The encryption key is randomly generated and cannot be guessed" **
+  true
+
+gs_private_key() <=
+  ** "The Ground Station does not leak the encryption key" **
+  true
+
+transmit_private_key() <=
+  ** "The encryption key is securely transmitted to the UAV and Ground Station" **
+  true
+ 
+uav_private_key() <=
+  ** "The UAV does not leak the encryption key" **
+  true
+
+-- The component x only receives messages that pass Decrypt.
+only_receive_decrypt(x : component) <=
+  ** "The component " x " only receives messages that pass Decrypt" **
+  forall (y : component) (c : connection).  
+    ((connected(y, c, x) and command_channel(c)) => 
+      unalterable_channel(c) and (class_of(y, ULB_SOFTWARE::vsm_radio) or only_receive_decrypt(y)))       
+       
+-- The connection c potentially carries commands
+-- Non command datatypes must be explicitly whitelisted here
+command_channel(c : connection) : bool =
+  (not has_type(c)) or
+ ((type(c) <> ULB_Device_Types::Sensor_data) and
+  (type(c) <> ULB_Device_Types::Altimeter_data) and
+  (type(c) <> ULB_Device_Types::Position_data) and
+  (type(c) <> ULB_Device_Types::Engine_data) and
+  (type(c) <> ULB_Device_Types::Display_data) and
+  (type(c) <> ULB_Device_Types::Video_stream) and
+  (type(c) <> ULB_Device_Types::pilot_command) and
+  (type(c) <> ULB_Device_Types::Air_Data))
+  
+  
+  
+ivory_thread(t : thread) <=
+  ** "The thread " t " is generated from Ivory" **
+  property_lookup(t, SMACCM::Language) = "Ivory"
+  
+  
+memory_safe_thread(t : thread) <=
+  ** "The thread " t " only writes to its own memory space" **
+  ivory_thread(t)
+
+memory_safe_process(p : process) <=
+  ** "The process " p " only writes to its own memory space" **
+  forall (t : thread). contained(t, p) => memory_safe_thread(t)
+  
+  
+  
+  
+  memory_protected(p : process) <=
+  ** "The memory of process " p " is protected from alterations by other processes" **
+  property_lookup(p, SMACCM::OS) = "SeL4" or
+  (property_lookup(p, SMACCM::OS) = "Breakaway-RTOS" and
+   forall (mem : memory). bound(p, mem) =>
+     forall (q : process). bound(q, mem) => memory_safe_process(q))
+     
+     
+
+-- The connection c delivers data without alteration.
+-- "contained" means write permissions
+unalterable_channel(c : connection) <=
+  ** "The connection " c " delivers data without alteration" **
+  (exists (p1 : process) (p2 : process). 
+        conn_source(c) = p1 
+    and conn_dest(c) = p2
+    and p1 <> p2
+    and memory_protected(p1)
+    and memory_protected(p2)  
+    )
+  or
+  (exists (p : process).
+  	contained(conn_source(c), p) and
+  	contained(conn_dest(c), p) and
+  	memory_protected(p))
+  	  	or
+  	(exists (d1 : device) (p3 : process). 
+        conn_source(c) = d1
+    and conn_dest(c) = p3
+    and memory_protected(p3)    )
+    
+  	or
+  	(exists (d2 : device) (p4 : process). 
+        conn_source(c) = p4 
+    and conn_dest(c) = d2
+    and memory_protected(p4)    )
+    	or
+  	(exists (d3 : device) (d4 : device). 
+        conn_source(c) = d3 
+    and conn_dest(c) = d4
+       )
+    
+
+
+  
+**};
+    
+end Execute_Soundness;

@@ -1,0 +1,244 @@
+package ULB_Device_Types
+public
+
+with SMACCM;
+with Base_Types;
+
+  
+  -- generic sensor datatypes
+  
+  data Sensor_data
+  end Sensor_data;
+  
+  
+  data Altimeter_data extends Sensor_data
+  end Altimeter_data;
+  
+  data Air_data extends Sensor_data
+  end Air_data;
+  
+  data Engine_data extends Sensor_data
+  end Engine_data;
+  
+  data Position_data extends Sensor_data
+  end Position_data;
+  
+  data Video_stream extends Sensor_data
+  end Video_stream;
+  
+  data Display_data
+  end Display_data;
+  
+  -- generic command datatypes
+  
+  data STANAG_4586_message
+  end STANAG_4586_message;
+  
+  data implementation STANAG_4586_message.i
+    subcomponents
+      m_id : data Base_Types::Integer;
+      m_data : data STANAG_4586_message_data.i;
+  end STANAG_4586_message.i;
+  
+  data STANAG_4586_message_data
+  end STANAG_4586_message_data;
+  
+  data implementation STANAG_4586_message_data.i
+    subcomponents
+      cucs_auth_req : data STANAG_4586_message.cucs_auth_req;
+      payload_steer : data STANAG_4586_message.payload_steer;
+  end STANAG_4586_message_data.i;
+  
+  data implementation STANAG_4586_message.cucs_auth_req
+    subcomponents
+      tstamp : data Base_Types::Integer;
+      vid : data Base_Types::Integer;
+      cucsid : data Base_Types::Integer;
+      vtype : data Base_Types::Integer;
+      vsubtype : data Base_Types::Integer;
+      dlid : data Base_Types::Integer;
+      rloi : data Base_Types::Integer;
+      cs : data Base_Types::Integer;
+      csm : data Base_Types::Integer;
+      wait : data Base_Types::Integer;
+  end STANAG_4586_message.cucs_auth_req;
+  
+  
+  data implementation STANAG_4586_message.payload_steer
+    subcomponents
+      tstamp : data Base_Types::Integer;
+      vid : data Base_Types::Integer;
+      cucsid : data Base_Types::Integer;
+      station_num : data Base_Types::Integer;
+      azimuth : data Base_Types::Float;
+      elevation : data Base_Types::Float;
+      hfov : data Base_Types::Float;
+      vfov : data Base_Types::Float;
+      hsr : data Base_Types::Float;
+      vsr : data Base_Types::Float;
+      lati : data Base_Types::Float;
+      long : data Base_Types::Float;
+      alti : data Base_Types::Integer;
+  end STANAG_4586_message.payload_steer;
+  
+  data Authenticated_STANAG_4586_message
+  end Authenticated_STANAG_4586_message;
+  
+  data miniTCDL_command
+  end miniTCDL_command;
+  
+  data ULB_message
+  end ULB_message;
+  
+  data camera_command
+  end camera_command;
+  
+  data implementation camera_command.i
+    subcomponents
+      tstamp : data Base_Types::Integer;
+      vid : data Base_Types::Integer;
+      cucsid : data Base_Types::Integer;
+      station_num : data Base_Types::Integer;
+      azimuth : data Base_Types::Float;
+      elevation : data Base_Types::Float;
+      hfov : data Base_Types::Float;
+      vfov : data Base_Types::Float;
+      hsr : data Base_Types::Float;
+      vsr : data Base_Types::Float;
+      lati : data Base_Types::Float;
+      long : data Base_Types::Float;
+      alti : data Base_Types::Integer;
+  end camera_command.i;
+  
+  data pilot_command
+  end pilot_command;
+  
+  -- generic bus types
+  
+  bus RS232
+  end RS232;
+  
+  bus ARINC429
+  end ARINC429;
+  
+  bus VME
+  end VME;
+  
+  bus MIL1553
+  end MIL1553;
+  
+  bus RS170
+  end RS170;
+  
+  bus RS422
+  end RS422;
+  
+  bus ethernet
+  end ethernet;
+  
+  bus usb
+  end usb;
+  
+  bus TCDL
+  end TCDL;
+  
+  
+  
+  -- sensor device types
+
+device Altimeter
+features
+busout: requires bus access ARINC429;
+altitude: out  data port Altimeter_data;
+end Altimeter;
+
+device Air_Data_Computer
+features
+busout: requires bus access ARINC429;
+airdata: out  data port Air_data;
+end Air_Data_Computer;
+
+device Position_Sensor
+features
+busout: requires bus access ;
+position: out  data port Position_data;
+end Position_Sensor;
+
+device Camera
+features
+busin: requires bus access RS422;
+videobus: requires bus access RS170;
+video: out event data port Video_stream;
+cmd: in event data port camera_command;
+end Camera;
+
+
+
+
+-- display device  types
+
+device Display
+features
+busin: requires bus access ;
+displaydata: in event data port ;
+end Display;
+
+device A429_Display extends Display
+features
+busin: refined to requires bus access ARINC429;
+end A429_Display;
+
+
+device Video_Display extends Display
+features
+displaydata: refined to in event data port Video_stream;
+end Video_Display;
+
+
+device Camera_Display extends Video_Display
+features
+busin: refined to requires bus access RS170;
+end Camera_Display;
+
+-- comm device types
+
+device TCDL_Radio
+features
+downlink: requires bus access TCDL;
+onboard: requires bus access ethernet;
+streamin: requires bus access RS170;
+
+commands: in event data port miniTCDL_command;
+video: in event data port Video_stream;
+rf_in: in event data port Authenticated_STANAG_4586_message;
+rf_out: out event data port Authenticated_STANAG_4586_message;
+stanag: in out event data port Authenticated_STANAG_4586_message;
+
+
+
+Properties
+    SMACCM::Always_Sends_Message => true; 
+ 
+           
+
+end TCDL_Radio;
+
+
+
+
+
+-- storage device
+
+device flashdrive
+features
+busin: requires bus access usb;
+inport: in event data port;
+end flashdrive;
+
+
+  
+  
+  
+
+  
+end ULB_Device_Types;
