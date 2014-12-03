@@ -28,7 +28,7 @@ properties
 --   Initialize_Entrypoint =>
 --classifier (onepart::printer_spg);
    Priority => 42;
-   Stack_Size => 100 Kbyte;
+--   Stack_Size => 100 Kbyte;
    Period => 20 ms;
    Compute_Execution_Time => 10 ms .. 12 ms;
    Deadline => 40 ms;
