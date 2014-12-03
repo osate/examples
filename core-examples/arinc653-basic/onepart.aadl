@@ -1,0 +1,111 @@
+package onepart
+
+public
+
+with ARINC653;
+
+
+virtual processor partition1_rt
+properties
+      Scheduling_Protocol => (RMS);
+end partition1_rt;
+
+virtual processor implementation partition1_rt.impl
+end partition1_rt.impl;
+
+
+subprogram printer_spg
+properties
+   source_name => "printer";
+   source_language => (C);
+   source_text => ("bla.c");
+end printer_spg;
+
+-- Threads for the first partition
+
+thread printer_thread
+properties
+--   Initialize_Entrypoint =>
+--classifier (onepart::printer_spg);
+   Priority => 42;
+   Stack_Size => 100 Kbyte;
+   Period => 20 ms;
+   Compute_Execution_Time => 10 ms .. 12 ms;
+   Deadline => 40 ms;
+end printer_thread;
+
+thread implementation   printer_thread.impl
+calls 
+   call1 : { pspg : subprogram printer_spg;};
+
+end                     printer_thread.impl;
+
+
+
+process partition1_process
+end partition1_process;
+
+process implementation partition1_process.impl
+subcomponents
+   printer : thread printer_thread.impl;
+end partition1_process.impl;
+
+
+
+-- Main runtime
+
+processor arincos
+end arincos;
+
+processor implementation arincos.impl
+subcomponents
+   part1:   virtual processor partition1_rt.impl;
+properties
+   ARINC653::Module_Major_Frame => 50ms;
+
+	ARINC653::Module_Schedule => 
+	    ( [Partition => reference (part1);
+	      Duration  => 10 ms;
+	      Periodic_Processing_Start => false;]
+	    );
+end arincos.impl;
+
+
+-- Memory
+memory partition1_memory
+properties
+   Base_Address => 0;
+   ARINC653::Memory_Type => (Code_Memory);
+end partition1_memory;
+
+
+memory main_memory
+end main_memory;
+
+memory implementation main_memory.impl
+subcomponents
+   part1mem: memory partition1_memory;
+end main_memory.impl;
+
+system arincsystem
+end arincsystem;
+
+system implementation arincsystem.impl
+subcomponents
+   mem            : memory main_memory.impl;
+   cpu            : processor arincos.impl;
+   partition1_pr  : process partition1_process.impl;
+properties
+   --  bind partition process to their associated       
+   --  runtime (virtual processor)
+   Actual_Processor_Binding =>
+(reference (cpu.part1)) applies to partition1_pr;
+
+   --  bind partition process to their address spaces       
+   --  (memory components)
+   Actual_Memory_Binding =>
+(reference (mem.part1mem)) applies to partition1_pr;
+end arincsystem.impl;
+
+
+end onepart;
