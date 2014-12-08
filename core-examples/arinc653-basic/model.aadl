@@ -7,20 +7,20 @@ with ARINC653;
 
 
 virtual processor partition
-end partition;
+end partition; 
 
 virtual processor implementation partition.impl
 end partition.impl;
 
-processor ppc
-end ppc;
+processor module
+end module;
 
-processor implementation ppc.impl
+processor implementation module.impl
 subcomponents
    part1 : virtual processor partition.impl;
 properties
    ARINC653::Module_Major_Frame => 1000ms;
-end ppc.impl;
+end module.impl;
 
 process myprocess
 end myprocess;
@@ -30,14 +30,11 @@ subcomponents
    thr1 : thread mythread.impl1;
 end myprocess.impl1;
 
-process implementation myprocess.impl2
-subcomponents
-   thr2 : thread mythread.impl2;
-end myprocess.impl2;
+
 
 thread mythread
 properties
-   Source_Stack_Size => 30 Kbyte;
+   Stack_Size => 30 Kbyte;
 end mythread;
 
 thread implementation mythread.impl1
@@ -50,27 +47,27 @@ properties
    period            => 1000ms;
    deadline          => 500ms;
    compute_execution_time => 0ms .. 1ms;
-   Source_Code_Size  => 4 Kbyte;
-   Source_Stack_Size => 4 Kbyte;
-   Source_Data_Size  => 4 Kbyte;
+   Code_Size  => 4 Kbyte;
+   Stack_Size => 4 Kbyte;
+   Data_Size  => 4 Kbyte;
 end mythread.impl1;
 
 subprogram thread_starting
 properties
    source_name => "user_thread_starting";
-   source_language => C;
+   source_language => (C);
    Source_Text => ("../../../threadstart.o");
-   Source_Code_Size  => 2 Kbyte;
-   Source_Data_Size  => 2 Kbyte;
+   Code_Size  => 2 Kbyte;
+   Data_Size  => 2 Kbyte;
 end thread_starting;
 
 subprogram hello_part1
 properties
    source_name => "user_hello_part1";
-   source_language => C;
+   source_language => (C);
    Source_Text => ("../../../hello1.o");
-   Source_Code_Size  => 2 Kbyte;
-   Source_Data_Size  => 2 Kbyte;
+   Code_Size  => 2 Kbyte;
+   Data_Size  => 2 Kbyte;
 end hello_part1;
 
 
@@ -78,7 +75,6 @@ memory partitionmemory
 properties
    Byte_Count => 80000;
    ARINC653::Memory_Type => (code_memory);
-   ARINC653::Access_Type => read;
 end partitionmemory;
 
 memory mainmemory
@@ -87,11 +83,7 @@ end mainmemory;
 memory implementation mainmemory.impl
 subcomponents
    part1: memory partitionmemory 
-               {ARINC653::Memory_Type => (code_memory);
-                ARINC653::Access_Type => read;};
-   part2: memory partitionmemory
-               {ARINC653::Memory_Type => (data_memory);
-               ARINC653::Access_Type => write;};
+               {ARINC653::Memory_Type => (code_memory);};
 end mainmemory.impl;
 
 
@@ -101,11 +93,9 @@ end node;
 
 system implementation node.impl
 subcomponents
-   cpu   : processor ppc.impl;
+   cpu   : processor module.impl;
    part1 : process myprocess.impl1;
-   part2 : process myprocess.impl2;
    mem : memory mainmemory.impl;
-   rtbus : bus separation_bus.i;
 properties
    Actual_Processor_Binding => (reference (cpu.part1)) applies to part1;
    actual_memory_binding =>
