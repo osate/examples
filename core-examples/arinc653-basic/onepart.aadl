@@ -2,110 +2,110 @@ package onepart
 
 public
 
+
+with Data_Model;
 with ARINC653;
 
+virtual bus security_layer
+end security_layer;
 
-virtual processor partition1_rt
+
+virtual processor partition
+end partition;
+
+virtual processor implementation partition.impl
+end partition.impl;
+
+processor module
+end module;
+
+processor implementation module.impl
+subcomponents
+   part1 : virtual processor partition.impl;
 properties
-      Scheduling_Protocol => (RMS);
-end partition1_rt;
+   ARINC653::Module_Major_Frame => 1000ms;
+--   ARINC653::Partition_Slots => (500ms, 500ms);
+--   ARINC653::Slots_Allocation => (reference (part1), reference (part2));
+end module.impl;
 
-virtual processor implementation partition1_rt.impl
-end partition1_rt.impl;
+process myprocess
+end myprocess;
+
+process implementation myprocess.impl1
+subcomponents
+   thr1 : thread mythread.impl1;
+end myprocess.impl1;
 
 
-subprogram printer_spg
+thread mythread
 properties
-   source_name => "printer";
-   source_language => (C);
-   source_text => ("bla.c");
-end printer_spg;
+   Stack_Size => 30 KByte;
+end mythread;
 
--- Threads for the first partition
-
-thread printer_thread
-properties
---   Initialize_Entrypoint =>
---classifier (onepart::printer_spg);
-   Priority => 42;
---   Stack_Size => 100 Kbyte;
-   Period => 20 ms;
-   Compute_Execution_Time => 10 ms .. 12 ms;
-   Deadline => 40 ms;
-end printer_thread;
-
-thread implementation   printer_thread.impl
+thread implementation mythread.impl1
 calls 
-   call1 : { pspg : subprogram printer_spg;};
-
-end                     printer_thread.impl;
-
-
-
-process partition1_process
-end partition1_process;
-
-process implementation partition1_process.impl
-subcomponents
-   printer : thread printer_thread.impl;
-end partition1_process.impl;
-
-
-
--- Main runtime
-
-processor arincos
-end arincos;
-
-processor implementation arincos.impl
-subcomponents
-   part1:   virtual processor partition1_rt.impl;
+   call1 : { pspg : subprogram hello_part1;};
 properties
-   ARINC653::Module_Major_Frame => 50ms;
+   Priority => 1;
+   Initialize_Entrypoint => classifier (onepart::thread_starting);
+   dispatch_protocol => periodic;
+   period            => 1000ms;
+   deadline          => 500ms;
+   compute_execution_time => 0ms .. 1ms;
+   Code_Size  => 4 Kbyte;
+   Stack_Size => 4 Kbyte;
+   Data_Size  => 4 Kbyte;
+end mythread.impl1;
 
-	ARINC653::Module_Schedule => 
-	    ( [Partition => reference (part1);
-	      Duration  => 10 ms;
-	      Periodic_Processing_Start => false;]
-	    );
-end arincos.impl;
-
-
--- Memory
-memory partition1_memory
+subprogram thread_starting
 properties
-   Base_Address => 0;
-   ARINC653::Memory_Type => (Code_Memory);
-end partition1_memory;
+   source_name => "user_thread_starting";
+   source_language => (C);
+   Source_Text => ("../../../threadstart.o");
+   Code_Size  => 2 Kbyte;
+   Data_Size  => 2 Kbyte;
+end thread_starting;
 
-
-memory main_memory
-end main_memory;
-
-memory implementation main_memory.impl
-subcomponents
-   part1mem: memory partition1_memory;
-end main_memory.impl;
-
-system arincsystem
-end arincsystem;
-
-system implementation arincsystem.impl
-subcomponents
-   mem            : memory main_memory.impl;
-   cpu            : processor arincos.impl;
-   partition1_pr  : process partition1_process.impl;
+subprogram hello_part1
 properties
-   --  bind partition process to their associated       
-   --  runtime (virtual processor)
-   Actual_Processor_Binding =>
-(reference (cpu.part1)) applies to partition1_pr;
+   source_name => "user_hello_part1";
+   source_language => (C);
+   Source_Text => ("../../../hello1.o");
+   Code_Size  => 2 Kbyte;
+   Data_Size  => 2 Kbyte;
+end hello_part1;
 
-   --  bind partition process to their address spaces       
-   --  (memory components)
-   Actual_Memory_Binding =>
-(reference (mem.part1mem)) applies to partition1_pr;
-end arincsystem.impl;
+
+memory partitionmemory
+properties
+   Byte_Count => 80000;
+   ARINC653::Memory_Type => (code_memory);
+end partitionmemory;
+
+memory mainmemory
+end mainmemory;
+
+memory implementation mainmemory.impl
+subcomponents
+   part1: memory partitionmemory 
+               {ARINC653::Memory_Type => (code_memory);};
+end mainmemory.impl;
+
+
+
+system node
+end node;
+
+system implementation node.impl
+subcomponents
+   cpu   : processor module.impl;
+   part1 : process myprocess.impl1;
+   mem : memory mainmemory.impl;
+properties
+   Actual_Processor_Binding => (reference (cpu.part1)) applies to part1;
+   actual_memory_binding =>
+      (reference (mem.part1)) applies to part1;
+end node.impl;
 
 
 end onepart;
