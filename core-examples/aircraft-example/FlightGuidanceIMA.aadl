@@ -11,6 +11,8 @@ with AircraftSubsystems, HardwarePlatform, AppSystems;
     subcomponents
       Platform: system HardwarePlatform::ComputingPlatform.ThreeProcessorParts;
       ApplicationSystem: system AppSystems::EmbeddedApp.SubSystemParts;
+      connections
+      	power: bus access  Platform.powerdemand -> ElectricalSupply ;
   end FlightGuidance.parts;
   
   --        the same system of parts with subsystems allocated to processors
