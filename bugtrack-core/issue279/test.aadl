@@ -1,0 +1,72 @@
+package issue279
+public
+-- inherit Occurrence Distribution
+with ErrorLibrary, EMV2;
+
+thread t
+properties
+Period => 1 ms;
+end t;
+
+process p
+
+end p;
+
+device sensor
+		annex EMV2{**
+use behavior ErrorLibrary::FailStop;
+
+**};
+end sensor;
+
+system control
+		annex EMV2{**
+use behavior ErrorLibrary::FailStop;
+
+**};
+end control;
+
+device actuator
+	annex EMV2{**
+use behavior ErrorLibrary::FailStop;
+
+**};
+end actuator;
+
+process implementation p.i
+subcomponents
+t1 : thread t;
+t2 : thread t {Period => 2 ms;};
+end p.i;
+
+system complete
+end complete;
+
+system implementation complete.dual
+subcomponents
+p1 : process p.i;
+sensors: device sensor;
+control1: system control;
+control2: system control;
+actuator: device actuator;
+
+annex EMV2{**
+use behavior ErrorLibrary::FailStop;
+
+composite error behavior
+states
+[sensors.FailStop or actuator.FailStop]->FailStop;
+[control1.FailStop and control2.FailStop]->FailStop;
+end composite;
+
+properties
+EMV2::OccurrenceDistribution => [ ProbabilityValue => 3.0e-4 ; Distribution => Fixed;]applies to sensors.FailStop;
+EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.0003 ; Distribution => Fixed;] applies to control1.FailStop;
+EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.0003 ; Distribution => Fixed;] applies to control2.FailStop;
+EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.0003 ; Distribution => Fixed;] applies to actuator.FailStop;
+
+**};
+
+end complete.dual;
+
+end issue279;

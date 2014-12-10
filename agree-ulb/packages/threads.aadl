@@ -1,0 +1,169 @@
+package ULB_Threads
+public
+with ULB_aircraft;
+with SMACCM;
+with Base_Types;
+
+with ULB_Device_Types, ULB_Hardware;
+renames ULB_Device_Types::all;
+renames ULB_Hardware::all;
+
+thread authentication_stanag
+  features
+    stanag_offboard: in out event data port Authenticated_STANAG_4586_message;
+    stanag_onboard_in: in event data port STANAG_4586_message;
+    stanag_onboard_out: out event data port STANAG_4586_message;
+end authentication_stanag;
+
+
+thread vsm_fcc
+  features
+    egi_port: in data port Position_data;
+    fcc_port_in: in event data port ULB_message;
+    fcc_port_out: out event data port ULB_message;
+    stanag_fcc_port_in: in event data port ULB_message;
+    stanag_fcc_port_out: out event data port ULB_message;
+end vsm_fcc;
+
+thread vsm_camera
+  features
+    camera_commands_in: in event data port camera_command.i;
+    camera_commands_out: out event data port camera_command.i;
+    
+  annex agree {**
+  	
+  	--initial state of camera
+  	initially:
+  	  camera_commands_out.tstamp = 0 and
+      camera_commands_out.vid = 0 and
+      camera_commands_out.cucsid = 0 and
+      camera_commands_out.station_num = 0 and
+      camera_commands_out.azimuth = 0.0 and
+      camera_commands_out.elevation = 0.0 and
+      camera_commands_out.hfov = 0.0 and
+      camera_commands_out.vfov = 0.0 and
+      camera_commands_out.hsr = 0.0 and
+      camera_commands_out.vsr = 0.0 and
+      camera_commands_out.lati = 0.0 and
+      camera_commands_out.long = 0.0 and
+      camera_commands_out.alti = 0 and
+      event(camera_commands_out);
+         
+    guarantee "the state of the camera when its clock first ticks":
+      camera_commands_out.tstamp = 0 and
+      camera_commands_out.vid = 0 and
+      camera_commands_out.cucsid = 0 and
+      camera_commands_out.station_num = 0 and
+      camera_commands_out.azimuth = 0.0 and
+      camera_commands_out.elevation = 0.0 and
+      camera_commands_out.hfov = 0.0 and
+      camera_commands_out.vfov = 0.0 and
+      camera_commands_out.hsr = 0.0 and
+      camera_commands_out.vsr = 0.0 and
+      camera_commands_out.lati = 0.0 and
+      camera_commands_out.long = 0.0 and
+      camera_commands_out.alti = 0 and
+      event(camera_commands_out) -> true;
+  	
+    guarantee "camera state pass-through" : true ->
+      if(event(camera_commands_in)) then
+        camera_commands_out = camera_commands_in and
+        event(camera_commands_out)
+      else
+        camera_commands_out = pre(camera_commands_out) and
+        not event(camera_commands_out);
+  **};
+  
+end vsm_camera;
+
+thread vsm_radio
+features
+radio_commands: out event data port miniTCDL_command;
+
+Properties
+  	  SMACCM::Encryption_Algorthim => "AES-128-GCM";
+  	  
+  	  
+end vsm_radio;
+
+thread vsm_stanag
+  features
+    stanag_in: in event data port STANAG_4586_message.i;
+    stanag_out: out event data port STANAG_4586_message.i;
+    stanag_fcc_port_in: in event data port ULB_message;
+    stanag_fcc_port_out: out event data port ULB_message;
+
+end vsm_stanag;
+
+thread camera_vsm_stanag
+  features
+    stanag_in: in event data port STANAG_4586_message.i;
+    stanag_out: out event data port STANAG_4586_message.i;
+    --camera_state_in: in event data port camera_command.i;
+    camera_state_out: out event data port camera_command.i;
+    
+  annex agree {**
+  	eq stanag_cam_state : ULB_Device_Types::STANAG_4586_message.payload_steer = 
+  	  stanag_in.m_data.payload_steer;
+  	  
+  	guarantee "always output camera state": true ->
+  	  if(event(stanag_in) and stanag_in.m_id = 200) then
+  	     camera_state_out.tstamp = stanag_cam_state.tstamp and
+         camera_state_out.vid = stanag_cam_state.vid and
+         camera_state_out.cucsid = stanag_cam_state.cucsid and
+         camera_state_out.station_num = stanag_cam_state.station_num and
+         camera_state_out.azimuth = stanag_cam_state.azimuth and
+         camera_state_out.elevation = stanag_cam_state.elevation and
+         camera_state_out.hfov = stanag_cam_state.hfov and
+         camera_state_out.vfov = stanag_cam_state.vfov and
+         camera_state_out.hsr = stanag_cam_state.hsr and
+         camera_state_out.vsr = stanag_cam_state.vsr and 
+         camera_state_out.lati = stanag_cam_state.lati and
+         camera_state_out.long = stanag_cam_state.long and
+         camera_state_out.alti = stanag_cam_state.alti and
+         event(camera_state_out)
+  	  else
+  	    camera_state_out = pre(camera_state_out) and
+  	    not event(camera_state_out);
+  	    
+  	 guarantee "initial camera state":
+  	     (camera_state_out.tstamp = 0 and
+         camera_state_out.vid = 0 and
+         camera_state_out.cucsid = 0 and
+         camera_state_out.station_num = 0 and
+         camera_state_out.azimuth = 0.0 and
+         camera_state_out.elevation = 0.0 and
+         camera_state_out.hfov = 0.0 and
+         camera_state_out.vfov = 0.0 and
+         camera_state_out.hsr = 0.0 and
+         camera_state_out.vsr = 0.0 and
+         camera_state_out.lati = 0.0 and
+         camera_state_out.long = 0.0 and
+         camera_state_out.alti = 0 and
+         not event(camera_state_out)) -> true;
+  **};
+    
+end camera_vsm_stanag;
+
+thread vsm_logger
+  features
+    login: in out event data port ;
+    logout: in out event data port ;
+end vsm_logger;
+
+thread fcc_thread
+  features
+    pos1_in: in data port Position_data;
+    pos2_in: in data port Position_data;
+    altimeter_in: in data port Altimeter_data;
+    adc_in: in data port Air_data;
+    vid_out: out event data port;
+    diu_out: out event data port;
+    vsm_port_in: in event data port ULB_message;
+    vsm_port_out: out event data port ULB_message;
+    log_out: out event data port;
+    pilotinput: in event data port pilot_command;
+end fcc_thread;
+
+
+end ULB_Threads;

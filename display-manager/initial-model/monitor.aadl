@@ -31,9 +31,9 @@ subprogram engine_sensor_simulate
 features 
 	status : out parameter dm::legacy::types::engine_status;
 properties 
-    source_name => "simulate";
+    source_name => "simulate_engine";
     source_language => (C);
-    source_text => ("../../../functional-code/engine.h","../../../functional-code/engine.c");
+    source_text => ("../functional-code/engine.h","../functional-code/engine.c");
 end engine_sensor_simulate;
 
 
@@ -64,9 +64,9 @@ features
 	engine2 : in parameter dm::legacy::types::engine_status;
 	status  : out parameter dm::legacy::types::engines_status.i;
 properties 
-    source_name => "voter";
+    source_name => "engines_status_voter";
     source_language => (C);
-    source_text => ("../../../functional-code/engine.h","../../../functional-code/engine.c");
+    source_text => ("../functional-code/engine.h","../functional-code/engine.c");
 end engines_status_voter;
 
 -- 
@@ -84,9 +84,9 @@ subprogram pitot_simulate
 features 
 	pitot_value : out parameter dm::legacy::types::pitot_val;
 properties 
-    source_name => "simulate";
+    source_name => "pitot_simulate";
     source_language => (C);
-    source_text => ("../../../functional-code/pitot.h","../../../functional-code/pitot.c");
+    source_text => ("../functional-code/pitot.h","../functional-code/pitot.c");
 end pitot_simulate;
 
 thread implementation pitot_sensor.i
@@ -127,9 +127,9 @@ features
  	pitot2_sensed : in parameter dm::legacy::types::pitot_val;
 	status : out parameter  dm::legacy::types::pitot_status.i;
 properties 
-    source_name => "voter";
+    source_name => "pitot_status_compute";
     source_language => (C);
-    source_text => ("../../../functional-code/pitot.h","../../../functional-code/pitot.c");
+    source_text => ("../functional-code/pitot.h","../functional-code/pitot.c");
 end pitot_status_compute;
 
 
@@ -154,9 +154,9 @@ subprogram fuel_gauge_simulate
 features
 	level : out parameter  dm::legacy::types::fuel_level;
 properties 
-    source_name => "simulate";
+    source_name => "fuel_gauge_simulate";
     source_language => (C);
-    source_text => ("../../../functional-code/fuel_gauge.h","../../../functional-code/fuel_gauge.c");
+    source_text => ("../functional-code/fuel_gauge.h","../functional-code/fuel_gauge.c");
 end fuel_gauge_simulate;
 
 
@@ -187,15 +187,15 @@ features
  	level2 : in parameter dm::legacy::types::fuel_level;
 	status : out parameter dm::legacy::types::fuel_status.i;
 properties 
-    source_name => "voter";
+    source_name => "fuel_status_calculate";
     source_language => (C);
-    source_text => ("../../../functional-code/fuel_gauge.h","../../../functional-code/fuel_gauge.c");
+    source_text => ("../functional-code/fuel_gauge.h","../functional-code/fuel_gauge.c");
 end fuel_status_calculate;
 
 process monitor
 features
 	engines_status : out data port dm::legacy::types::engines_status.i;
-	pitot_status   : out data port dm::legacy::types::pitot_status;
+	pitot_status   : out data port dm::legacy::types::pitot_status.i;
 	fuel_status    : out data port dm::legacy::types::fuel_status.i;
 end monitor;
 

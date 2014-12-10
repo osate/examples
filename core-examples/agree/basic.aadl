@@ -1,0 +1,51 @@
+package agree_basic
+
+public
+
+with base_types;
+
+system sender
+features
+	dataout : out data port base_types::integer;
+annex agree {**
+
+    guarantee "data sent is between 0 and 100": dataout < 100 and dataout > 0;
+**};
+end sender;
+
+system implementation sender.i
+annex agree {**
+	eq k : int = 1 -> if (pre(k) > 90) then 10 else pre(k) + 1;
+	assert (dataout = k);
+**};
+end sender.i;
+
+system receiver
+features
+	datain : in data port base_types::integer;
+annex agree {**
+	assume "data produced between 0 and 100": (datain < 100) and (datain > 0);
+**};
+end receiver;
+
+
+system implementation receiver.i
+end receiver.i;	
+
+system integration
+annex agree {**
+	guarantee "dummy" : true;
+**};
+end integration; 
+
+system implementation integration.i
+subcomponents 
+	-- The ordering matters, add the rcv before the snd component
+	-- This is a constraint of AGREE.
+	rcv : system receiver.i;
+	snd : system sender.i;
+connections
+	c0 : port snd.dataout -> rcv.datain {Communication_Properties::timing => immediate;};
+end integration.i;
+	
+end agree_basic;

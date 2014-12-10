@@ -13,7 +13,7 @@ with data_model;
 thread filter
 features
 	engines_status 	: in data port dm::legacy::types::engines_status.i;
-	pitot_status   	: in data port dm::legacy::types::pitot_status;
+	pitot_status   	: in data port dm::legacy::types::pitot_status.i;
 	fuel_status    	: in data port dm::legacy::types::fuel_status.i;
 	aircraft_speed 	: in data port dm::legacy::types::speed;
 	wind_speed 		: in data port dm::legacy::types::speed;
@@ -53,7 +53,7 @@ features
 	filter_severity	: requires data access dm::legacy::types::severity;
 	
 	engines_status 	: in parameter dm::legacy::types::engines_status.i;
-	pitot_status   	: in parameter dm::legacy::types::pitot_status;
+	pitot_status   	: in parameter dm::legacy::types::pitot_status.i;
 	fuel_status    	: in parameter dm::legacy::types::fuel_status.i;
 	aircraft_speed 	: in parameter dm::legacy::types::speed;
 	wind_speed 		: in parameter dm::legacy::types::speed;
@@ -62,7 +62,7 @@ features
 properties 
     source_name => "filter_values";
     source_language => (C);
-    source_text => ("../../../functional-code/filter.h","../../../functional-code/filter.c");
+    source_text => ("../functional-code/filter.h","../functional-code/filter.c");
 end spg_filter;
 
 
@@ -75,7 +75,7 @@ end spg_filter;
 process manager
 features
 	engines_status 	: in data port dm::legacy::types::engines_status.i;
-	pitot_status   	: in data port dm::legacy::types::pitot_status;
+	pitot_status   	: in data port dm::legacy::types::pitot_status.i;
 	fuel_status    	: in data port dm::legacy::types::fuel_status.i;
 	aircraft_speed 	: in data port dm::legacy::types::speed;
 	wind_speed 		: in data port dm::legacy::types::speed;

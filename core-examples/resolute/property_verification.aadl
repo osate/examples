@@ -1,0 +1,38 @@
+package resolute_property_evaluation
+
+public
+	
+with resoluteps;
+
+thread t
+properties
+	resoluteps::foobar => 10;
+end t;
+
+thread implementation t.i
+end t.i;
+
+	
+process p
+end p;
+
+process implementation p.i
+subcomponents
+--	t1 : thread t.i {resoluteps::foobar => 20;};
+	t1 : thread t.i;
+	t2 : thread t.i {resoluteps::foobar => 20;};
+end p.i;
+	
+system integration
+end integration;
+
+system implementation integration.i
+subcomponents
+	p : process p.i;
+annex resolute {** 
+	prove have_good_foobar(this.p)
+**};
+end integration.i;
+
+
+end resolute_property_evaluation;

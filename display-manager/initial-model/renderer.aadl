@@ -9,7 +9,7 @@ features
 properties 
     source_name => "display";
     source_language => (C);
-    source_text => ("../../../functional-code/renderer.h","../../../functional-code/renderer.c");
+    source_text => ("../functional-code/renderer.h","../functional-code/renderer.c");
 end display_page;
 
 

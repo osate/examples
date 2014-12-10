@@ -1,0 +1,39 @@
+package resolute_check_fanin
+public
+with base_types;
+
+system sender
+features
+	dataout : out data port base_types::integer;
+end sender;
+
+system implementation sender.i
+end sender.i;
+
+system receiver
+features
+	datain : in data port base_types::integer;
+end receiver;
+
+
+system implementation receiver.i
+end receiver.i;	
+
+system integration
+end integration; 
+
+system implementation integration.i
+subcomponents 
+	rcv : system receiver.i;
+	snd1 : system sender.i;
+	snd2 : system sender.i;
+connections
+	c0 : port snd1.dataout -> rcv.datain {Communication_Properties::timing => immediate;};
+	c1 : port snd2.dataout -> rcv.datain {Communication_Properties::timing => immediate;};
+
+annex resolute {**
+	prove no_double_fanin()
+**};
+end integration.i; 
+	
+end resolute_check_fanin;

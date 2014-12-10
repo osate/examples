@@ -1,0 +1,59 @@
+package physical_bus
+
+public
+with base_types;
+
+
+bus power 
+end power;
+
+abstract battery
+features
+	powerout : requires bus access power;
+end battery;
+
+abstract battery2
+features
+	powerout : provides bus access power;
+end battery2;
+
+abstract sensor
+features
+	powerin : requires bus access power;
+end sensor;
+
+system integration
+
+end integration;
+
+--
+-- First example uses the bus component
+-- to represent the power wire.
+--
+
+system implementation integration.impl
+subcomponents 
+	batt : abstract battery;
+	sens : abstract sensor;
+	powe : bus power;
+connections
+	b0 : bus access batt.powerout -> powe;
+	b1 : bus access batt.powerout -> powe;
+end integration.impl;
+
+--
+-- Second example uses only the bus access.
+-- Then, depending on the bus access type
+-- (provides or requires) one can know the
+-- connection direction.
+--
+
+system implementation integration.impl2
+subcomponents 
+	batt : abstract battery2;
+	sens : abstract sensor;
+connections
+	b0 : bus access batt.powerout -> sens.powerin;
+end integration.impl2;
+
+end physical_bus;

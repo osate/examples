@@ -1,0 +1,111 @@
+package onepart
+
+public
+
+
+with Data_Model;
+with ARINC653;
+
+virtual bus security_layer
+end security_layer;
+
+
+virtual processor partition
+end partition;
+
+virtual processor implementation partition.impl
+end partition.impl;
+
+processor module
+end module;
+
+processor implementation module.impl
+subcomponents
+   part1 : virtual processor partition.impl;
+properties
+   ARINC653::Module_Major_Frame => 1000ms;
+--   ARINC653::Partition_Slots => (500ms, 500ms);
+--   ARINC653::Slots_Allocation => (reference (part1), reference (part2));
+end module.impl;
+
+process myprocess
+end myprocess;
+
+process implementation myprocess.impl1
+subcomponents
+   thr1 : thread mythread.impl1;
+end myprocess.impl1;
+
+
+thread mythread
+properties
+   Stack_Size => 30 KByte;
+end mythread;
+
+thread implementation mythread.impl1
+calls 
+   call1 : { pspg : subprogram hello_part1;};
+properties
+   Priority => 1;
+   Initialize_Entrypoint => classifier (onepart::thread_starting);
+   dispatch_protocol => periodic;
+   period            => 1000ms;
+   deadline          => 500ms;
+   compute_execution_time => 0ms .. 1ms;
+   Code_Size  => 4 Kbyte;
+   Stack_Size => 4 Kbyte;
+   Data_Size  => 4 Kbyte;
+end mythread.impl1;
+
+subprogram thread_starting
+properties
+   source_name => "user_thread_starting";
+   source_language => (C);
+   Source_Text => ("../../../threadstart.o");
+   Code_Size  => 2 Kbyte;
+   Data_Size  => 2 Kbyte;
+end thread_starting;
+
+subprogram hello_part1
+properties
+   source_name => "user_hello_part1";
+   source_language => (C);
+   Source_Text => ("../../../hello1.o");
+   Code_Size  => 2 Kbyte;
+   Data_Size  => 2 Kbyte;
+end hello_part1;
+
+
+memory partitionmemory
+properties
+   Byte_Count => 80000;
+   ARINC653::Memory_Type => (code_memory);
+end partitionmemory;
+
+memory mainmemory
+end mainmemory;
+
+memory implementation mainmemory.impl
+subcomponents
+   part1: memory partitionmemory 
+               {ARINC653::Memory_Type => (code_memory);};
+end mainmemory.impl;
+
+
+
+system node
+end node;
+
+system implementation node.impl
+subcomponents
+   cpu   : processor module.impl;
+   part1 : process myprocess.impl1;
+   mem : memory mainmemory.impl;
+properties
+   Actual_Processor_Binding => (reference (cpu.part1)) applies to part1;
+   actual_memory_binding =>
+      (reference (mem.part1)) applies to part1;
+end node.impl;
+
+
+end onepart;

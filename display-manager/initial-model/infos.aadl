@@ -32,7 +32,7 @@ features
 properties 
     source_name => "gps_simulate";
     source_language => (C);
-    source_text => ("../../../functional-code/gps.h","../../../functional-code/gps.c");
+    source_text => ("../functional-code/gps.h","../functional-code/gps.c");
 end gps_simulate;
 
 
@@ -65,7 +65,7 @@ features
 properties 
     source_name => "gps_to_speed";
     source_language => (C);
-    source_text => ("../../../functional-code/gps.h","../../../functional-code/gps.c");
+    source_text => ("../functional-code/gps.h","../functional-code/gps.c");
 end speed_calculate;
 
 --
@@ -96,9 +96,9 @@ subprogram altitude_simulate
 features
 	alt : out parameter dm::legacy::types::altitude_sensed;
 properties 
-    source_name => "simulate";
+    source_name => "altitude_simulate";
     source_language => (C);
-    source_text => ("../../../functional-code/sensor_altitude.h","../../../functional-code/sensor_altitude.c");
+    source_text => ("../functional-code/sensor_altitude.h","../functional-code/sensor_altitude.c");
 end altitude_simulate;
 
 thread altitude_processing
@@ -125,9 +125,9 @@ features
 	sensed_value : in parameter dm::legacy::types::altitude_sensed;
 	altitude     : out parameter dm::legacy::types::altitude_meter;
 properties 
-    source_name => "convert_sensed_to_meter";
+    source_name => "convert_altitude_sensed_to_meter";
     source_language => (C);
-    source_text => ("../../../functional-code/sensor_altitude.h","../../../functional-code/sensor_altitude.c");
+    source_text => ("../functional-code/sensor_altitude.h","../functional-code/sensor_altitude.c");
 end altitude_process;
 
 --
@@ -159,9 +159,9 @@ features
 	sensed : in parameter dm::legacy::types::wind_sensed;
 	speed     : out parameter dm::legacy::types::speed;
 properties 
-    source_name => "convert_sensed_to_meter";
+    source_name => "convert_wind_sensed_to_meter";
     source_language => (C);
-    source_text => ("../../../functional-code/wind_sensor.h","../../../functional-code/wind_sensor.c");
+    source_text => ("../functional-code/wind_sensor.h","../functional-code/wind_sensor.c");
 end wind_process;
 
 thread wind_sensor
@@ -185,9 +185,9 @@ subprogram wind_simulate
 features 
 	sensed : out parameter dm::legacy::types::wind_sensed;
 properties 
-    source_name => "simulate";
+    source_name => "wind_simulate";
     source_language => (C);
-    source_text => ("../../../functional-code/wind_sensor.h","../../../functional-code/wind_sensor.c");
+    source_text => ("../functional-code/wind_sensor.h","../functional-code/wind_sensor.c");
 end wind_simulate;
 
 

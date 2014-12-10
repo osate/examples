@@ -1,0 +1,110 @@
+package resolute_examples
+
+public
+	
+annex resolute {**
+	have_good_foobar(p : component) <=
+  		** " Check threads in component " p **
+		forall(t : thread). contained(t, p) => check_thread (t)
+
+	check_thread(t : thread) <=
+  	** "The thread " t " as a foobar bigger than 15"  **
+  		(has_property (t, resoluteps::foobar)) and 
+  		(property (t, resoluteps::foobar) > 15)
+
+	no_double_fanin() <=
+  		** " All incoming feature have only one connection" **
+		forall (c : component) . true => has_single_fanin (c)
+ 
+
+	has_single_fanin (comp : component) <=
+		** " All incoming feature have only one connection on " comp **
+		forall (f : features (comp)) . (direction(f) = "in") => (length (connections (f)) = 1) 
+
+
+	minfoobarvalue(c : component) <=
+  		** " Check the minimum foobar for features on " c  **
+		forall (conn : connections (c)) . has_property (source(conn), resoluteps::foobar) and
+		                                  has_property (destination(conn), resoluteps::foobar) => 
+		(property(source(conn), resoluteps::foobar) < property(destination(conn), resoluteps::foobar))
+
+
+ 
+	check_arinc653_compliance () <=
+		** "Check compliance of the model with ARINC653 annex" **
+		check_arinc653_processes() and
+		check_arinc653_processors() and
+		check_arinc653_virtual_processors ()
+
+
+    --
+    -- Procesor checks
+    --
+    
+	check_arinc653_processors () <=
+		** "Check compliance of the processors" **
+		forall (cpu : processor) . true => check_arinc653_procesor (cpu)
+
+	check_arinc653_procesor (cpu : processor) <=
+		** "Check compliance of processor " cpu **
+		 check_arinc653_procesor_scheduling (cpu) and
+		 check_arinc653_procesor_hm (cpu)
+		 
+	check_arinc653_procesor_hm (cpu : processor) <=
+		** "Check compliance of processor " cpu " for Health-Monitoring properties" **
+		 has_property (cpu, ARINC653::HM_Error_ID_Levels) and
+		 has_property (cpu, ARINC653::HM_Error_ID_Actions)
+
+	check_arinc653_procesor_scheduling (cpu : processor) <=
+		** "Check compliance of processor " cpu " for scheduling properties" **
+		 has_property (cpu, ARINC653::Module_Schedule) and
+		 has_property (cpu, ARINC653::Module_Major_Frame)
+	
+	
+	-- 
+	-- Virtual Processor checks
+    --
+	
+	check_arinc653_virtual_processors () <=
+		** "Virtual Processors are in processors" **
+		forall (vp : virtual_processor) . true => 
+		             (exists (cpu : processor) . parent(vp) = cpu) and
+		             (has_property (vp, ARINC653::Partition_Identifier)) and
+		             (has_property (vp, ARINC653::Partition_Name))
+
+    --
+    -- Process checks
+    --
+	check_arinc653_processes() <=
+	   ** "All processes are bound to a memory segment and a virtual processor" **
+	   forall (p : process) . true =>  check_arinc653_process_memory (p) and 
+	                                   check_interfaces (p) and
+	                                   check_tasks (p) and 
+	                                   check_arinc653_process_virtual_processor (p)
+
+	check_tasks (p : process) <=
+	   ** "Check tasks from process " p **
+	   forall (thr : thread) . (parent (thr) = p) => check_interfaces (thr) 
+
+	check_interfaces (comp : component) <=
+		** "Check that component " comp " declares all necessary properties on its ports" **
+		forall (poevent : features (comp)) . is_event_port (poevent) and (direction(poevent) = "in") => has_property (poevent, ARINC653::Queueing_Discipline)
+		and
+		forall (pononevent : features (comp)) . (is_event_port (pononevent) = false) and (direction(pononevent) = "in") => has_property (pononevent, ARINC653::Sampling_Refresh_Period)
+
+
+	check_arinc653_process_memory (p : process) <=
+		** "Check that process " p " is associated with a memory" **
+		exists (segment : memory) . (is_bound_to (p, segment)) and check_arinc653_memory_segment (segment)
+
+	check_arinc653_memory_segment (segment : memory) <=
+		** "Check that the memory segment " segment " is contained in a memory" **
+		exists (mem : memory) . (parent(segment) = mem)
+
+	check_arinc653_process_virtual_processor (p : process) <=
+		** "Check that process " p " is associated with a virtual processor" **
+		exists (runtime : virtual_processor) . (is_bound_to (p, runtime))		
+			
+**};
+	
+end resolute_examples;

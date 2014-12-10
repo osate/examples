@@ -1,0 +1,54 @@
+package resolute_check_dataflow
+
+public
+	
+with base_types;
+with resoluteps;
+
+system sender
+features 
+	dataout : out data port base_types::integer {resoluteps::foobar => 5;};
+end sender;
+
+system implementation sender.i
+end sender.i;
+
+system filter
+features
+	datain : in data port base_types::integer {resoluteps::foobar => 4;};
+	dataout : out data port base_types::integer {resoluteps::foobar => 5;};
+end filter;
+
+
+system implementation filter.i
+end filter.i;	
+
+system receiver
+features
+	datain : in data port base_types::integer {resoluteps::foobar => 10;};
+end receiver;
+
+
+system implementation receiver.i
+end receiver.i;	
+
+system integration
+end integration; 
+
+system implementation integration.i
+subcomponents 
+	rcv : system receiver.i;
+	snd : system sender.i;
+	mid : system filter.i;
+connections
+	c0 : port snd.dataout -> mid.datain {Communication_Properties::timing => immediate;};
+	c1 : port mid.dataout -> rcv.datain {Communication_Properties::timing => immediate;};
+
+annex resolute {**
+	prove minfoobarvalue(this.snd)
+	prove minfoobarvalue(this.mid)
+ 	prove minfoobarvalue(this.rcv) 
+**};
+end integration.i;
+	
+end resolute_check_dataflow;

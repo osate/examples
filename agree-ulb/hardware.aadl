@@ -1,0 +1,199 @@
+package ULB_Hardware
+public
+ 
+ with ULB_Device_Types;
+ with SMACCM;
+ renames ULB_Device_Types::all;
+ 
+ -- bus implementations
+ 
+ bus implementation RS232.fcc
+ end RS232.fcc;
+ 
+ bus implementation MIL1553.vehiclebus
+ end MIL1553.vehiclebus;
+ 
+ bus implementation ARINC429.fccsensors
+ end ARINC429.fccsensors;
+ 
+ bus implementation RS422.wescam
+ end RS422.wescam;
+ 
+ bus implementation RS170.Video
+ end RS170.Video;
+
+ 
+ bus implementation VME.vme64
+ end VME.vme64;
+ 
+ bus implementation ethernet.frontend
+ end ethernet.frontend;
+ 
+ bus implementation usb.datarecorder
+ end usb.datarecorder;
+ 
+ 
+ 
+
+ 
+ bus ethernet2serial
+ features
+ ethernetside: requires bus access ethernet;
+ serialside: requires bus access RS422;
+ end ethernet2serial;
+ 
+ bus implementation ethernet2serial.esr904
+ end ethernet2serial.esr904;
+ 
+ -- processors
+ 
+ processor PPC
+ features
+ vme: requires bus access VME;
+ sensordata: requires bus access ARINC429;
+ display: requires bus access RS232;
+ vehicle: requires bus access MIL1553;
+ end PPC;
+ 
+ processor implementation PPC.DY4_2828
+ end PPC.DY4_2828;
+ 
+ processor Pentium_Core_i7
+ features
+ vme: requires bus access VME;
+ c2: requires bus access ethernet;
+ logging: requires bus access usb;
+ end Pentium_Core_i7;
+ 
+
+ 
+ virtual processor linux_partition
+ 
+ end linux_partition;
+ 
+  virtual processor implementation linux_partition.log_partition   
+ 
+ end linux_partition.log_partition;
+ 
+ 
+ 
+ virtual processor comms_partition
+ 
+ end comms_partition;
+ 
+  virtual processor implementation comms_partition.authenticatedcomms_partition   
+ 
+ end comms_partition.authenticatedcomms_partition;
+ 
+ 
+ virtual processor seL4_vme_partition
+
+ end seL4_vme_partition;
+ 
+ virtual processor implementation seL4_vme_partition.aircraft_vsm_partition
+ end seL4_vme_partition.aircraft_vsm_partition;
+ 
+ 
+ virtual processor seL4_sensor_partition
+
+ end seL4_sensor_partition;
+ 
+ virtual processor implementation seL4_sensor_partition.aircraft_wescam_partition
+ end seL4_sensor_partition.aircraft_wescam_partition;
+ 
+ 
+  processor implementation Pentium_Core_i7.AiTech_C162
+  
+  
+  subcomponents
+  
+  datalogger_partition: virtual processor linux_partition.log_partition;
+  
+  wescam_partition: virtual processor seL4_sensor_partition.aircraft_wescam_partition;
+  
+  flight_vsm_partition: virtual processor seL4_vme_partition.aircraft_vsm_partition;
+  
+  authenticated_comms_partition: virtual processor comms_partition.authenticatedcomms_partition;
+  
+  
+ 
+ end Pentium_Core_i7.AiTech_C162;
+ 
+ 
+ 
+ 
+ -- sensors
+ 
+ device implementation Altimeter.radar  
+ end Altimeter.radar;
+ 
+ device implementation Air_Data_Computer.Harco
+ end Air_Data_Computer.Harco;
+ 
+ 
+  device M1553_Position_Sensor extends Position_Sensor
+ features 
+busout: refined to requires bus access MIL1553;
+ end M1553_Position_Sensor;
+ 
+ 
+ 
+ device implementation M1553_Position_Sensor.LN251_egi
+ end M1553_Position_Sensor.LN251_egi;
+ 
+ device Position_Sensor_DualBus extends Position_Sensor
+ features 
+busout: refined to requires bus access RS232;
+ busout2: requires bus access RS422;
+ position2: out data port Position_data;
+ end Position_Sensor_DualBus;
+ 
+ device implementation Position_Sensor_DualBus.Novatel_gps
+ end Position_Sensor_DualBus.Novatel_gps;
+ 
+device WesCam Extends Camera
+features
+video2bus: requires bus access RS170;
+video2: out event data port Video_stream;
+position: in data port Position_data;
+end WesCam;
+
+device implementation WesCam.MX15
+end WesCam.MX15;
+
+-- displays
+
+device implementation A429_Display.enginedisplay
+end A429_Display.enginedisplay;
+
+device Control_Display extends Display
+features
+busin: refined to requires bus access RS232;
+pilotinput: out event data port pilot_command;
+end Control_Display;
+
+device implementation Control_Display.Display_Interface_Unit
+end Control_Display.Display_Interface_Unit;
+
+device implementation Camera_Display.Avalex
+end Camera_Display.Avalex;
+
+
+ 
+ -- communication
+ 
+ device implementation TCDL_Radio.miniTCDL
+ 
+
+      
+ end TCDL_Radio.miniTCDL;
+ 
+ 
+
+
+--storage
+
+device implementation flashdrive.external
+end flashdrive.external;
+  
+end ULB_Hardware;

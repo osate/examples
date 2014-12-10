@@ -1,0 +1,182 @@
+package agree_temperature
+
+public
+
+with base_types;
+
+data temperature_type extends base_types::unsigned_8
+end temperature_type;
+
+data command
+end command;
+
+data implementation command.impl
+subcomponents
+	heater_on : data base_types::boolean;
+	cooler_on : data base_types::boolean;
+end command.impl;
+
+
+system temperature_sensor
+features
+	dataout : out data port temperature_type;
+annex agree {**
+    guarantee "data between 0 and 20 (both included)": dataout <= 20 and dataout >= 0;
+**};
+end temperature_sensor;
+
+system implementation temperature_sensor.i1
+annex agree {**
+	eq k : int = 10 -> if (pre(k) >= 20) then pre(k) - 1 else if (pre(k) <= 0) then pre(k) + 1 else pre(k);
+	assert (dataout = k);
+**};
+end temperature_sensor.i1;
+
+system implementation temperature_sensor.i2
+annex agree {**
+	eq k : int = 10 -> if (pre(k) >= 20) then pre(k) - 1 else if (pre(k) <= 0) then pre(k) + 1 else pre(k);
+	assert (dataout = k);
+**};	
+end temperature_sensor.i2;
+
+--
+--  The control panel that shows the temperature
+--  and has two buttons to activate the cooling system.
+--
+
+system control_panel
+features
+	cmd : out data port command.impl;
+end control_panel;
+
+system implementation control_panel.i
+end control_panel.i;
+
+
+--
+--  Regulate the system according
+--  to the user request but keep the temperature
+--  within 0 to 20 degrees.
+--
+
+system temp_control
+features
+	temp1 			: in data port temperature_type;
+	temp2 			: in data port temperature_type;
+	user_request 	: in data port command.impl;
+annex agree {**
+    assume "incoming temperature on sensor1 between 0 and 20 (both included)": temp1 <= 20 and temp1 >= 0;
+    assume "incoming temperature on sensor2 between 0 and 20 (both included)": temp2 <= 20 and temp2 >= 0;
+**}; 
+end temp_control;
+
+system implementation temp_control.i
+subcomponents
+	heater 		: system heater.impl;
+	cooler 		: system cooler.impl;
+	controller 	: system controller.impl;
+	voter  		: system voter.impl;
+connections
+	c0 : port temp1 -> voter.tempin1 {communication_properties::timing => immediate;};
+	c1 : port temp2 -> voter.tempin2 {communication_properties::timing => immediate;};
+	c2 : port user_request -> controller.user_request {communication_properties::timing => immediate;};
+	c3 : port controller.heater_on -> heater.enabled {communication_properties::timing => immediate;};
+	c4 : port controller.cooler_on -> cooler.enabled {communication_properties::timing => immediate;};
+	c5 : port voter.tempout -> controller.tempin {communication_properties::timing => immediate;};
+end temp_control.i;
+
+system voter
+features
+	tempin1 		: in data port temperature_type;
+	tempin2 		: in data port temperature_type;
+	tempout 		: out data port temperature_type;
+annex agree {**
+    assume "incoming temperature on sensor1 between 0 and 20 (both included)": tempin1 <= 20 and tempin1 >= 0;
+    assume "incoming temperature on sensor2 between 0 and 20 (both included)": tempin2 <= 20 and tempin2 >= 0;
+    guarantee "outgoing temperature is between 0 and 20 (both included)": tempout <= 20 and tempout >= 0;
+**}; 
+end voter;
+
+system implementation voter.impl
+annex agree {**
+--	eq selected_temp : int = 0 -> if (tempin1 = tempin2) then tempin1 else pre(selected_temp);
+	
+	-- to be completed
+	eq selected_temp : int = -1;
+    assert (tempout = selected_temp);
+**}; 
+end voter.impl;
+ 
+system controller
+features
+	tempin 			: in data port temperature_type;
+	user_request 	: in data port command.impl;
+	heater_on		: out data port base_types::boolean;
+	cooler_on		: out data port base_types::boolean;
+annex agree {**
+    assume "incoming temperature is between 0 and 20 (both included)": tempin <= 20 and tempin >= 0;
+
+	guarantee "Cannot heat and cool at the same time" : not (heater_on and cooler_on);
+**};
+end controller;
+
+system implementation controller.impl
+annex agree {**
+	--eq heating_request : bool = false -> if ((user_request.heater_on = true) and (user_request.cooler_on = false)) then true else false;
+	--eq cooling_request  : bool = false -> if ((user_request.cooler_on = true) and (user_request.heater_on = false)) then true else false;
+	
+	-- to be completed
+	eq heating_request : bool = true;
+	eq cooling_request : bool = true;
+	assert (heater_on = (heating_request and (tempin <= 20)));
+	assert (cooler_on = (cooling_request and (tempin > 0)));
+**};
+end controller.impl;
+
+--
+-- Heater to warm the place
+--
+
+system heater
+features
+	enabled : in data port base_types::boolean;
+end heater;
+
+system implementation heater.impl
+end heater.impl;
+
+--
+--  Cooler to lower the temperature
+--
+
+system cooler
+features 
+	enabled : in data port base_types::boolean;
+end cooler;
+
+system implementation cooler.impl
+end cooler.impl;
+
+
+system integration
+annex agree {**
+	assume "Dumb assumption !" : true;
+	guarantee "I am dumb!": true;
+**};
+end integration;
+
+system implementation integration.impl
+subcomponents
+	temp_control   : system temp_control.i;
+	user_panel 	: system control_panel.i;		
+	sensor1 	: system temperature_sensor.i1;
+	sensor2 	: system temperature_sensor.i2;
+connections
+	sensor1_tc : port sensor1.dataout -> temp_control.temp1 {communication_properties::timing => immediate;};
+	sensor2_tc : port sensor2.dataout -> temp_control.temp2 {communication_properties::timing => immediate;};
+	up_to_tc   : port user_panel.cmd -> temp_control.user_request {communication_properties::timing => immediate;};
+end integration.impl;
+
+
+	
+end agree_basic;
