@@ -20,6 +20,11 @@ subcomponents
    part1 : virtual processor partition.impl;
 properties
    ARINC653::Module_Major_Frame => 1000ms;
+  	ARINC653::Module_Schedule => 
+	    ( [Partition => reference (part1);
+	      Duration  => 10 ms;
+	      Periodic_Processing_Start => false;]
+	    );
 end module.impl;
 
 process myprocess
