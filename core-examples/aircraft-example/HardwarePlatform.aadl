@@ -5,9 +5,11 @@
 package HardwarePlatform
 public
 with HardwareParts;
+	with AircraftSubsystems;
   system ComputingPlatform
     features
       BusAccess1: provides bus access HardwareParts::EtherSwitch;
+      powerdemand: requires bus access AircraftSubsystems::ElectricalPower; 
   end ComputingPlatform;
   
   --       a platform with three dual core processors as a parts specification

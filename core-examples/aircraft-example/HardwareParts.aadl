@@ -11,7 +11,7 @@ with HardwareParts, AppTypes, SEI;
         SEI::PowerBudget => 0.1 W;
         };
     properties
-      Byte_Count => 256000;
+      Memory_size => 256000 Bytes;
       SEI::RAMCapacity => 1.0 MByte;
       SEI::ROMCapacity => 100.0 KByte;
       SEI::NetWeight => 0.5 kg;
