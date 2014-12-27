@@ -25,8 +25,11 @@ subcomponents
    part1 : virtual processor partition.impl;
 properties
    ARINC653::Module_Major_Frame => 1000ms;
---   ARINC653::Partition_Slots => (500ms, 500ms);
---   ARINC653::Slots_Allocation => (reference (part1), reference (part2));
+  	ARINC653::Module_Schedule => 
+	    ( [Partition => reference (part1);
+	      Duration  => 10 ms;
+	      Periodic_Processing_Start => false;]
+	    );
 end module.impl;
 
 process myprocess
@@ -100,7 +103,7 @@ subprogram consumer_spg
 features
 	datain : in parameter base_types::unsigned_8;
 properties
-   source_name => "user_producer";
+   source_name => "user_consumer";
    source_language => (C);
    Source_Text => ("../../../hello1.o");
    Code_Size  => 2 Kbyte;
