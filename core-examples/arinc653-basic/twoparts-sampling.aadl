@@ -31,10 +31,8 @@ properties
   	ARINC653::Module_Schedule => 
 	    ( [Partition => reference (part1);
 	      Duration  => 10 ms;
-	      Periodic_Processing_Start => false;]
-	    );
-  	ARINC653::Module_Schedule => 
-	    ( [Partition => reference (part2);
+	      Periodic_Processing_Start => false;],
+		  [Partition => reference (part2);
 	      Duration  => 10 ms;
 	      Periodic_Processing_Start => false;]
 	    );
@@ -164,6 +162,8 @@ subcomponents
    part1 : process pr_sender.impl;
    part2 : process pr_receiver.impl;
    mem : memory mainmemory.impl;
+connections
+	c0 : port part1.dataout -> part2.datain;
 properties
    Actual_Processor_Binding => (reference (cpu.part1)) applies to part1;
    Actual_Processor_Binding => (reference (cpu.part2)) applies to part2;
