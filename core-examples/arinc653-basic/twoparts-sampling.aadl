@@ -40,7 +40,7 @@ end module.impl;
 
 process pr_sender
 features
-	dataout : out data port base_types::unsigned_8;
+	dataout : out data port base_types::Character;
 end pr_sender;
 
 process implementation pr_sender.impl
@@ -53,7 +53,7 @@ end pr_sender.impl;
 
 process pr_receiver
 features
-	datain : in data port base_types::unsigned_8;
+	datain : in data port base_types::Character;
 end pr_receiver;
 
 process implementation pr_receiver.impl
@@ -65,7 +65,7 @@ end pr_receiver.impl;
 
 thread producer
 features
-	dataout : out data port base_types::unsigned_8;
+	dataout : out data port base_types::Character;
 end producer;
 
 thread implementation producer.impl
@@ -86,11 +86,11 @@ end producer.impl;
 
 thread consumer
 features
-	datain : in data port base_types::unsigned_8;
+	datain : in data port base_types::Character;
 end consumer;
 
 thread implementation consumer.impl
-calls 
+calls  
    call1 : { pspg : subprogram consumer_spg;};
 connections
 	c0 : parameter datain -> pspg.datain;
@@ -109,7 +109,7 @@ end consumer.impl;
 
 subprogram producer_spg
 features
-	dataout : out parameter base_types::unsigned_8;
+	dataout : out parameter base_types::Character;
 properties
    source_name => "user_producer";
    source_language => (C);
@@ -120,7 +120,7 @@ end producer_spg;
 
 subprogram consumer_spg
 features
-	datain : in parameter base_types::unsigned_8;
+	datain : in parameter base_types::Character;
 properties
    source_name => "user_consumer";
    source_language => (C);
