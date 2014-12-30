@@ -5,11 +5,15 @@ public
 
 with Data_Model;
 with ARINC653;
-with base_types;
 
 virtual bus security_layer
 end security_layer;
 
+  data Character
+  properties
+    Data_Model::Data_Representation => Character;
+    Data_Size => 1 Bytes;
+  end Character;
 
 virtual processor partition
 end partition;
@@ -23,28 +27,28 @@ end module;
 processor implementation module.impl
 subcomponents
    part1 : virtual processor partition.impl
-   	{Period => 1000 ms; Execution_Time => 10ms;};
+   	{Period => 25 ms; Execution_Time => 1ms;};
    part2 : virtual processor partition.impl
-   	{Period => 1000 ms; Execution_Time => 10ms;};
+   	{Period => 25 ms; Execution_Time => 1ms;};
 properties
    ARINC653::Module_Major_Frame => 1000ms;
   	ARINC653::Module_Schedule => 
 	    ( [Partition => reference (part1);
-	      Duration  => 10 ms;
+	      Duration  => 1 ms;
 	      Periodic_Processing_Start => false;],
 		  [Partition => reference (part2);
-	      Duration  => 10 ms;
+	      Duration  => 1 ms;
 	      Periodic_Processing_Start => false;]
 	    );
 end module.impl;
 
 process pr_sender
 features
-	dataout : out data port base_types::Character;
+	dataout : out data port Character;
 end pr_sender;
 
 process implementation pr_sender.impl
-subcomponents
+subcomponents 
    prod : thread producer.impl;
 connections
 	c0 : port prod.dataout -> dataout;
@@ -53,7 +57,7 @@ end pr_sender.impl;
 
 process pr_receiver
 features
-	datain : in data port base_types::Character;
+	datain : in data port Character;
 end pr_receiver;
 
 process implementation pr_receiver.impl
@@ -65,7 +69,7 @@ end pr_receiver.impl;
 
 thread producer
 features
-	dataout : out data port base_types::Character;
+	dataout : out data port Character;
 end producer;
 
 thread implementation producer.impl
@@ -86,7 +90,7 @@ end producer.impl;
 
 thread consumer
 features
-	datain : in data port base_types::Character;
+	datain : in data port Character;
 end consumer;
 
 thread implementation consumer.impl
@@ -109,7 +113,7 @@ end consumer.impl;
 
 subprogram producer_spg
 features
-	dataout : out parameter base_types::Character;
+	dataout : out parameter Character;
 properties
    source_name => "user_producer";
    source_language => (C);
@@ -120,7 +124,7 @@ end producer_spg;
 
 subprogram consumer_spg
 features
-	datain : in parameter base_types::Character;
+	datain : in parameter Character;
 properties
    source_name => "user_consumer";
    source_language => (C);
@@ -144,11 +148,11 @@ subcomponents
    part1: memory partitionmemory 
                {ARINC653::Memory_Type => (code_memory);
                Base_Address => 0;
-               Memory_Size => 2 MByte;};
+               Memory_Size => 102400 Bytes;};
    part2: memory partitionmemory 
                {ARINC653::Memory_Type => (code_memory);
                Base_Address => 0;
-               Memory_Size => 2 MByte;};
+               Memory_Size => 102400 Bytes;};
 end mainmemory.impl;
 
 
