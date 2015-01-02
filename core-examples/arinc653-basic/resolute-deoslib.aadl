@@ -1,0 +1,41 @@
+package resolute::deoslib
+
+public
+	  
+annex resolute {** 
+
+	check_deos_compliance (s : system) <=
+		** "Check compliance of the model to be generated with the DeOS code generator" **
+		check_arinc653_compliance (s) and
+		check_deos_processes (s) and
+		check_deos_memory_segments (s) and
+		check_deos_virtual_processors (s)
+
+	check_deos_processes (s : system) <=
+		** "Compliance of processes contained in system " s "" **
+		forall (p : process) . contained (s, p) =>
+		check_deos_threads (p)
+
+	check_deos_threads (p : process) <=
+		** "Check that threads of process " p " have all the required properties (Dispatch_Protocol, Period, Deadline, Compute_Execution_Time)" **
+		forall (t : thread) . contained (t,p)  => 
+			has_property (t, Thread_Properties::Dispatch_Protocol) and
+			has_property (t, Timing_Properties::Period) and
+			has_property (t, Timing_Properties::Deadline) and
+			has_property (t, Timing_Properties::Compute_Execution_Time)
+	
+	check_deos_memory_segments (s : system) <=
+		** "Check memory segment of system " s " with the following properties: base_address and memory_size" **
+		forall (seg : memory) (mainmem : memory) . contained(seg,mainmem) =>
+		has_property (seg, Memory_Properties::Base_Address)	and
+		has_property (seg, Memory_Properties::Memory_Size)
+		
+	check_deos_virtual_processors (s : system) <=
+		** "Check that runtimes of system " s " have the properties period and exeecution_time" **
+		forall (vp : virtual_processor) . contained(vp, s) =>
+		has_property (vp, Timing_Properties::Period) and
+		has_property (vp, Timing_Properties::Execution_Time) 
+
+**};
+	
+end resolute::deoslib;
