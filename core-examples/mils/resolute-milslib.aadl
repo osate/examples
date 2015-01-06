@@ -9,12 +9,12 @@ annex resolute {**
   		
 	check_mils_compliance (s : system) <=
 		** "Check compliance of the model with MILS guidelines" **
-		check_mils_properties (s)
---		check_mils_partitions_connections (s) 
---		and
---		check_mils_memories (s) 
---      and
---		check_mils_components_integration (s)
+		check_mils_properties (s) and
+		check_mils_partitions_connections (s) 
+		and
+		check_mils_memories (s) 
+      	and
+		check_mils_components_integration (s)
 		
 
 	check_mils_properties (c : component) <=
@@ -42,8 +42,7 @@ annex resolute {**
 
 	check_mils_components_integration (c : component) <=
 		** "Check that component " c " has subcomponents at the same level" **
-		(forall (p : process) . ((has_parent(p)) and (parent(p) = c)) =>
-			(property (p, SEI::SecurityLevel) = property (c, SEI::SecurityLevel)) and
+		(forall (p : process)  . ((has_parent(p)) and (parent(p) = c)) =>
 			(check_mils_components_integration (p))) and
 		(forall (t : thread) . ((has_parent(t)) and (parent(t) = c)) =>
 			(property (t, SEI::SecurityLevel) = property (c, SEI::SecurityLevel)) and

@@ -120,6 +120,8 @@ end module.impl;
 process pr_sender
 features
 	dataout : out data port Character;
+properties
+	SEI::SecurityLevel => 2;
 annex EMV2 {**
 	use types errorlibrary;
 	use behavior errorlibrary::FailAndRecover;
@@ -151,6 +153,8 @@ end pr_sender.impl;
 process pr_receiver
 features
 	datain : in data port Character;
+properties
+	SEI::SecurityLevel => 2;
 annex EMV2 {**
 	use types errorlibrary;
 	use behavior errorlibrary::FailAndRecover;
