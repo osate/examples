@@ -6,6 +6,7 @@ public
 with Data_Model;
 with SEI;
 with ARINC653;
+with EMV2;
 
 virtual bus security_layer
 end security_layer;
@@ -17,12 +18,79 @@ properties
 end Character;
 
 virtual processor partition
+annex EMV2 {**
+	use types errorlibrary;
+	use behavior errorlibrary::FailAndRecover;
+	
+	error propagations
+		bindings : out propagation {ServiceError};
+		processor : in  propagation {ServiceError};
+	flows
+		fsoft : error source bindings{ServiceError};
+		fhard : error path processor{ServiceError} -> bindings {ServiceError};
+	end propagations;
+
+	component error behavior
+	events
+		SoftwareFailure : error event;
+	transitions
+		t0 : Operational -[SoftwareFailure]-> Failed;
+		t1 : Operational -[processor{ServiceError}]-> Failed;
+	propagations
+		normal : Operational 	-[]-> bindings {NoError};
+		p2     : Failed 		-[]-> bindings{ServiceError};
+	end component;
+	properties
+		EMV2::severity => ARP4761::Major applies to SoftwareFailure;
+		EMV2::likelihood => ARP4761::Probable applies to SoftwareFailure;
+		EMV2::hazards => 
+			([	crossreference => "TBD";
+				failure => "";
+				phases => ("all");
+				description => "Software failure from the platform (OS exception, etc.)";
+				comment => "Impact all components that are controlled by this software";
+			])
+			applies to SoftwareFailure;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.35e-5 ; Distribution => Poisson;] applies to SoftwareFailure;
+**};
 end partition;
 
 virtual processor implementation partition.impl
 end partition.impl;
  
 processor module
+annex EMV2 {**
+	use types errorlibrary;
+	use behavior errorlibrary::FailAndRecover;
+	
+	error propagations
+		bindings : out propagation {ServiceError};
+	flows
+		fhard : error source bindings{ServiceError};
+	end propagations;
+
+	component error behavior
+	events
+		HardwareError : error event;
+	transitions
+		t0 : Operational -[HardwareError]-> Failed;
+	propagations
+		normal : Operational 	-[]-> bindings {NoError};
+		p2     : Failed 		-[]-> bindings{ServiceError};
+	end component;
+	properties
+		EMV2::severity => ARP4761::Major applies to HardwareError;
+		EMV2::likelihood => ARP4761::Probable applies to HardwareError;
+		EMV2::hazards => 
+			([	crossreference => "TBD";
+				failure => "";
+				phases => ("all");
+				description => "Hardware Failure of the CPU";
+				comment => "Impact all components that are running on this processor";
+			])
+			applies to HardwareError;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.24e-5 ; Distribution => Poisson;] applies to HardwareError;
+**};
 end module;
 
 processor implementation module.impl
@@ -52,11 +120,29 @@ end module.impl;
 process pr_sender
 features
 	dataout : out data port Character;
+annex EMV2 {**
+	use types errorlibrary;
+	use behavior errorlibrary::FailAndRecover;
+
+	error propagations
+		dataout			: out propagation{ValueError};
+		processor 		: in propagation {ServiceError};
+	flows
+		runtime_error	: error path processor{ServiceError} -> dataout{ValueError};
+	end propagations;
+	
+	component error behavior
+	transitions
+		fromcpu 		: Operational -[processor{ServiceError}]-> Failed;
+	propagations
+		p0 : Failed -[]-> dataout{ValueError};
+	end component;
+**};
 end pr_sender;
 
 process implementation pr_sender.impl
 subcomponents 
-   prod : thread producer.impl;
+   prod : thread producer.impl {SEI::SecurityLevel => 2;};
 connections
 	c0 : port prod.dataout -> dataout;
 end pr_sender.impl;
@@ -65,11 +151,25 @@ end pr_sender.impl;
 process pr_receiver
 features
 	datain : in data port Character;
+annex EMV2 {**
+	use types errorlibrary;
+	use behavior errorlibrary::FailAndRecover;
+
+	error propagations
+		datain			: in propagation{ValueError};
+		processor 		: in propagation {ServiceError};
+	end propagations;
+	
+	component error behavior
+	transitions
+		fromcpu 		: Operational -[processor{ServiceError}]-> Failed;
+	end component;
+**};
 end pr_receiver;
 
 process implementation pr_receiver.impl
 subcomponents
-   recv : thread consumer.impl;
+   recv : thread consumer.impl {SEI::SecurityLevel => 2;};
 connections
 	c0 : port datain -> recv.datain;
 end pr_receiver.impl;
@@ -77,6 +177,37 @@ end pr_receiver.impl;
 thread producer
 features
 	dataout : out data port Character;
+annex EMV2 {**
+	use types errorlibrary;
+	use behavior errorlibrary::FailAndRecover;
+	error propagations
+		dataout : out propagation {ValueError};
+	flows
+		f0 : error source dataout {ValueError};	
+	end propagations;
+
+	component error behavior
+	events
+		ComputationError : error event;
+	transitions
+		t0 : Operational -[ComputationError]-> Failed;
+	propagations
+		p0 : Failed -[]-> dataout{ValueError};
+	end component;
+	
+	properties
+		EMV2::severity => ARP4761::Hazardous applies to dataout.ValueError;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.42e-5 ; Distribution => Poisson;] applies to dataout.ValueError;
+		EMV2::likelihood => ARP4761::Probable applies to dataout.ValueError;
+		EMV2::hazards => 
+			([	crossreference => "TBD";
+				failure => "";
+				phases => ("all");
+				description => "Bad Value from the thread producer";
+				comment => "Must check the software that the value is not faulty";
+			])
+			applies to dataout.ValueError;		
+**};
 end producer;
 
 thread implementation producer.impl
@@ -98,6 +229,22 @@ end producer.impl;
 thread consumer
 features
 	datain : in data port Character;
+annex EMV2 {**
+	use types errorlibrary;
+	use behavior errorlibrary::FailAndRecover;
+	error propagations
+		datain : in propagation {ValueError};
+	flows
+		f0 : error sink datain {ValueError};	
+	end propagations;
+
+	component error behavior
+	transitions
+		t0 : Operational -[datain{ValueError}]-> Failed;
+	end component;
+	properties
+		EMV2::severity => ARP4761::Hazardous applies to datain.ValueError;
+**};
 end consumer;
 
 thread implementation consumer.impl
@@ -182,9 +329,20 @@ properties
    actual_memory_binding =>
       (reference (mem.part2)) applies to part2;
 annex resolute {**
-	prove (check_deos_compliance(this))
+--	prove (check_deos_compliance(this))
 	prove (check_mils_compliance(this))
-**}; 
+**};
+annex EMV2 {**
+	use types errorlibrary;
+	use behavior errorlibrary::FailAndRecover;
+
+	composite error behavior
+	states
+		[part1.Failed]-> Failed;
+		[part2.Failed]-> Failed;
+		[cpu.Failed]-> Failed;
+	end composite;
+**};
 end node.impl;
 
 
