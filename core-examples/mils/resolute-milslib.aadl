@@ -1,0 +1,35 @@
+package resolute::milslib
+
+public
+	  
+annex resolute {**  
+	check_mils_compliance (s : system) <=
+		** "Check compliance of the model with MILS guidelines" **
+		check_mils_partitions_connections (s) and
+		check_mils_memories (s) and
+		check_mils_components_integration (s)
+		
+
+	check_mils_partitions_connections (s : system) <=
+		** "Check that connected partitions in " s " share the same security level" **
+		forall (p1 : process) (p2 : process) (c : connection) (vp1 : virtual_processor) (vp2 : virtual_processor) .
+		(connected (p1, c, p2)) and (processor_bound (p1, vp1)) and (processor_bound (p2, vp2))
+		=> property (vp1, SEI::SecurityLevel) = property (vp2, SEI::SecurityLevel)
+
+	check_mils_memories (s : system) <=
+		** "Check that memory segments in system s " s " are bound to partitions with the same security level" **
+		forall (p1 : process) (p2 : process) (mem : memory) (vp1 : virtual_processor) (vp2 : virtual_processor)  .
+		(memory_bound (p1, mem)) and (memory_bound (p2, mem)) and (processor_bound (p1, vp1)) and (processor_bound (p2, vp2))
+		=> property (vp1, SEI::SecurityLevel) = property (vp2, SEI::SecurityLevel)
+
+	check_mils_components_integration (c : component) <=
+		** "Check that component " c " has subcomponents at the same level" **
+		forall (p : process) . parent(p) = c =>
+			(property (p, SEI::SecurityLevel) = property (c, SEI::SecurityLevel)) and
+			(check_mils_components_integration (p)) and
+		forall (t : thread) . parent(t) = c =>
+			(property (t, SEI::SecurityLevel) = property (c, SEI::SecurityLevel)) and
+			(check_mils_components_integration (t))
+**};
+	
+end resolute::milslib;

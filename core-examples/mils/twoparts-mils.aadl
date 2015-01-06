@@ -1,0 +1,191 @@
+package twoparts_mils
+
+public
+
+
+with Data_Model;
+with SEI;
+with ARINC653;
+
+virtual bus security_layer
+end security_layer;
+
+data Character
+properties
+	Data_Model::Data_Representation => Character;
+    Data_Size => 1 Bytes;
+end Character;
+
+virtual processor partition
+end partition;
+
+virtual processor implementation partition.impl
+end partition.impl;
+ 
+processor module
+end module;
+
+processor implementation module.impl
+subcomponents
+   part1 : virtual processor partition.impl
+   	{Period => 25 ms;
+   	 Execution_Time => 1ms;
+   	 SEI::SecurityLevel => 2;
+   	}; 
+   part2 : virtual processor partition.impl 
+   	{Period => 25 ms; 
+   	 Execution_Time => 1ms;
+   	 SEI::SecurityLevel => 2;
+   	};
+properties
+   ARINC653::Module_Major_Frame => 1000ms;
+  	ARINC653::Module_Schedule =>  
+	    ( [Partition => reference (part1);
+	      Duration  => 1 ms;
+	      Periodic_Processing_Start => false;],
+		  [Partition => reference (part2);
+	      Duration  => 1 ms;
+	      Periodic_Processing_Start => false;] 
+	    );
+end module.impl;
+
+process pr_sender
+features
+	dataout : out data port Character;
+end pr_sender;
+
+process implementation pr_sender.impl
+subcomponents 
+   prod : thread producer.impl;
+connections
+	c0 : port prod.dataout -> dataout;
+end pr_sender.impl;
+
+
+process pr_receiver
+features
+	datain : in data port Character;
+end pr_receiver;
+
+process implementation pr_receiver.impl
+subcomponents
+   recv : thread consumer.impl;
+connections
+	c0 : port datain -> recv.datain;
+end pr_receiver.impl;
+
+thread producer
+features
+	dataout : out data port Character;
+end producer;
+
+thread implementation producer.impl
+calls 
+   call1 : { pspg : subprogram producer_spg;};
+connections
+	c0 : parameter pspg.dataout -> dataout;
+properties
+   Priority => 1;
+   dispatch_protocol => periodic;
+   period            => 1000ms;
+   deadline          => 500ms;
+   compute_execution_time => 0ms .. 1ms;
+   Code_Size  => 4 Kbyte;
+   Stack_Size => 30 Kbyte;
+   Data_Size  => 4 Kbyte;
+end producer.impl;
+
+thread consumer
+features
+	datain : in data port Character;
+end consumer;
+
+thread implementation consumer.impl
+calls  
+   call1 : { pspg : subprogram consumer_spg;};
+connections
+	c0 : parameter datain -> pspg.datain;
+properties
+   Priority => 1;
+   dispatch_protocol => periodic;
+   period            => 1000ms;
+   deadline          => 500ms; 
+   compute_execution_time => 0ms .. 1ms;
+   Code_Size  => 4 Kbyte;
+   Stack_Size => 30 Kbyte;
+   Data_Size  => 4 Kbyte;
+end consumer.impl;
+
+
+
+subprogram producer_spg
+features
+	dataout : out parameter Character;
+properties
+   source_name => "user_producer";
+   source_language => (C);
+   Source_Text => ("../../../hello1.o");
+   Code_Size  => 2 Kbyte;
+   Data_Size  => 2 Kbyte;
+end producer_spg; 
+
+subprogram consumer_spg
+features
+	datain : in parameter Character;
+properties
+   source_name => "user_consumer";
+   source_language => (C);
+   Source_Text => ("../../../hello1.o");
+   Code_Size  => 2 Kbyte;
+   Data_Size  => 2 Kbyte;
+end consumer_spg;
+
+
+memory partitionmemory
+properties
+   ARINC653::Memory_Type => (code_memory);
+end partitionmemory;
+
+memory mainmemory
+end mainmemory;
+
+memory implementation mainmemory.impl
+subcomponents
+   part1: memory partitionmemory 
+               {ARINC653::Memory_Type => (code_memory);
+               Base_Address => 0;
+               Memory_Size => 102400 Bytes;};
+   part2: memory partitionmemory 
+               {ARINC653::Memory_Type => (code_memory);
+               Base_Address => 0;
+               Memory_Size => 102400 Bytes;};
+end mainmemory.impl;
+
+
+
+system node
+end node;
+
+system implementation node.impl
+subcomponents
+   cpu   : processor module.impl;
+   part1 : process pr_sender.impl;
+   part2 : process pr_receiver.impl;
+   mem : memory mainmemory.impl;
+connections
+	c0 : port part1.dataout -> part2.datain;
+properties
+   Actual_Processor_Binding => (reference (cpu.part1)) applies to part1;
+   Actual_Processor_Binding => (reference (cpu.part2)) applies to part2;
+   actual_memory_binding =>
+      (reference (mem.part1)) applies to part1;
+   actual_memory_binding =>
+      (reference (mem.part2)) applies to part2;
+annex resolute {**
+	prove (check_deos_compliance(this))
+	prove (check_mils_compliance(this))
+**}; 
+end node.impl;
+
+
+end twoparts_mils;
