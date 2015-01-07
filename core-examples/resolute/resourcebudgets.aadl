@@ -1,0 +1,318 @@
+package resourcebudgets
+public
+	with sei;
+	with ARINC429;
+	data SensorData
+		properties
+			Data_Size => 2 KByte;
+	end SensorData;
+
+	data actuatecmd
+		properties
+			Data_Size => 100 Bytes;
+	end actuatecmd;
+
+	-- Threads for the first process
+	thread sensor_sense_thread
+		features
+			signalout: out data port SensorData;
+			signalin: in data port SensorData;
+		properties
+			Stack_Size => 10 Kbyte;
+			Period => 20 ms;
+			Compute_Execution_Time => 10 ms .. 12 ms;
+	end sensor_sense_thread;
+
+	thread actuator_output_thread
+		features
+			controlin: in data port actuatecmd;
+			actuate: out data port actuatecmd;
+		properties
+			Stack_Size => 10 Kbyte;
+			Period => 20 ms;
+			Compute_Execution_Time => 8 ms .. 10 ms;
+	end actuator_output_thread;
+
+	--  Threads for the second process
+	thread filterApp
+		features
+			sensorraw: in data port SensorData;
+			sensorfiltered: out data port SensorData;
+		properties
+			Stack_Size => 25 Kbyte;
+			Data_size => 250 KByte; -- for logging
+			Period => 20 ms;
+			Compute_Execution_Time => 5 ms .. 7 ms;
+	end filterApp;
+
+	thread controlApp
+		features
+			sensorfiltered: in data port SensorData;
+			actuate: out data port actuatecmd;
+		properties
+			Stack_Size => 25 Kbyte;
+			Data_size => 50 KByte; -- for control state
+			Period => 20 ms;
+			--   Compute_Execution_Time => 2 ms .. 6 ms; intentionally left out
+
+	end controlApp;
+
+	-- Now, declare process that model partition address space
+	process IOP
+		features
+			sensorin: in data port SensorData;
+			senseout: out data port SensorData;
+			controlin: in data port actuatecmd;
+			actuatorout: out data port actuatecmd;
+		properties
+			SEI::MIPSBudget => 0.8 mips;
+	end IOP;
+
+	process implementation IOP.impl
+		subcomponents
+			sense: thread sensor_sense_thread;
+			actuate: thread actuator_output_thread;
+		connections
+			incomingactuate: port controlin -> actuate.controlin;
+			outgoingactuate: port actuate.actuate -> actuatorout;
+			incomongsense: port sensorin -> sense.signalin;
+			outgoingsense: port sense.signalout -> senseout;
+	end IOP.impl;
+
+	process APP
+		features
+			samplingin: in data port SensorData;
+			controlout: out data port actuatecmd;
+		properties
+			SEI::MIPSBudget => 0.7 mips;
+	end APP;
+
+	process implementation APP.impl
+		subcomponents
+			filter: thread filterApp;
+			control: thread controlApp;
+		connections
+			filtertocontrol: port filter.sensorfiltered -> control.sensorfiltered;
+			outgoingCmd: port control.actuate -> controlout;
+			incomingSignal: port samplingin -> filter.sensorraw;
+	end APP.impl;
+
+	-- computer hardware platform
+	processor powerpc
+		features
+			power: in data port Power;
+			canbusaccess: requires bus access CANbus;
+		properties
+			SEI::PowerBudget => 0.8 w applies to power;
+			SEI::MIPSCapacity => 1.2 mips;
+	end powerpc;
+
+	bus CANbus
+		features
+			power: in data port Power;
+		properties
+			SEI::PowerBudget => 0.8 w applies to power;
+	end CANbus;
+
+	memory main_memory
+		features
+			power: in data port Power;
+		properties
+			SEI::PowerBudget => 0.8 w applies to power;
+	end main_memory;
+
+	system DCA
+		features
+			sensor1in: in data port SensorData;
+			sensor2In: in data port SensorData;
+			actuatorOut: out data port actuatecmd;
+		properties
+			SEI::MIPSBudget => 2.0 mips;
+	end DCA;
+
+	system implementation DCA.tier1
+		subcomponents
+			iop: process IOP;
+			app: process APP;
+		connections
+			sampledData: port iop.senseout ->
+					app.samplingin;
+			controlData: port app.controlout ->
+					iop.controlin;
+			actuatorcmdxfer: port iop.actuatorout -> actuatorOut;
+			signal1xfer: port sensor1in -> iop.sensorin;
+			signal2xfer: port sensor2In -> iop.sensorin;
+	end DCA.tier1;
+
+	system implementation DCA.tier2 extends DCA.tier1
+		subcomponents
+			iop: refined to process IOP.impl;
+			app: refined to process APP.impl;
+	end DCA.tier2;
+
+	system platform
+		features
+			canbusaccess: provides bus access CANbus;
+			power: in data port Power;
+		properties
+			SEI::PowerBudget => 0.8 w applies to power;
+			SEI::MIPSCapacity => 2.4 mips;
+			SEI::Grossweight => 1.0 kg;
+	end platform;
+
+	system implementation platform.single
+		subcomponents
+			pc1: processor powerpc;
+			M: memory main_memory;
+			canbus: bus CANbus;
+		connections
+			ExtCanbusaccess: bus access canbus -> canbusaccess;
+			CantoPC1: bus access canbus -> pc1.canbusaccess;
+			PCPower: port power -> pc1.power;
+			BusPower: port power -> canbus.power;
+			MemoryPower: port power -> M.power;
+	end platform.single;
+
+	system implementation platform.dual extends platform.single
+		subcomponents
+			pc2: processor powerpc;
+		connections
+			CantoPC2: bus access canbus -> pc1.canbusaccess;
+	end platform.dual;
+
+	device sensor
+		features
+			power: in data port Power;
+			canbusaccess: requires bus access CANbus;
+			sensorSignal: out data port SensorData;
+		properties
+			SEI::GrossWeight => 0.1 kg;
+			SEI::PowerBudget => 0.45 w applies to power;
+			Period => 25 ms;
+			Dispatch_Protocol => Periodic;
+	end sensor;
+
+	device actuator
+		features
+			power: in data port Power;
+			canbusaccess: requires bus access CANbus;
+			actuatorCmd: in data port actuatecmd;
+		properties
+--			SEI::GrossWeight => 0.3 kg;
+			SEI::PowerBudget => 0.8 w applies to power;
+			Period => 25 ms;
+			Dispatch_Protocol => Periodic;
+	end actuator;
+
+	system DCS
+		features
+			power: in data port Power;
+			canbusaccess: provides bus access CANbus;
+			sensor1in: in data port SensorData;
+			sensor2In: in data port SensorData;
+			actuatorOut: out data port actuatecmd;
+		properties
+			SEI::Grossweight => 0.5 kg;
+	end DCS;
+
+	system implementation DCS.singletier0
+		subcomponents
+			app: system DCA;
+			hw: system platform;
+		connections
+			powerline: port power -> hw.power;
+			Signal1Xfer: port sensor1in -> app.sensor1in;
+			Signal2Xfer: port sensor2In -> app.sensor2In;
+			ActuatorCmdXfer: port app.actuatorOut -> actuatorOut;
+			CanbusConn: bus access hw.canbusaccess -> canbusaccess;
+		annex Resolute {**
+			prove (SCSReq1(this))
+			**};
+	end DCS.singletier0;
+
+	system implementation DCS.singletier1 extends DCS.singletier0
+		subcomponents
+			app: refined to system DCA.tier1;
+			hw: refined to system platform.single;
+	end DCS.singletier1;
+
+	system implementation DCS.singletier2 extends DCS.singletier1
+		subcomponents
+			app: refined to system DCA.tier2;
+		properties
+			Reference_Processor => classifier (powerpc);
+	end DCS.singletier2;
+
+	system implementation DCS.dualtier2 extends DCS.singletier2
+		subcomponents
+			hw: refined to system platform.dual;
+		properties
+			Reference_Processor => classifier (powerpc);
+	end DCS.dualtier2;
+
+	system SCS
+		features
+			power: in data port Power;
+		properties
+			SEI::PowerBudget => 2.5 w applies to power;
+			SEI::WeightLimit => 1.2 kg;
+	end SCS;
+
+	system implementation SCS.Phys
+		subcomponents
+			dcs: system DCS.singletier0;
+			sensor1: device sensor;
+			sensor2: device sensor;
+			actuator: device actuator;
+		annex Resolute {**
+			prove (SCSReq1(this))
+			prove (SCSReq1_1(this, property(this,SEI::WeightLimit)))
+			prove (AllHaveBudgets(this))
+		**};
+	end SCS.Phys;
+
+	system implementation SCS.tier0
+		subcomponents
+			dcs: system DCS;
+			sensor1: device sensor;
+			sensor2: device sensor;
+			actuator: device actuator;
+		connections
+			sensor1access: bus access dcs.canbusaccess -> sensor1.canbusaccess;
+			sensor2access: bus access dcs.canbusaccess -> sensor2.canbusaccess;
+			actuatoraccess: bus access dcs.canbusaccess -> actuator.canbusaccess;
+			Sensor1Xfer: port sensor1.sensorSignal -> dcs.sensor1in;
+			Signal1Xfer: port sensor2.sensorSignal -> dcs.sensor2In;
+			ActuatorCmdXfer: port dcs.actuatorOut -> actuator.actuatorCmd;
+		annex Resolute {**
+			prove (SCSReq1(this))
+			prove (AllHaveBudgets(this))
+			prove (SCSReq1_1(this, MaximumWeight))
+		**};
+	end SCS.tier0;
+
+	system implementation SCS.tier1 extends SCS.tier0
+		subcomponents
+			dcs: refined to system DCS.singletier1;
+	end SCS.tier1;
+
+	system implementation SCS.tier2 extends SCS.tier1
+		subcomponents
+			dcs: refined to system DCS.singletier2;
+	end SCS.tier2;
+
+	system implementation SCS.dualtier2 extends SCS.tier1
+		subcomponents
+			dcs: refined to system DCS.dualtier2;
+	end SCS.dualtier2;
+
+	abstract Power
+	end Power;
+
+	abstract Mass
+		properties
+			Output_Rate => [Value_Range => 1.0 .. 1.0; Rate_Unit => PerDispatch; Rate_Distribution => Fixed;];
+					ARINC429::NumberBits => 4;
+	end Mass;
+
+end resourcebudgets;
