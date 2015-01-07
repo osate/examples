@@ -128,12 +128,6 @@ features
 {Queue_Size => 4;
                              ARINC653::Timeout => 5ms; 
                              ARINC653::Queueing_Discipline => FIFO;};
-   --  In the context of a event data port, the ARINC653::Timeout property
-   --  is the timeout we used in the APEX functions.
-   --  More, the Queue_Size property is used to compute the size of the queue
-   --  of the port.
-   --  Finally, the ARINC653::Queueing_Discipline indicates how you handle queuing
-   --  data and how data are classified in the queue.
    samplingout: out data port integer;
 end partition1_process;
 
