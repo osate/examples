@@ -54,10 +54,10 @@ connections
 	c0 : port prod.dataout -> dataout;
 end pr_sender.impl;
 
-
+ 
 process pr_receiver
 features
-	datain : in data port Character;
+	datain : in data port Character {ARINC653::Sampling_Refresh_Period => 100ms;};
 end pr_receiver;
 
 process implementation pr_receiver.impl
@@ -175,6 +175,9 @@ properties
       (reference (mem.part1)) applies to part1;
    actual_memory_binding =>
       (reference (mem.part2)) applies to part2;
+annex resolute {**
+	prove check_deos_compliance (this)
+**};
 end node.impl;
 
 
