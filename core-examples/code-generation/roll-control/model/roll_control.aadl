@@ -53,17 +53,20 @@ end thr_roll_control.i;
 
 subprogram scade_roll_control
 features
-	joystick : in parameter roll_control::types::real;
-	onoff    : in parameter roll_control::types::bool;
-	left_adverse_yaw : in parameter roll_control::types::real;
-	right_adverse_yaw : in parameter roll_control::types::real;
-	left_warning : out parameter roll_control::types::bool;
-	right_warning : out parameter roll_control::types::bool;	
-	roll_rate : out parameter roll_control::types::real;
+	joystick : in parameter roll_control::types::real {source_name => "joystickCmd";};
+	onoff    : in parameter roll_control::types::bool{source_name => "onOffPressed";};
+	left_adverse_yaw : in parameter roll_control::types::real{source_name => "leftAdverseYaw";};
+	right_adverse_yaw : in parameter roll_control::types::real{source_name => "rightAdverseYaw";};
+	left_warning : out parameter roll_control::types::bool{source_name => "leftWarning";};
+	right_warning : out parameter roll_control::types::bool{source_name => "rightWarning";};
+	roll_rate : out parameter roll_control::types::real{source_name => "rollRate";};
 properties
-   source_name => "panel";
+   --
+   -- Name of the SCADE operator
+   --
+   source_name => "RollControl";
    source_language => (SCADE);
-   Source_Text => ("");
+   Source_Text => ("RollControlRollControl.c");
    Code_Size  => 2 Kbyte;
    Data_Size  => 2 Kbyte;	
 end scade_roll_control;
