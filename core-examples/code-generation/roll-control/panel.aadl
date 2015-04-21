@@ -1,0 +1,55 @@
+package roll_control::panel
+
+public
+with roll_control::types;
+
+process panel
+features
+	joystick : out data port roll_control::types::real;
+	onoff : out data port roll_control::types::bool;
+end panel;
+
+process implementation panel.i
+subcomponents
+	thr : thread thr_panel.i;
+connections
+	c0 : port thr.joystick -> joystick;
+	c1 : port thr.onoff -> onoff;
+end panel.i;
+
+thread thr_panel
+features
+	joystick : out data port roll_control::types::real;
+	onoff : out data port roll_control::types::bool;
+end thr_panel;
+
+thread implementation thr_panel.i
+calls 
+   call1 : { pspg : subprogram user_panel;};
+connections
+	c0 : parameter pspg.joystick -> joystick;
+	c1 : parameter pspg.onoff -> onoff;
+properties
+   Priority => 1; 
+   dispatch_protocol => periodic;
+   period            => 1000ms;
+   deadline          => 500ms;
+   compute_execution_time => 0ms .. 1ms;
+   Code_Size  => 4 Kbyte;
+   Stack_Size => 30 Kbyte;
+   Data_Size  => 4 Kbyte;	
+end thr_panel.i;
+
+subprogram user_panel
+features
+	joystick : out parameter roll_control::types::real;
+	onoff : out parameter roll_control::types::bool;
+properties
+   source_name => "panel";
+   source_language => (C);
+   Source_Text => ("panel.c");
+   Code_Size  => 2 Kbyte;
+   Data_Size  => 2 Kbyte;	
+end user_panel;
+
+end roll_control::panel;

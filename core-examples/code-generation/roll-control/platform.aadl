@@ -1,0 +1,89 @@
+package roll_control::platform
+public
+
+with arinc653;
+
+virtual processor partition
+properties
+	Period => 10 ms;
+	Execution_Time => 5 ms;
+end partition;
+
+virtual processor implementation partition.i
+end partition.i;
+
+processor module
+end module;
+
+processor implementation module.i
+subcomponents
+	p1 : virtual processor partition.i
+	 {ARINC653::Partition_Identifier => 1; ARINC653::Partition_Name => "sensors";};
+	p2 : virtual processor partition.i
+		{ARINC653::Partition_Identifier => 2; ARINC653::Partition_Name => "panel";};
+	p3 : virtual processor partition.i
+		{ARINC653::Partition_Identifier => 3; ARINC653::Partition_Name => "roll_control";};
+	p4 : virtual processor partition.i
+		{ARINC653::Partition_Identifier => 4; ARINC653::Partition_Name => "display";};
+properties
+	ARINC653::Module_Major_Frame => 40ms;
+	ARINC653::Module_Schedule => 
+	    ( [Partition => reference (p1);
+	      Duration  => 10 ms;
+	      Periodic_Processing_Start => false;],
+	      [Partition => reference (p2);
+	      Duration  => 10 ms;
+	      Periodic_Processing_Start => false;],
+	      [Partition => reference (p3);
+	      Duration  => 10 ms;
+	      Periodic_Processing_Start => false;],
+	      [Partition => reference (p4);
+	      Duration  => 10 ms;
+	      Periodic_Processing_Start => false;]
+	    );
+	ARINC653::HM_Error_ID_Levels => 
+		([ErrorIdentifier => 1;
+		  Description => "Deadline Missed";
+		  ErrorLevel => Process_Level ; ErrorCode => Deadline_Miss;
+		],
+ 		 [ErrorIdentifier => 2; Description => "Application Error"           ; ErrorLevel => Process_Level ; ErrorCode => Application_Error;],
+		 [ErrorIdentifier => 3; Description => "Numeric Error"               ; ErrorLevel => Process_Level ; ErrorCode => Numeric_Error;],
+		 [ErrorIdentifier => 4; Description => "Illegal Request"             ; ErrorLevel => Process_Level ; ErrorCode => Illegal_Request;],
+		 [ErrorIdentifier => 5; Description => "Stack Overflow"              ; ErrorLevel => Process_Level ; ErrorCode => Stack_Overflow;],
+		 [ErrorIdentifier => 6; Description => "Memory Violation"            ; ErrorLevel => Process_Level ; ErrorCode => Memory_Violation;],
+		 [ErrorIdentifier => 7; Description => "Hardware Fault"              ; ErrorLevel => Process_Level ; ErrorCode => Hardware_Fault;],
+		 [ErrorIdentifier => 8; Description => "Power Failure"               ; ErrorLevel => Process_Level ; ErrorCode => Power_Fail;]);
+	ARINC653::HM_Error_ID_Actions =>
+	(
+		[ErrorIdentifier => 1 ; Description => "Ignore the error"; Action => "ignore";],
+		[ErrorIdentifier => 2 ; Description => "Ignore the error"; Action => "ignore";],
+		[ErrorIdentifier => 3 ; Description => "Ignore the error"; Action => "ignore";],
+		[ErrorIdentifier => 4 ; Description => "Ignore the error"; Action => "ignore";],
+		[ErrorIdentifier => 5 ; Description => "Ignore the error"; Action => "ignore";],
+		[ErrorIdentifier => 6 ; Description => "Ignore the error"; Action => "ignore";],
+		[ErrorIdentifier => 7 ; Description => "Ignore the error"; Action => "ignore";],
+		[ErrorIdentifier => 8 ; Description => "Ignore the error"; Action => "ignore";]
+	);
+end module.i;
+
+memory segment
+end segment;
+
+memory implementation segment.i
+properties
+	Memory_Size =>102400 Bytes;
+	Base_Address => 0;
+end segment.i;
+
+memory ram
+end ram;
+
+memory implementation ram.i
+subcomponents
+	s1 : memory segment.i;
+	s2 : memory segment.i;
+	s3 : memory segment.i;
+	s4 : memory segment.i;
+end ram.i;
+	
+end roll_control::platform;

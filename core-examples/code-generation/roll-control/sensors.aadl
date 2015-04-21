@@ -1,0 +1,55 @@
+package roll_control::sensors
+
+public
+with roll_control::types;
+
+process sensors
+features
+	left_adverse_yaw : out data port roll_control::types::real;
+	right_adverse_yaw : out data port roll_control::types::real;
+end sensors;
+
+process implementation sensors.i
+subcomponents
+	thr : thread sensors_thr.i;
+connections
+	c0 : port thr.left_adverse_yaw -> left_adverse_yaw;
+	c1 : port thr.right_adverse_yaw -> right_adverse_yaw;
+end sensors.i;
+
+thread sensors_thr
+features
+	left_adverse_yaw : out data port roll_control::types::real;
+	right_adverse_yaw : out data port roll_control::types::real;
+end sensors_thr;
+
+thread implementation sensors_thr.i
+calls 
+   call1 : { pspg : subprogram sensors_simulator;};
+connections
+	c0 : parameter pspg.left_adverse_yaw -> left_adverse_yaw;
+	c1 : parameter pspg.right_adverse_yaw -> right_adverse_yaw;
+properties
+   Priority => 1;
+   dispatch_protocol => periodic;
+   period            => 1000ms; 
+   deadline          => 500ms;
+   compute_execution_time => 0ms .. 1ms;
+   Code_Size  => 4 Kbyte;
+   Stack_Size => 30 Kbyte;
+   Data_Size  => 4 Kbyte;	
+end sensors_thr.i;
+
+subprogram sensors_simulator
+features
+	left_adverse_yaw : out parameter roll_control::types::real;
+	right_adverse_yaw : out parameter roll_control::types::real;
+properties
+   source_name => "sensors_simulation";
+   source_language => (C);
+   Source_Text => ("sensors.c");
+   Code_Size  => 2 Kbyte;
+   Data_Size  => 2 Kbyte;	
+end sensors_simulator;
+
+end roll_control::sensors;

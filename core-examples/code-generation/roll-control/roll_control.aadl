@@ -1,0 +1,72 @@
+package roll_control::roll_control
+
+public
+with roll_control::types;
+
+process roll_control
+features
+	joystick : in data port roll_control::types::real;
+	onoff    : in data port roll_control::types::bool;
+	left_adverse_yaw : in data port roll_control::types::real;
+	right_adverse_yaw : in data port roll_control::types::real;
+	left_warning : out data port roll_control::types::bool;
+	right_warning : out data port roll_control::types::bool;	
+	roll_rate : out data port roll_control::types::real;	
+end roll_control;
+
+process implementation roll_control.i
+end roll_control.i;
+
+thread thr_roll_control
+features
+	joystick : in data port roll_control::types::real;
+	onoff    : in data port roll_control::types::bool;
+	left_adverse_yaw : in data port roll_control::types::real;
+	right_adverse_yaw : in data port roll_control::types::real;
+	left_warning : out data port roll_control::types::bool;
+	right_warning : out data port roll_control::types::bool;	
+	roll_rate : out data port roll_control::types::real;	
+end thr_roll_control;
+
+thread implementation thr_roll_control.i
+calls 
+   call1 : { pspg : subprogram scade_roll_control;};
+connections
+	c0 : parameter joystick -> pspg.joystick;
+	c1 : parameter onoff -> pspg.onoff;
+	c2 : parameter left_adverse_yaw -> pspg.left_adverse_yaw;
+	c3 : parameter right_adverse_yaw -> pspg.right_adverse_yaw;
+	
+	c4 : parameter pspg.left_warning -> left_warning;
+	c5 : parameter pspg.right_warning -> right_warning;
+	c6 : parameter pspg.roll_rate -> roll_rate;
+properties
+   Priority => 1;
+   dispatch_protocol => periodic;
+   period            => 1000ms;
+   deadline          => 500ms;
+   compute_execution_time => 0ms .. 1ms;
+   Code_Size  => 4 Kbyte;
+   Stack_Size => 30 Kbyte;
+   Data_Size  => 4 Kbyte;	
+end thr_roll_control.i;
+
+subprogram scade_roll_control
+features
+	joystick : in parameter roll_control::types::real;
+	onoff    : in parameter roll_control::types::bool;
+	left_adverse_yaw : in parameter roll_control::types::real;
+	right_adverse_yaw : in parameter roll_control::types::real;
+	left_warning : out parameter roll_control::types::bool;
+	right_warning : out parameter roll_control::types::bool;	
+	roll_rate : out parameter roll_control::types::real;
+properties
+   source_name => "panel";
+   source_language => (SCADE);
+   Source_Text => ("");
+   Code_Size  => 2 Kbyte;
+   Data_Size  => 2 Kbyte;	
+end scade_roll_control;
+
+
+end roll_control::roll_control;

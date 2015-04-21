@@ -1,0 +1,18 @@
+package roll_control::types
+public
+
+with data_model;
+
+data real
+properties
+	Data_Size => 4 bytes;
+	data_model::data_representation => Float ;
+end real;
+
+data bool
+properties
+	Data_Size => 4 bytes;
+	data_model::data_representation => Integer ;
+end bool;
+
+end roll_control::types;

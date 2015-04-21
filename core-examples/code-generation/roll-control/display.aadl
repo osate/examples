@@ -1,0 +1,60 @@
+package roll_control::display
+
+public
+with roll_control::types;
+
+process display
+features
+	left_warning : in data port roll_control::types::bool;
+	right_warning : in data port roll_control::types::bool;	
+	roll_rate : in data port roll_control::types::real;	
+end display;
+
+process implementation display.i
+subcomponents
+	thr : thread thr_display.i;
+connections
+	c0 : port left_warning -> thr.left_warning;
+	c1 : port right_warning -> thr.right_warning;
+	c2 : port roll_rate -> thr.roll_rate;
+end display.i;
+
+thread thr_display
+features
+	left_warning : in data port roll_control::types::bool;
+	right_warning : in data port roll_control::types::bool;	
+	roll_rate : in data port roll_control::types::real;	
+end thr_display;
+
+thread implementation thr_display.i
+calls 
+   call1 : { pspg : subprogram user_display;};
+connections
+	c0 : parameter left_warning -> pspg.left_warning;
+	c1 : parameter right_warning -> pspg.right_warning;
+	c2 : parameter roll_rate -> pspg.roll_rate;
+properties
+   Priority => 1;
+   dispatch_protocol => periodic;
+   period            => 1000ms;
+   deadline          => 500ms;
+   compute_execution_time => 0ms .. 1ms;
+   Code_Size  => 4 Kbyte;
+   Stack_Size => 30 Kbyte;
+   Data_Size  => 4 Kbyte;		
+end thr_display.i;
+
+subprogram user_display
+features
+	left_warning : in parameter roll_control::types::bool;
+	right_warning : in parameter roll_control::types::bool;	
+	roll_rate : in parameter roll_control::types::real;	
+properties
+   source_name => "display";
+   source_language => (C);
+   Source_Text => ("display.c");
+   Code_Size  => 2 Kbyte;
+   Data_Size  => 2 Kbyte;	
+end user_display;
+
+end roll_control::display;

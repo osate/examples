@@ -1,0 +1,55 @@
+package roll_control::main
+
+public
+with arinc653;
+with roll_control::types;
+with roll_control::sensors;
+with roll_control::panel;
+with roll_control::display;
+with roll_control::platform;
+with roll_control::roll_control;
+
+system main
+end main;
+ 
+system implementation main.i
+subcomponents
+	sensors : process roll_control::sensors::sensors.i;
+	panel : process roll_control::panel::panel.i;
+	roll_control : process roll_control::roll_control::roll_control.i;
+	display : process roll_control::display::display.i;
+	module : processor roll_control::platform::module.i;
+	ram : memory roll_control::platform::ram.i;
+connections
+	c0 : port sensors.left_adverse_yaw -> roll_control.left_adverse_yaw;
+	c1 : port sensors.right_adverse_yaw -> roll_control.right_adverse_yaw;
+	c2 : port panel.joystick -> roll_control.joystick;
+	c3 : port panel.onoff -> roll_control.onoff;
+	c4 : port roll_control.left_warning -> display.left_warning;
+	c5 : port roll_control.right_warning -> display.right_warning;
+	c6 : port roll_control.roll_rate -> display.roll_rate;
+properties
+	Actual_Memory_Binding => (reference (ram.s1)) applies to sensors;
+	Actual_Memory_Binding => (reference (ram.s2)) applies to panel;
+	Actual_Memory_Binding => (reference (ram.s3)) applies to roll_control;
+	Actual_Memory_Binding => (reference (ram.s4)) applies to display;
+	
+	Actual_Processor_Binding => (reference (module.p1)) applies to sensors;
+	Actual_Processor_Binding => (reference (module.p2)) applies to panel;
+	Actual_Processor_Binding => (reference (module.p3)) applies to roll_control;
+	Actual_Processor_Binding => (reference (module.p4)) applies to display;
+end main.i;
+
+system implementation main.deos extends main.i
+annex resolute {**
+	prove (check_deos_compliance(this))
+**};
+end main.deos;
+
+system implementation main.vxworks653 extends main.i
+annex resolute {**
+	prove (check_vxworks653_compliance(this))
+**};
+end main.vxworks653;
+
+end roll_control::main;
