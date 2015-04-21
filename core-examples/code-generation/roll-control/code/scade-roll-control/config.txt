@@ -1,0 +1,11 @@
+-target_dir "C:/Users/julien/Desktop/roll-control-code" -target C -name_length 200 -significance_length 31 -user_config "./user_macros.h" 
+-node RollControl::RollControl
+"C:/Program Files (x86)/Esterel Technologies/SCADE R16/examples/GettingStarted/final/RollControl/RollRate.xscade"
+"C:/Program Files (x86)/Esterel Technologies/SCADE R16/examples/GettingStarted/final/RollControl/RollControl.xscade"
+"C:/Program Files (x86)/Esterel Technologies/SCADE R16/examples/GettingStarted/final/RollControl/RollMode.xscade"
+"C:/Program Files (x86)/Esterel Technologies/SCADE R16/SCADE/libraries/libpwlinear/pwlinear.xscade"
+"C:/Program Files (x86)/Esterel Technologies/SCADE R16/SCADE/libraries/libpwlinear/lut.xscade"
+"C:/Program Files (x86)/Esterel Technologies/SCADE R16/SCADE/libraries/libmath/vect.xscade"
+"C:/Program Files (x86)/Esterel Technologies/SCADE R16/SCADE/libraries/libmath/math.xscade"
+"C:/Program Files (x86)/Esterel Technologies/SCADE R16/SCADE/libraries/libdigital/digital.xscade"
+"C:/Program Files (x86)/Esterel Technologies/SCADE R16/SCADE/libraries/libdigital/TruthTables.xscade"

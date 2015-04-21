@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--$**************** KCG Version 6.4 (build i21) ****************
+** Command: kcg64.exe -config C:/Users/julien/Desktop/roll-control-code/config.txt
+** Generation date: 2015-04-21T14:59:40
+*************************************************************$-->
+<Model date="2015-04-21T14:59:40" commandLine="kcg64.exe -config C:/Users/julien/Desktop/roll-control-code/config.txt">
+  <Option name="xml_basename" value="kcg_xml_filter_out.scade"/>
+  <Option name="xml_filter" value="#off#"/>
+  <Option name="state_vector" value="#off#"/>
+  <Option name="static" value="#off#"/>
+  <Option name="warn_error" value="#off#"/>
+  <Option name="no_bitwise" value="#off#"/>
+  <Option name="wrap_c_ops" value="#off#"/>
+  <Option name="input_file"
+      value="C:/Program Files (x86)/Esterel Technologies/SCADE R16/SCADE/libraries/libdigital/TruthTables.xscade"/>
+  <Option name="input_file"
+      value="C:/Program Files (x86)/Esterel Technologies/SCADE R16/SCADE/libraries/libdigital/digital.xscade"/>
+  <Option name="input_file"
+      value="C:/Program Files (x86)/Esterel Technologies/SCADE R16/SCADE/libraries/libmath/math.xscade"/>
+  <Option name="input_file"
+      value="C:/Program Files (x86)/Esterel Technologies/SCADE R16/SCADE/libraries/libmath/vect.xscade"/>
+  <Option name="input_file"
+      value="C:/Program Files (x86)/Esterel Technologies/SCADE R16/SCADE/libraries/libpwlinear/lut.xscade"/>
+  <Option name="input_file"
+      value="C:/Program Files (x86)/Esterel Technologies/SCADE R16/SCADE/libraries/libpwlinear/pwlinear.xscade"/>
+  <Option name="input_file"
+      value="C:/Program Files (x86)/Esterel Technologies/SCADE R16/examples/GettingStarted/final/RollControl/RollMode.xscade"/>
+  <Option name="input_file"
+      value="C:/Program Files (x86)/Esterel Technologies/SCADE R16/examples/GettingStarted/final/RollControl/RollControl.xscade"/>
+  <Option name="input_file"
+      value="C:/Program Files (x86)/Esterel Technologies/SCADE R16/examples/GettingStarted/final/RollControl/RollRate.xscade"/>
+  <Option name="probes" value="#off#"/>
+  <Option name="debug" value="#off#"/>
+  <Option name="no_observe" value="#off#"/>
+  <Option name="observe" value="#off#"/>
+  <Option name="user_config" value="./user_macros.h"/>
+  <Option name="input_threshold" value="#off#"/>
+  <Option name="header" value="#off#"/>
+  <Option name="significance_length" value="31"/>
+  <Option name="name_length" value="200"/>
+  <Option name="globals_prefix" value="#off#"/>
+  <Option name="macro_on_assert" value="#off#"/>
+  <Option name="optimization_level" value="1"/>
+  <Option name="global_root_context" value="#off#"/>
+  <Option name="expall" value="#off#"/>
+  <Option name="noexp" value="#off#"/>
+  <Option name="exp" value="#off#"/>
+  <Option name="target_dir" value="C:/Users/julien/Desktop/roll-control-code"/>
+  <Option name="target" value="C"/>
+  <Option name="node" value="RollControl::RollControl"/>
+  <Option name="auth" value="#off#"/>
+  <Package scadeName="RollRate">
+    <Constant scadeName="kRollRateWarning" scadeType="RollRate::TRealLeftRight" targetName="kRollRateWarning_RollRate"
+        targetType="TRealLeftRight_RollRate"/>
+    <NamedType scadeName="TRealLeftRight" targetName="TRealLeftRight_RollRate" refType="TRealLeftRight_RollRate"/>
+    <NoExpNode scadeName="AdverseYaw" headerFile="AdverseYaw_RollRate.h" targetCycleFct="AdverseYaw_RollRate">
+      <Input scadeName="leftAdverseYaw" scadeType="real" targetName="leftAdverseYaw" targetType="kcg_real"/>
+      <Input scadeName="rightAdverseYaw" scadeType="real" targetName="rightAdverseYaw" targetType="kcg_real"/>
+      <Output scadeName="rollCoupling" scadeType="real" targetName="rollCoupling" targetType="kcg_real"/>
+      <Local scadeName="_L5" scadeType="real" targetName="rollCoupling" targetType="kcg_real"/>
+      <Local scadeName="_L4" scadeType="real" targetName="leftAdverseYaw" targetType="kcg_real"/>
+      <Local scadeName="_L2" scadeType="real" targetName="rightAdverseYaw" targetType="kcg_real"/>
+      <NodeInstance scadeName="-" instName="1"/>
+      <NodeInstance scadeName="*" instName="1"/>
+    </NoExpNode>
+    <NoExpNode scadeName="RollRateCalculate" headerFile="RollRateCalculate_RollRate.h"
+        targetCycleFct="RollRateCalculate_RollRate">
+      <Input scadeName="joystickCmd" scadeType="real" targetName="joystickCmd" targetType="kcg_real"/>
+      <Input scadeName="leftAdverseYaw" scadeType="real" targetName="leftAdverseYaw" targetType="kcg_real"/>
+      <Input scadeName="rightAdverseYaw" scadeType="real" targetName="rightAdverseYaw" targetType="kcg_real"/>
+      <Output scadeName="rollRate" scadeType="real" targetName="rollRate" targetType="kcg_real"/>
+      <Local scadeName="_L1" scadeType="real" targetName="joystickCmd" targetType="kcg_real"/>
+      <Local scadeName="_L2" scadeType="real" targetName="leftAdverseYaw" targetType="kcg_real"/>
+      <Local scadeName="_L3" scadeType="real" targetName="rightAdverseYaw" targetType="kcg_real"/>
+      <Local scadeName="_L6" scadeType="real" targetName="_L6" targetType="kcg_real"/>
+      <Local scadeName="_L8" scadeType="real" targetName="rollRate" targetType="kcg_real"/>
+      <NodeInstance scadeName="RollRate::AdverseYaw" instName="1" refName="AdverseYaw_RollRate"/>
+      <NodeInstance scadeName="-" instName="1"/>
+      <NodeInstance scadeName="*" instName="1"/>
+      <NodeInlining scadeName="pwlinear::LimiterSymmetrical" instName="1">
+        <Local scadeName="Upper_limit" scadeType="&apos;T" targetName="Upper_limit_1" targetType="kcg_real"
+            reused="true"/>
+        <Local scadeName="Lower_limit" scadeType="&apos;T" targetName="Lower_limit_1" targetType="kcg_real"/>
+        <Local scadeName="_L5" scadeType="&apos;T" targetName="rollRate" targetType="kcg_real"/>
+        <Local scadeName="_L8" scadeType="&apos;T" targetName="_L6" targetType="kcg_real"/>
+        <NodeInstance scadeName="&gt;=" instName="1"/>
+        <NodeInstance scadeName="&lt;=" instName="2"/>
+        <NodeInstance scadeName="-" instName="3"/>
+        <NodeInstance scadeName="+" instName="4"/>
+        <NodeInstance scadeName="if" instName="5"/>
+        <NodeInstance scadeName="if" instName="8"/>
+        <Input scadeName="LS_Input" scadeType="&apos;T" targetName="_L6" targetType="kcg_real"/>
+        <Output scadeName="LS_Output" scadeType="&apos;T" targetName="rollRate" targetType="kcg_real"/>
+      </NodeInlining>
+    </NoExpNode>
+    <NoExpNode scadeName="RollRateWarning" headerFile="RollRateWarning_RollRate.h"
+        targetCycleFct="RollRateWarning_RollRate">
+      <Input scadeName="rollRate" scadeType="real" targetName="rollRate" targetType="kcg_real"/>
+      <Output scadeName="leftWarning" scadeType="bool" targetName="leftWarning" targetType="kcg_bool"/>
+      <Output scadeName="rightWarning" scadeType="bool" targetName="rightWarning" targetType="kcg_bool"/>
+      <Local scadeName="_L3" scadeType="real" targetName="rollRate" targetType="kcg_real"/>
+      <Local scadeName="_L17" scadeType="bool" targetName="leftWarning" targetType="kcg_bool"/>
+      <Local scadeName="_L18" scadeType="bool" targetName="rightWarning" targetType="kcg_bool"/>
+      <Local scadeName="_L19" scadeType="real" targetName="rollRate" targetType="kcg_real"/>
+      <NodeInstance scadeName="&lt;" instName="1"/>
+      <NodeInstance scadeName="&gt;" instName="1"/>
+    </NoExpNode>
+  </Package>
+  <Package scadeName="RollControl">
+    <RootNode scadeName="RollControl" headerFile="RollControl_RollControl.h" targetCycleFct="RollControl_RollControl"
+        targetInitFct="RollControl_reset_RollControl" targetInitializationFct="RollControl_init_RollControl">
+      <Input scadeName="joystickCmd" scadeType="real" targetName="joystickCmd" targetType="kcg_real" inCtx="true"/>
+      <Input scadeName="leftAdverseYaw" scadeType="real" targetName="leftAdverseYaw" targetType="kcg_real"
+          inCtx="true"/>
+      <Input scadeName="rightAdverseYaw" scadeType="real" targetName="rightAdverseYaw" targetType="kcg_real"
+          inCtx="true"/>
+      <Input scadeName="onOffPressed" scadeType="bool" targetName="onOffPressed" targetType="kcg_bool" inCtx="true"/>
+      <Output scadeName="rollRate" scadeType="real" targetName="rollRate" targetType="kcg_real" inCtx="true"/>
+      <Output scadeName="leftWarning" scadeType="bool" targetName="leftWarning" targetType="kcg_bool" inCtx="true"/>
+      <Output scadeName="rightWarning" scadeType="bool" targetName="rightWarning" targetType="kcg_bool" inCtx="true"/>
+      <Output scadeName="mode" scadeType="RollMode::TRollMode" targetName="mode" targetType="TRollMode_RollMode"
+          inCtx="true"/>
+      <Local scadeName="_L1" scadeType="real" targetName="joystickCmd" targetType="kcg_real"/>
+      <Local scadeName="_L2" scadeType="real" targetName="leftAdverseYaw" targetType="kcg_real"/>
+      <Local scadeName="_L3" scadeType="real" targetName="rightAdverseYaw" targetType="kcg_real"/>
+      <Local scadeName="_L4" scadeType="real" targetName="rollRate" targetType="kcg_real" inCtx="true"/>
+      <Local scadeName="_L14" scadeType="bool" targetName="rightWarning" targetType="kcg_bool" inCtx="true"/>
+      <Local scadeName="_L13" scadeType="bool" targetName="leftWarning" targetType="kcg_bool" inCtx="true"/>
+      <Local scadeName="_L17" scadeType="RollMode::TRollMode" targetName="mode" targetType="TRollMode_RollMode"
+          inCtx="true"/>
+      <Local scadeName="_L18" scadeType="bool" targetName="onOffPressed" targetType="kcg_bool"/>
+      <NodeInstance scadeName="RollRate::RollRateCalculate" instName="1" refName="RollRateCalculate_RollRate"/>
+      <NodeInstance scadeName="RollRate::RollRateWarning" instName="1" refName="RollRateWarning_RollRate"/>
+      <NodeInlining scadeName="math::Abs" instName="1">
+        <Local scadeName="_L5" scadeType="&apos;T" targetName="rollRate" targetType="kcg_real" inCtx="true"/>
+        <NodeInstance scadeName="&lt;=" instName="1"/>
+        <NodeInstance scadeName="if" instName="2"/>
+        <NodeInstance scadeName="-" instName="5"/>
+        <Input scadeName="A_Input" scadeType="&apos;T" targetName="rollRate" targetType="kcg_real" inCtx="true"/>
+      </NodeInlining>
+      <NodeInstance scadeName="digital::RisingEdge" instName="1" refName="RisingEdge_digital">
+        <OutCtxVar targetName="Context_1"/>
+      </NodeInstance>
+      <NodeInstance scadeName="RollMode::RollMode" instName="1" refName="RollMode_RollMode">
+        <OutCtxVar targetName="_1_Context_1"/>
+      </NodeInstance>
+      <OutCtxType targetName="outC_RollControl_RollControl"/>
+      <InCtxType targetName="inC_RollControl_RollControl"/>
+    </RootNode>
+  </Package>
+  <Package scadeName="RollMode">
+    <Constant scadeName="kFailSoftRoll" scadeType="real" targetName="kFailSoftRoll_RollMode" targetType="kcg_real"
+        macroDef="true"/>
+    <EnumType scadeName="TRollMode" targetName="TRollMode_RollMode">
+      <EnumVal scadeName="off" targetName="off_RollMode"/>
+      <EnumVal scadeName="nominal" targetName="nominal_RollMode"/>
+      <EnumVal scadeName="failsoft" targetName="failsoft_RollMode"/>
+    </EnumType>
+    <NoExpNode scadeName="RollMode" headerFile="RollMode_RollMode.h" targetCycleFct="RollMode_RollMode"
+        targetInitFct="RollMode_reset_RollMode" targetInitializationFct="RollMode_init_RollMode">
+      <Input scadeName="absRollRate" scadeType="real" targetName="absRollRate" targetType="kcg_real"/>
+      <Input scadeName="onOffPressed" scadeType="bool" targetName="onOffPressed" targetType="kcg_bool"/>
+      <Output scadeName="mode" scadeType="RollMode::TRollMode" targetName="mode" targetType="TRollMode_RollMode"
+          inCtx="true"/>
+      <Automaton scadeName="SMRollMode" targetStatesType="SSM_ST_SMRollMode" targetTransitionsType="SSM_TR_SMRollMode">
+        <State scadeName="Off" targetName="SSM_st_Off_SMRollMode">
+          <Fork priority="1">
+            <Transition targetName="SSM_TR_Off_1_SMRollMode" kind="strong" scadeDest="On"/>
+          </Fork>
+        </State>
+        <State scadeName="On" targetName="SSM_st_On_SMRollMode">
+          <Automaton scadeName="SMOn" targetStatesType="SSM_ST_SMOn_SMRollMode_On"
+              targetTransitionsType="SSM_TR_SMOn_SMRollMode_On">
+            <State scadeName="Nominal" targetName="SSM_st_Nominal_SMRollMode_On_SMOn">
+              <Fork priority="1">
+                <Condition>
+                  <NodeInstance scadeName="&gt;" instName="1"/>
+                </Condition>
+                <Transition targetName="SSM_TR_Nominal_1_SMOn_SMRollMode_On" kind="strong" scadeDest="Failsoft"/>
+              </Fork>
+            </State>
+            <State scadeName="Failsoft" targetName="SSM_st_Failsoft_SMRollMode_On_SMOn">
+              <Fork priority="1">
+                <Condition>
+                  <NodeInstance scadeName="&lt;=" instName="1"/>
+                </Condition>
+                <Transition targetName="SSM_TR_Failsoft_1_SMOn_SMRollMode_On" kind="strong" scadeDest="Nominal"/>
+              </Fork>
+            </State>
+            <ActiveState targetName="SMOn_state_act_SMRollMode_On"/>
+            <NextState targetName="SMOn_state_nxt_SMRollMode_On" mem="true" inCtx="true"/>
+            <SelectedState targetName="SMOn_state_sel_SMRollMode_On"/>
+          </Automaton>
+          <Fork priority="1">
+            <Transition targetName="SSM_TR_On_1_SMRollMode" kind="strong" scadeDest="Off"/>
+          </Fork>
+        </State>
+        <ActiveState targetName="SMRollMode_state_act"/>
+        <NextState targetName="SMRollMode_state_nxt" mem="true" inCtx="true"/>
+        <SelectedState targetName="SMRollMode_state_sel"/>
+        <ResetActiveState targetName="SMRollMode_reset_act"/>
+      </Automaton>
+      <Init targetName="init1" targetType="kcg_bool" inCtx="true"/>
+      <Init targetName="init" targetType="kcg_bool" clockVar="SMRollMode_state_act" clockVal="SSM_st_On_SMRollMode"
+          inCtx="true"/>
+      <OutCtxType targetName="outC_RollMode_RollMode"/>
+    </NoExpNode>
+  </Package>
+  <Package scadeName="pwlinear">
+    <ExpNode scadeName="LimiterSymmetrical"/>
+  </Package>
+  <Package scadeName="lut">
+    <NamedType scadeName="LutIndex" targetName="LutIndex_lut" refType="LutIndex_lut"/>
+  </Package>
+  <Package scadeName="vect"/>
+  <Package scadeName="math">
+    <ExpNode scadeName="Abs"/>
+  </Package>
+  <Package scadeName="digital">
+    <NoExpNode scadeName="RisingEdge" headerFile="RisingEdge_digital.h" targetCycleFct="RisingEdge_digital"
+        targetInitFct="RisingEdge_reset_digital" targetInitializationFct="RisingEdge_init_digital">
+      <Input scadeName="RE_Input" scadeType="bool" targetName="RE_Input" targetType="kcg_bool"/>
+      <Output scadeName="RE_Output" scadeType="bool" targetName="RE_Output" targetType="kcg_bool" inCtx="true"/>
+      <Local scadeName="_L1" scadeType="bool" targetName="RE_Input" targetType="kcg_bool"/>
+      <Local scadeName="_L6" scadeType="bool" targetName="RE_Output" targetType="kcg_bool" inCtx="true"/>
+      <FbyOp instName="1">
+        <Init targetName="init" targetType="kcg_bool" inCtx="true"/>
+        <Memory targetName="rem_RE_Input" targetType="kcg_bool" inCtx="true"/>
+      </FbyOp>
+      <NodeInstance scadeName="and" instName="2"/>
+      <NodeInstance scadeName="not" instName="3"/>
+      <Init targetName="init" targetType="kcg_bool" inCtx="true"/>
+      <Memory scadeName="RE_Input" scadeType="bool" targetName="rem_RE_Input" targetType="kcg_bool" inCtx="true"/>
+      <OutCtxType targetName="outC_RisingEdge_digital"/>
+    </NoExpNode>
+  </Package>
+  <Package scadeName="truthtables">
+    <EnumType scadeName="TruthTableValues" targetName="TruthTableValues_truthtables">
+      <EnumVal scadeName="T" targetName="T_truthtables"/>
+      <EnumVal scadeName="F" targetName="F_truthtables"/>
+      <EnumVal scadeName="X" targetName="X_truthtables"/>
+    </EnumType>
+  </Package>
+  <StructType targetName="TRealLeftRight_RollRate" targetCopyFct="kcg_copy_TRealLeftRight_RollRate"
+      targetCompFct="kcg_comp_TRealLeftRight_RollRate">
+    <Field scadeName="left" scadeType="real" targetName="left" targetType="kcg_real"/>
+    <Field scadeName="right" scadeType="real" targetName="right" targetType="kcg_real"/>
+  </StructType>
+  <StructType targetName="LutIndex_lut" targetCopyFct="kcg_copy_LutIndex_lut" targetCompFct="kcg_comp_LutIndex_lut">
+    <Field scadeName="k" scadeType="int" targetName="k" targetType="kcg_int"/>
+    <Field scadeName="f" scadeType="real" targetName="f" targetType="kcg_real"/>
+  </StructType>
+  <PredefType scadeName="real" targetName="kcg_real"/>
+  <PredefType scadeName="bool" targetName="kcg_bool"/>
+  <PredefType scadeName="char" targetName="kcg_char"/>
+  <PredefType scadeName="int" targetName="kcg_int"/>
+</Model>
+<!--$**************** KCG Version 6.4 (build i21) ****************
+** kcg_trace.xml
+** Generation date: 2015-04-21T14:59:40
+*************************************************************$-->

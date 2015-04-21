@@ -1,0 +1,29 @@
+$**************** KCG Version 6.4 (build i21) ****************
+** Command: kcg64.exe -config C:/Users/julien/Desktop/roll-control-code/config.txt
+** Generation date: 2015-04-21T14:59:40
+*************************************************************$
+Data structures
+  Structures
+    Max members in a single structure: 6
+  Arrays
+    Max number of dimensions for an array: 0
+    Maximum size for a dimension: 0
+  Enumeration
+    Max of enum constants in a single enumeration: 3
+Control structures
+  Max numbers of case labels in a switch: 2
+  Max number of nesting levels in compound statement: 3
+Program size
+  Functions
+    Max number of function parameters in definition: 3
+    Max number of function arguments in a call: 3
+  Expressions
+    Max number of nesting levels of parenthesized expression in a full expression: 1
+  Identifiers
+    Max number of identifiers with block scope declared in one block: 5
+    Max number of macro identifiers simultaneously defined in one preprocessing translation unit: 21
+    Max number of extern identifiers in one translation unit: 15
+$**************** KCG Version 6.4 (build i21) ****************
+** kcg_metrics.txt
+** Generation date: 2015-04-21T14:59:40
+*************************************************************$

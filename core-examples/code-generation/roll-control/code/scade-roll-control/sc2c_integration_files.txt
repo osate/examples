@@ -1,0 +1,38 @@
+*****************************
+*** Generated KCG H files ***
+*****************************
+RollControl_RollControl.h
+RollMode_RollMode.h
+RisingEdge_digital.h
+RollRateWarning_RollRate.h
+RollRateCalculate_RollRate.h
+AdverseYaw_RollRate.h
+kcg_types.h
+kcg_consts.h
+kcg_sensors.h
+
+*****************************
+*** Generated KCG C files ***
+*****************************
+RollControl_RollControl.c
+RollMode_RollMode.c
+RisingEdge_digital.c
+RollRateWarning_RollRate.c
+RollRateCalculate_RollRate.c
+AdverseYaw_RollRate.c
+kcg_types.c
+kcg_consts.c
+
+*****************************
+*** Generated SC2C Files  ***
+*****************************
+user_macros.h
+kcg_imported_types.h
+
+*****************************
+*** Include Directories   ***
+*****************************
+.
+$(SCADE)
+$(SCADE)\include
+

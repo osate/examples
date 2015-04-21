@@ -1,0 +1,56 @@
+$**************  SCADETOC Version R16 (build i21) **************
+** Generation date: 2015-04-21T14:59:39
+** Command: scade -code "C:\Program Files (x86)\Esterel Technologies\SCADE R16\examples\GettingStarted\final\RollControl\RollControl.etp" -root RollControl::RollControl -conf KCG
+*************************************************************$
+*** Generated Files Information (GENFIL): KCG- Generated files
+ ~kcg_trace.xml
+  at file C:\Users\julien\Desktop\roll-control-code\kcg_trace.xml, line 0, character 0
+ ~kcg_metrics.txt
+  at file C:\Users\julien\Desktop\roll-control-code\kcg_metrics.txt, line 0, character 0
+ ~RollControl_RollControl.c
+  at file C:\Users\julien\Desktop\roll-control-code\RollControl_RollControl.c, line 0, character 0
+ ~RollMode_RollMode.c
+  at file C:\Users\julien\Desktop\roll-control-code\RollMode_RollMode.c, line 0, character 0
+ ~RisingEdge_digital.c
+  at file C:\Users\julien\Desktop\roll-control-code\RisingEdge_digital.c, line 0, character 0
+ ~RollRateWarning_RollRate.c
+  at file C:\Users\julien\Desktop\roll-control-code\RollRateWarning_RollRate.c, line 0, character 0
+ ~RollRateCalculate_RollRate.c
+  at file C:\Users\julien\Desktop\roll-control-code\RollRateCalculate_RollRate.c, line 0, character 0
+ ~AdverseYaw_RollRate.c
+  at file C:\Users\julien\Desktop\roll-control-code\AdverseYaw_RollRate.c, line 0, character 0
+ ~RollControl_RollControl.h
+  at file C:\Users\julien\Desktop\roll-control-code\RollControl_RollControl.h, line 0, character 0
+ ~RollMode_RollMode.h
+  at file C:\Users\julien\Desktop\roll-control-code\RollMode_RollMode.h, line 0, character 0
+ ~RisingEdge_digital.h
+  at file C:\Users\julien\Desktop\roll-control-code\RisingEdge_digital.h, line 0, character 0
+ ~RollRateWarning_RollRate.h
+  at file C:\Users\julien\Desktop\roll-control-code\RollRateWarning_RollRate.h, line 0, character 0
+ ~RollRateCalculate_RollRate.h
+  at file C:\Users\julien\Desktop\roll-control-code\RollRateCalculate_RollRate.h, line 0, character 0
+ ~AdverseYaw_RollRate.h
+  at file C:\Users\julien\Desktop\roll-control-code\AdverseYaw_RollRate.h, line 0, character 0
+ ~kcg_types.h
+  at file C:\Users\julien\Desktop\roll-control-code\kcg_types.h, line 0, character 0
+ ~kcg_consts.h
+  at file C:\Users\julien\Desktop\roll-control-code\kcg_consts.h, line 0, character 0
+ ~kcg_sensors.h
+  at file C:\Users\julien\Desktop\roll-control-code\kcg_sensors.h, line 0, character 0
+ ~kcg_types.c
+  at file C:\Users\julien\Desktop\roll-control-code\kcg_types.c, line 0, character 0
+ ~kcg_consts.c
+  at file C:\Users\julien\Desktop\roll-control-code\kcg_consts.c, line 0, character 0
+*** Generated Files Information (GENFIL): Code Generator Generated files
+ ~user_macros.h
+  at file C:\Users\julien\Desktop\roll-control-code\user_macros.h, line 0, character 0
+ ~kcg_imported_types.h
+  at file C:\Users\julien\Desktop\roll-control-code\kcg_imported_types.h, line 0, character 0
+ ~sc2c.log
+  at file C:\Users\julien\Desktop\roll-control-code\sc2c.log, line 0, character 0
+ ~sc2c_integration_files.txt
+  at file C:\Users\julien\Desktop\roll-control-code\sc2c_integration_files.txt, line 0, character 0
+$**************  SCADETOC Version R16 (build i21) **************
+** Generation date: 2015-04-21T14:59:40
+** sc2c.log
+*************************************************************$
