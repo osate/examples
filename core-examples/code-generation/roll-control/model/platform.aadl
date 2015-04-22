@@ -26,19 +26,19 @@ subcomponents
 	p4 : virtual processor partition.i
 		{ARINC653::Partition_Identifier => 4; ARINC653::Partition_Name => "display";};
 properties
-	ARINC653::Module_Major_Frame => 40ms;
+	ARINC653::Module_Major_Frame => 20ms;
 	ARINC653::Module_Schedule => 
 	    ( [Partition => reference (p1);
-	      Duration  => 10 ms;
+	      Duration  => 5 ms;
 	      Periodic_Processing_Start => false;],
 	      [Partition => reference (p2);
-	      Duration  => 10 ms;
+	      Duration  => 5 ms;
 	      Periodic_Processing_Start => false;],
 	      [Partition => reference (p3);
-	      Duration  => 10 ms;
+	      Duration  => 5 ms;
 	      Periodic_Processing_Start => false;],
 	      [Partition => reference (p4);
-	      Duration  => 10 ms;
+	      Duration  => 5 ms;
 	      Periodic_Processing_Start => false;]
 	    );
 	ARINC653::HM_Error_ID_Levels => 

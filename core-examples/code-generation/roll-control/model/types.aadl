@@ -5,14 +5,16 @@ with data_model;
 
 data real
 properties
-	Data_Size => 4 bytes;
+	Data_Size => 8 bytes;
 	data_model::data_representation => Float ;
+	Type_Source_Name => "double";
 end real;
 
 data bool
 properties
-	Data_Size => 4 bytes;
+	Data_Size => 1 bytes;
 	data_model::data_representation => Integer ;
+	Type_Source_Name => "unsigned char";
 end bool;
 
 end roll_control::types;

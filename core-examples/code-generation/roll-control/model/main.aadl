@@ -29,6 +29,8 @@ connections
 	c5 : port roll_control.right_warning -> display.right_warning;
 	c6 : port roll_control.roll_rate -> display.roll_rate;
 properties
+
+	
 	Actual_Memory_Binding => (reference (ram.s1)) applies to sensors;
 	Actual_Memory_Binding => (reference (ram.s2)) applies to panel;
 	Actual_Memory_Binding => (reference (ram.s3)) applies to roll_control;
@@ -41,6 +43,11 @@ properties
 end main.i;
 
 system implementation main.deos extends main.i
+properties
+	Source_Name => "roll-control-sensors.exe" applies to module.p1;
+	Source_Name => "roll-control-panel.exe" applies to module.p2;
+	Source_Name => "roll-control-roll-control.exe" applies to module.p3;
+	Source_Name => "roll-control-display.exe" applies to module.p4;
 annex resolute {**
 	prove (check_deos_compliance(this))
 **};

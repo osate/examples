@@ -15,6 +15,17 @@ features
 end roll_control;
 
 process implementation roll_control.i
+subcomponents
+	thr : thread thr_roll_control.i;
+connections
+	c0 : port joystick -> thr.joystick;
+	c1 : port onoff -> thr.onoff;
+	c2 : port left_adverse_yaw -> thr.left_adverse_yaw;
+	c3 : port right_adverse_yaw -> thr.right_adverse_yaw;
+	
+	c4 : port thr.left_warning -> left_warning;
+	c5 : port thr.right_warning -> right_warning;
+	c6 : port thr.roll_rate -> roll_rate;
 end roll_control.i;
 
 thread thr_roll_control
@@ -64,7 +75,7 @@ properties
    --
    -- Name of the SCADE operator
    --
-   source_name => "RollControl";
+   source_name => "RollControl_RollControl";
    source_language => (SCADE);
    Source_Text => ("RollControlRollControl.c");
    Code_Size  => 2 Kbyte;
