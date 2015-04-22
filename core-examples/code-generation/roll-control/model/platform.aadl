@@ -29,16 +29,16 @@ properties
 	ARINC653::Module_Major_Frame => 20ms;
 	ARINC653::Module_Schedule => 
 	    ( [Partition => reference (p1);
-	      Duration  => 5 ms;
+	      Duration  => 500 us;
 	      Periodic_Processing_Start => false;],
 	      [Partition => reference (p2);
-	      Duration  => 5 ms;
+	      Duration  => 500 us;
 	      Periodic_Processing_Start => false;],
 	      [Partition => reference (p3);
-	      Duration  => 5 ms;
+	      Duration  => 500 us;
 	      Periodic_Processing_Start => false;],
 	      [Partition => reference (p4);
-	      Duration  => 5 ms;
+	      Duration  => 500 us;
 	      Periodic_Processing_Start => false;]
 	    );
 	ARINC653::HM_Error_ID_Levels => 

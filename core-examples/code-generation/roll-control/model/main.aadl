@@ -48,6 +48,27 @@ properties
 	Source_Name => "roll-control-panel.exe" applies to module.p2;
 	Source_Name => "roll-control-roll-control.exe" applies to module.p3;
 	Source_Name => "roll-control-display.exe" applies to module.p4;
+	
+	ARINC653::Module_Major_Frame => 20ms applies to module;
+
+--  Disable for now, it causes Ocarina to output
+--  a wrong configuration code.
+
+--	ARINC653::Module_Schedule => 
+--	    ( [Partition => reference (module.p1);
+--	      Duration  => 500 us;
+--	      Periodic_Processing_Start => false;],
+--	      [Partition => reference (module.p2);
+--	      Duration  => 500 us;
+--	      Periodic_Processing_Start => false;],
+--	      [Partition => reference (module.p3);
+--	      Duration  => 500 us;
+--	      Periodic_Processing_Start => false;],
+--	      [Partition => reference (module.p4);
+--	      Duration  => 500 us;
+--	      Periodic_Processing_Start => false;]
+--	    ) applies to module;	
+	
 annex resolute {**
 	prove (check_deos_compliance(this))
 **};

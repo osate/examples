@@ -32,8 +32,8 @@ connections
 properties
    Priority => 1; 
    dispatch_protocol => periodic;
-   period            => 1000ms;
-   deadline          => 500ms;
+   period            => 10ms;
+   deadline          => 10ms;
    compute_execution_time => 0ms .. 1ms;
    Code_Size  => 4 Kbyte;
    Stack_Size => 30 Kbyte;
