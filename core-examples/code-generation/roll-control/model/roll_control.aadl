@@ -76,7 +76,7 @@ properties
    -- Name of the SCADE operator
    --
    source_name => "RollControl_RollControl";
-   source_language => (SCADE);
+   source_language => (SCADE); 
    Source_Text => ("RollControlRollControl.c");
    Code_Size  => 2 Kbyte;
    Data_Size  => 2 Kbyte;	
