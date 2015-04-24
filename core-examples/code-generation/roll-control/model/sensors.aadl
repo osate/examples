@@ -2,11 +2,12 @@ package roll_control::sensors
 
 public
 with roll_control::types;
+with ARINC653;
 
 process sensors
 features
-	left_adverse_yaw : out data port roll_control::types::real;
-	right_adverse_yaw : out data port roll_control::types::real;
+	left_adverse_yaw : out data port roll_control::types::real {arinc653::sampling_refresh_period => 10 ms;};
+	right_adverse_yaw : out data port roll_control::types::real {arinc653::sampling_refresh_period => 10 ms;};
 end sensors;
 
 process implementation sensors.i

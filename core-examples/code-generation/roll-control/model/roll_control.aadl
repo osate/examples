@@ -2,16 +2,17 @@ package roll_control::roll_control
 
 public
 with roll_control::types;
+with ARINC653;
 
 process roll_control
 features
-	joystick : in data port roll_control::types::real;
-	onoff    : in data port roll_control::types::bool;
-	left_adverse_yaw : in data port roll_control::types::real;
-	right_adverse_yaw : in data port roll_control::types::real;
-	left_warning : out data port roll_control::types::bool;
-	right_warning : out data port roll_control::types::bool;	
-	roll_rate : out data port roll_control::types::real;	
+	joystick : in data port roll_control::types::real {arinc653::sampling_refresh_period => 10 ms;};
+	onoff    : in data port roll_control::types::bool {arinc653::sampling_refresh_period => 10 ms;};
+	left_adverse_yaw : in data port roll_control::types::real {arinc653::sampling_refresh_period => 10 ms;};
+	right_adverse_yaw : in data port roll_control::types::real {arinc653::sampling_refresh_period => 10 ms;};
+	left_warning : out data port roll_control::types::bool {arinc653::sampling_refresh_period => 10 ms;};
+	right_warning : out data port roll_control::types::bool {arinc653::sampling_refresh_period => 10 ms;};	
+	roll_rate : out data port roll_control::types::real {arinc653::sampling_refresh_period => 10 ms;};	
 end roll_control;
 
 process implementation roll_control.i

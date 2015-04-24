@@ -2,11 +2,12 @@ package roll_control::panel
 
 public
 with roll_control::types;
+	with ARINC653;
 
 process panel
 features
-	joystick : out data port roll_control::types::real;
-	onoff : out data port roll_control::types::bool;
+	joystick : out data port roll_control::types::real {arinc653::sampling_refresh_period => 10 ms;};
+	onoff : out data port roll_control::types::bool {arinc653::sampling_refresh_period => 10 ms;};
 end panel;
 
 process implementation panel.i

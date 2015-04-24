@@ -2,12 +2,13 @@ package roll_control::display
 
 public
 with roll_control::types;
+with arinc653;
 
 process display
 features
-	left_warning : in data port roll_control::types::bool;
-	right_warning : in data port roll_control::types::bool;	
-	roll_rate : in data port roll_control::types::real;	
+	left_warning : in data port roll_control::types::bool {arinc653::sampling_refresh_period => 10 ms;};
+	right_warning : in data port roll_control::types::bool {arinc653::sampling_refresh_period => 10 ms;};	
+	roll_rate : in data port roll_control::types::real {arinc653::sampling_refresh_period => 10 ms;};	
 end display;
 
 process implementation display.i
