@@ -1,0 +1,66 @@
+package fta_propagations_sample
+
+
+public
+
+data mydata
+end mydata;
+
+system s
+features
+	datain : in data port mydata; 
+annex EMV2 {**
+	use types ErrorModelLibrary;
+	use behavior ErrorModelLibrary::Simple;
+	
+	error propagations
+		datain : in propagation {BadValue};
+	flows
+		f0 : error sink datain {BadValue};
+	end propagations;
+	component error behavior
+	transitions
+		t0 : Operational -[datain{BadValue}]-> Failed;
+	end component;
+**};
+end s;
+
+device sensor
+features
+	dataout : out data port mydata;
+annex EMV2 {**
+	use types ErrorModelLibrary;
+	use behavior ErrorModelLibrary::Simple;
+	error propagations
+		dataout : out propagation {BadValue};
+	flows
+		f0 : error source dataout {BadValue};
+	end propagations;
+**};	
+end sensor;
+
+system main
+end main;
+
+system implementation main.i
+subcomponents
+	s1 : system s;
+	s2 : system s;
+	sens1 : device sensor;
+	sens2 : device sensor;
+connections
+	c0 : port sens1.dataout -> s1.datain;
+	c1 : port sens2.dataout -> s2.datain;
+annex EMV2 {**
+	use types ErrorModelLibrary;
+	use behavior ErrorModelLibrary::Simple;
+	
+	composite error behavior
+		states
+			[s1.Failed and s2.Failed]-> Failed;
+		end composite;  
+	
+**};
+end main.i;
+
+end fta_propagations_sample;
