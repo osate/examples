@@ -44,12 +44,16 @@ call : { add : subprogram function_addtogether;
 	     mult : subprogram function_multiply;
 };
 connections
+	set_local_a: parameter va -> local_a;
+	set_local_b: parameter vb -> local_b;
+	set_local_c: parameter vc -> local_c;
 	c0 : parameter local_a -> add.va;
 	c1 : parameter local_b -> add.vb;
 	c2 : parameter add.res -> ga;
 	c3 : parameter local_c -> mult.vc;
 	c4 : parameter ga -> mult.va;
 	c5 : parameter mult.res -> local_d;
+	return_d : parameter res -> local_d;
 end function_a.impl;
 
 
