@@ -61,6 +61,7 @@ public
 		internal_req : port server.internal_request -> arduino.internal_request;
 		internal_rep : port arduino.internal_reply -> server.internal_reply;
 	flows
-		request : flow sink user_request -> user_req -> server.request -> internal_req -> arduino.flow_request;
+		request : flow sink user_request -> user_req -> server.server_flow_request -> internal_req -> arduino.flow_request;
+		reply   : flow source arduino.flow_reply -> internal_rep -> server.server_flow_reply -> user_rep -> user_reply;
 	end home.i; 
 end iot::home::integration;

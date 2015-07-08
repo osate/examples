@@ -37,6 +37,8 @@ public
 		sensor_proximity 	: device iot::sap_node::devices::proximity_sensor;
 		sensor_temperature 	: device iot::sap_node::devices::temperature_sensor;
 	connections
+		network   : bus access eth <-> board.eth;
+		 
 		act_alarm : port soft.alert -> actuator_alarm.activate;
 		act_door  : port soft.activate_door -> actuator_door.activate;
 		sen_door  : port sensor_door.isopen -> soft.sensor_door;
@@ -45,6 +47,8 @@ public
 		sen_temp  : port sensor_temperature.temperature -> soft.sensor_temperature;
 		request   : port internal_request -> soft.internal_request;
 		reply     : port soft.internal_reply -> internal_reply;
+	properties
+		actual_connection_binding => (reference (board)) applies to soft;
 	end sap_node.i;
 	
 end iot::sap_node::integration;

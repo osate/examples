@@ -21,7 +21,20 @@ public
 		internal_reply : in event data port iot::common::datatypes::internal_reply;
 	flows
 		request_flow : flow path user_request -> internal_request;
-		reply_flow   : flow path internal_reply -> user_reply; 
+		reply_flow   : flow path internal_reply -> user_reply;
+	annex EMV2 {**
+		use types errorlibrary;
+		
+		error propagations
+			internal_reply 	 	: in propagation {ServiceError};
+			internal_request 	: out propagation {BadValue};
+			user_reply 	 		: out propagation {ServiceError};
+			user_request 		: in propagation {BadValue};
+		flows
+			request : error path user_request{BadValue} -> internal_request{BadValue};
+			reply   : error path internal_reply{ServiceError} -> user_reply{ServiceError}; 
+		end propagations;
+	**};
 	end server;
 	
 end iot::home::server::software;

@@ -36,7 +36,7 @@ public
 				description => "Bad distance sent from the sensor - would then trigger potential faults";
 				comment => "Can then either trigger an alarm and generates false report";
 			])
-			applies to distance.serviceomission;
+			applies to distance.badvalue;
 			EMV2::hazards => 
 			([	crossreference => "";
 				failure => "No distance";
@@ -80,7 +80,7 @@ public
 				description => "Bad temperature sent from the sensor";
 				comment => "Potential hazards (automatic activation or cooler or heater)";
 			])
-			applies to temperature.serviceomission;
+			applies to temperature.badvalue;
 			EMV2::hazards => 
 			([	crossreference => "";
 				failure => "No temperature";
