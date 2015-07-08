@@ -1,0 +1,50 @@
+----------------------------------------------
+--  IoT example
+--       Julien Delange <jdelange@sei.cmu.edu>
+--
+--
+--
+--
+--
+----------------------------------------------
+
+package iot::sap_node::integration
+public
+	with iot::sap_node::devices;
+	with iot::sap_node::software;
+	with iot::sap_node::platform;
+	with iot::common::platform;
+	with iot::common::datatypes;
+	
+	system sap_node
+	features
+		internal_request : in event data port iot::common::datatypes::internal_request;
+		internal_reply : out event data port iot::common::datatypes::internal_reply;
+		eth : requires bus access iot::common::platform::ethernet;
+	flows
+		flow_request : flow sink internal_request;
+		flow_reply   : flow source internal_reply;
+	end sap_node;
+	 
+	system implementation sap_node.i
+	subcomponents
+		board 				: processor iot::sap_node::platform::arduino;
+		soft  				: process iot::sap_node::software::pr_control_loop;
+		actuator_alarm   	: device iot::sap_node::devices::alarm;
+		actuator_door 		: device iot::sap_node::devices::door_actuator;
+		sensor_door 		: device iot::sap_node::devices::door_sensor;
+		actuator_led 		: device iot::sap_node::devices::led;
+		sensor_proximity 	: device iot::sap_node::devices::proximity_sensor;
+		sensor_temperature 	: device iot::sap_node::devices::temperature_sensor;
+	connections
+		act_alarm : port soft.alert -> actuator_alarm.activate;
+		act_door  : port soft.activate_door -> actuator_door.activate;
+		sen_door  : port sensor_door.isopen -> soft.sensor_door;
+		act_led   : port soft.activate_led -> actuator_led.activate;
+		sen_prox  : port sensor_proximity.distance -> soft.sensor_proximity;
+		sen_temp  : port sensor_temperature.temperature -> soft.sensor_temperature;
+		request   : port internal_request -> soft.internal_request;
+		reply     : port soft.internal_reply -> internal_reply;
+	end sap_node.i;
+	
+end iot::sap_node::integration;

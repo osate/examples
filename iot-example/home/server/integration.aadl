@@ -1,0 +1,47 @@
+----------------------------------------------
+--  IoT example
+--       Julien Delange <jdelange@sei.cmu.edu>
+--
+--
+--
+--
+--
+----------------------------------------------
+
+
+package iot::home::server::integration
+public
+	with iot::home::server::platform;
+	with iot::home::server::software;
+	with iot::common::platform;
+with iot::common::datatypes;
+	
+	system server
+	features
+		eth 				: requires bus access iot::common::platform::ethernet;	
+		user_request 		: in event data port iot::common::datatypes::request;
+		user_reply 			: out event data port iot::common::datatypes::reply;
+		internal_request 	: out event data port iot::common::datatypes::internal_request;
+		internal_reply :	 in event data port iot::common::datatypes::internal_reply;
+	flows
+		request : flow path user_request -> internal_request;
+		reply   : flow path internal_reply -> user_reply;
+	end server;
+	
+	system implementation server.i
+	subcomponents
+		cpu  : processor iot::home::server::platform::linux;
+		soft : process iot::home::server::software::server;
+	connections
+		user_req : port user_request -> soft.user_request;
+		user_rep : port soft.user_reply -> user_reply;
+		int_req  : port soft.internal_request -> internal_request;
+		int_rep  : port internal_reply -> soft.internal_reply;
+	flows
+		request  : flow path user_request -> user_req -> soft.request_flow -> int_req -> internal_request;
+		reply    : flow path internal_reply -> int_rep -> soft.reply_flow -> user_rep -> user_reply;
+	properties
+		actual_processor_binding => (reference (cpu)) applies to soft;
+	end server.i;
+end iot::home::server::integration;
+ 

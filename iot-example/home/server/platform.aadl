@@ -1,0 +1,21 @@
+----------------------------------------------
+--  IoT example
+--       Julien Delange <jdelange@sei.cmu.edu>
+--
+--
+--
+--
+--
+----------------------------------------------
+
+package iot::home::server::platform
+
+public
+	
+	with iot::common::platform;
+	
+	processor linux
+	features
+		eth : requires bus access iot::common::platform::ethernet;
+	end linux;
+end iot::home::server::platform;

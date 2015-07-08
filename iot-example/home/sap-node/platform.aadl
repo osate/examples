@@ -1,0 +1,19 @@
+----------------------------------------------
+--  IoT example
+--       Julien Delange <jdelange@sei.cmu.edu>
+--
+--
+--
+--
+--
+----------------------------------------------
+
+package iot::sap_node::platform
+public
+	with iot::common::platform;
+	
+	processor arduino
+	features
+		eth : requires bus access iot::common::platform::ethernet;
+	end arduino;
+end iot::sap_node::platform;

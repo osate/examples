@@ -1,0 +1,133 @@
+----------------------------------------------
+--  IoT example
+--       Julien Delange <jdelange@sei.cmu.edu>
+--
+--
+--
+--
+--
+----------------------------------------------
+
+
+package iot::sap_node::devices
+public
+	with iot::common::datatypes;
+	with emv2;
+	 
+	device proximity_sensor
+	features
+		distance : out data port iot::common::datatypes::distance;
+	flows
+		flow_distance : flow source distance;
+	annex EMV2 {**
+		use types errorlibrary;
+		
+		error propagations
+			distance : out propagation {BadValue,ServiceOmission};
+		flows
+			baddistance : error source distance{BadValue};
+			nodistance  : error source distance{serviceomission};
+		end propagations;
+		properties
+			EMV2::hazards => 
+			([	crossreference => "";
+				failure => "Bad distance";
+				phases => ("");
+				description => "Bad distance sent from the sensor - would then trigger potential faults";
+				comment => "Can then either trigger an alarm and generates false report";
+			])
+			applies to distance.serviceomission;
+			EMV2::hazards => 
+			([	crossreference => "";
+				failure => "No distance";
+				phases => ("");
+				description => "No distance sent from the sensor";
+				comment => "Potentially critical if an application is using the sensor - would then miss alarming reports";
+			])
+			applies to distance.serviceomission;
+	**};
+	end proximity_sensor;
+	
+	
+	device led
+	features
+		activate : in data port iot::common::datatypes::boolean;
+	flows
+		flow_led : flow sink activate;
+	end led;
+	
+	
+	device temperature_sensor
+	features
+		temperature : out data port iot::common::datatypes::temperature;
+	flows
+		flow_distance : flow source temperature;
+	annex EMV2 {**
+		use types errorlibrary;
+		
+		error propagations
+			temperature : out propagation {BadValue,ServiceOmission};
+		flows
+			badtemperature : error source temperature{BadValue};
+			notemperature  : error source temperature{serviceomission};
+		end propagations;
+		
+		properties
+			EMV2::hazards => 
+			([	crossreference => "";
+				failure => "Bad temperature";
+				phases => ("");
+				description => "Bad temperature sent from the sensor";
+				comment => "Potential hazards (automatic activation or cooler or heater)";
+			])
+			applies to temperature.serviceomission;
+			EMV2::hazards => 
+			([	crossreference => "";
+				failure => "No temperature";
+				phases => ("");
+				description => "No temperature from the sensor";
+				comment => "If correctly handled/managed, not so much an issue";
+			])
+			applies to temperature.serviceomission;
+	**};
+	end temperature_sensor;
+	
+	device door_actuator
+	features
+		activate : in data port iot::common::datatypes::boolean;
+	flows
+		flow_activate : flow sink activate;
+	annex EMV2 {**
+		use types errorlibrary;
+		
+		error propagations
+			activate : in propagation {BadValue};
+		flows
+			badopening : error sink activate{BadValue};
+		end propagations;
+		properties
+			EMV2::hazards => 
+			([	crossreference => "";
+				failure => "Bad command";
+				phases => ("");
+				description => "Bad value to command the door";
+				comment => "Might trigger a door opening when the user wants to keep it closed";
+			])
+			applies to activate.badvalue;
+	**};
+	end door_actuator;
+	
+	device alarm
+	features
+		activate : in data port iot::common::datatypes::boolean;
+	flows
+		flow_activate : flow sink activate;
+	end alarm;	
+	
+	device door_sensor
+	features
+		isopen : out data port iot::common::datatypes::boolean;
+	flows
+		flow_isopen : flow source isopen;
+	end door_sensor;
+end iot::sap_node::devices;

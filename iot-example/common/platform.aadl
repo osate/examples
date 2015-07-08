@@ -1,0 +1,22 @@
+----------------------------------------------
+--  IoT example
+--       Julien Delange <jdelange@sei.cmu.edu>
+--
+--
+--
+--
+--
+----------------------------------------------
+
+
+package iot::common::platform
+public
+	
+	bus internet
+		
+	end internet;
+	
+	bus ethernet
+		
+	end ethernet;
+end iot::common::platform;

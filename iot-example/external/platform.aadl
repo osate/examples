@@ -1,0 +1,35 @@
+----------------------------------------------
+--  IoT example
+--       Julien Delange <jdelange@sei.cmu.edu>
+--
+--
+--
+--
+--
+----------------------------------------------
+
+package iot::external::platform
+public
+with iot::common::datatypes;
+with iot::common::platform;
+	system client
+	features
+		user_request : out event data port iot::common::datatypes::request;
+		user_reply 	: in event data port iot::common::datatypes::reply;
+	flows
+		request : flow source user_request;
+		reply   : flow sink user_reply;
+	end client;
+	
+	
+	system smartphone extends client
+	features
+		eth : requires bus access iot::common::platform::internet;
+	end smartphone;
+	
+	system laptop extends client
+	features
+		eth : requires bus access iot::common::platform::internet;
+	end laptop;
+	
+end iot::external::platform;

@@ -1,0 +1,27 @@
+----------------------------------------------
+--  IoT example
+--       Julien Delange <jdelange@sei.cmu.edu>
+--
+--
+--
+--
+--
+----------------------------------------------
+
+
+package iot::home::server::software
+public
+	with iot::common::datatypes;
+	
+	process server
+	features
+		user_request : in event data port iot::common::datatypes::request;
+		user_reply : out event data port iot::common::datatypes::reply;
+		internal_request : out event data port iot::common::datatypes::internal_request;
+		internal_reply : in event data port iot::common::datatypes::internal_reply;
+	flows
+		request_flow : flow path user_request -> internal_request;
+		reply_flow   : flow path internal_reply -> user_reply; 
+	end server;
+	
+end iot::home::server::software;

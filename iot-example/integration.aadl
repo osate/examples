@@ -1,0 +1,49 @@
+----------------------------------------------
+--  IoT example
+--       Julien Delange <jdelange@sei.cmu.edu>
+--
+--
+--
+--
+--
+----------------------------------------------
+
+package iot::integration
+public
+with iot::external::platform;
+with iot::home::integration;
+with iot::common::platform;
+	system iot_system
+	end iot_system;
+	
+	system implementation iot_system.i
+	subcomponents
+		home : system iot::home::integration::home.i;
+		smartphone : system iot::external::platform::smartphone;
+		laptop : system iot::external::platform::laptop;
+		internet : bus iot::common::platform::internet;
+	connections
+		--
+		--  First, physical connections (bus)
+		--
+		int_laptop : bus access internet <-> laptop.eth;
+		int_smart  : bus access internet <-> smartphone.eth;
+		int_home   : bus access internet <-> home.external_net;
+		
+		
+		--
+		--  Then, logical connections
+		--
+		laptop_request : port laptop.user_request -> home.user_request;
+		laptop_reply   : port home.user_reply -> laptop.user_reply;
+		
+		smart_request : port smartphone.user_request -> home.user_request;
+		smart_reply   : port home.user_reply -> smartphone.user_reply;
+	
+	properties
+		actual_connection_binding => (reference (internet)) applies to
+		                             laptop_request, laptop_reply, smart_request, smart_reply;	
+		latency => 10 ms .. 20 ms applies to laptop_request, laptop_reply;
+		latency => 1 sec .. 10 sec applies to smart_request, smart_reply;
+	end iot_system.i;
+end iot::integration;
