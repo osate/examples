@@ -17,8 +17,8 @@ with iot::common::platform;
 		user_request : out event data port iot::common::datatypes::request;
 		user_reply 	: in event data port iot::common::datatypes::reply;
 	flows
-		request : flow source user_request;
-		reply   : flow sink user_reply;
+		requestsource : flow source user_request;
+		replysink     : flow sink user_reply;
 	end client;
 	
 	

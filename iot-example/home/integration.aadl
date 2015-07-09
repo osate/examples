@@ -28,8 +28,8 @@ public
 		user_request 	: in event data port iot::common::datatypes::request;
 		user_reply 		: out event data port iot::common::datatypes::reply;
 	flows 
-		request         : flow sink user_request;
-		reply           : flow source user_reply;
+		flow_request         : flow sink user_request;
+		flow_reply           : flow source user_reply;
 	end home;
 	
 	system implementation home.i
@@ -61,7 +61,7 @@ public
 		internal_req : port server.internal_request -> arduino.internal_request;
 		internal_rep : port arduino.internal_reply -> server.internal_reply;
 	flows
-		request : flow sink user_request -> user_req -> server.server_flow_request -> internal_req -> arduino.flow_request;
-		reply   : flow source arduino.flow_reply -> internal_rep -> server.server_flow_reply -> user_rep -> user_reply;
+		flow_request : flow sink user_request -> user_req -> server.server_flow_request -> internal_req -> arduino.flow_request;
+		flow_reply   : flow source arduino.flow_reply -> internal_rep -> server.server_flow_reply -> user_rep -> user_reply;
 	end home.i; 
 end iot::home::integration;

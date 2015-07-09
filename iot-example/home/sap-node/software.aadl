@@ -22,7 +22,8 @@ public
 		alert            : out data port iot::common::datatypes::boolean;
 		internal_request : in event data port iot::common::datatypes::internal_request;
 		internal_reply : out event data port iot::common::datatypes::internal_reply;
-	
+	flows
+		intreply            : flow source internal_reply;
 	end control_loop;
 	
 	process pr_control_loop
@@ -41,6 +42,7 @@ public
 		door_detection      : flow path sensor_door -> internal_reply;
 		temp_detection      : flow path sensor_temperature -> internal_reply;
 		proximity_detection : flow path sensor_proximity -> internal_reply;
+		intreply            : flow source internal_reply;
 	annex EMV2 {**
 		use types errorlibrary;
 		
@@ -70,5 +72,7 @@ public
 		c5 : port  	sensor_proximity 	-> thr.sensor_proximity;
 		c6 : port 	thr.internal_reply -> internal_reply;
 		c7 : port 	internal_request -> thr.internal_request;
+	flows
+		intreply : flow source thr.intreply -> c6 -> internal_reply;
 	end pr_control_loop.i;
 end iot::sap_node::software;

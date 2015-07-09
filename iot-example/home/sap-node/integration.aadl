@@ -47,6 +47,8 @@ public
 		sen_temp  : port sensor_temperature.temperature -> soft.sensor_temperature;
 		request   : port internal_request -> soft.internal_request;
 		reply     : port soft.internal_reply -> internal_reply;
+	flows
+		flow_reply : flow source soft.intreply -> reply -> internal_reply;
 	properties
 		actual_connection_binding => (reference (board)) applies to soft;
 	end sap_node.i;

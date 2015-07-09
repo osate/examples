@@ -33,13 +33,13 @@ with iot::common::datatypes;
 		cpu  : processor iot::home::server::platform::linux;
 		soft : process iot::home::server::software::server;
 	connections
-		user_req : port user_request -> soft.user_request;
-		user_rep : port soft.user_reply -> user_reply;
-		int_req  : port soft.internal_request -> internal_request;
-		int_rep  : port internal_reply -> soft.internal_reply;
+		user_req     : port user_request -> soft.user_request;
+		user_rep     : port soft.user_reply -> user_reply;
+		int_request  : port soft.internal_request -> internal_request;
+		int_reply    : port internal_reply -> soft.internal_reply;
 	flows
-		server_flow_request  : flow path user_request -> user_req -> soft.request_flow -> int_req -> internal_request;
-		server_flow_reply    : flow path internal_reply -> int_rep -> soft.reply_flow -> user_rep -> user_reply;
+		server_flow_request  : flow path user_request -> user_req -> soft.request_flow -> int_request -> internal_request;
+		server_flow_reply    : flow path internal_reply -> int_reply -> soft.reply_flow -> user_rep -> user_reply;
 	properties
 		actual_processor_binding => (reference (cpu)) applies to soft;
 	end server.i;

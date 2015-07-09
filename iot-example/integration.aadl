@@ -30,7 +30,6 @@ with iot::common::platform;
 		int_smart  : bus access internet <-> smartphone.eth;
 		int_home   : bus access internet <-> home.external_net;
 		
-		
 		--
 		--  Then, logical connections
 		--
@@ -40,14 +39,14 @@ with iot::common::platform;
 		smart_request : port smartphone.user_request -> home.user_request;
 		smart_reply   : port home.user_reply -> smartphone.user_reply;
 	flows
-		laptop_request_flow : end to end flow laptop.request -> laptop_request -> home.request;
-		smart_request_flow : end to end flow smartphone.request -> smart_request -> home.request;
-		laptop_reply_flow : end to end flow home.reply -> smart_reply -> laptop.reply;
---		smart_reply_flow : end to end flow home.reply -> laptop_reply -> smartphone.reply;
+		laptop_request_flow : end to end flow laptop.requestsource -> laptop_request -> home.flow_request;
+		smart_request_flow : end to end flow smartphone.requestsource -> smart_request -> home.flow_request;
+		laptop_reply_flow : end to end flow home.flow_reply -> smart_reply -> laptop.replysink;
+		smart_reply_flow : end to end flow home.flow_reply -> laptop_reply -> smartphone.replysink;
 	properties
 		actual_connection_binding => (reference (internet)) applies to
 		                             laptop_request, laptop_reply, smart_request, smart_reply;	
 		latency => 10 ms .. 20 ms applies to laptop_request, laptop_reply;
 		latency => 1 sec .. 10 sec applies to smart_request, smart_reply;
 	end iot_system.i;
-end iot::integration;
+end iot::integration; 
