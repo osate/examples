@@ -21,14 +21,16 @@ with iot::common::platform;
 		home : system iot::home::integration::home.i;
 		smartphone : system iot::external::platform::smartphone;
 		laptop : system iot::external::platform::laptop;
-		internet : bus iot::common::platform::internet;
+		internet_landline : bus iot::common::platform::internet;
+		internet_mobile : bus iot::common::platform::internet;
 	connections
 		--
 		--  First, physical connections (bus)
 		--
-		int_laptop : bus access internet <-> laptop.eth;
-		int_smart  : bus access internet <-> smartphone.eth;
-		int_home   : bus access internet <-> home.external_net;
+		int_laptop      : bus access internet_landline <-> laptop.eth;
+		int_smart       : bus access internet_mobile <-> smartphone.eth;
+		int_home_land   : bus access internet_landline <-> home.external_net;
+		int_home_mobi   : bus access internet_mobile   <-> home.external_net;
 		
 		--
 		--  Then, logical connections
@@ -44,9 +46,14 @@ with iot::common::platform;
 		laptop_reply_flow : end to end flow home.flow_reply -> smart_reply -> laptop.replysink;
 		smart_reply_flow : end to end flow home.flow_reply -> laptop_reply -> smartphone.replysink;
 	properties
-		actual_connection_binding => (reference (internet)) applies to
-		                             laptop_request, laptop_reply, smart_request, smart_reply;	
+		actual_connection_binding => (reference (internet_landline)) applies to
+		                             laptop_request, laptop_reply;	
+		actual_connection_binding => (reference (internet_mobile)) applies to
+		                              smart_request, smart_reply;	
+	
 		latency => 10 ms .. 20 ms applies to laptop_request, laptop_reply;
 		latency => 1 sec .. 10 sec applies to smart_request, smart_reply;
+		Transmission_Time => [ fixed => 10 ms .. 20 ms ; PerByte => 1 us .. 2 us;] applies to internet_landline;
+		Transmission_Time => [ fixed => 1 sec .. 10 sec ; PerByte => 20 ms .. 200 ms;] applies to internet_mobile;
 	end iot_system.i;
 end iot::integration; 
