@@ -107,8 +107,16 @@ end arinc_module;
 
 processor implementation arinc_module.two_partitions
 subcomponents
-	runtime1 : virtual processor partition.i {ARINC653::DAL => LEVEL_B;};
-	runtime2 : virtual processor partition.i {ARINC653::DAL => LEVEL_A;};
+	runtime1 : virtual processor partition.i
+		{ARINC653::DAL => LEVEL_B;
+		 ARINC653::Partition_Identifier => 1;
+		 ARINC653::Partition_Name => "runtime a";
+		};
+	runtime2 : virtual processor partition.i
+		{ARINC653::DAL => LEVEL_A;
+		 ARINC653::Partition_Identifier => 2;
+		 ARINC653::Partition_Name => "runtime b";
+		};
 properties
 	ARINC653::Module_Schedule => 
 	    ( [Partition => reference (runtime1);
@@ -163,7 +171,7 @@ subcomponents
 	statistics : process pr_stats.i;
 connections
 	c0 : port data_acquisition.sensor1out -> statistics.sensor1in;
-	c1 : port data_acquisition.sensor2out -> statistics.sensor2in;
+	c1 : port data_acquisition.sensor2out -> statistics.sensor2in; 
 properties
 	Actual_Processor_Binding => (reference (module.runtime1)) applies to statistics;
 	Actual_Memory_Binding => (reference (ram.segment1)) applies to statistics;
