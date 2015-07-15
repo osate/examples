@@ -21,5 +21,19 @@ analysis capabilities in OSATE:
 * Performance with latency analysis
 * Safety with Fault Impact and Functional Hazard Analysis
 
+# Model Overview
+* Common components are in the common/ directory.
+* Components related to the home (router, arduino, 
+sensors, etc.) are located in the home/directory.
+* Components related to the external environment
+(computer, mobile phone, etc.) are located
+in the external/ directory.
+
+Finally, all these components are reused in a final
+assembly in the integration.aadl file.
+
+In oder to help the user to use the model, the model
+contains some comments about what is inside.
+
 # Contact
 This model has been designed by Julien Delange <jdelange@sei.cmu.edu>

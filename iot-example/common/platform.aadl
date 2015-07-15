@@ -2,10 +2,12 @@
 --  IoT example
 --       Julien Delange <jdelange@sei.cmu.edu>
 --
---
---
---
---
+-- The iot::common::platform package contains
+-- mostly components used to communicate
+-- between the different components at the
+-- top-level element. These components are
+-- shared between the home and the external
+-- world (mobile devices, desktop, etc.)
 ----------------------------------------------
 
 
@@ -13,10 +15,8 @@ package iot::common::platform
 public
 	
 	bus internet
-		
 	end internet;
 	
 	bus ethernet
-		
 	end ethernet;
 end iot::common::platform;

@@ -2,10 +2,10 @@
 --  IoT example
 --       Julien Delange <jdelange@sei.cmu.edu>
 --
---
---
---
---
+-- The iot::sap_node::platform package is very
+-- simple and captures the sap_node platform,
+-- which is the arduino that controls the
+-- home sensors/actuators.
 ----------------------------------------------
 
 package iot::sap_node::platform

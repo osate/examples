@@ -2,10 +2,11 @@
 --  IoT example
 --       Julien Delange <jdelange@sei.cmu.edu>
 --
---
---
---
---
+-- The iot::home::server::integration captures
+-- the integration of the web server that is
+-- connected with the outside world. The outside
+-- world sends request, the server filters
+-- them and finally forwards them to the sap_node.
 ----------------------------------------------
 
 
@@ -37,6 +38,8 @@ with iot::common::datatypes;
 		user_rep     : port soft.user_reply -> user_reply;
 		int_request  : port soft.internal_request -> internal_request;
 		int_reply    : port internal_reply -> soft.internal_reply;
+		
+		eth_conn     : bus access eth <-> cpu.eth;
 	flows
 		server_flow_request  : flow path user_request -> user_req -> soft.request_flow -> int_request -> internal_request;
 		server_flow_reply    : flow path internal_reply -> int_reply -> soft.reply_flow -> user_rep -> user_reply;

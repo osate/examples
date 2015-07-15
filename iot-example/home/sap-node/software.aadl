@@ -2,10 +2,11 @@
 --  IoT example
 --       Julien Delange <jdelange@sei.cmu.edu>
 --
---
---
---
---
+-- The iot::sap_node::software package contains
+-- the software executed by the arduino. The
+-- arduino executes a single thread, this is
+-- why we represent the software with a single
+-- thread component contained in a process.
 ----------------------------------------------
 
 package iot::sap_node::software

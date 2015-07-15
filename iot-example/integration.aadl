@@ -2,9 +2,11 @@
 --  IoT example
 --       Julien Delange <jdelange@sei.cmu.edu>
 --
---
---
---
+-- This is the top-level model that integrates
+-- all sub-systems together: the external
+-- environment and the home. The main system
+-- is integration.complete and is used
+-- to run analysis tools.
 --
 ----------------------------------------------
 
@@ -16,21 +18,25 @@ with iot::common::platform;
 	system iot_system
 	end iot_system;
 	
-	system implementation iot_system.i
+	system implementation iot_system.complete
 	subcomponents
 		home : system iot::home::integration::home.i;
-		smartphone : system iot::external::platform::smartphone;
+		smartphone_slow : system iot::external::platform::smartphone;
+		smartphone_fast : system iot::external::platform::smartphone;
 		laptop : system iot::external::platform::laptop;
 		internet_landline : bus iot::common::platform::internet;
-		internet_mobile : bus iot::common::platform::internet;
+		internet_mobile_slow : bus iot::common::platform::internet;
+		internet_mobile_fast : bus iot::common::platform::internet;
 	connections
 		--
 		--  First, physical connections (bus)
 		--
 		int_laptop      : bus access internet_landline <-> laptop.eth;
-		int_smart       : bus access internet_mobile <-> smartphone.eth;
+		int_smart_slow       : bus access internet_mobile_slow <-> smartphone_slow.eth;
+		int_smart_fast       : bus access internet_mobile_fast <-> smartphone_fast.eth;
 		int_home_land   : bus access internet_landline <-> home.external_net;
-		int_home_mobi   : bus access internet_mobile   <-> home.external_net;
+		int_home_mobi_slow   : bus access internet_mobile_slow   <-> home.external_net;
+		int_home_mobi_fast   : bus access internet_mobile_fast   <-> home.external_net;
 		
 		--
 		--  Then, logical connections
@@ -38,22 +44,31 @@ with iot::common::platform;
 		laptop_request : port laptop.user_request -> home.user_request;
 		laptop_reply   : port home.user_reply -> laptop.user_reply;
 		
-		smart_request : port smartphone.user_request -> home.user_request;
-		smart_reply   : port home.user_reply -> smartphone.user_reply;
+		smart_slow_request : port smartphone_slow.user_request -> home.user_request;
+		smart_slow_reply   : port home.user_reply -> smartphone_slow.user_reply;
+			
+		smart_fast_request : port smartphone_fast.user_request -> home.user_request;
+		smart_fast_reply   : port home.user_reply -> smartphone_fast.user_reply;
 	flows
 		laptop_request_flow : end to end flow laptop.requestsource -> laptop_request -> home.flow_request;
-		smart_request_flow : end to end flow smartphone.requestsource -> smart_request -> home.flow_request;
-		laptop_reply_flow : end to end flow home.flow_reply -> smart_reply -> laptop.replysink;
-		smart_reply_flow : end to end flow home.flow_reply -> laptop_reply -> smartphone.replysink;
+		smart_slow_request_flow : end to end flow smartphone_slow.requestsource -> smart_slow_request -> home.flow_request;
+		smart_fast_request_flow : end to end flow smartphone_fast.requestsource -> smart_fast_request -> home.flow_request;
+		
+		laptop_reply_flow : end to end flow home.flow_reply -> laptop_reply -> laptop.replysink;
+		smart_slow_reply_flow : end to end flow home.flow_reply -> smart_slow_reply -> smartphone_slow.replysink;
+		smart_fast_reply_flow : end to end flow home.flow_reply -> smart_fast_reply -> smartphone_fast.replysink;
 	properties
 		actual_connection_binding => (reference (internet_landline)) applies to
 		                             laptop_request, laptop_reply;	
-		actual_connection_binding => (reference (internet_mobile)) applies to
-		                              smart_request, smart_reply;	
-	
+		actual_connection_binding => (reference (internet_mobile_slow)) applies to
+		                              smart_slow_request, smart_slow_reply;	
+		actual_connection_binding => (reference (internet_mobile_fast)) applies to
+		                              smart_fast_request, smart_fast_reply;	
+	 
 		latency => 10 ms .. 20 ms applies to laptop_request, laptop_reply;
-		latency => 1 sec .. 10 sec applies to smart_request, smart_reply;
+		latency => 1 sec .. 10 sec applies to smart_slow_request, smart_slow_reply;
 		Transmission_Time => [ fixed => 10 ms .. 20 ms ; PerByte => 1 us .. 2 us;] applies to internet_landline;
-		Transmission_Time => [ fixed => 1 sec .. 10 sec ; PerByte => 20 ms .. 200 ms;] applies to internet_mobile;
-	end iot_system.i;
+		Transmission_Time => [ fixed => 1 sec .. 10 sec ; PerByte => 20 ms .. 200 ms;] applies to internet_mobile_slow;
+		Transmission_Time => [ fixed => 1 sec .. 2 sec ; PerByte => 2 ms .. 10 ms;] applies to internet_mobile_fast;
+	end iot_system.complete;
 end iot::integration; 

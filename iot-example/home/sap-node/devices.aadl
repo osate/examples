@@ -2,10 +2,9 @@
 --  IoT example
 --       Julien Delange <jdelange@sei.cmu.edu>
 --
---
---
---
---
+-- The iot::sap_node::devices package contains
+-- a description of the sensors/actuators
+-- controlled by the sap_node (arduino)
 ----------------------------------------------
 
 

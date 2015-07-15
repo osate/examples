@@ -2,10 +2,13 @@
 --  IoT example
 --       Julien Delange <jdelange@sei.cmu.edu>
 --
---
---
---
---
+-- The  iot::home::integration contains the
+-- integration of the home, which is
+--  1. The sap_node (arduino + sensors/actuators)
+--     which controls the home according to the
+--     requests from the server. 
+--  2. The server that receives request from the
+--     outside and send them to the sap_node.
 ----------------------------------------------
 
 

@@ -2,10 +2,9 @@
 --  IoT example
 --       Julien Delange <jdelange@sei.cmu.edu>
 --
---
---
---
---
+-- The iot::external::platform package contains
+-- components that represent the "outside" world.
+-- Mostly mobile device and regular client (desktop).
 ----------------------------------------------
 
 package iot::external::platform
