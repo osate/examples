@@ -27,7 +27,7 @@ end the_processor.i;
 process mainprocess
 end mainprocess;
 
-process implementation mainprocess.i
+process implementation mainprocess.multitasks
 subcomponents
   Producer        : thread tasksync::software::producerflow.i; 
   computer : thread tasksync::software::computerflow.i;
@@ -35,7 +35,12 @@ subcomponents
 connections
   c0 : port Producer.Data_Source -> computer.data_sink;
   c1 : port computer.data_source -> Consumer.Data_Sink;
-end mainprocess.i;
+end mainprocess.multitasks;
+
+process implementation mainprocess.singletask
+subcomponents
+  thetask : thread tasksync::software::singletask.i;
+end mainprocess.singletask;
 
 ------------
 -- System --
@@ -45,12 +50,20 @@ system pc
 end pc;
 
 
-system implementation pc.i
+system implementation pc.multitasks
 subcomponents
-  pr_A : process mainprocess.i;
+  pr_A : process mainprocess.multitasks;
   CPU_A : processor the_processor.i;
 properties
   actual_processor_binding => (reference (CPU_A)) applies to pr_A;
-end pc.i;
+end pc.multitasks;
+
+system implementation pc.singletask
+subcomponents
+  pr_A : process mainprocess.singletask;
+  CPU_A : processor the_processor.i;
+properties
+  actual_processor_binding => (reference (CPU_A)) applies to pr_A;
+end pc.singletask;
 
 end tasksync;

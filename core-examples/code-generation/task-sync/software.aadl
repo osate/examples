@@ -44,9 +44,29 @@ properties
 end computerflow_Spg;
 
 
+subprogram singletask_spg
+properties
+  source_language => (C);
+  source_name     => "user_singletask_spg";
+  source_text     => ("tasksync.c");
+end singletask_spg;
+
 -------------
 -- Threads --
 -------------
+
+thread singletask
+end singletask;
+
+thread implementation singletask.i
+calls 
+Mycalls: {
+  P_Spg : subprogram singletask_spg;
+};
+properties
+  Dispatch_Protocol => Periodic;
+  Period            => 1000 Ms;
+end singletask.i;
 
 thread producerflow
 features

@@ -26,7 +26,10 @@ void user_consumeflow_spg (int data)
 #else
    printf ("Consume %d\n", data);
 #endif
-
+	if (data == 10)
+	{
+		exit (0);
+	}
 }
 
 
@@ -42,6 +45,17 @@ void user_computeflow_spg (int *dataout, int datain)
 #endif
 
 }
+
+void user_singletask_spg ()
+{
+	int foobar;
+	int foobar2;
+	user_produceflow_spg (&foobar);
+	user_computeflow_spg (&foobar2, foobar);
+	user_consumeflow_spg (foobar2);
+
+}
+
 
 
 

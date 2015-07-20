@@ -15,6 +15,11 @@ void user_produceflow_spg (int* data)
    printf ("Produce %d\n", data);
 #endif
    produce_data++;
+
+   if (produce_data == 10)
+   {
+      exit (0);
+   }
 }
 
 void user_consumeflow_spg (int data)
@@ -29,5 +34,3 @@ void user_consumeflow_spg (int data)
 
 }
 
-
-}

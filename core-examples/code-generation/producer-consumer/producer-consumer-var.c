@@ -18,6 +18,12 @@ void user_producevar_spg ()
    printf ("Produce %d\n", data);
 #endif
    produce_data++;
+
+   if (produce_data == 10)
+   {
+      exit (0);
+   }
+
 }
 
 void user_consumevar_spg ()
