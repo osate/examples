@@ -1,0 +1,75 @@
+--
+-- Example from PolyORB-HI-C to demonstrate
+-- the implementation of communication patterns
+-- with ports or shared variables.
+--
+
+package producer_consumer
+public
+  with Deployment, Software;
+
+---------------
+-- Processor --
+---------------
+
+processor the_processor
+properties
+  Deployment::Execution_Platform => Native;
+end the_processor;
+
+processor implementation the_processor.i
+end the_processor.i;
+
+---------------
+-- Processes --
+---------------
+
+process mainprocess
+end mainprocess;
+
+process implementation mainprocess.flowimpl
+subcomponents
+  Producer        : thread Software::producerflow.i; 
+  Consumer : thread Software::consumerflow.i;
+connections
+  c0 : port Producer.Data_Source -> Consumer.Data_Sink;
+end mainprocess.flowimpl;
+
+process implementation mainprocess.varimpl
+subcomponents
+  shareddata      : data software::Alpha_Type; 
+  Producer        : thread Software::producervar.i; 
+  Consumer : thread Software::consumervar.i;
+connections
+  c0 : data access shareddata -> Producer.Data_Source;
+  c1 : data access shareddata -> Consumer.Data_Sink;
+end mainprocess.varimpl;
+ 
+------------
+-- System --
+------------
+
+system pc
+end pc;
+
+
+system implementation pc.flowimpl
+subcomponents
+  pr_A : process mainprocess.flowimpl;
+  CPU_A : processor the_processor.i;
+  CPU_B : processor the_processor.i;
+properties
+  actual_processor_binding => (reference (CPU_A)) applies to pr_A;
+end pc.flowimpl;
+
+
+system implementation pc.varimpl
+subcomponents
+  pr_A : process mainprocess.varimpl;
+  CPU_A : processor the_processor.i;
+  CPU_B : processor the_processor.i;
+properties
+  actual_processor_binding => (reference (CPU_A)) applies to pr_A;
+end pc.varimpl;
+
+end producer_consumer;

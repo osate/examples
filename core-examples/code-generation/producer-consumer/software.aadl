@@ -1,0 +1,122 @@
+package Software
+public
+  with Data_Model;
+
+----------
+-- Data --
+----------
+
+data Alpha_Type
+properties
+  Data_Model::Data_Representation => integer;
+end Alpha_Type;
+
+-----------------
+-- Subprograms --
+-----------------
+
+subprogram Produceflow_Spg
+features
+  Data_Source : out parameter Alpha_Type;
+properties
+  source_language => (C);
+  source_name     => "user_produceflow_spg";
+  source_text     => ("producer-consumer-flow.c");
+end Produceflow_Spg;
+
+subprogram Consumeflow_Spg
+features
+  Data_Sink : in parameter Alpha_Type;
+properties
+  source_language => (C);
+  source_name     => "user_consumeflow_spg";
+  source_text     => ("producer-consumer-flow.c");
+end Consumeflow_Spg;
+
+subprogram Producevar_Spg
+properties
+  source_language => (C);
+  source_name     => "user_producevar_spg";
+  source_text     => ("producer-consumer-var.c");
+end Producevar_Spg;
+
+subprogram Consumevar_Spg
+properties
+  source_language => (C);
+  source_name     => "user_consumevar_spg";
+  source_text     => ("producer-consumer-var.c");
+end Consumevar_Spg;
+
+-------------
+-- Threads --
+-------------
+
+thread producerflow
+features
+  Data_Source : out data port Alpha_Type;
+end producerflow;
+
+
+
+thread implementation producerflow.i
+calls 
+Mycalls: {
+  P_Spg : subprogram Produceflow_Spg;
+};
+connections
+  c0 : parameter P_Spg.Data_Source -> Data_Source;
+properties
+  Dispatch_Protocol => Periodic;
+  Period            => 1000 Ms;
+end producerflow.i;
+
+thread producervar
+features
+  Data_Source : requires data access Alpha_Type;
+end producervar;
+
+thread implementation producervar.i
+calls 
+Mycalls: {
+  P_Spg : subprogram Producevar_Spg;
+};
+properties
+  Dispatch_Protocol => Periodic;
+  Period            => 1000 Ms;
+end producervar.i;
+
+ 
+thread consumerflow
+features
+  Data_Sink : in data port Alpha_Type;
+end consumerflow;
+
+thread implementation consumerflow.i
+calls 
+Mycalls: {
+  Q_Spg : subprogram Consumeflow_Spg;
+};
+connections
+  c0 : parameter Data_Sink -> Q_Spg.Data_Sink;
+properties
+  Dispatch_Protocol => Periodic;
+  Period            => 1000 Ms;
+end consumerflow.i;
+
+ 
+thread consumervar
+features
+  Data_Sink : requires data access Alpha_Type;
+end consumervar;
+
+thread implementation consumervar.i
+calls 
+Mycalls: {
+  Q_Spg : subprogram Consumevar_Spg;
+};
+properties
+  Dispatch_Protocol => Periodic;
+  Period            => 1000 Ms;
+end consumervar.i;
+
+end Software;
