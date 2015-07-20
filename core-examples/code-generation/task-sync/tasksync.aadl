@@ -1,0 +1,56 @@
+--
+-- Example from PolyORB-HI-C to demonstrate
+-- the implementation of communication patterns
+-- with ports or shared variables.
+--
+
+package tasksync
+public
+  with Deployment, tasksync::software;
+
+---------------
+-- Processor --
+---------------
+
+processor the_processor
+properties
+  Deployment::Execution_Platform => Native;
+end the_processor;
+
+processor implementation the_processor.i
+end the_processor.i;
+
+---------------
+-- Processes --
+---------------
+
+process mainprocess
+end mainprocess;
+
+process implementation mainprocess.i
+subcomponents
+  Producer        : thread tasksync::software::producerflow.i; 
+  computer : thread tasksync::software::computerflow.i;
+  Consumer : thread tasksync::software::consumerflow.i;
+connections
+  c0 : port Producer.Data_Source -> computer.data_sink;
+  c1 : port computer.data_source -> Consumer.Data_Sink;
+end mainprocess.i;
+
+------------
+-- System --
+------------
+
+system pc
+end pc;
+
+
+system implementation pc.i
+subcomponents
+  pr_A : process mainprocess.i;
+  CPU_A : processor the_processor.i;
+properties
+  actual_processor_binding => (reference (CPU_A)) applies to pr_A;
+end pc.i;
+
+end tasksync;
