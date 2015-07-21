@@ -1,9 +1,3 @@
---
--- Example from PolyORB-HI-C to demonstrate
--- the implementation of communication patterns
--- with ports or shared variables.
---
-
 package producer_consumer
 public
   with Deployment, Software;

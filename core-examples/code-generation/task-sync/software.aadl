@@ -75,6 +75,21 @@ end producerflow;
 
 
 
+thread implementation singletask.i2
+calls 
+Mycalls: {
+  P_Spg : subprogram Produceflow_Spg;
+  C_Spg : subprogram Computerflow_Spg;
+  Q_Spg : subprogram Consumeflow_Spg;
+};
+connections
+	c0 : parameter p_spg.Data_Source -> c_spg.data_sink;
+	c1 : parameter c_spg.Data_Source -> q_spg.data_sink;
+properties
+  Dispatch_Protocol => Periodic;
+  Period            => 1000 Ms;
+end singletask.i2;
+
 thread implementation producerflow.i
 calls 
 Mycalls: {

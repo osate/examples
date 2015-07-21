@@ -42,6 +42,13 @@ subcomponents
   thetask : thread tasksync::software::singletask.i;
 end mainprocess.singletask;
 
+
+process implementation mainprocess.singletask2
+subcomponents
+  thetask : thread tasksync::software::singletask.i2;
+end mainprocess.singletask2;
+
+
 ------------
 -- System --
 ------------
@@ -65,5 +72,13 @@ subcomponents
 properties
   actual_processor_binding => (reference (CPU_A)) applies to pr_A;
 end pc.singletask;
+
+system implementation pc.singletask2
+subcomponents
+  pr_A : process mainprocess.singletask2;
+  CPU_A : processor the_processor.i;
+properties
+  actual_processor_binding => (reference (CPU_A)) applies to pr_A;
+end pc.singletask2;
 
 end tasksync;
