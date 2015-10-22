@@ -1,0 +1,113 @@
+package automotive_system
+public
+
+bus internet
+
+end internet;
+
+device router
+features
+	internet : requires bus access internet;
+end router;
+
+device cellular_router extends router
+features
+	cel : requires bus access cellular;
+end cellular_router;
+
+device wifi_router extends router
+features
+	wifi : requires bus access wifi;
+end wifi_router;
+
+bus can
+end can;
+
+bus wifi
+end wifi;
+
+bus cellular
+end cellular;
+
+
+system function
+features
+	can_socket : requires bus access can;
+end function;
+
+system radio
+features
+	can_ihs_socket : requires bus access can;
+	can_c_socket   : requires bus access can;
+	wifi_access    : requires bus access wifi;
+	cellular_access : requires bus access cellular;
+end radio;
+
+system car
+features
+	wifi_access    : requires bus access wifi;
+	cellular_access : requires bus access cellular;
+end car;
+
+
+system implementation car.cherokee
+subcomponents
+    --  The radio system - connected to the wireless, cellular
+    --  and two cans networks.
+	radio : system radio;
+	
+	--  The CAN buses: IHS is connected to non-critical
+	--  systems, the C is connected to critical equipments.
+	can_ihs      : bus can;
+	can_c        : bus can;
+	
+	-- Functions on the IHS (non-critical) bus
+	hvac        : system function;  --  temperature control
+	amplifier  	: system function;  --  radio amplifier
+	bcm         : system function;  --  body control module
+	hsm         : system function;  --  heated seats
+	
+	-- Functions on the C (critical) bus
+	abs : system function;    --  braking
+	acc : system function;    --  adaptive cruise control
+	eps : system function;    --  electric power steering
+	epb : system function;    --  electric parking brake
+connections
+	ihs_radio      : bus access can_ihs <-> radio.can_ihs_socket;
+	ihs_hvac       : bus access can_ihs <-> hvac.can_socket;
+	ihs_amplifier  : bus access can_ihs <-> amplifier.can_socket;
+	ihs_bcm        : bus access can_ihs <-> bcm.can_socket;
+	ihs_hsm        : bus access can_ihs <-> hsm.can_socket;
+	
+	c_radio : bus access can_c <-> radio.can_c_socket;
+	c_abs   : bus access can_c <-> abs.can_socket;
+	c_acc   : bus access can_c <-> acc.can_socket;
+	c_eps   : bus access can_c <-> eps.can_socket;
+	c_epb   : bus access can_c <-> epb.can_socket;
+	
+	wifi_radio      : bus access wifi_access <-> radio.wifi_access;
+	cellular_radio  : bus access cellular_access <-> radio.cellular_access;
+end car.cherokee;
+
+system integration
+end integration;
+
+system implementation integration.i
+subcomponents
+	car         : system car.cherokee;
+	router_wifi : device wifi_router;
+	router_cel  : device cellular_router;
+	cellular    : bus cellular;
+	wifi        : bus wifi;
+	internet    : bus internet;
+connections
+	car_wifi     : bus access wifi <-> car.wifi_access;
+	car_cel      : bus access cellular <-> car.cellular_access;
+	routerwifi   : bus access wifi <-> router_wifi.wifi;
+	routercel    : bus access cellular <-> router_cel.cel;
+	routercelint : bus access internet <-> router_cel.internet;
+	routerwifiint: bus access internet <-> router_wifi.internet;
+end integration.i;
+
+
+end automotive_system;
