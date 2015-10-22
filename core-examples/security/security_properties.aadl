@@ -1,0 +1,4 @@
+property set security_properties is
+Security_Level : aadlinteger applies to (all);
+
+end security_properties;
