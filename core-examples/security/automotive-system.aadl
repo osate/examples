@@ -15,7 +15,7 @@ end wifi;
 bus cellular
 end cellular;
 
-device attacker
+system attacker
 prototypes
 	network : bus;
 features
@@ -107,8 +107,16 @@ connections
 	cellular_radio  : bus access cellular_access <-> radio.cellular_access;
 end car.cherokee;
 
+--
+--  Generic integration component
+--
+
 system integration
 end integration;
+
+--
+--  Integration of the system with its operating environment.
+--
 
 system implementation integration.i
 subcomponents
@@ -122,8 +130,29 @@ connections
 	--  The router is connected to the internet AND the cellular
 	routercel    : bus access cellular <-> router_cel.socket;
 	routercelint : bus access internet <-> router_cel.internet;
-	
 end integration.i;
+
+--
+--  This model adds attackers that would then be able to attack
+--  the system. We connect these persons to the shared resources.
+--
+
+system implementation integration.attack extends integration.i
+subcomponents
+	attacker_cel      : system attacker (network => bus cellular)
+						{security_properties::security_level => 100;};
+	attacker_wifi     : system attacker (network => bus wifi)
+						{security_properties::security_level => 100;};
+	attacker_internet : system attacker (network => bus internet)
+						{security_properties::security_level => 100;};
+connections
+	attacker_to_internet : bus access attacker_internet.connection <-> internet;
+	attacker_to_cel      : bus access attacker_cel.connection <-> cellular;
+	attacker_to_wifi     : bus access attacker_wifi.connection <-> car.wifi_access;
+annex resolute {**
+	prove (check_component (this))
+**};
+end integration.attack;
 
 
 end automotive_system;

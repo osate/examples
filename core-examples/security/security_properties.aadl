@@ -1,4 +1,4 @@
 property set security_properties is
-Security_Level : aadlinteger applies to (all);
+Security_Level : aadlinteger => 100 applies to (all);
 
 end security_properties;

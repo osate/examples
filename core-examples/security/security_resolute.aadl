@@ -1,0 +1,46 @@
+package security_resolute
+public
+with Resolute_Stdlib;
+
+annex resolute {**
+	check_component (comp : component) <=
+	** "Check security levels for component " comp **
+	check_connections (comp) and check_subcomponents (comp)
+	
+--	check_connections_old (comp : component) <=
+--	** "Check all connections involving bus" ** 
+--	forall (src : subcom) (dst : component) (buscom : bus)
+--	       (conn1 : connections (comp)) (conn2 : connections (comp)).
+--	       has_parent (src) and has_parent (dst) and
+--	       parent (src) = comp and parent(dst) = comp and 
+--	       (connected_to_bus (buscom,conn1,src))  
+--	       and (connected_to_bus(buscom,conn2,dst)) and
+--	       has_parent (src) and has_parent (dst) => 
+--		check_security_level (src,dst)
+		
+	check_connections (comp : component) <=
+	** "Check all connections involving buses" ** 
+	forall (src : component) (dst : component) (thebus : bus)
+	       (conn1 : connections (comp)) (conn2 : connections (comp)) 
+			. connected_to_bus(thebus,conn1,src) and connected_to_bus(thebus,conn2,dst)
+	      	and (src <> dst)
+	        =>  
+		check_security_level (src,dst)
+	 
+   connected_to_bus(thebus : bus, conn : connection, b : component) : bool =
+  	(source(conn) = thebus and parent(destination(conn)) = b)
+  	or (destination(conn) = thebus and parent(source(conn)) = b)
+	
+	
+	check_subcomponents (comp : component) <=
+	** "Check bus connections for subcomponents" **
+	forall (subco : subcomponents (comp)) . true => 
+		check_component (subco)
+	
+	
+	check_security_level (comp1 : aadl, comp2 : aadl) <=
+	** "Component " comp1 " and " comp2 " have the same security level" **
+	 true => property (comp1, security_properties::Security_Level) = property (comp2, security_properties::Security_Level)
+		
+**};
+end security_resolute;
