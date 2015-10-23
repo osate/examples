@@ -105,6 +105,9 @@ connections
 	wifi_radio      : bus access wifi <-> radio.wifi_access;
 	wifi_outside    : bus access wifi <-> wifi_access;
 	cellular_radio  : bus access cellular_access <-> radio.cellular_access;
+annex resolute {**
+	prove (check_component (this))
+**};
 end car.cherokee;
 
 --

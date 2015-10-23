@@ -5,25 +5,37 @@ with Resolute_Stdlib;
 annex resolute {**
 	check_component (comp : component) <=
 	** "Check security levels for component " comp **
-	check_connections (comp) and check_subcomponents (comp)
+	check_buses_connections (comp) and 
+--	check_bouncer_connections (comp) and
+	check_subcomponents (comp)
 	
---	check_connections_old (comp : component) <=
---	** "Check all connections involving bus" ** 
---	forall (src : subcom) (dst : component) (buscom : bus)
---	       (conn1 : connections (comp)) (conn2 : connections (comp)).
---	       has_parent (src) and has_parent (dst) and
---	       parent (src) = comp and parent(dst) = comp and 
---	       (connected_to_bus (buscom,conn1,src))  
---	       and (connected_to_bus(buscom,conn2,dst)) and
---	       has_parent (src) and has_parent (dst) => 
---		check_security_level (src,dst)
-		
-	check_connections (comp : component) <=
-	** "Check all connections involving buses" ** 
+	check_bouncer_connections (comp : component) <=
+	** "Check there is no possible bypass by a non-verified component" ** 
+	forall (src : system) (middle : system) (dst : system) (thebus1 : bus) (thebus2 : bus)
+	       (conn1 : connections (comp)) (conn2 : connections (comp)) 
+			. (connected_to_bus(thebus1,conn1,middle)) and 
+			  (connected_to_bus(thebus1,conn1,src)) and 
+			  (connected_to_bus(thebus2,conn2,middle)) and 
+			  (connected_to_bus(thebus2,conn2,dst)) and 
+			  (src <> dst) and
+			  (thebus1 <> thebus2) and
+			  (middle <> src) and
+			  (middle <> dst) and
+			  (property (middle, security_properties::Is_Verified) = false)
+	        =>  
+		check_security_level (src,dst)
+	
+	check_buses_connections (comp : component) <=
+	** "Check buses connections " ** 
 	forall (src : component) (dst : component) (thebus : bus)
 	       (conn1 : connections (comp)) (conn2 : connections (comp)) 
-			. connected_to_bus(thebus,conn1,src) and connected_to_bus(thebus,conn2,dst)
-	      	and (src <> dst)
+			. (has_parent(src)) and
+			  (has_parent(dst)) and
+			  (parent(src) = comp) and
+			  (parent(dst) = comp) and
+			  (connected_to_bus(thebus,conn1,src)) and 
+			  (connected_to_bus(thebus,conn2,dst)) and 
+			  (src <> dst) 
 	        =>  
 		check_security_level (src,dst)
 	 
