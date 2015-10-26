@@ -6,44 +6,66 @@ annex resolute {**
 	check_component (comp : component) <=
 	** "Check security levels for component " comp **
 	check_buses_connections (comp) and 
---	check_bouncer_connections (comp) and
+	check_bouncer_connections (comp) and
 	check_subcomponents (comp)
 	
 	check_bouncer_connections (comp : component) <=
 	** "Check there is no possible bypass by a non-verified component" ** 
-	forall (src : system) (middle : system) (dst : system) (thebus1 : bus) (thebus2 : bus)
-	       (conn1 : connections (comp)) (conn2 : connections (comp)) 
-			. (connected_to_bus(thebus1,conn1,middle)) and 
-			  (connected_to_bus(thebus1,conn1,src)) and 
-			  (connected_to_bus(thebus2,conn2,middle)) and 
-			  (connected_to_bus(thebus2,conn2,dst)) and 
-			  (src <> dst) and
-			  (thebus1 <> thebus2) and
-			  (middle <> src) and
-			  (middle <> dst) and
-			  (property (middle, security_properties::Is_Verified) = false)
-	        =>  
+	forall (src : subcomponents(comp)) . 
+		forall (middle : subcomponents(comp)) . 
+		(property (middle, security_properties::Is_Verified) = false) and 
+			forall (dst : subcomponents(comp)) . 
+				forall (connsrc : connections(src)) .
+					forall (conndst : connections(dst)) .
+						forall (connmiddle1 : connections(middle)) .
+							forall (connmiddle2 : connections(middle)) .
+								forall (thebus1 : subcomponents(comp)) .
+									forall (thebus2 : subcomponents(comp)) .
+--					true
+                     
+					connected_to_bus (thebus1,connsrc,src) and
+					connected_to_bus (thebus1,connmiddle1,middle) and
+					connected_to_bus (thebus2,conndst,dst) and
+					connected_to_bus (thebus2,connmiddle2,middle) and
+					(src <> dst) and
+					(src <> middle) and
+					(middle <> dst) and
+					(thebus1 <> thebus2) 
+	        =>	        
 		check_security_level (src,dst)
 	
 	check_buses_connections (comp : component) <=
 	** "Check buses connections " ** 
-	forall (src : component) (dst : component) (thebus : bus)
-	       (conn1 : connections (comp)) (conn2 : connections (comp)) 
-			. (has_parent(src)) and
-			  (has_parent(dst)) and
-			  (parent(src) = comp) and
-			  (parent(dst) = comp) and
-			  (connected_to_bus(thebus,conn1,src)) and 
-			  (connected_to_bus(thebus,conn2,dst)) and 
-			  (src <> dst) 
-	        =>  
+	forall (src : subcomponents(comp)) . 
+		forall (dst : subcomponents(comp)) . 
+			forall (connsrc : connections(src)) .
+				forall (conndst : connections(dst)) .
+					forall (thebus : subcomponents(comp)) .
+--					true
+					connected_to_bus (thebus,connsrc,src) and
+					connected_to_bus (thebus,conndst,dst) and
+					(src <> dst)
+					
+	        =>	        
 		check_security_level (src,dst)
 	 
-   connected_to_bus(thebus : bus, conn : connection, b : component) : bool =
-  	(source(conn) = thebus and parent(destination(conn)) = b)
-  	or (destination(conn) = thebus and parent(source(conn)) = b)
+   connected_to_bus(thebus : component, conn : connection, b : component) : bool =
+--    (print_aadl (thebus)) and
+  	((source(conn) = thebus) and (parent(destination(conn)) = b))
+  	or ((destination(conn) = thebus) and (parent(source(conn)) = b))
+		
+	 
+	print_empty() <= ** "" ** true
 	
-	
+	print_aadl(a : aadl) <=
+	  ** a **
+	  true
+	  
+	print_set(s : {aadl}) <=
+	  ** s **
+	  true
+ 
+
 	check_subcomponents (comp : component) <=
 	** "Check bus connections for subcomponents" **
 	forall (subco : subcomponents (comp)) . true => 
@@ -51,8 +73,11 @@ annex resolute {**
 	
 	
 	check_security_level (comp1 : aadl, comp2 : aadl) <=
-	** "Component " comp1 " and " comp2 " have the same security level" **
-	 true => property (comp1, security_properties::Security_Level) = property (comp2, security_properties::Security_Level)
+	** "Component " comp1 " and " comp2 " have the same security level(s)" **
+		true 
+	 =>  length(intersect (property (comp1, security_properties::Security_Level),
+	 	            property (comp2, security_properties::Security_Level)))
+	      = length(property (comp2, security_properties::Security_Level))
 		
 **};
 end security_resolute;

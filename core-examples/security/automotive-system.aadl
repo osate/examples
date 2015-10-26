@@ -57,36 +57,38 @@ system implementation car.cherokee
 subcomponents
     --  The radio system - connected to the wireless, cellular
     --  and two cans networks.
-	radio : system radio {security_properties::security_level => 1;};
-	
+	radio : system radio {security_properties::security_level => (1,2);
+		                  security_properties::is_verified => true;
+	};
+	 
 	--  The CAN buses: IHS is connected to non-critical
 	--  systems, the C is connected to critical equipments.
-	can_ihs      : bus can {security_properties::security_level => 2;};
-	can_c        : bus can {security_properties::security_level => 1;};
+	can_ihs      : bus can {security_properties::security_level => (2);};
+	can_c        : bus can {security_properties::security_level => (1);};
 	
 	--  The wifi provided by the car to connect to the car
 	wifi        : bus wifi;
 	
 	-- Functions on the IHS (non-critical) bus
 	--  temperature control
-	hvac        : system function {security_properties::security_level => 2;};  
+	hvac        : system function {security_properties::security_level => (2);};  
 	
 	--  radio amplifier
-	amplifier  	: system function {security_properties::security_level => 2;};  
+	amplifier  	: system function {security_properties::security_level => (2);};  
 	--  body control module
-	bcm         : system function {security_properties::security_level => 2;}; 
+	bcm         : system function {security_properties::security_level => (2);}; 
 	--  heated seats 
-	hsm         : system function {security_properties::security_level => 2;};  
+	hsm         : system function {security_properties::security_level => (2);};  
 	
 	-- Functions on the C (critical) bus
 	--  braking
-	abs : system function {security_properties::security_level => 1;};
+	abs : system function {security_properties::security_level => (1);};
 	--  adaptive cruise control
-	acc : system function {security_properties::security_level => 1;};
+	acc : system function {security_properties::security_level => (1);};
 	--  electric power steering  
-	eps : system function {security_properties::security_level => 1;};
+	eps : system function {security_properties::security_level => (1);};
 	--  electric parking brake
-	epb : system function {security_properties::security_level => 1;};    
+	epb : system function {security_properties::security_level => (1);};    
 connections
     -- Connections for all the non-critical functions on the IHS bus
 	ihs_radio      : bus access can_ihs <-> radio.can_ihs_socket;
@@ -143,11 +145,11 @@ end integration.i;
 system implementation integration.attack extends integration.i
 subcomponents
 	attacker_cel      : system attacker (network => bus cellular)
-						{security_properties::security_level => 100;};
+						{security_properties::security_level => (100);};
 	attacker_wifi     : system attacker (network => bus wifi)
-						{security_properties::security_level => 100;};
+						{security_properties::security_level => (100);};
 	attacker_internet : system attacker (network => bus internet)
-						{security_properties::security_level => 100;};
+						{security_properties::security_level => (100);};
 connections
 	attacker_to_internet : bus access attacker_internet.connection <-> internet;
 	attacker_to_cel      : bus access attacker_cel.connection <-> cellular;
