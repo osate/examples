@@ -31,10 +31,8 @@ with virtual processor. Virtual processors are associated
 with a kernel that supports time and space isolation.
 
 
-
 Security Verification Rules with RESOLUTE
 -----------------------------------------
-
 ### R0: Shared buses through different components
 Check components at different security levels sharing a bus. If two
 components at different security levels share the same bus, there
@@ -64,3 +62,7 @@ An MLS component is a component having multiple security levels. For MLS compone
 the component must explicitly defined the security levels it handles. Such components
 must also define the security level for each feature (what security levels are
 associated with each interface/feature).
+
+### R6: Bouncer component.
+An MLS component cannot be used as a gateway to downgrade a data from a given
+security level to another one unless it has been verified.
