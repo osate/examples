@@ -1,0 +1,60 @@
+package hw_flow
+public
+
+	bus mybus
+	end mybus;
+	
+	
+	system producer
+	features
+		mybus : requires bus access mybus;
+	flows
+		f0 : flow source mybus;
+	end producer;
+
+	system computer
+	features
+		mybusinput : requires bus access mybus;
+		mybusoutput1 : requires bus access mybus;
+		mybusoutput2 : requires bus access mybus;
+	flows
+		f0 : flow path mybusinput -> mybusoutput1;
+		f1 : flow path mybusinput -> mybusoutput2;
+	end computer;
+
+
+	system receiver
+	features
+		mybus1 : requires bus access mybus;
+		mybus2 : requires bus access mybus;
+	flows
+		f0 : flow sink mybus1;
+		f1 : flow sink mybus2;
+	end receiver;
+
+
+	system mysystem
+	end mysystem;
+	
+	system implementation mysystem.i
+	subcomponents
+		p1 : system producer;
+		p2 : system producer;
+		c  : system computer;
+		r  : system receiver;
+		b1 : bus mybus;
+		b2 : bus mybus;
+		b3 : bus mybus;
+	connections
+		c0 : bus access p1.mybus <-> b1;
+		c1 : bus access c.mybusinput <-> b1;
+		c2 : bus access c.mybusoutput1 <-> b2;
+		c3 : bus access r.mybus1 <-> b2;
+		c4 : bus access c.mybusoutput2 <-> b3;
+		c5 : bus access r.mybus2 <-> b3;
+	flows
+		etef0 : end to end flow p1 -> c0 -> b1 -> c1 -> c -> c2 -> b2 -> c3 -> r.mybus1;
+		etef0 : end to end flow p1 -> c0 -> b1 -> c1 -> c -> c4 -> b3 -> c5 -> r.mybus2;
+	end mysystem.i;
+
+end hw_flow;
