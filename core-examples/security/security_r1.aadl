@@ -7,7 +7,7 @@ public
 	features
 		outfeat : out event port;
 	end sender;
-
+  
 	system receiver
 	features
 		infeat : in event port;
@@ -22,7 +22,10 @@ public
 		r : system receiver;
 	connections
 		c0 : port s.outfeat -> r.infeat;
-	end main.i;
+	annex resolute {**
+		prove (check_ports_connections ())
+	**}; 
+	end main.i;  
 
 	system implementation main.incorrect extends main.i
 	properties
