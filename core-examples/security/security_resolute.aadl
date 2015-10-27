@@ -9,8 +9,55 @@ annex resolute {**
 	check_bouncer_connections (comp) and
 	check_subcomponents (comp)
 	
+	
+	--
+	--  Rule R0: check that components sharing
+	--  a bus have the same security level. 
+	check_buses_connections (comp : component) <=
+	** "R0: Components sharing a bus have the same security level" ** 
+	forall (src : subcomponents(comp)) . 
+		forall (dst : subcomponents(comp)) . 
+			forall (connsrc : connections(src)) .
+				forall (conndst : connections(dst)) .
+					forall (thebus : subcomponents(comp)) .
+--					true
+					connected_to_bus (thebus,connsrc,src) and
+					connected_to_bus (thebus,conndst,dst) and
+					(src <> dst)
+					
+	        =>	        
+		check_security_level (src,dst) 
+	
+	--
+	--  Rule R1: check that components connected through ports
+	--  share the same security level.
+	check_ports_connections () <=
+	** "R1: Inter-connected components have the same security levels" **
+	forall (comp : component) . 
+		forall  (conn : connections (comp)) . true
+		=> check_conn_security_level (conn)
+		 
+		
+	check_conn_security_level (conn : connection) <=
+	** "Check connection " conn **
+	   check_security_level (parent (source(conn)), parent (destination(conn)))
+		
+	--
+	--  Rule R2: Processes on the same processor with different security levels bound to separate memories
+	--
+	check_memory_separation () <=
+	** "Check that processes with different security levels are on separate memories" **
+	forall (pr1 : component) (pr2 : component) (cpu : processor) (mem : memory) .
+		is_bound_to (pr1, cpu) and is_bound_to (pr1, mem) and
+		is_bound_to (pr2, cpu) and is_bound_to (pr2, mem) =>
+		check_security_level (pr1,pr2)
+		
+	--
+	--  Rule R6: check that there is no component that can
+	--  lower a security level if the middle component is not verified
+	--
 	check_bouncer_connections (comp : component) <=
-	** "Check there is no possible bypass by a non-verified component" ** 
+	** "R6: Check there is no possible bypass by a non-verified component" ** 
 	forall (src : subcomponents(comp)) . 
 		forall (middle : subcomponents(comp)) . 
 		(property (middle, security_properties::Is_Verified) = false) and 
@@ -34,20 +81,6 @@ annex resolute {**
 	        =>	        
 		check_security_level (src,dst)
 	
-	check_buses_connections (comp : component) <=
-	** "Check buses connections " ** 
-	forall (src : subcomponents(comp)) . 
-		forall (dst : subcomponents(comp)) . 
-			forall (connsrc : connections(src)) .
-				forall (conndst : connections(dst)) .
-					forall (thebus : subcomponents(comp)) .
---					true
-					connected_to_bus (thebus,connsrc,src) and
-					connected_to_bus (thebus,conndst,dst) and
-					(src <> dst)
-					
-	        =>	        
-		check_security_level (src,dst)
 	 
    connected_to_bus(thebus : component, conn : connection, b : component) : bool =
 --    (print_aadl (thebus)) and

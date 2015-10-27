@@ -43,7 +43,7 @@ will accesses data at a high security level.
 Functions that are communicating must handle data at the same security level.
 The feature or the component must share the same security levels.
 
-### R2: Processes with different security levels bound to separate memories
+### R2: Processes with different security levels executed on the same processor are bound to separate memories
 Two process or abstract AADL components with different
 security levels cannot be bound or associated to the same memory.
 

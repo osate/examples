@@ -1,4 +1,4 @@
 property set security_properties is
 Security_Level : list of aadlinteger => (100) applies to (all);
 Is_Verified : aadlboolean => false applies to (all);
-end security_properties;
+end security_properties; 
