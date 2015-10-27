@@ -46,11 +46,33 @@ annex resolute {**
 	--  Rule R2: Processes on the same processor with different security levels bound to separate memories
 	--
 	check_memory_separation () <=
-	** "Check that processes with different security levels are on separate memories" **
+	** "R2: Check that processes with different security levels are on separate memories" **
 	forall (pr1 : component) (pr2 : component) (cpu : processor) (mem : memory) .
 		is_bound_to (pr1, cpu) and is_bound_to (pr1, mem) and
 		is_bound_to (pr2, cpu) and is_bound_to (pr2, mem) =>
 		check_security_level (pr1,pr2)
+		
+	--
+	--  Rule R4: all threads for a process have the same security levels unless the process is verified
+	--
+	check_threads_level () <=
+	** "R4: Check that processes with different security levels are on separate memories" **
+	forall (thr1 : thread) (thr2 : thread) (pr : process) .
+		property (pr,security_properties::Is_Verified) = false and
+		parent(thr1) = parent(thr2) =>
+		check_security_level (thr1,thr2)
+
+
+	--
+	--  Rule R5: an MLS components has to explicitly define the security level of its ports
+	--
+	check_mls_components () <=
+	** "R5: Check that MLS components explicitly define security levels of their features" **
+	forall (comp : component) .
+		forall (f : features (comp)) .
+			(length (property (comp, security_properties::Security_Level)) > 0)
+		=>
+		length (intersect (property (comp, security_properties::Security_Level),property (f, security_properties::Security_Level))) > 0
 		
 	--
 	--  Rule R6: check that there is no component that can
