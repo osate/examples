@@ -16,7 +16,7 @@ public
 	end threadt;
 
 	system main
-	end main;
+	end main; 
 
 	system implementation main.i
 	subcomponents

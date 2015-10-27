@@ -1,4 +1,4 @@
-package security_r0
+package security_r6
 public
 
 	with security_properties;
@@ -12,6 +12,12 @@ public
 	features
 		mybus : requires bus access ethernet;
 	end receiver;
+	
+	system intermediate
+	features
+		mybus1 : requires bus access ethernet;
+		mybus2 : requires bus access ethernet;
+	end intermediate;
 
 	bus ethernet
 	end ethernet;
@@ -22,29 +28,35 @@ public
  
 
 	system implementation main.i
-	subcomponents
+	subcomponents 
 		s : system sender;
-		b : bus ethernet;
+		b1 : bus ethernet;
+		i : system intermediate;
+		b2 : bus ethernet;
 		r : system receiver;
 	connections
-		c0 : bus access b <-> s.mybus;
-		c1 : bus access b <-> r.mybus; 
-	annex resolute {**
-		prove (check_buses_connections (this))
+		c0 : bus access b1 <-> s.mybus;
+		c1 : bus access b1 <-> i.mybus1;
+		c2 : bus access b2 <-> i.mybus2;
+		c4 : bus access b2 <-> r.mybus; 
+	annex resolute {** 
+		prove (check_bouncer ())
 	**};
 	end main.i;
  
 	system implementation main.incorrect extends main.i
 	properties
 		security_properties::security_level => (1) applies to s;
+		security_properties::security_level => (1) applies to i;
 		security_properties::security_level => (2) applies to r;
 	end main.incorrect;
 
 	system implementation main.correct extends main.i
 	properties
 		security_properties::security_level => (1) applies to s;
+		security_properties::security_level => (1) applies to i;
 		security_properties::security_level => (1) applies to r;
 	end main.correct;	
 
 
-end security_r0;
+end security_r6;

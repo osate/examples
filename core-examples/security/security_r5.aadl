@@ -18,7 +18,7 @@ public
 	annex resolute {**
 		prove (check_mls_components ())
 	**};  
-	end main.i;
+	end main.i; 
  
 	system implementation main.incorrect1 extends main.i
 	properties

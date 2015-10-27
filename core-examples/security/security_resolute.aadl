@@ -6,7 +6,7 @@ annex resolute {**
 	check_component (comp : component) <=
 	** "Check security levels for component " comp **
 	check_buses_connections (comp) and 
-	check_bouncer_connections (comp) and
+	check_bouncer_component (comp) and
 	check_subcomponents (comp)
 	
 	
@@ -51,6 +51,29 @@ annex resolute {**
 		is_bound_to (pr1, cpu) and is_bound_to (pr1, mem) and
 		is_bound_to (pr2, cpu) and is_bound_to (pr2, mem) =>
 		check_security_level (pr1,pr2)
+
+	--
+	--  Rule R3: Processes with different security levels are on different processor/partitions
+	--
+	check_runtime_separation () <=
+	** "R3: Check that processes with different security levels are on separate runtime(s)" **
+	check_processor_separation() and check_virtual_processor_separation ()
+
+	check_processor_separation () <=
+	** "R3: Check that processes with different security levels are on separate runtime(s)" **
+	forall (pr1 : component) (pr2 : component) (cpu : processor) .
+		is_bound_to (pr1, cpu) and
+		is_bound_to (pr2, cpu) =>
+		check_security_level (pr1,pr2)
+
+
+	check_virtual_processor_separation () <=
+	** "R3: Check that processes with different security levels are on separate runtime(s)" **
+	forall (pr1 : component) (pr2 : component) (vcpu : virtual_processor) .
+		is_bound_to (pr1, vcpu) and
+		is_bound_to (pr2, vcpu) =>
+		check_security_level (pr1,pr2)
+
 		
 	--
 	--  Rule R4: all threads for a process have the same security levels unless the process is verified
@@ -78,10 +101,15 @@ annex resolute {**
 	--  Rule R6: check that there is no component that can
 	--  lower a security level if the middle component is not verified
 	--
-	check_bouncer_connections (comp : component) <=
-	** "R6: Check there is no possible bypass by a non-verified component" ** 
+	check_bouncer () <=
+	** "R6: Check there is no possible bypass" ** 
+	forall (c : component) . true =>
+	check_bouncer_component (c)
+	
+	check_bouncer_component (comp : component) <=
+	** "R6: Check there is no possible bypass within component " comp ** 
 	forall (src : subcomponents(comp)) . 
-		forall (middle : subcomponents(comp)) . 
+		forall (middle : subcomponents(comp)) .
 		(property (middle, security_properties::Is_Verified) = false) and 
 			forall (dst : subcomponents(comp)) . 
 				forall (connsrc : connections(src)) .

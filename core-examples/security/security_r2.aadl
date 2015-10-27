@@ -29,7 +29,7 @@ public
 	annex resolute {**
 		prove (check_memory_separation ())
 	**};  
-	end main.i; 
+	end main.i;  
  
 	system implementation main.incorrect extends main.i
 	properties
