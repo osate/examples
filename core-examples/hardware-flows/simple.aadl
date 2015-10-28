@@ -53,8 +53,8 @@ public
 		c4 : bus access c.mybusoutput2 <-> b3;
 		c5 : bus access r.mybus2 <-> b3;
 	flows
-		etef0 : end to end flow p1 -> c0 -> b1 -> c1 -> c -> c2 -> b2 -> c3 -> r.mybus1;
-		etef0 : end to end flow p1 -> c0 -> b1 -> c1 -> c -> c4 -> b3 -> c5 -> r.mybus2;
+		etef0 : end to end flow p1 -> c0 -> b1 -> c1 -> c -> c2 -> b2 -> c3 -> r.f0;
+		etef1 : end to end flow p1 -> c0 -> b1 -> c1 -> c -> c4 -> b3 -> c5 -> r.f1;
 	end mysystem.i;
 
 end hw_flow;
