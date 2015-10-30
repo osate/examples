@@ -160,14 +160,15 @@ annex resolute {**
 	check_cwe362_component (c)
 	
 	check_cwe362_component (c : component) <=
-	** "CWE362: check component " c **  
-	forall (conn : connections(c)) . is_data_access(source (conn)) =>
-	check_cwe362_component_connection (type(source(conn)))
+	** "CWE362: check component " c **
+	forall (conn : connections(c)) . is_data_access(conn) =>
+	check_cwe362_component_connection (source(conn)) or 
+ 	check_cwe362_component_connection (destination(conn))
  
  
- 
-	check_cwe362_component_connection (d : data) <=
-	** "CWE362: check connection " c **
+	check_cwe362_component_connection (d : aadl) <=
+	** "CWE362: check data " d **
+	has_property (d , Thread_Properties::Concurrency_Control_Protocol)
 	 	  
 	--
 	--  Utility functions
