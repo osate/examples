@@ -1,0 +1,45 @@
+package security_cwe131
+public
+
+	with security_properties;
+
+	system sender
+	features
+		e : out event port;
+	end sender;
+
+	system receiver
+	features
+		e : in event port;
+	end receiver;
+	
+
+	system main
+	end main;
+ 
+
+	system implementation main.i
+	subcomponents 
+		s : system sender;
+		r : system receiver;
+	connections
+		c0 : port s.e -> r.e;
+	annex resolute {** 
+		prove (check_cwe131 ())
+	**};
+	end main.i;
+ 
+	system implementation main.incorrect extends main.i
+	properties
+		queue_size => 3 applies to s.e;
+		queue_size => 2 applies to r.e;
+	end main.incorrect;
+
+	system implementation main.correct extends main.i
+	properties
+		queue_size => 2 applies to s.e;
+		queue_size => 3 applies to r.e;
+	end main.correct;	
+
+
+end security_cwe131;

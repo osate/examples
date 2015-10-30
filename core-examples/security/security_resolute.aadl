@@ -126,11 +126,52 @@ annex resolute {**
 					connected_to_bus (thebus2,connmiddle2,middle) and
 					(src <> dst) and
 					(src <> middle) and
-					(middle <> dst) and
+					(middle <> dst) and 
 					(thebus1 <> thebus2) 
 	        =>	        
 		check_security_level (src,dst)
 	
+	 
+	--
+	-- CWE-131 - check buffer size
+	-- 	 
+	check_cwe131 () <=
+	** "CWE131: incorrect calculation of buffer size" ** 
+	forall (c : component) . true =>
+	check_connections_queue_size_for_component (c)
+	 
+	 
+	check_connections_queue_size_for_component (c : component) <=
+	** "check connections for component " c ** 
+	forall (conn : connections (c)) . true =>
+		check_queue_size_connection (conn)
+	 
+	check_queue_size_connection (c : connection) <=
+	** "check connection " c ** 
+	property (source(c), Communication_Properties::Queue_Size) <= property (destination(c), Communication_Properties::Queue_Size)
+
+
+	--
+	-- CWE-362 - race condition
+	--
+	check_cwe362 () <=
+	** "CWE362: Concurrent Execution using Shared Resource with Improper Synchronization (Race Condition)" ** 
+	forall (c : component) . true =>
+	check_cwe362_component (c)
+	
+	check_cwe362_component (c : component) <=
+	** "CWE362: check component " c **  
+	forall (conn : connections(c)) . is_data_access(source (conn)) =>
+	check_cwe362_component_connection (type(source(conn)))
+ 
+ 
+ 
+	check_cwe362_component_connection (d : data) <=
+	** "CWE362: check connection " c **
+	 	  
+	--
+	--  Utility functions
+	--	 
 	 
    connected_to_bus(thebus : component, conn : connection, b : component) : bool =
 --    (print_aadl (thebus)) and
