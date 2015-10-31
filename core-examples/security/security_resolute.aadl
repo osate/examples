@@ -169,7 +169,19 @@ annex resolute {**
 	check_cwe362_component_connection (d : aadl) <=
 	** "CWE362: check data " d **
 	has_property (d , Thread_Properties::Concurrency_Control_Protocol)
-	 	  
+	 
+	 
+	check_timing_requirements () <=
+	** "Check that timing requirements for communicating components are consistent" **
+	forall (c : component) (conn : connections (c)) .  
+		has_property (c, Timing_Properties::Period) =>
+		check_timing_requirements_connection (conn)
+ 
+	check_timing_requirements_connection (conn : connection) <=
+	** "Check timing requirements for connection " conn **
+		property (parent(destination(conn)), Timing_Properties::Period) / property (destination (conn), Communication_Properties::Queue_Size)
+	 	<=
+	 	property (parent(source(conn)), Timing_Properties::Period) 
 	--
 	--  Utility functions
 	--	 
