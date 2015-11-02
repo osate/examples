@@ -237,12 +237,17 @@ annex resolute {**
 	check_cwe327 () <=
 	** "CWE327: Use of risky or weak security protocol" ** 
 	forall (c : component) . true =>
-	check_encryption_mechanism (c)
+	true
+	
+--	check_encryption_mechanism (c)
 
-	check_encryption_mechanism (c : component) <=
-	** "Check that encryption mechanisms for component " c " are not weak" **
-	forall (conn : connections(c)) . true =>
-	has_property (conn, security_properties::encryption_type)
+--  The list of potential good/weak encryption mechanisms
+--  are listed here: https://www.owasp.org/index.php/Guide_to_Cryptography#Algorithm_Selection
+
+--	check_encryption_mechanism (c : component) <=
+--	** "Check that encryption mechanisms for component " c " are not weak" **
+--	forall (conn : connections(c)) . true =>
+--	has_property (conn, security_properties::encryption_type)
 	-- To be completed, need to support record in RESOLUTE
 	
 	--
