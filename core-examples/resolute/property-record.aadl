@@ -1,0 +1,13 @@
+package property_record
+public
+	with resoluteps;
+	
+	system a
+	properties
+		resoluteps::myrec => [ foo => 1 ; bar => 2;];
+	end a;
+	
+	system implementation a.i
+	
+	end a.i;
+end property_record;

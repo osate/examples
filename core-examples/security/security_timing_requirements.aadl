@@ -25,7 +25,7 @@ public
 	connections
 		c0 : port s.e -> r.e;
 	annex resolute {** 
-		prove (check_timing_requirements ())
+		prove (check_cwe131 ())
 	**};
 	end main.i;
  

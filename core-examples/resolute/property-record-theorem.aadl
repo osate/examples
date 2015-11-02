@@ -1,0 +1,11 @@
+package property_record_theorem
+public
+	
+annex resolute {**
+	check_record() <=
+  	** "Check record members"  **
+		forall (c : component) . has_property (c, resoluteps::myrec)
+		=>
+		property_member (property (c, resoluteps::myrec), "foo") = 1
+  	**};
+end property_record_theorem;

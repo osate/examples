@@ -2,4 +2,11 @@ property set resoluteps is
 	foobar : aadlinteger applies to (all);
 	
 	required_foobar : constant aadlinteger => 15;
+	
+  	myrec : resoluteps::myrecord applies to (all);
+        
+    myrecord : type record (
+		foo : aadlinteger;
+		bar : aadlinteger;
+    );
 end resoluteps;   
