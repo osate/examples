@@ -108,7 +108,7 @@ connections
 	wifi_outside    : bus access wifi <-> wifi_access;
 	cellular_radio  : bus access cellular_access <-> radio.cellular_access;
 annex resolute {**
-	prove (check_component (this))
+	prove (check_security())
 **};
 end car.cherokee;
 
@@ -155,7 +155,7 @@ connections
 	attacker_to_cel      : bus access attacker_cel.connection <-> cellular;
 	attacker_to_wifi     : bus access attacker_wifi.connection <-> car.wifi_access;
 annex resolute {**
-	prove (check_component (this))
+	prove (check_security ())
 **};
 end integration.attack;
 

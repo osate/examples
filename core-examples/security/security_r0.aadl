@@ -30,7 +30,7 @@ public
 		c0 : bus access b <-> s.mybus;
 		c1 : bus access b <-> r.mybus; 
 	annex resolute {**
-		prove (check_buses_connections (this))
+		prove (check_buses_connections ())
 	**};
 	end main.i;
  

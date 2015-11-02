@@ -3,18 +3,39 @@ public
 with Resolute_Stdlib;
 
 annex resolute {**
-	check_component (comp : component) <=
-	** "Check security levels for component " comp **
-	check_buses_connections (comp) and 
-	check_bouncer_component (comp) and
-	check_subcomponents (comp)
+	check_security () <=
+	** "Check security constraints" **
+	check_general_rules() and check_cwes()
+
+
+
 	
+
+	-------------------------------------------------------------
+	--  General security rules
+	-------------------------------------------------------------
+	check_general_rules () <=
+	** "Check general security rules" ** 
+	check_buses_connections () and
+	check_ports_connections() and
+	check_memory_separation () and
+	check_runtime_separation () and
+	check_threads_level () and
+	check_mls_components () and
+	check_bouncer ()
+	
+	--to be completed
 	
 	--
 	--  Rule R0: check that components sharing
-	--  a bus have the same security level. 
-	check_buses_connections (comp : component) <=
+	--  a bus have the same security level.
+	check_buses_connections () <=
 	** "R0: Components sharing a bus have the same security level" ** 
+	forall (c : component ) . true
+	=> check_buses_connections_component (c)
+	
+	check_buses_connections_component (comp : component) <=
+	** "Check that component " comp " does not share a bus with a component at a different criticality level" ** 
 	forall (src : subcomponents(comp)) . 
 		forall (dst : subcomponents(comp)) . 
 			forall (connsrc : connections(src)) .
@@ -131,14 +152,26 @@ annex resolute {**
 	        =>	        
 		check_security_level (src,dst)
 	
-	 
+	
+	
+	
+	-------------------------------------------------------------
+	--  CWE related rules
+	-------------------------------------------------------------
+	check_cwes () <=
+	** "Check that the architecture handles existing common weaknesses" **
+		check_cwe131() and 
+		check_cwe362() and 
+		check_cwe514() and
+		check_cwe327()
+	
 	--
 	-- CWE-131 - check buffer size
 	-- 	 
 	check_cwe131 () <=
 	** "CWE131: incorrect calculation of buffer size" ** 
 	forall (c : component) . true =>
-	check_connections_queue_size_for_component (c)
+	check_connections_queue_size_for_component (c) and check_timing_requirements (c)
 	 
 	 
 	check_connections_queue_size_for_component (c : component) <=
@@ -151,9 +184,27 @@ annex resolute {**
 	property (source(c), Communication_Properties::Queue_Size) <= property (destination(c), Communication_Properties::Queue_Size)
 
 
+ 	--
+ 	-- The check_timing_requirements is more than just taking care
+ 	-- of the queue_size, it also has a look at the period
+ 	-- of communicating components
+	check_timing_requirements (c : component) <=
+	** "Check that timing requirements of communication with " c " are consistent" **
+	forall (conn : connections (c)) .  
+		has_property (c, Timing_Properties::Period) =>
+		check_timing_requirements_connection (conn)
+ 
+	check_timing_requirements_connection (conn : connection) <=
+	** "Check timing requirements for connection " conn **
+		property (parent(destination(conn)), Timing_Properties::Period) / property (destination (conn), Communication_Properties::Queue_Size)
+	 	<=
+	 	property (parent(source(conn)), Timing_Properties::Period) 
+
+
 	--
 	-- CWE-362 - race condition
 	--
+	
 	check_cwe362 () <=
 	** "CWE362: Concurrent Execution using Shared Resource with Improper Synchronization (Race Condition)" ** 
 	forall (c : component) . true =>
@@ -165,23 +216,30 @@ annex resolute {**
 	check_cwe362_component_connection (source(conn)) or 
  	check_cwe362_component_connection (destination(conn))
  
- 
-	check_cwe362_component_connection (d : aadl) <=
+  
+	check_cwe362_component_connection (d : aadl) <= 
 	** "CWE362: check data " d **
 	has_property (d , Thread_Properties::Concurrency_Control_Protocol)
-	 
-	 
-	check_timing_requirements () <=
-	** "Check that timing requirements for communicating components are consistent" **
-	forall (c : component) (conn : connections (c)) .  
-		has_property (c, Timing_Properties::Period) =>
-		check_timing_requirements_connection (conn)
- 
-	check_timing_requirements_connection (conn : connection) <=
-	** "Check timing requirements for connection " conn **
-		property (parent(destination(conn)), Timing_Properties::Period) / property (destination (conn), Communication_Properties::Queue_Size)
-	 	<=
-	 	property (parent(source(conn)), Timing_Properties::Period) 
+
+
+	--
+	-- CWE-514 - covert channel
+	--	 
+	check_cwe514 () <=
+	** "CWE514: There are no covert channel" ** 
+	forall (c : component) . true =>
+	check_bouncer_component (c)
+
+
+	--
+	-- CWE-327 - use of risky or weak security protocol
+	--	 
+	check_cwe327 () <=
+	** "CWE327: Use of risky or weak security protocol" ** 
+	forall (c : component) . true =>
+	true
+	--  to be completed
+
 	--
 	--  Utility functions
 	--	 
@@ -203,11 +261,6 @@ annex resolute {**
 	  true
  
 
-	check_subcomponents (comp : component) <=
-	** "Check bus connections for subcomponents" **
-	forall (subco : subcomponents (comp)) . true => 
-		check_component (subco)
-	
 	
 	check_security_level (comp1 : aadl, comp2 : aadl) <=
 	** "Component " comp1 " and " comp2 " have the same security level(s)" **
