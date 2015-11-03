@@ -8,6 +8,8 @@ public
 	end a;
 	
 	system implementation a.i
-	
+	annex resolute {**
+		prove check_record()
+	**};
 	end a.i;
 end property_record;
