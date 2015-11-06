@@ -1,0 +1,27 @@
+package figure12
+public
+	
+processor PC
+features
+	deviceBus: requires bus access CANbus;
+annex EMV2 {**
+  use types MyErrorLib;
+  error propagations
+	-- outgoing error propagation from processor binding
+    bindings: out propagation {NoService};
+    deviceBus: in propagation {NoService};
+  end propagations;
+**};
+end PC;
+
+bus CANbus
+annex EMV2{**
+  use types MyErrorLib;
+  error propagations
+	-- outgoing error propagation on access connections
+    access: out propagation {NoService};
+  end propagations;
+**};
+end CANbus;
+
+end figure12;

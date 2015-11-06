@@ -1,0 +1,15 @@
+package WaterValveErrorLib
+public
+annex EMV2 {**
+error types 
+     DrippingValve renames type MyValveErrorLib::ValveLeak;
+     RustedShut renames type MyValveErrorLib::StuckShut;
+     RustedOpen renames type MyValveErrorLib::StuckOpen;
+     WaterValveError: type set {DrippingValve, RustedShut, RustedOpen};
+     WaterValveRusted: type set {RustedShut, RustedOpen};
+     WaterValveDrip: type set {DrippingValve};
+end types;
+**};
+
+
+end WaterValveErrorLib;

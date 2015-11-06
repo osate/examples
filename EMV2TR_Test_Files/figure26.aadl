@@ -1,0 +1,23 @@
+package figure26
+public
+with MyValveErrorLib;
+
+system valve
+	features
+ValveFlow: out data port;
+   ValveFlow2: out data port;
+   ValveFlow3: out data port;
+   
+
+annex EMV2 {**
+use types MyValveErrorLib;
+error propagations
+   ValveFlow: out propagation {StuckOpen, StuckClosed};
+   ValveFlow2: out propagation {ValveError};
+   ValveFlow3: out propagation {ValveError, ValveLeak};
+end propagations;
+**};
+
+end valve;
+	
+end figure26;

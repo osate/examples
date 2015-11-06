@@ -1,0 +1,98 @@
+--
+
+-- This is figure 48 plus additions from or needed by other figures.
+
+--
+
+package MyBehaviorLibrary
+public
+with EMV2;     -- include reference to Error Model Annex
+
+annex EMV2 {**
+error behavior WorkingFailed1
+events
+		BadValueEvent:  error event;
+states
+	Working : initial state ;
+	Failed : state ;
+	
+end behavior ;
+
+
+-- Three-State error model
+error behavior ThreeStateDegraded
+
+events
+		BadValueEvent:  error event;
+		LateValueEvent: error event;
+states
+	Working : initial state ;
+	Degraded: state;
+	Failed : state ;
+end behavior;
+
+-- needed for figure 59 --this is figure 58
+
+	error behavior 
+	
+	ErrorRecovery4  -- Three State Abstracted Model
+-- error model abstracted to show recovery
+events
+  E_Degraded: error event;
+  E_Working: recover event;
+  E_Fail: error event; 
+states
+  Working: initial state; 
+  Degraded: state;
+  Failed: state; 
+transitions
+  Degrade: Working -[E_Degraded]-> Degraded;
+  Work: Degraded -[E_Working]-> (Working with 0.95, Failed with 0.05);
+end behavior;
+
+--
+-- this is from figure 61.
+error behavior ErrorDetectionandRecovery
+use types MyBehaviorLibrary;
+events
+Successful_Detection: recover event;
+Successful_Recovery: recover event;
+Unsuccessful_Detection: error event;
+Unsuccessful_Recovery: error event;
+states
+Working: initial state;
+Degraded: state;
+Failed: state;
+end behavior;
+
+-- from figure 64
+
+error behavior ErrorRecovery
+-- error model detailed to show detection, and 2 levels of repair/recovery
+events
+  E_Detect: error event;
+  E_Recovering: repair event;
+  E_Rec_Degraded: recover event;
+  E_Degrade_Detect: error event;
+  E_Rec_Working: recover event; 
+  E_Fail: recover event; 
+  E_two_faults: recover event; 
+states
+  Working: initial state; 
+  Detecting: state;
+  Recovering: state;
+  Working_Degraded: state;
+  Failed: state; 
+transitions
+  Detect: Working -[E_detect]-> Detecting;
+  Recovery: Detecting -[E_recovering]-> Recovering;
+  Fixing: Recovering -[E_two_faults]-> (Working with 0.5, Working_degraded    with 0.4, Failed with 0.1);
+end behavior;
+
+
+
+**};
+
+
+
+end MyBehaviorLibrary;

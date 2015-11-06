@@ -1,0 +1,31 @@
+package figure50
+public
+with EMV2;
+
+system flight_controller_2
+end flight_controller_2;
+
+
+system implementation flight_controller_2.impl
+
+annex EMV2 {**                       
+	
+	use behavior MyBehaviorLibrary::WorkingFailed1;
+	component error behavior
+	events
+ 	    PowerLoss: error event;
+ 	    SensorFailure: error event;
+	transitions	
+	    Working_To_Failed: Working -[SensorFailure or PowerLoss]-> Failed;
+	end component;
+	properties
+		EMV2::OccurrenceDistribution => [ OccurrenceRate => 1.0e-5; 
+          Distribution => Poisson;] applies to PowerLoss;
+ --       EMV2::OccurrenceProbability => 1.0e-5; applies to PowerLoss;
+ EMV2::Likelihood => ARP4761::ExtremelyRemote applies to Failed;
+		
+**};
+
+end flight_controller_2.impl;
+	
+end figure50;

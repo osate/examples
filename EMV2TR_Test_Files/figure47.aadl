@@ -1,0 +1,23 @@
+package EM_example
+public
+with ErrorModelLibrary;
+system flight_controller_1
+  -- small example of flight controller - get flight data from other
+  -- systems, output data and indicators to other flight systems and display
+  -- 
+features 
+  current_air_speed: in data port;  -- from ADC
+  current_heading: in data port;  -- from Nav gps
+  new_air_speed: out data port;  -- to engine control
+  fc_error_recovery: out data port;  -- to pilot, copilot MFD
+
+  --  Flight controller error model EM description
+
+ annex EMV2 {**   -- refer to EMV annex reference the error behavior library and 
+		    -- the specific error behavior model
+
+	use behavior ErrorModelLibrary::ThreeErrorStates;
+**};
+ 
+end flight_controller_1 ;
+end EM_example;

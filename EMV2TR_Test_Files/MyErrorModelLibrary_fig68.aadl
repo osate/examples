@@ -1,0 +1,44 @@
+package MyErrorModelLibrary
+public
+
+annex EMV2 {**
+error types
+  NoValue: type;
+  BadValue: type;
+  NoService: type;
+  LateValue: type;
+  ThreeErrorSet: type set {NoValue, BadValue, LateValue};
+  MyTypeSet: type set {ThreeErrorSet, NoService};
+  
+ -- added for figure 81
+ 
+  ComputeError: type; 
+  
+  -- needed for figure 71 
+  
+  MyType: type;
+  
+end types;
+
+error behavior TypedState
+use types MyErrorModelLibrary;
+events
+  MyEvent: error event {MyTypeSet};
+  
+  
+states
+  Operational: initial state;
+  Failed: state {ThreeErrorSet};
+transitions
+  Trans_NoValue : Operational -[MyEvent {NoValue}]-> Failed {NoValue};
+  Trans_BadValue : Operational -[MyEvent {BadValue}]-> Failed {BadValue};
+  Trans_LateValue : Operational -[MyEvent {LateValue}]-> Failed {LateValue};
+  Trans_NoService : Operational -[MyEvent {NoService}]-> Failed {NoValue};
+end behavior;
+**};
+
+-- needed for figure 71
+
+
+
+end MyErrorModelLibrary;

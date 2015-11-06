@@ -1,0 +1,31 @@
+package MyErrorLib
+public
+annex EMV2 {**
+error types
+     PowerFailure : type;
+     TransientPowerLoss : type;
+     PowerErrors: type set { PowerFailure, TransientPowerLoss };
+     SensorFailure: type;
+     NoService: type;
+     BadData: type;
+     NoData: type;
+     MissingCmd: type;
+
+ end types;
+
+
+error behavior TwoState
+events
+  Fail: error event;
+states
+  Operational: initial state; 
+  Failed: state; 
+transitions
+  Failure: Operational -[Fail]-> Failed;
+end behavior;
+
+ 
+ **};
+end MyErrorLib;
+
+

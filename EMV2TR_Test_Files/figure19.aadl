@@ -1,0 +1,36 @@
+package figure19
+public
+
+with EMV2;
+
+device PositionSensor
+features
+  PositionReading: out data port ;
+flows
+  f1: flow source PositionReading {Latency => 2 ms .. 3 ms;};
+annex EMV2 {**
+use types ErrorLibrary;
+use behavior ErrorModelLibrary::Simple;
+error propagations 
+  PositionReading: out propagation {ServiceOmission, ItemOmission, ValueError};
+flows
+  ef1:error source PositionReading when Failed;
+end propagations;
+properties
+	EMV2::Severity => 1 applies to ef1;
+
+ EMV2::hazards => 
+   ([crossreference => "1.1.1"; 	
+    failure => "Loss of sensor readings";
+	phases => ("all");
+	severity => 1;
+	likelihood => C; --<use concete labels>
+	description => "No position readings due to sensor failure";
+	comment => "Becomes major hazard, if no redundant sensor";
+
+    ])applies to ef1;
+**};
+end PositionSensor;
+
+
+end figure19;

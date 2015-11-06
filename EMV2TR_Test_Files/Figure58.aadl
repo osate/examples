@@ -1,0 +1,27 @@
+package Figure58
+public
+--	with EMV2;
+	
+	
+annex EMV2 {**
+	
+	error behavior 
+	
+	ErrorRecovery4  -- Three State Abstracted Model
+-- error model abstracted to show recovery
+events
+  E_Degraded: error event;
+  E_Working: recover event;
+  E_Fail: error event; 
+states
+  Working: initial state; 
+  Degraded: state;
+  Failed: state; 
+transitions
+  Degrade: Working -[E_Degraded]-> Degraded;
+  Work: Degraded -[E_Working]-> (Working with 0.95, Failed with 0.05);
+end behavior;
+	
+**};
+
+end Figure58;

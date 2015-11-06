@@ -1,0 +1,27 @@
+package newfigure47 
+public
+	system flight_controller
+features
+  current_air_speed: in data port;  -- from Air Data Computer (ADC)
+  new_air_speed: out data port;  -- to engine control
+annex EMV2 {**                       
+   use types ErrorLibrary;
+   use behavior ErrorLibrary::FailStop;
+
+   error propagations
+     current_air_speed: in propagation {BadValue};
+     new_air_speed: out propagation {BadValue, ServiceOmission};
+   end propagations;
+
+   component error behavior
+   events
+      IncorrectComputation: error event;
+   propagations	
+      Transient: Operational -[IncorrectComputation or current_air_speed]-> 
+            new_air_speed{BadValue};
+      Failed: Failstop -[]-> new_air_speed{ServiceOmission};
+   end component;
+**};
+end flight_controller;
+	
+end newfigure47;

@@ -1,0 +1,236 @@
+package GPSbasicModesExample
+public
+-- this example illustrates the separation of operational modes and failure modes
+-- and the specification of a mapping between the two to derive a combined behavioral model.
+
+with  EMV2;
+	
+Device sensor
+features
+	sensedData: out data port;
+	reset: in event port; -- initiate reset recovery, which may fail to complete
+	annex EMV2 {**
+		use types ErrorLibrary, GPSEMLibrary;
+		use behavior GPSEMLibrary::FailStopped;
+		error propagations
+			sensedData: out propagation {ServiceOmission};
+		flows
+			src: error source sensedData{ServiceOmission} when FailStop;
+		end propagations;
+		component error behavior
+		events
+			FailEvent: error event {SensorBreaks};
+			ResetEvent: recover event when reset;
+		transitions
+			tfail: Operational -[FailEvent ]-> FailStop;
+			-- reset will be successful with 0.8 probability, and fail with 0.2 probability
+			treset: FailStop -[ ResetEvent ]->
+			    (Operational with 0.8, FailStop with 0.2);
+		end component;
+	**};
+	end sensor;
+	
+	device gpsprocessing
+	features
+		sensor1input: in data port;
+		sensor2input: in data port;
+		locationPosition: out data port;
+	annex EMV2 {**
+		use types ErrorLibrary;
+		use behavior GPSEMLibrary::FailStopped;
+		error propagations
+			sensor1input: in propagation {ServiceOmission, OutOfRange};
+			sensor2input: in propagation {ServiceOmission, OutOfRange};
+			locationPosition: out propagation {ServiceOmission};
+		flows
+			src: error source locationPosition{ServiceOmission} when FailStop;
+			-- unspecified error paths implies incoming proagations going to all outgoing
+		end propagations;
+--		component error behavior
+--		  use behavior FailStopped;
+--		end component;
+		
+	**};
+	end gpsprocessing;
+	
+	
+	abstract GPSHM
+	features
+		sensor1Output: in data port;
+		sensor2Output: in data port;
+		sensorOneFailed: out event port;
+		sensorTwoFailed: out event port;
+	properties
+		Dispatch_Protocol => Periodic;
+		Period => 1 sec;
+	annex EMV2 {**
+		use types ErrorLibrary;
+		error propagations
+		sensor1Output: in propagation {ServiceOmission};
+		sensor2Output: in propagation {ServiceOmission};
+		end propagations;
+		component error behavior
+		detections
+		all-[sensor1Output{ServiceOmission}]-> sensorOneFailed!;
+		all-[sensor2Output{ServiceOmission}]-> sensorTwoFailed!;
+		end component;
+	**};
+--	annex Behavior_Specification {**
+--		-- test for freshness of input and count the number of times
+--		-- we encounter item omission before treating it a service omission
+--		variables
+--		sensor1failcount: persistent DataModel::Integer; -- should be modeled as data component
+--		sensor2failcount: persistent DataModel::Integer; -- should be modeled as data component
+--		states
+--		ready: initial state;
+--		transitions
+--		ready -[on dispatch]-> ready 
+--			{ 
+--				if (sensor1Output.count == 0 )
+--					sensor1failcount := sensor1failcount + 1;
+--					if (sensor1failcount > 5)
+--						sensorOneFailed!;
+--					endif;
+--				else
+--				-- decrement count
+--				endif; 
+--				if (sensor2Output.count == 0 )
+--					sensor2failcount := sensor1failcount + 1;
+--					if (sensor2failcount > 5)
+--						sensorOneFailed!;
+--					endif;
+--				endif; 
+--			};
+--	**};
+	end GPSHM;
+	
+
+-- GPS is defined with externally visible modes.
+-- Therefore, they are defined in the GPS type specification
+	system GPS
+	features
+		Reset : in event port; 
+		-- each user command is represented by a separate event port
+		-- we could have defined an event data port with the command as value
+		-- and then use the behavior annex to specify how the message content is interpreted.
+		RequestOff : in event port;
+		RequestLoP : in event port;
+		RequestHiP : in event port;
+		LocationPosition: out data port;
+		FailStatus: out event data port;
+	modes
+		Off : initial mode;
+		LoP : mode; -- low precision operation using Sensor1 with both operational
+		HiP : mode; -- hi precision operation
+			LoPPrimary: mode; -- low precision operation in primary configuration
+		LoPBackup: mode; -- low precision operation in backup configuration
+		
+		TurnOffFromLoP : LoP -[ RequestOff ]-> Off;
+		TurnOffFromHiP : HiP -[ RequestOff ]-> Off; 
+		TurnOnLoP : Off -[ RequestLoP ]-> LoP;
+		TurnonHiP : Off -[ RequestHiP ]-> HiP;  
+		SwitchToHiP : LoP -[ RequestHiP ]-> HiP;
+		SwitchToLoP : HiP -[ RequestLoP ]-> LoP;
+		
+	
+	annex EMV2 {**
+		use types ErrorLibrary;
+		use behavior GPSEMLibrary::DegradedSM;
+		error propagations
+		LocationPosition: out propagation {ServiceOmission};
+		end propagations;
+		component error behavior
+		-- attempt do model error detection from within subcomponents without an explicit monitor
+		events
+		sensor1failed: error event {ServiceOmission} ;
+		sensor2failed: error event {ServiceOmission} ;
+		  processingfailed: error event;
+transitions
+  Operational-[sensor1failed or sensor2failed]-> Degraded;
+  Operational-[ processingfailed]-> FailStop;
+  Degraded -[ sensor1failed or sensor2failed or processingfailed]-> FailStop;
+		detections
+			all-[sensor1failed{ServiceOmission}]-> FailStatus!(1);
+			all-[sensor2failed{ServiceOmission}]-> FailStatus!(2);
+		mode mappings
+		  Operational in modes (HiP, LoP, Off);
+		  Degraded in modes (LoP, LoPBackup, Off); -- Degraded with either of the two sensors active
+		  Failstop in modes (Off);
+		end component;
+		properties
+		EMV2::Description => "sensor1.sensorData{ServiceOmission}" applies to sensor1failed; 
+		EMV2::Description => "sensor2.sensorData{ServiceOmission}" applies to sensor2failed; 
+		EMV2::Description => "processing.locationPosition{ServiceOmission}" applies to processingfailed; 
+		EMV2::OccurrenceDistribution => [ 
+			ProbabilityValue => 0.012; Distribution => Poisson;
+		] applies to LocationPosition.ServiceOmission;
+		EMV2::OccurrenceDistribution => [ 
+			ProbabilityValue => 0.012; Distribution => Poisson;
+		] applies to sensor1failed.ServiceOmission, sensor2failed.ServiceOmission;
+	**};
+	end GPS;
+	
+	
+	system implementation GPS.impl
+	subcomponents
+		sensor1: device sensor in modes (LoP,HiP);
+		sensor2: device sensor in modes (HiP, LoPBackup);
+		processing: device GPSprocessing in modes (LoP, HiP, LoPBackup);
+	connections
+			
+		sconn1: port sensor1.sensedData -> processing.sensor1input;
+		sconn2: port sensor2.sensedData -> processing.sensor2input;
+		pconn: port processing.locationPosition -> locationPosition;
+		resetconnS1: port reset -> sensor1.reset in modes (LoPBackup);
+		resetconnS2: port reset -> sensor2.reset in modes (LoPPrimary);
+--	modes
+--	-- mode transitions dealing with fault management
+--	mtHiPS1: HiP-[self.SensorOneFailed]->LoPBackup;
+--	mtLoPS1: LoP-[self.SensorOneFailed]-> LoPBackup;
+--	mtHiPS2: HiP-[self.SensorTwoFailed]->LoPPrimary;
+--	mtLoPS2: LoP-[self.SensorTwoFailed]-> LoPPrimary;
+--	mtLoPS1S2: LoPBackup-[self.SensorTwoFailed]->Off;
+--	mtLoPS2S1: LoPPrimary-[self.SensorOneFailed]->Off;
+	
+	annex EMV2 {**
+	use behavior GPSEMLibrary::DegradedSM;
+		component error behavior
+		events
+		Recovered: recover event ;
+	transitions
+		Degraded -[Recovered]-> Operational;
+		end component;
+		composite error behavior
+		states
+			[sensor1.Operational and sensor2.Operational and processing.Operational]-> Operational;
+			[(sensor1.FailStop and sensor2.Operational and processing.Operational)
+				or (sensor1.Operational and sensor2.FailStop and processing.Operational)
+			]-> Degraded;
+			[(sensor1.FailStop and sensor2.FailStop) or processing.FailStop]-> FailStop;
+-- abstract modeling of error detection in subcomponents
+-- specified in composite model as it also deals with component error sates in terms of subcomponent error states
+		end composite;
+		properties
+		EMV2::Description => "Sensor Reset Successful" applies to Recovered;
+	**};
+	end GPS.impl;
+	
+	system implementation GPS.hm extends GPS.impl
+	subcomponents
+	-- health monitor that explicitly monitor subcomponent outputs
+		gpshm: abstract GPShm;
+	connections
+		 conn1: port sensor1.sensedData -> gpshm.sensor1Output;
+		conn2:port sensor2.sensedData -> gpshm.sensor2Output;
+	modes
+	-- mode transitions dealing with fault management
+	-- through an explicitly modeled health monitor
+	hmHiPS1: HiP-[gpshm.SensorOneFailed]->LoPBackup;
+	hmLoPS1: LoP-[gpshm.SensorOneFailed]-> LoPBackup;
+	hmHiPS2: HiP-[gpshm.SensorTwoFailed]->LoPPrimary;
+	hmLoPS2: LoP-[gpshm.SensorTwoFailed]-> LoPPrimary;
+	hmLoPS1S2: LoPBackup-[gpshm.SensorTwoFailed]->Off;
+	hmLoPS2S1: LoPPrimary-[gpshm.SensorTwoFailed]->Off;
+	end GPS.hm;
+	
+end GPSBasicModesExample;

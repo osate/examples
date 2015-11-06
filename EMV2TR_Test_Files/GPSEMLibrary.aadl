@@ -1,0 +1,24 @@
+package GPSEMLibrary
+public
+	
+	-- We include the EMV2 library within the same package since it is specific to the GPS example.
+	-- A common practice is to maintain such libraries in a separate package as it may get used in
+	-- several packages with component classifier specifications.
+	annex EMV2 {**
+		error types
+			SensorBreaks: type;
+		end types;
+		error behavior DegradedSM
+		states
+		Operational: initial state;
+		Degraded: state;
+		FailStop: state;
+		end behavior;
+		
+		error behavior FailStopped
+		states
+		Operational: initial state;
+		FailStop: state;
+		end behavior;
+	**};
+end GPSEMLibrary;

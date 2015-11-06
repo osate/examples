@@ -1,0 +1,32 @@
+package FeatureGroupExamples
+public
+	feature group roll_set  --- feature group example from the book
+features
+roll_data: in data port;
+roll_cmd: out data port;
+engage: in event port;
+h_bus: requires bus access;
+errors: feature group error_set;
+annex EMV2 {**
+	
+**};
+
+end roll_set;
+
+feature group error_set
+features
+sensor_error: in data port;
+range_error: out event data port;
+error_log: requires data access error_data;
+end error_set;
+feature group dual_Inports
+features
+input1: in data port;
+input2: in data port;
+end dual_Inports;
+	
+	data error_data	
+		end error_data
+		;
+		
+end FeatureGroupExamples;

@@ -1,0 +1,85 @@
+package network_protocol_pkg
+public
+
+with CommunicationErrors, ErrorModelLibrary, ErrorLibrary;
+
+system MySystem
+end MySystem;
+
+system Sender
+features
+	output: out data port;
+end Sender;
+
+system Receiver
+features
+input: in data port;
+end Receiver;
+
+Processor PC
+end PC;
+
+system implementation MySystem.basic
+subcomponents
+  Sender: system Sender;
+  Receiver: system Receiver;
+  PC1: processor PC;
+  PC2: processor PC;
+  Network: bus Network;
+  DP: virtual bus DP;
+  CRC: virtual bus CRC;
+connections
+  dataxfer: port Sender.output -> Receiver.input;
+properties
+  Actual_Processor_Binding => (reference(PC1)) applies to Sender;
+  Actual_Processor_Binding => (reference(PC2)) applies to Receiver;
+  Actual_Connection_Binding => (reference(CRC)) applies to dataxfer;
+  Actual_Connection_Binding => (reference(DP)) applies to CRC;
+  Actual_Connection_Binding => (reference(Network)) applies to DP;
+annex EMV2 {**
+connection error
+  use transformations CommunicationErrors::DataXfer;
+end connection;
+**};
+end MySystem.basic ;
+
+bus Network
+annex EMV2 {**
+use types ErrorLibrary, CommunicationErrors;
+error propagations
+  bindings: out propagation {LostMessage, ValueCorruption};
+flows
+  HWFault: error source bindings {LostMessage, ValueCorruption};
+end propagations;
+**};
+end Network;
+
+virtual bus DP
+annex EMV2 {**
+use types ErrorLibrary, CommunicationErrors;
+error propagations
+  bindings: out propagation {LateDelivery, ValueCorruption};
+  connection: in propagation {LostMessage, ValueCorruption};
+flows
+  RetryTiming: error source bindings {LateDelivery};
+  MaskLoss: error sink connection {LostMessage};
+  PassCorruption: error path connection {ValueCorruption} -> bindings;
+end propagations;
+**};
+end DP;
+
+virtual bus CRC
+annex EMV2 {**
+use types ErrorLibrary, CommunicationErrors;
+error propagations
+  bindings: out propagation {LateDelivery, LostMessage};
+  connection: in propagation {LateDelivery, ValueCorruption};
+flows
+  DetectCorruption: error path connection{ValueCorruption} 
+     -> bindings {LostMessage};
+  PassTiming: error path connection {LateDelivery} -> bindings;
+end propagations;
+**};
+end CRC;
+
+end network_protocol_pkg;

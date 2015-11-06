@@ -1,0 +1,31 @@
+package figure74
+public
+
+with EMV2;
+
+annex EMV2 {**
+error types
+  NoValue : type ;
+  BadValue : type ;
+  LateValue : type ;
+  NoService : type ;
+properties
+  EMV2::Persistence => Transient applies to BadValue, LateValue, NoValue;
+  EMV2::Persistence => Permanent applies to NoService;
+end types ;
+
+error behavior Simple
+events
+  Failure : error event ;
+states
+  Operational : initial state ;
+  Failed : state ;
+transitions
+  BadValueTransition : Operational -[ Failure ]-> Failed ;
+properties
+  EMV2::OccurrenceDistribution => 
+    [ ProbabilityValue => 0.1 ; Distribution => Fixed;] applies to Failure;
+end behavior ;
+**};
+	
+end figure74;

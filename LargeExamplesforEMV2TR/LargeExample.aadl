@@ -1,0 +1,132 @@
+package LargeExample
+public
+with TripleErrorModel, TripleErrorTypes,EMV2;
+
+system Subsystem
+features
+   A: in data port;
+   B: in data port;
+   O: out data port;
+   A_Failed: out event port;
+   B_Failed: out event port;
+modes
+   Powered: initial mode;
+   Unpowered:  mode;
+   
+   
+annex EMV2 {**
+use types TripleErrorTypes;
+use behavior TripleErrorModel::Example;
+error propagations
+   A : in propagation {Data_Fault, Bad_Data, No_Data};
+   B : in propagation {Data_Fault, Bad_Data, No_Data};
+   O : out propagation {Data_Fault, Bad_Data, No_Data};
+flows
+   es: error source O{Data_Fault};
+   ep1: error path A -> O{Bad_Data};
+   ep2: error path B-> O{Bad_Data}; 
+   es2: error sink A;  
+   es3: error sink B;  
+end propagations;
+
+
+
+component error behavior
+propagations
+   Fail_Unknown -[ ]-> O{Bad_Data};
+   Fail_Stopped -[ ]-> O{No_Data};
+-- these conditions represent the Guard_In declaration in the EM V1 Example
+   Operational -[B{Data_Fault} or A{Data_Fault}]-> O{noerror};
+   Operational -[A{Data_Fault} and B{Data_Fault}]-> O{Bad_Data};
+detections
+   Operational -[1 ormore(A{No_Data},A{Bad_Data})]-> A_Failed!;
+   Operational -[1 ormore(B{No_Data},B{Bad_Data})]-> B_Failed!;
+end component;
+properties
+   EMV2::OccurrenceDistribution =>
+      [ ProbabilityValue => 1.0e-4; Distribution => poisson; ]
+      in modes (Powered),
+      [ ProbabilityValue => 1.0e-5; Distribution =>  poisson;]
+      in modes (Unpowered) applies to Self_Checked_Fault;
+   EMV2::OccurrenceDistribution =>
+      [ ProbabilityValue => 0.05e-4; Distribution =>  poisson;]
+      in modes (Powered),
+      [ ProbabilityValue => 0.05e-5; Distribution =>  poisson;]
+   in modes (Unpowered) applies to Uncovered_Fault;
+   EMV2::OccurrenceDistribution =>
+      [ ProbabilityValue => 1.0e-4; Distribution => fixed; ]
+      applies to O.Bad_Data;
+**};
+end Subsystem;
+
+system Dependable_System
+end Dependable_System;
+ 
+system implementation Dependable_System.Notional
+subcomponents
+	S1: system Subsystem in modes (S123, S124, S134);
+	S2: system Subsystem in modes (S123, S234, S124);
+	S3: system Subsystem in modes (S123, S134, S234);
+	S4: system Subsystem in modes (S124, S134, S234);
+connections
+	c1: port S2.O -> S1.A in modes (S123);
+	c2: port S3.O -> S1.B in modes (S123);
+	c3: port S1.O -> S2.A in modes (S123);
+	c4: port S3.O -> S2.B in modes (S123);
+	c5: port S1.O -> S3.A in modes (S123);
+	c6: port S2.O -> S3.B in modes (S123);
+
+	c11: port S2.O -> S4.A in modes (S234);
+	c12: port S3.O -> S4.B in modes (S234);
+	c13: port S4.O -> S2.A in modes (S234);
+	c14: port S3.O -> S2.B in modes (S234);
+	c15: port S4.O -> S3.A in modes (S234);
+	c16: port S2.O -> S3.B in modes (S234);
+ 
+	c21: port S4.O -> S1.A in modes (S134);
+	c22: port S3.O -> S1.B in modes (S134);
+	c23: port S1.O -> S4.A in modes (S134);
+	c24: port S3.O -> S4.B in modes (S134);
+	c25: port S1.O -> S3.A in modes (S134);
+	c26: port S4.O -> S3.B in modes (S134);
+ 
+	c31: port S2.O -> S1.A in modes (S124);
+	c32: port S4.O -> S1.B in modes (S124);
+	c33: port S1.O -> S2.A in modes (S124);
+	c34: port S4.O -> S2.B in modes (S124);
+	c35: port S1.O -> S4.A in modes (S124);
+	c36: port S2.O -> S4.B in modes (S124);
+modes
+	S123: initial mode;
+	S234: mode; S134: mode; S124: mode;
+	T1_4: S123 -[ S2.A_Failed, S3.A_Failed ]-> S234;
+	T2_4: S123 -[ S1.A_Failed, S3.B_Failed ]-> S134;
+	T3_4: S123 -[ S1.B_Failed, S2.B_Failed ]-> S124;
+annex EMV2 {**
+   use behavior TripleErrorModel::Example;
+   
+   composite error behavior
+   states
+      [2 ormore(S1.Operational,S2.Operational,S3.Operational,S4.Operational) and
+     	1 orless(S1.Fail_Unknown, S2.Fail_Unknown, S3.Fail_Unknown, S4.Fail_Unknown)]-> Operational;
+-- original model did not have a specification for  Fail_Stopped state
+      [3 ormore(S1.Fail_Stopped,S2.Fail_Stopped,S3.Fail_Stopped,S4.Fail_Stopped)
+    	]-> Fail_Stopped;
+-- we do not have others as catch all 	
+  	[ others]-> Fail_Unknown;
+  	end composite;
+**};
+
+annex behavior_specification {**
+transitions
+	T1_4: S123 -[ S2.A_Failed and S3.A_Failed ]-> S234;
+	T2_4: S123 -[ S1.A_Failed and S3.B_Failed ]-> S134;
+	T3_4: S123 -[ S1.B_Failed and S2.B_Failed ]-> S124;
+**} ;
+
+
+end Dependable_System.Notional;
+ 
+
+
+end LargeExample;

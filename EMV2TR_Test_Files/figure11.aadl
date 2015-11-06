@@ -1,0 +1,29 @@
+package figure11
+public
+
+process MyApp
+features
+ sensorData: in data port;
+ actuatorCmd: out data port;
+ monitorControl: feature group Control;
+annex EMV2 {**
+  use types MyErrorLib;
+  error propagations
+    sensorData: in propagation {Baddata};
+    actuatorCmd: out propagation {MissingCmd};
+	-- incoming error propagation from processor binding
+    processor: in propagation {NoService};
+    -- propagation on a feature group element
+    monitorControl.reset : in propagation {NoService};
+  end propagations;
+**};
+end MyApp;
+
+feature group Control
+features
+  reset: in event port;
+  shutdown: in event port;
+end Control;
+
+	
+end figure11;

@@ -1,0 +1,26 @@
+package figure17
+public
+
+process C
+
+features
+	sensordata: in data port;
+	actuatorcmd: out data port;
+
+annex EMV2 {**
+
+use types ErrorModelLibrary;
+
+error propagations
+  sensorData: in propagation {OutOfRange};
+  actuatorCmd: out propagation {NoData};
+  actuatorCmd: not out propagation {OutOfRange};
+flows
+  OORHandling: error path sensorData{OutOfRange} -> actuatorCmd {NoData};
+end propagations;
+
+	
+**};
+	end C;
+	
+end figure17;

@@ -1,0 +1,47 @@
+package Figure55
+public
+
+-- Model for defining incoming and outgoing propagations
+system flight_controller3b   
+  -- small example of flight controller - get flight data from other
+  -- systems, output data to other flight systems and pilot display
+features
+  current_air_speed: in data port;  -- from ADC
+  current_heading: in data port;  -- from Nav gps
+  new_air_speed: out data port;  -- to engine control
+  fc_error_recovery: out data port;  -- to pilot, copilot MFD
+
+--  Flight controller error model description
+annex EMV2 {**                       
+	use types MyBehaviorLibrary, ErrorLibrary, ErrorMOdelLibrary;
+	use behavior MyBehaviorLibrary::ThreeStateDegraded;
+	error propagations
+		current_air_speed: in propagation {BadValue, NoData, LateValue};  
+-- Allowed Incoming Propagations 
+             current_air_speed: not in propagation { StuckValue}; 
+-- Explicit declaration of error types that are not expected
+		processor: in propagation {ServiceOmission};
+		New_Air_Speed: out propagation {ServiceOmission, BadValue};
+		New_Air_Speed: not out propagation {SequenceTimingError};		
+	end propagations;
+		
+	component error behavior 
+	events
+	BadValue:  error event;
+	LateValue: error event;
+	transitions	
+      WorkingToFailed: Working -[current_air_speed {BadValue}]-> Failed;   -- take this transition if BadValue on Current_Air_Speed 
+      WorkingToDegraded:  Working -[current_air_speed{LateValue}]-> Degraded;
+
+-- from figure 56
+
+       propagations   -- added this for propagating BadValue
+  	Working -[current_air_speed{BadValue}]-> new_air_speed {BadValue};
+      
+end component;
+
+
+**};
+end flight_controller3b ;
+	
+end Figure55;

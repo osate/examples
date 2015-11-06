@@ -1,0 +1,17 @@
+package YourValveerrorLib
+public
+
+annex EMV2 {**
+	
+error types
+StuckOpenValve: type;
+StuckClosedValve: type;
+LeakingValve: type;
+
+end types;
+
+
+
+**};
+
+end YourValveerrorLib;

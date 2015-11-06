@@ -1,0 +1,70 @@
+package figure70
+public
+
+with MyErrorModelLibrary;
+
+annex EMV2 {**
+	
+error types
+  NoValue: type;
+  BadValue: type;
+  NoService: type;
+  LateValue: type;
+  ThreeErrorSet: type set {NoValue, BadValue, LateValue};
+ -- MyTypeSet: type set {ThreeErrorSet, NoService};
+  Mytype: type;
+end types;
+
+
+error behavior threestate
+use types figure70;
+events
+--  BadValueEvent: error event{ThreeErrorSet, MyType};
+--  NoValueEvent: error event{ThreeErrorSet, MyType};
+  LateValueEvent: error event {ThreeErrorSet, MyType};
+  MyEvent: error event {ThreeErrorSet, MyType};
+states
+  Operational: initial state;
+  ErrorState: state {ThreeErrorSet};
+  Failed: state {MyType,ThreeErrorSet};
+transitions
+
+ NoValueEvent: Failed{MyType} -[MyEvent{NoValue}]-> Failed{NoValue};
+ NoValueState: Failed {NoValue} -[MyEvent {BadValue}]-> Failed {NoValue};
+ BadValueEvent1: Failed{BadValue} -[MyEvent{BadValue}]-> Failed {BadValue};
+ BadValueEvent2:Failed{LateValue} -[MyEvent{BadValue}]->Failed{BadValue};
+ BadValueState: Failed{BadValue}-[MyEvent{LateValue}]-> Failed{BadValue};
+
+ LateValueTransition : Failed{LateValue}-[MyEvent{LateValue}]->Failed{LateValue}; 
+--{LateValue} –[MyEvent{LateValue}]-> Failed{LateValue};
+end behavior;
+
+error behavior TypedState
+use types figure70;
+use transformations figure70::Mytransformations;
+events
+  MyEvent: error event {MyType};
+States
+  Operational: initial state;
+  Failed: state {MyType};
+transitions
+  EventTransition : Operational -[MyEvent]-> Failed;
+  EventTransition2 : Failed -[MyEvent]-> Failed;
+end behavior;
+
+
+type transformations Mytransformations
+use types MyErrorModelLibrary; 
+   {MyType} -[{NoValue}]-> {NoValue};
+   {MyType} -[{NoService}]-> {NoValue};   
+   {NoValue} -[{MyType}]-> {NoValue};
+   {BadValue} -[{BadValue}]-> {BadValue};
+   {BadValue} -[{LateValue}]-> {BadValue};
+   {LateValue} -[{BadValue}]-> {BadValue};
+   {LateValue} -[{LateValue}]-> {LateValue};
+end transformations;
+
+**};
+
+	
+end figure70;

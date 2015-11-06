@@ -1,0 +1,25 @@
+package figure15
+public
+
+device sensor
+	features
+	outdata: out data port;
+
+annex EMV2{**
+use types ErrorModelLibrary;
+
+error propagations
+outdata: out propagation {BadData,SensorFailure};
+
+
+flows
+
+ErrorSource: error source all{BadData} when {SensorFailure};    
+end propagations;
+	
+**};
+
+	
+	end sensor;
+	
+end figure15;

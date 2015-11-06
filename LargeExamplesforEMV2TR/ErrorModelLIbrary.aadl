@@ -1,0 +1,83 @@
+package ErrorModelLIbrary
+public
+	
+annex EMV2{**
+		
+		error types
+		-- needed for figure 101
+		noPower: type;	
+				-- needed for figures 14 & 15
+		BadData: type;
+		SensorFailure: type;
+		-- needed for figure 17
+		NoData: type;
+		OutofRange: type;
+		-- needed for figure 54 - I modified figure 54 to include ErrorLibrary deleting redundant types {BadValue and ServiceOmission}
+	--	BadValue: type;
+		NoValue: type;
+		LateValue: type;
+	--	ServiceOmission: type;
+		end types;
+		
+	error behavior Simple
+events
+  Failure : error event ;
+states
+  Operational : initial state ;
+  Failed : state ;
+transitions
+  FailureTransition : Operational -[ Failure ]-> Failed ;
+end behavior ;
+
+
+error behavior ThreeErrorStates
+events
+  SingleNoValueEvent: error event;
+  DualNoValueEvent: error event;
+  SelfFailure: error event;
+states
+   Operational: initial state;
+   OperationalNonCritical: state;
+   OperationalCritical : state;
+   Failed: state;
+transitions
+   SingleNoValueTransiton : Operational-[SingleNoValueEvent]->OperationalCritical;
+   DualNoValueTransition : Operational -[DualNoValueEvent]-> OperationalNonCritical;
+   FailureTransition:Operational-[SelfFailure]->Failed;
+   end behavior;
+
+--
+--error behavior ThreeErrorStates
+--events
+--  BadValueEvent: error event;
+--  NoValueEvent: error event;
+--  LateValueEvent: error event;
+--states
+--   Operational: initial state;
+--   BadValueState: state;
+--   NoValueState : state;
+--   LateValueState: state;
+--   Failed: state;
+--transitions
+--   BadValueTransition:Operational-[BadValueEvent]->BadValueState;
+--   NoValueTransition : Operational -[NoValueEvent]-> NoValueState;
+--   LateTransition : Operational-[LateValueEvent]->LateValueState;
+--end behavior;
+--
+--error behavior ThreeStateDegraded
+--
+--events
+--		BadValueEvent:  error event;
+--		LateValueEvent: error event;
+--states
+--	Working : initial state ;
+--	Degraded: state;
+--	Failed : state ;
+--end behavior;
+
+
+**};
+
+
+	
+end ErrorModelLIbrary;
