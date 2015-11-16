@@ -1,0 +1,49 @@
+package figure53
+public
+
+system flight_controller
+  -- example of flight controller - get flight data from other systems,
+  -- output data and indicators to other flight systems and display
+  -- 
+features
+  current_air_speed: in data port;  -- from Air Data Computer
+  current_heading: in data port;  -- from Nav gps
+  new_air_speed: out data port;  -- to engine control
+  fc_error_recovery: out data port;  -- to pilot, copilot MFD
+  --  Top level flight controller error model
+  --  EM description will go here….
+end flight_controller ;
+
+-- A processor with an out propagation of NoService, and in propagation of NoService from bus
+-- the out propagation is attached to whatever system uses the processor
+processor PC
+end PC;
+--
+system implementation flight_controller.impl
+subcomponents
+PC: processor PC;
+-- other declarations are omitted
+
+
+annex EMV2 {**                       
+	use types ErrorModelLibrary, ErrorLibrary;
+	use behavior MyBehaviorLibrary::ThreeStateDegraded;
+	error propagations
+processor: in propagation {ServiceOmission};
+Current_Air_Speed: in propagation {BadValue, LateValue};
+New_Air_Speed: out propagation {BadValue, LateValue};
+	end propagations; 
+
+component error behavior 
+transitions	
+    WorkingToFailed: Working -[Current_Air_Speed{ BadValue}]-> Failed;   
+-- take this transition if BadValue on Current_Air_Speed 
+    WorkingToDegraded:  Working -[Current_Air_Speed{LateValue}]-> Degraded;
+    WorkingToFailed2: Working -[Current_Air_Speed{BadValue} or processor {ServiceOmission}]-> Failed;
+end component;
+**};	
+
+end flight_controller.impl;
+
+
+end figure53;

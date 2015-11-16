@@ -1,0 +1,26 @@
+package figure14
+public
+
+device actuator
+features
+	indata: in data port;
+	SensorReading: in data port;
+annex EMV2{**
+
+use types ErrorModelLibrary;
+
+error propagations
+
+SensorReading: in propagation {BadData};
+flows
+	
+ErrorSink: error sink SensorReading {BadData}; 
+Errorsink2: error sink all;  
+
+end propagations; 
+	
+**};
+
+end actuator;
+
+end figure14;

@@ -1,0 +1,23 @@
+package CommunicationErrors
+public
+	with ErrorLibrary;
+
+annex EMV2{**
+
+		error types
+	    LostMessage: type;
+	    NoData: type;
+		end types;		
+
+type transformations DataXfer
+use types ErrorLibrary, CommunicationErrors;
+{NoError} -[{LateDelivery}]-> {LateDelivery};
+{NoError} -[{ValueCorruption}]-> {ValueError};
+{ValueError} -[{LateDelivery}]-> {ValueError*LateDelivery};
+all -[{LostMessage}]-> {NoData};
+{NoData} -[]-> {NoData};
+end transformations;
+
+
+**};
+end CommunicationErrors;

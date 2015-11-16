@@ -1,0 +1,32 @@
+package figure62
+public
+
+ with EMV2;
+
+-- with MyBehaviorLibrary;
+
+system flight_system
+  annex EMV2 {**
+  use types ErrorModelLibrary;    	
+  use behavior MyBehaviorLibrary::ErrorDetectionandRecovery;    	
+  component error behavior
+	transitions
+  Success_Detect: Working -[Successful_Detection]-> Degraded;
+  Unsuccess_Detect: Working -[Unsuccessful_Detection]-> Failed;
+  Success_Recover: Degraded -[Successful_Recovery]-> Working;
+  Unsuccess_Recover: Degraded -[Unsuccessful_Recovery]-> Failed;  
+  end component;
+  Properties
+  EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.95; ] 
+applies to Successful_Detection; 
+  EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.05; ] 
+applies to Unsuccessful_Detection;
+  EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.90; ] 
+applies to Successful_Recovery; 
+  EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.10; ] 
+applies to Unsuccessful_Recovery;  
+  **};
+  end flight_system;
+
+
+end figure62;

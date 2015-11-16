@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="ASCII"?>
+<instance:SystemInstance xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aadl2="http://aadl.info/AADL/2.0" xmlns:instance="http://aadl.info/AADL/2.0/instance" name="Dependable_System_Notional_Instance" category="system">
+  <componentInstance name="S1" category="system" inMode="//@modeInstance.0 //@modeInstance.3 //@modeInstance.2">
+    <featureInstance name="A" dstConnectionInstance="//@connectionInstance.6 //@connectionInstance.10 //@connectionInstance.20">
+      <feature xsi:type="aadl2:DataPort" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.0"/>
+    </featureInstance>
+    <featureInstance name="B" dstConnectionInstance="//@connectionInstance.12 //@connectionInstance.16 //@connectionInstance.22">
+      <feature xsi:type="aadl2:DataPort" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.1"/>
+    </featureInstance>
+    <featureInstance name="O" srcConnectionInstance="//@connectionInstance.0 //@connectionInstance.1 //@connectionInstance.2 //@connectionInstance.3 //@connectionInstance.4 //@connectionInstance.5" direction="out">
+      <feature xsi:type="aadl2:DataPort" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.2"/>
+    </featureInstance>
+    <featureInstance name="A_Failed" category="eventPort" direction="out">
+      <feature xsi:type="aadl2:EventPort" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedEventPort.0"/>
+    </featureInstance>
+    <featureInstance name="B_Failed" category="eventPort" direction="out">
+      <feature xsi:type="aadl2:EventPort" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedEventPort.1"/>
+    </featureInstance>
+    <modeInstance name="Powered" initial="true">
+      <mode href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedMode.0"/>
+    </modeInstance>
+    <modeInstance name="Unpowered">
+      <mode href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedMode.1"/>
+    </modeInstance>
+    <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedSystemSubcomponent.0"/>
+    <index>0</index>
+  </componentInstance>
+  <componentInstance name="S2" category="system" inMode="//@modeInstance.0 //@modeInstance.1 //@modeInstance.3">
+    <featureInstance name="A" dstConnectionInstance="//@connectionInstance.0 //@connectionInstance.4 //@connectionInstance.18">
+      <feature xsi:type="aadl2:DataPort" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.0"/>
+    </featureInstance>
+    <featureInstance name="B" dstConnectionInstance="//@connectionInstance.13 //@connectionInstance.15 //@connectionInstance.23">
+      <feature xsi:type="aadl2:DataPort" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.1"/>
+    </featureInstance>
+    <featureInstance name="O" srcConnectionInstance="//@connectionInstance.6 //@connectionInstance.7 //@connectionInstance.8 //@connectionInstance.9 //@connectionInstance.10 //@connectionInstance.11" direction="out">
+      <feature xsi:type="aadl2:DataPort" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.2"/>
+    </featureInstance>
+    <featureInstance name="A_Failed" category="eventPort" direction="out">
+      <feature xsi:type="aadl2:EventPort" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedEventPort.0"/>
+    </featureInstance>
+    <featureInstance name="B_Failed" category="eventPort" direction="out">
+      <feature xsi:type="aadl2:EventPort" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedEventPort.1"/>
+    </featureInstance>
+    <modeInstance name="Powered" initial="true">
+      <mode href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedMode.0"/>
+    </modeInstance>
+    <modeInstance name="Unpowered">
+      <mode href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedMode.1"/>
+    </modeInstance>
+    <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedSystemSubcomponent.1"/>
+    <index>0</index>
+  </componentInstance>
+  <componentInstance name="S3" category="system" inMode="//@modeInstance.0 //@modeInstance.2 //@modeInstance.1">
+    <featureInstance name="A" dstConnectionInstance="//@connectionInstance.1 //@connectionInstance.3 //@connectionInstance.19">
+      <feature xsi:type="aadl2:DataPort" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.0"/>
+    </featureInstance>
+    <featureInstance name="B" dstConnectionInstance="//@connectionInstance.7 //@connectionInstance.9 //@connectionInstance.21">
+      <feature xsi:type="aadl2:DataPort" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.1"/>
+    </featureInstance>
+    <featureInstance name="O" srcConnectionInstance="//@connectionInstance.12 //@connectionInstance.13 //@connectionInstance.14 //@connectionInstance.15 //@connectionInstance.16 //@connectionInstance.17" direction="out">
+      <feature xsi:type="aadl2:DataPort" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.2"/>
+    </featureInstance>
+    <featureInstance name="A_Failed" category="eventPort" direction="out">
+      <feature xsi:type="aadl2:EventPort" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedEventPort.0"/>
+    </featureInstance>
+    <featureInstance name="B_Failed" category="eventPort" direction="out">
+      <feature xsi:type="aadl2:EventPort" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedEventPort.1"/>
+    </featureInstance>
+    <modeInstance name="Powered" initial="true">
+      <mode href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedMode.0"/>
+    </modeInstance>
+    <modeInstance name="Unpowered">
+      <mode href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedMode.1"/>
+    </modeInstance>
+    <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedSystemSubcomponent.2"/>
+    <index>0</index>
+  </componentInstance>
+  <componentInstance name="S4" category="system" inMode="//@modeInstance.3 //@modeInstance.2 //@modeInstance.1">
+    <featureInstance name="A" dstConnectionInstance="//@connectionInstance.2 //@connectionInstance.5 //@connectionInstance.8">
+      <feature xsi:type="aadl2:DataPort" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.0"/>
+    </featureInstance>
+    <featureInstance name="B" dstConnectionInstance="//@connectionInstance.11 //@connectionInstance.14 //@connectionInstance.17">
+      <feature xsi:type="aadl2:DataPort" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.1"/>
+    </featureInstance>
+    <featureInstance name="O" srcConnectionInstance="//@connectionInstance.18 //@connectionInstance.19 //@connectionInstance.20 //@connectionInstance.21 //@connectionInstance.22 //@connectionInstance.23" direction="out">
+      <feature xsi:type="aadl2:DataPort" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.2"/>
+    </featureInstance>
+    <featureInstance name="A_Failed" category="eventPort" direction="out">
+      <feature xsi:type="aadl2:EventPort" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedEventPort.0"/>
+    </featureInstance>
+    <featureInstance name="B_Failed" category="eventPort" direction="out">
+      <feature xsi:type="aadl2:EventPort" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedEventPort.1"/>
+    </featureInstance>
+    <modeInstance name="Powered" initial="true">
+      <mode href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedMode.0"/>
+    </modeInstance>
+    <modeInstance name="Unpowered">
+      <mode href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.0/@ownedMode.1"/>
+    </modeInstance>
+    <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedSystemSubcomponent.3"/>
+    <index>0</index>
+  </componentInstance>
+  <modeInstance name="S123" srcModeTransition="//@modeTransitionInstance.0 //@modeTransitionInstance.1 //@modeTransitionInstance.2" initial="true">
+    <mode href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedMode.0"/>
+  </modeInstance>
+  <modeInstance name="S234" dstModeTransition="//@modeTransitionInstance.0">
+    <mode href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedMode.1"/>
+  </modeInstance>
+  <modeInstance name="S134" dstModeTransition="//@modeTransitionInstance.1">
+    <mode href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedMode.2"/>
+  </modeInstance>
+  <modeInstance name="S124" dstModeTransition="//@modeTransitionInstance.2">
+    <mode href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedMode.3"/>
+  </modeInstance>
+  <modeTransitionInstance name="S123.S2.A_Failed.S234" destination="//@modeInstance.1" source="//@modeInstance.0">
+    <modeTransition href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedModeTransition.0"/>
+  </modeTransitionInstance>
+  <modeTransitionInstance name="S123.S1.A_Failed.S134" destination="//@modeInstance.2" source="//@modeInstance.0">
+    <modeTransition href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedModeTransition.1"/>
+  </modeTransitionInstance>
+  <modeTransitionInstance name="S123.S1.B_Failed.S124" destination="//@modeInstance.3" source="//@modeInstance.0">
+    <modeTransition href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedModeTransition.2"/>
+  </modeTransitionInstance>
+  <connectionInstance name="S1.O -> S2.A" inSystemOperationMode="//@systemOperationMode.0 //@systemOperationMode.1 //@systemOperationMode.2 //@systemOperationMode.3 //@systemOperationMode.4 //@systemOperationMode.5 //@systemOperationMode.6 //@systemOperationMode.7" complete="true" kind="portConnection" destination="//@componentInstance.1/@featureInstance.0" source="//@componentInstance.0/@featureInstance.2">
+    <connectionReference context="/" source="//@componentInstance.0/@featureInstance.2" destination="//@componentInstance.1/@featureInstance.0">
+      <connection xsi:type="aadl2:PortConnection" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedPortConnection.2"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="S1.O -> S3.A" inSystemOperationMode="//@systemOperationMode.0 //@systemOperationMode.1 //@systemOperationMode.2 //@systemOperationMode.3 //@systemOperationMode.4 //@systemOperationMode.5 //@systemOperationMode.6 //@systemOperationMode.7" complete="true" kind="portConnection" destination="//@componentInstance.2/@featureInstance.0" source="//@componentInstance.0/@featureInstance.2">
+    <connectionReference context="/" source="//@componentInstance.0/@featureInstance.2" destination="//@componentInstance.2/@featureInstance.0">
+      <connection xsi:type="aadl2:PortConnection" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedPortConnection.4"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="S1.O -> S4.A" inSystemOperationMode="//@systemOperationMode.16 //@systemOperationMode.17 //@systemOperationMode.18 //@systemOperationMode.19 //@systemOperationMode.20 //@systemOperationMode.21 //@systemOperationMode.22 //@systemOperationMode.23" complete="true" kind="portConnection" destination="//@componentInstance.3/@featureInstance.0" source="//@componentInstance.0/@featureInstance.2">
+    <connectionReference context="/" source="//@componentInstance.0/@featureInstance.2" destination="//@componentInstance.3/@featureInstance.0">
+      <connection xsi:type="aadl2:PortConnection" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedPortConnection.14"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="S1.O -> S3.A" inSystemOperationMode="//@systemOperationMode.16 //@systemOperationMode.17 //@systemOperationMode.18 //@systemOperationMode.19 //@systemOperationMode.20 //@systemOperationMode.21 //@systemOperationMode.22 //@systemOperationMode.23" complete="true" kind="portConnection" destination="//@componentInstance.2/@featureInstance.0" source="//@componentInstance.0/@featureInstance.2">
+    <connectionReference context="/" source="//@componentInstance.0/@featureInstance.2" destination="//@componentInstance.2/@featureInstance.0">
+      <connection xsi:type="aadl2:PortConnection" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedPortConnection.16"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="S1.O -> S2.A" inSystemOperationMode="//@systemOperationMode.24 //@systemOperationMode.25 //@systemOperationMode.26 //@systemOperationMode.27 //@systemOperationMode.28 //@systemOperationMode.29 //@systemOperationMode.30 //@systemOperationMode.31" complete="true" kind="portConnection" destination="//@componentInstance.1/@featureInstance.0" source="//@componentInstance.0/@featureInstance.2">
+    <connectionReference context="/" source="//@componentInstance.0/@featureInstance.2" destination="//@componentInstance.1/@featureInstance.0">
+      <connection xsi:type="aadl2:PortConnection" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedPortConnection.20"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="S1.O -> S4.A" inSystemOperationMode="//@systemOperationMode.24 //@systemOperationMode.25 //@systemOperationMode.26 //@systemOperationMode.27 //@systemOperationMode.28 //@systemOperationMode.29 //@systemOperationMode.30 //@systemOperationMode.31" complete="true" kind="portConnection" destination="//@componentInstance.3/@featureInstance.0" source="//@componentInstance.0/@featureInstance.2">
+    <connectionReference context="/" source="//@componentInstance.0/@featureInstance.2" destination="//@componentInstance.3/@featureInstance.0">
+      <connection xsi:type="aadl2:PortConnection" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedPortConnection.22"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="S2.O -> S1.A" inSystemOperationMode="//@systemOperationMode.0 //@systemOperationMode.1 //@systemOperationMode.2 //@systemOperationMode.3 //@systemOperationMode.4 //@systemOperationMode.5 //@systemOperationMode.6 //@systemOperationMode.7" complete="true" kind="portConnection" destination="//@componentInstance.0/@featureInstance.0" source="//@componentInstance.1/@featureInstance.2">
+    <connectionReference context="/" source="//@componentInstance.1/@featureInstance.2" destination="//@componentInstance.0/@featureInstance.0">
+      <connection xsi:type="aadl2:PortConnection" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedPortConnection.0"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="S2.O -> S3.B" inSystemOperationMode="//@systemOperationMode.0 //@systemOperationMode.1 //@systemOperationMode.2 //@systemOperationMode.3 //@systemOperationMode.4 //@systemOperationMode.5 //@systemOperationMode.6 //@systemOperationMode.7" complete="true" kind="portConnection" destination="//@componentInstance.2/@featureInstance.1" source="//@componentInstance.1/@featureInstance.2">
+    <connectionReference context="/" source="//@componentInstance.1/@featureInstance.2" destination="//@componentInstance.2/@featureInstance.1">
+      <connection xsi:type="aadl2:PortConnection" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedPortConnection.5"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="S2.O -> S4.A" inSystemOperationMode="//@systemOperationMode.8 //@systemOperationMode.9 //@systemOperationMode.10 //@systemOperationMode.11 //@systemOperationMode.12 //@systemOperationMode.13 //@systemOperationMode.14 //@systemOperationMode.15" complete="true" kind="portConnection" destination="//@componentInstance.3/@featureInstance.0" source="//@componentInstance.1/@featureInstance.2">
+    <connectionReference context="/" source="//@componentInstance.1/@featureInstance.2" destination="//@componentInstance.3/@featureInstance.0">
+      <connection xsi:type="aadl2:PortConnection" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedPortConnection.6"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="S2.O -> S3.B" inSystemOperationMode="//@systemOperationMode.8 //@systemOperationMode.9 //@systemOperationMode.10 //@systemOperationMode.11 //@systemOperationMode.12 //@systemOperationMode.13 //@systemOperationMode.14 //@systemOperationMode.15" complete="true" kind="portConnection" destination="//@componentInstance.2/@featureInstance.1" source="//@componentInstance.1/@featureInstance.2">
+    <connectionReference context="/" source="//@componentInstance.1/@featureInstance.2" destination="//@componentInstance.2/@featureInstance.1">
+      <connection xsi:type="aadl2:PortConnection" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedPortConnection.11"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="S2.O -> S1.A" inSystemOperationMode="//@systemOperationMode.24 //@systemOperationMode.25 //@systemOperationMode.26 //@systemOperationMode.27 //@systemOperationMode.28 //@systemOperationMode.29 //@systemOperationMode.30 //@systemOperationMode.31" complete="true" kind="portConnection" destination="//@componentInstance.0/@featureInstance.0" source="//@componentInstance.1/@featureInstance.2">
+    <connectionReference context="/" source="//@componentInstance.1/@featureInstance.2" destination="//@componentInstance.0/@featureInstance.0">
+      <connection xsi:type="aadl2:PortConnection" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedPortConnection.18"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="S2.O -> S4.B" inSystemOperationMode="//@systemOperationMode.24 //@systemOperationMode.25 //@systemOperationMode.26 //@systemOperationMode.27 //@systemOperationMode.28 //@systemOperationMode.29 //@systemOperationMode.30 //@systemOperationMode.31" complete="true" kind="portConnection" destination="//@componentInstance.3/@featureInstance.1" source="//@componentInstance.1/@featureInstance.2">
+    <connectionReference context="/" source="//@componentInstance.1/@featureInstance.2" destination="//@componentInstance.3/@featureInstance.1">
+      <connection xsi:type="aadl2:PortConnection" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedPortConnection.23"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="S3.O -> S1.B" inSystemOperationMode="//@systemOperationMode.0 //@systemOperationMode.1 //@systemOperationMode.2 //@systemOperationMode.3 //@systemOperationMode.4 //@systemOperationMode.5 //@systemOperationMode.6 //@systemOperationMode.7" complete="true" kind="portConnection" destination="//@componentInstance.0/@featureInstance.1" source="//@componentInstance.2/@featureInstance.2">
+    <connectionReference context="/" source="//@componentInstance.2/@featureInstance.2" destination="//@componentInstance.0/@featureInstance.1">
+      <connection xsi:type="aadl2:PortConnection" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedPortConnection.1"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="S3.O -> S2.B" inSystemOperationMode="//@systemOperationMode.0 //@systemOperationMode.1 //@systemOperationMode.2 //@systemOperationMode.3 //@systemOperationMode.4 //@systemOperationMode.5 //@systemOperationMode.6 //@systemOperationMode.7" complete="true" kind="portConnection" destination="//@componentInstance.1/@featureInstance.1" source="//@componentInstance.2/@featureInstance.2">
+    <connectionReference context="/" source="//@componentInstance.2/@featureInstance.2" destination="//@componentInstance.1/@featureInstance.1">
+      <connection xsi:type="aadl2:PortConnection" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedPortConnection.3"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="S3.O -> S4.B" inSystemOperationMode="//@systemOperationMode.8 //@systemOperationMode.9 //@systemOperationMode.10 //@systemOperationMode.11 //@systemOperationMode.12 //@systemOperationMode.13 //@systemOperationMode.14 //@systemOperationMode.15" complete="true" kind="portConnection" destination="//@componentInstance.3/@featureInstance.1" source="//@componentInstance.2/@featureInstance.2">
+    <connectionReference context="/" source="//@componentInstance.2/@featureInstance.2" destination="//@componentInstance.3/@featureInstance.1">
+      <connection xsi:type="aadl2:PortConnection" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedPortConnection.7"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="S3.O -> S2.B" inSystemOperationMode="//@systemOperationMode.8 //@systemOperationMode.9 //@systemOperationMode.10 //@systemOperationMode.11 //@systemOperationMode.12 //@systemOperationMode.13 //@systemOperationMode.14 //@systemOperationMode.15" complete="true" kind="portConnection" destination="//@componentInstance.1/@featureInstance.1" source="//@componentInstance.2/@featureInstance.2">
+    <connectionReference context="/" source="//@componentInstance.2/@featureInstance.2" destination="//@componentInstance.1/@featureInstance.1">
+      <connection xsi:type="aadl2:PortConnection" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedPortConnection.9"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="S3.O -> S1.B" inSystemOperationMode="//@systemOperationMode.16 //@systemOperationMode.17 //@systemOperationMode.18 //@systemOperationMode.19 //@systemOperationMode.20 //@systemOperationMode.21 //@systemOperationMode.22 //@systemOperationMode.23" complete="true" kind="portConnection" destination="//@componentInstance.0/@featureInstance.1" source="//@componentInstance.2/@featureInstance.2">
+    <connectionReference context="/" source="//@componentInstance.2/@featureInstance.2" destination="//@componentInstance.0/@featureInstance.1">
+      <connection xsi:type="aadl2:PortConnection" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedPortConnection.13"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="S3.O -> S4.B" inSystemOperationMode="//@systemOperationMode.16 //@systemOperationMode.17 //@systemOperationMode.18 //@systemOperationMode.19 //@systemOperationMode.20 //@systemOperationMode.21 //@systemOperationMode.22 //@systemOperationMode.23" complete="true" kind="portConnection" destination="//@componentInstance.3/@featureInstance.1" source="//@componentInstance.2/@featureInstance.2">
+    <connectionReference context="/" source="//@componentInstance.2/@featureInstance.2" destination="//@componentInstance.3/@featureInstance.1">
+      <connection xsi:type="aadl2:PortConnection" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedPortConnection.15"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="S4.O -> S2.A" inSystemOperationMode="//@systemOperationMode.8 //@systemOperationMode.9 //@systemOperationMode.10 //@systemOperationMode.11 //@systemOperationMode.12 //@systemOperationMode.13 //@systemOperationMode.14 //@systemOperationMode.15" complete="true" kind="portConnection" destination="//@componentInstance.1/@featureInstance.0" source="//@componentInstance.3/@featureInstance.2">
+    <connectionReference context="/" source="//@componentInstance.3/@featureInstance.2" destination="//@componentInstance.1/@featureInstance.0">
+      <connection xsi:type="aadl2:PortConnection" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedPortConnection.8"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="S4.O -> S3.A" inSystemOperationMode="//@systemOperationMode.8 //@systemOperationMode.9 //@systemOperationMode.10 //@systemOperationMode.11 //@systemOperationMode.12 //@systemOperationMode.13 //@systemOperationMode.14 //@systemOperationMode.15" complete="true" kind="portConnection" destination="//@componentInstance.2/@featureInstance.0" source="//@componentInstance.3/@featureInstance.2">
+    <connectionReference context="/" source="//@componentInstance.3/@featureInstance.2" destination="//@componentInstance.2/@featureInstance.0">
+      <connection xsi:type="aadl2:PortConnection" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedPortConnection.10"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="S4.O -> S1.A" inSystemOperationMode="//@systemOperationMode.16 //@systemOperationMode.17 //@systemOperationMode.18 //@systemOperationMode.19 //@systemOperationMode.20 //@systemOperationMode.21 //@systemOperationMode.22 //@systemOperationMode.23" complete="true" kind="portConnection" destination="//@componentInstance.0/@featureInstance.0" source="//@componentInstance.3/@featureInstance.2">
+    <connectionReference context="/" source="//@componentInstance.3/@featureInstance.2" destination="//@componentInstance.0/@featureInstance.0">
+      <connection xsi:type="aadl2:PortConnection" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedPortConnection.12"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="S4.O -> S3.B" inSystemOperationMode="//@systemOperationMode.16 //@systemOperationMode.17 //@systemOperationMode.18 //@systemOperationMode.19 //@systemOperationMode.20 //@systemOperationMode.21 //@systemOperationMode.22 //@systemOperationMode.23" complete="true" kind="portConnection" destination="//@componentInstance.2/@featureInstance.1" source="//@componentInstance.3/@featureInstance.2">
+    <connectionReference context="/" source="//@componentInstance.3/@featureInstance.2" destination="//@componentInstance.2/@featureInstance.1">
+      <connection xsi:type="aadl2:PortConnection" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedPortConnection.17"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="S4.O -> S1.B" inSystemOperationMode="//@systemOperationMode.24 //@systemOperationMode.25 //@systemOperationMode.26 //@systemOperationMode.27 //@systemOperationMode.28 //@systemOperationMode.29 //@systemOperationMode.30 //@systemOperationMode.31" complete="true" kind="portConnection" destination="//@componentInstance.0/@featureInstance.1" source="//@componentInstance.3/@featureInstance.2">
+    <connectionReference context="/" source="//@componentInstance.3/@featureInstance.2" destination="//@componentInstance.0/@featureInstance.1">
+      <connection xsi:type="aadl2:PortConnection" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedPortConnection.19"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="S4.O -> S2.B" inSystemOperationMode="//@systemOperationMode.24 //@systemOperationMode.25 //@systemOperationMode.26 //@systemOperationMode.27 //@systemOperationMode.28 //@systemOperationMode.29 //@systemOperationMode.30 //@systemOperationMode.31" complete="true" kind="portConnection" destination="//@componentInstance.1/@featureInstance.1" source="//@componentInstance.3/@featureInstance.2">
+    <connectionReference context="/" source="//@componentInstance.3/@featureInstance.2" destination="//@componentInstance.1/@featureInstance.1">
+      <connection xsi:type="aadl2:PortConnection" href="../LargeExample.aadl#//@ownedPublicSection/@ownedClassifier.2/@ownedPortConnection.21"/>
+    </connectionReference>
+  </connectionInstance>
+  <systemOperationMode name="S123 # S1.Powered # S2.Powered # S3.Powered" currentMode="//@modeInstance.0 //@componentInstance.0/@modeInstance.0 //@componentInstance.1/@modeInstance.0 //@componentInstance.2/@modeInstance.0"/>
+  <systemOperationMode name="S123 # S1.Powered # S2.Powered # S3.Unpowered" currentMode="//@modeInstance.0 //@componentInstance.0/@modeInstance.0 //@componentInstance.1/@modeInstance.0 //@componentInstance.2/@modeInstance.1"/>
+  <systemOperationMode name="S123 # S1.Powered # S2.Unpowered # S3.Powered" currentMode="//@modeInstance.0 //@componentInstance.0/@modeInstance.0 //@componentInstance.1/@modeInstance.1 //@componentInstance.2/@modeInstance.0"/>
+  <systemOperationMode name="S123 # S1.Powered # S2.Unpowered # S3.Unpowered" currentMode="//@modeInstance.0 //@componentInstance.0/@modeInstance.0 //@componentInstance.1/@modeInstance.1 //@componentInstance.2/@modeInstance.1"/>
+  <systemOperationMode name="S123 # S1.Unpowered # S2.Powered # S3.Powered" currentMode="//@modeInstance.0 //@componentInstance.0/@modeInstance.1 //@componentInstance.1/@modeInstance.0 //@componentInstance.2/@modeInstance.0"/>
+  <systemOperationMode name="S123 # S1.Unpowered # S2.Powered # S3.Unpowered" currentMode="//@modeInstance.0 //@componentInstance.0/@modeInstance.1 //@componentInstance.1/@modeInstance.0 //@componentInstance.2/@modeInstance.1"/>
+  <systemOperationMode name="S123 # S1.Unpowered # S2.Unpowered # S3.Powered" currentMode="//@modeInstance.0 //@componentInstance.0/@modeInstance.1 //@componentInstance.1/@modeInstance.1 //@componentInstance.2/@modeInstance.0"/>
+  <systemOperationMode name="S123 # S1.Unpowered # S2.Unpowered # S3.Unpowered" currentMode="//@modeInstance.0 //@componentInstance.0/@modeInstance.1 //@componentInstance.1/@modeInstance.1 //@componentInstance.2/@modeInstance.1"/>
+  <systemOperationMode name="S234 # S2.Powered # S3.Powered # S4.Powered" currentMode="//@modeInstance.1 //@componentInstance.1/@modeInstance.0 //@componentInstance.2/@modeInstance.0 //@componentInstance.3/@modeInstance.0"/>
+  <systemOperationMode name="S234 # S2.Powered # S3.Powered # S4.Unpowered" currentMode="//@modeInstance.1 //@componentInstance.1/@modeInstance.0 //@componentInstance.2/@modeInstance.0 //@componentInstance.3/@modeInstance.1"/>
+  <systemOperationMode name="S234 # S2.Powered # S3.Unpowered # S4.Powered" currentMode="//@modeInstance.1 //@componentInstance.1/@modeInstance.0 //@componentInstance.2/@modeInstance.1 //@componentInstance.3/@modeInstance.0"/>
+  <systemOperationMode name="S234 # S2.Powered # S3.Unpowered # S4.Unpowered" currentMode="//@modeInstance.1 //@componentInstance.1/@modeInstance.0 //@componentInstance.2/@modeInstance.1 //@componentInstance.3/@modeInstance.1"/>
+  <systemOperationMode name="S234 # S2.Unpowered # S3.Powered # S4.Powered" currentMode="//@modeInstance.1 //@componentInstance.1/@modeInstance.1 //@componentInstance.2/@modeInstance.0 //@componentInstance.3/@modeInstance.0"/>
+  <systemOperationMode name="S234 # S2.Unpowered # S3.Powered # S4.Unpowered" currentMode="//@modeInstance.1 //@componentInstance.1/@modeInstance.1 //@componentInstance.2/@modeInstance.0 //@componentInstance.3/@modeInstance.1"/>
+  <systemOperationMode name="S234 # S2.Unpowered # S3.Unpowered # S4.Powered" currentMode="//@modeInstance.1 //@componentInstance.1/@modeInstance.1 //@componentInstance.2/@modeInstance.1 //@componentInstance.3/@modeInstance.0"/>
+  <systemOperationMode name="S234 # S2.Unpowered # S3.Unpowered # S4.Unpowered" currentMode="//@modeInstance.1 //@componentInstance.1/@modeInstance.1 //@componentInstance.2/@modeInstance.1 //@componentInstance.3/@modeInstance.1"/>
+  <systemOperationMode name="S134 # S1.Powered # S3.Powered # S4.Powered" currentMode="//@modeInstance.2 //@componentInstance.0/@modeInstance.0 //@componentInstance.2/@modeInstance.0 //@componentInstance.3/@modeInstance.0"/>
+  <systemOperationMode name="S134 # S1.Powered # S3.Powered # S4.Unpowered" currentMode="//@modeInstance.2 //@componentInstance.0/@modeInstance.0 //@componentInstance.2/@modeInstance.0 //@componentInstance.3/@modeInstance.1"/>
+  <systemOperationMode name="S134 # S1.Powered # S3.Unpowered # S4.Powered" currentMode="//@modeInstance.2 //@componentInstance.0/@modeInstance.0 //@componentInstance.2/@modeInstance.1 //@componentInstance.3/@modeInstance.0"/>
+  <systemOperationMode name="S134 # S1.Powered # S3.Unpowered # S4.Unpowered" currentMode="//@modeInstance.2 //@componentInstance.0/@modeInstance.0 //@componentInstance.2/@modeInstance.1 //@componentInstance.3/@modeInstance.1"/>
+  <systemOperationMode name="S134 # S1.Unpowered # S3.Powered # S4.Powered" currentMode="//@modeInstance.2 //@componentInstance.0/@modeInstance.1 //@componentInstance.2/@modeInstance.0 //@componentInstance.3/@modeInstance.0"/>
+  <systemOperationMode name="S134 # S1.Unpowered # S3.Powered # S4.Unpowered" currentMode="//@modeInstance.2 //@componentInstance.0/@modeInstance.1 //@componentInstance.2/@modeInstance.0 //@componentInstance.3/@modeInstance.1"/>
+  <systemOperationMode name="S134 # S1.Unpowered # S3.Unpowered # S4.Powered" currentMode="//@modeInstance.2 //@componentInstance.0/@modeInstance.1 //@componentInstance.2/@modeInstance.1 //@componentInstance.3/@modeInstance.0"/>
+  <systemOperationMode name="S134 # S1.Unpowered # S3.Unpowered # S4.Unpowered" currentMode="//@modeInstance.2 //@componentInstance.0/@modeInstance.1 //@componentInstance.2/@modeInstance.1 //@componentInstance.3/@modeInstance.1"/>
+  <systemOperationMode name="S124 # S1.Powered # S2.Powered # S4.Powered" currentMode="//@modeInstance.3 //@componentInstance.0/@modeInstance.0 //@componentInstance.1/@modeInstance.0 //@componentInstance.3/@modeInstance.0"/>
+  <systemOperationMode name="S124 # S1.Powered # S2.Powered # S4.Unpowered" currentMode="//@modeInstance.3 //@componentInstance.0/@modeInstance.0 //@componentInstance.1/@modeInstance.0 //@componentInstance.3/@modeInstance.1"/>
+  <systemOperationMode name="S124 # S1.Powered # S2.Unpowered # S4.Powered" currentMode="//@modeInstance.3 //@componentInstance.0/@modeInstance.0 //@componentInstance.1/@modeInstance.1 //@componentInstance.3/@modeInstance.0"/>
+  <systemOperationMode name="S124 # S1.Powered # S2.Unpowered # S4.Unpowered" currentMode="//@modeInstance.3 //@componentInstance.0/@modeInstance.0 //@componentInstance.1/@modeInstance.1 //@componentInstance.3/@modeInstance.1"/>
+  <systemOperationMode name="S124 # S1.Unpowered # S2.Powered # S4.Powered" currentMode="//@modeInstance.3 //@componentInstance.0/@modeInstance.1 //@componentInstance.1/@modeInstance.0 //@componentInstance.3/@modeInstance.0"/>
+  <systemOperationMode name="S124 # S1.Unpowered # S2.Powered # S4.Unpowered" currentMode="//@modeInstance.3 //@componentInstance.0/@modeInstance.1 //@componentInstance.1/@modeInstance.0 //@componentInstance.3/@modeInstance.1"/>
+  <systemOperationMode name="S124 # S1.Unpowered # S2.Unpowered # S4.Powered" currentMode="//@modeInstance.3 //@componentInstance.0/@modeInstance.1 //@componentInstance.1/@modeInstance.1 //@componentInstance.3/@modeInstance.0"/>
+  <systemOperationMode name="S124 # S1.Unpowered # S2.Unpowered # S4.Unpowered" currentMode="//@modeInstance.3 //@componentInstance.0/@modeInstance.1 //@componentInstance.1/@modeInstance.1 //@componentInstance.3/@modeInstance.1"/>
+  <componentImplementation xsi:type="aadl2:SystemImplementation" href="../LargeExample.aadl#LargeExample.Dependable_System.Notional"/>
+</instance:SystemInstance>

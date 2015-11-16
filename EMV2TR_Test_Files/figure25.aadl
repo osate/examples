@@ -1,0 +1,15 @@
+
+package MyValveErrorLib
+public
+annex EMV2 {**
+error types
+     StuckOpen: type;
+     StuckClosed: type;
+     StuckShut: type;
+     ValveLeak: type;
+     ValveError: type set {StuckOpen, StuckClosed};
+     MoreValveError: type set {ValveError, ValveLeak};
+end types;
+**};
+end MyValveErrorLib;
+	

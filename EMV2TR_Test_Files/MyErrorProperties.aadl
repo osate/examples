@@ -1,0 +1,7 @@
+property set MyErrorProperties is
+
+SelectTypes: type enumeration (midvalue, averagevalue);
+
+SignalSelectionMethod: MyErrorProperties::SelectTypes applies to ({EMV2}**error detection);
+
+end MyErrorProperties;

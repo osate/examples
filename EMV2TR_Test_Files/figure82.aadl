@@ -1,0 +1,25 @@
+package figure82
+public
+
+
+feature group fgt
+features
+	inport1: in event port;
+	inport2: in event port;
+end fgt;
+	
+system receiver
+features
+  infg : feature group fgt;
+annex EMV2 {**
+  use types ErrorLibrary;
+  error propagations
+    infg.inport1: in propagation {ServiceOmission};
+    infg.inport2: in propagation {ValueError};
+  end propagations;
+**};
+end receiver;
+
+
+
+end figure82;

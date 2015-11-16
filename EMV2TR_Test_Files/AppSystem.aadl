@@ -1,0 +1,53 @@
+package AppSystem
+public
+
+
+process MyApp
+features
+ sensorData: in data port;
+ actuatorCmd: out data port;
+ monitorControl: feature group Control;
+annex EMV2 {**
+  use types MyErrorLib;
+  use behavior MyErrorLib::TwoState;
+  error propagations
+    sensorData: in propagation {Baddata};
+    actuatorCmd: out propagation {MissingCmd};
+	-- incoming error propagation from processor binding
+    processor: in propagation {NoService};
+    -- propagation on a feature group element
+    monitorControl.reset : in propagation {NoService};
+  end propagations;
+**};
+end MyApp;
+
+processor PC
+features
+	deviceBus: requires bus access CANbus;
+annex EMV2 {**
+  use types MyErrorLib;
+  error propagations
+	-- outgoing error propagation from processor binding
+    bindings: out propagation {NoService};
+    deviceBus: in propagation {NoService};
+  end propagations;
+**};
+end PC;
+
+bus CANbus
+annex EMV2{**
+  use types MyErrorLib;
+  error propagations
+	-- outgoing error propagation on access connections
+    access: out propagation {NoService};
+  end propagations;
+**};
+end CANbus;
+
+feature group Control
+features
+  reset: in event port;
+  shutdown: in event port;
+end Control;
+
+end AppSystem;

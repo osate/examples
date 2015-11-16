@@ -1,0 +1,21 @@
+package figure13
+public
+	device Sensor
+features
+   SensorReading: out data port ;
+   PowerSource: requires bus access;
+annex EMV2 {**
+ use types MyErrorLib;
+ error propagations
+  SensorReading: out propagation  {BadData, NoData};
+  PowerSource: in propagation  {PowerFailure};
+ flows
+  ErrorSource: error source SensorReading {BadData} when {SensorFailure} if "Operating in autoland mode"; 
+-- ErrorSource: error source SensorReading {BadData} when "Transient Sensor Reading Failure";    
+  ErrorPath: error path PowerSource->SensorReading {NoData} ;    
+end propagations;
+**};
+end sensor;
+	
+	
+end figure13;

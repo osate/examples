@@ -1,0 +1,23 @@
+package RecoverErrorModelLibrary
+public
+annex EMV2 {**
+error behavior Example
+  events  
+    SelfCheckedFault: error event;   
+    UncoveredFault: error event;
+    SelfRepair: recover event; 
+    Fix: repair event; 
+   states
+    Operational: initial state;
+    FailStopped: state;
+    FailTransient: state;
+    FailUnknown: state;
+  transitions
+     SelfFail: Operational -[SelfCheckedFault]-> 
+        (FailStopped with 0.7, FailTransient with 0.3);
+     Recovery: FailTransient -[SelfRepair]-> Operational;
+     UncoveredFail: Operational -[UncoveredFault]-> FailUnknown;
+  end behavior;
+ **};
+end RecoverErrorModelLibrary;
+

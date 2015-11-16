@@ -1,0 +1,27 @@
+package figure49
+public
+	
+	with MyBehaviorLibrary;
+-- Flight Controller containing transitions and specified error event
+system flight_controller_2
+  -- small example of flight controller - get flight data from other
+  -- systems, output data and indicators to other flight systems and display
+features
+  current_air_speed: in data port;  -- from Air Data Computer (ADC)
+  current_heading: in data port;  -- from Nav GPS
+  new_air_speed: out data port;  -- to engine control
+  fc_error_recovery: out data port;  -- to pilot, co-pilot Multi Function Display (MFD)
+    --   Component EM subclause declaration
+annex EMV2 {**                       
+	
+	use behavior MyBehaviorLibrary::WorkingFailed1;
+	component error behavior
+	events
+ 	    SensorFailure: error event;
+	transitions	
+	    Working_To_Failed: Working -[SensorFailure]-> Failed;
+	end component;
+**};
+end flight_controller_2;
+
+end figure49;
