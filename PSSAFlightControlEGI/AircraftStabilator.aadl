@@ -29,7 +29,7 @@ with ErrorLibrary, ErrorBehaviorLibrary;
 		description => "No stabilator position readings due to sensor failure";
 		comment => "Becomes major hazard, if no reundant sensor";
 			])
-			applies to ef1.Failed;
+			applies to ef1.ServiceOmission;
     **};
   end PositionSensor;
 
