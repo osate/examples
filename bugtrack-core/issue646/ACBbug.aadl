@@ -1,0 +1,61 @@
+package ACBbug
+public
+	bus b
+	end b;
+
+	processor pc
+		features
+			ba: requires bus access b;
+
+	end pc;
+
+	system platform
+
+	end platform;
+
+	system implementation platform.i
+		subcomponents
+			pc1: processor pc;
+			pc2: processor pc;
+			mybus: bus b;
+			mypout: process myoutp.i;
+			myinp: process myinp.i;
+		connections
+			cb1: bus access mybus <-> pc1.ba;
+			cb2: bus access mybus <-> pc2.ba;
+			cp: port mypout.outp -> myinp.inp {Actual_Connection_Binding => (reference(mybus));};
+	end platform.i;
+
+	thread t1
+		features
+			outp: out data port;
+	end t1;
+
+	thread t2
+		features
+			inp: in data port;
+	end t2;
+	
+	process myinp
+		features
+			inp: in data port;
+	end myinp;
+	process implementation myinp.i
+		subcomponents
+			t2: thread t2;
+		connections
+			c1: port inp-> t2.inp;
+	end myinp.i;
+
+	process myoutp
+		features
+			outp: out data port;
+	end myoutp;
+	process implementation myoutp.i
+		subcomponents
+			t1: thread t1;
+		connections
+			c1: port t1.outp -> outp;
+	end myoutp.i;
+
+end ACBbug;
