@@ -19,7 +19,7 @@ with ErrorLibrary, ErrorModelLibrary;
 		 	ef1:error source PositionReading {ServiceOmission,ValueError,ItemOmission} when Failed;
 	end propagations;
 	properties
-		EMV2::severity => 1 applies to ef1.Failed;
+		EMV2::severity => 1 applies to ef1;
     **};
   end PositionSensor;
 
