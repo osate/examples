@@ -1,0 +1,22 @@
+package figure81
+public
+
+device PositionSensorOverride extends PositionSensor
+	features
+		PositionReading: out data port;
+  annex EMV2 {**
+  use types ErrorLibrary;
+  error propagations 
+    PositionReading: out propagation  {ServiceOmission, ValueError};
+  flows
+--    ef2: error source PositionReading {ValueError} when {ComputeError};
+ef2: error source PositionReading {ValueError} when {BadValue};
+  end propagations;
+  **};
+end PositionSensorOverride;
+
+device PositionSensor
+	end PositionSensor;
+	
+	
+end figure81;

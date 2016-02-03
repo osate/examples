@@ -86,7 +86,7 @@ properties
 	    ( [Partition => reference (part2);
 	      Duration  => 10 ms;
 	      Periodic_Processing_Start => false;]
-	    ) applies to cpu.core1, cpu.core2;
+	    ) applies to cpu.core3, cpu.core4;
 	ARINC653::Module_Major_Frame => 10 ms applies to cpu.core1, cpu.core2, cpu.core3, cpu.core4;
 end arinc_multicore.i;
 

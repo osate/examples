@@ -1,0 +1,124 @@
+package figure90
+public
+	with EMV2;
+
+	system GPS
+		features
+		-- each user command is represented by a separate event port
+			RequestOff: in event port;
+			RequestLoP: in event port;
+			RequestHiP: in event port;
+			-- GPS output signal stream
+			LocationPosition: out data port;
+			-- input command to reset the GPS
+			Reset: in event port;
+		modes
+			Off: initial mode;
+			LoP: mode; -- low precision operation using one sensor 
+			HiP: mode; -- hi precision operation
+			TurnOffFromLoP: LoP -[RequestOff]-> Off;
+			TurnOffFromHiP: HiP -[RequestOff]-> Off;
+			TurnOnLoP: Off -[RequestLoP]-> LoP;
+			TurnonHiP: Off -[RequestHiP]-> HiP;
+			SwitchToHiP: LoP -[RequestHiP]-> HiP;
+			SwitchToLoP: HiP -[RequestLoP]-> LoP;
+		annex EMV2 {**
+use types ErrorLibrary;
+use behavior GPSEMLibrary::DegradedSM;
+error propagations
+  LocationPosition: out propagation {ServiceOmission};
+end propagations;
+component error behavior
+events
+  sensor1failed: error event;
+  sensor2failed: error event;
+  processingfailed: error event;
+  sensorfail: error event;
+transitions
+  Operational-[sensor1failed or sensor2failed]-> Degraded;
+  Operational-[ processingfailed]-> FailStop;
+  Degraded -[ sensor1failed or sensor2failed 
+              or processingfailed]-> FailStop;
+mode mappings
+  Operational in modes (HiP, LoP, Off);
+  Degraded in modes (LoP, Off); 
+  Failstop in modes (Off);
+end component;
+properties
+ EMV2::Description => "sensor1.sensorData{ServiceOmission}" 
+  applies to sensor1failed; 
+EMV2::Description => "sensor2.sensorData{ServiceOmission}" 
+  applies to sensor2failed; 
+EMV2::Description => "processing.locationPosition{ServiceOmission}" 
+  applies to processingfailed; 
+EMV2::OccurrenceDistribution => 
+  [ProbabilityValue => 0.005; Distribution => Poisson;] 
+  applies to processingfailed;
+EMV2::OccurrenceDistribution => 
+  [ ProbabilityValue => 0.012; Distribution => Poisson;] 
+  applies to sensor1failed, sensor2failed;
+**};
+end GPS;
+
+system implementation GPS.impl
+subcomponents
+	sensor1: device sensor in modes (LoP, HiP);
+	sensor2: device sensor in modes (HiP);
+	processing: device GPSprocessing in modes (LoP, HiP);
+internal features
+	resetS1: event;
+	resetS2: event;
+connections
+	conn1: port sensor1.sensedData -> processing.sensor1input;
+	sconn2: port sensor2.sensedData -> processing.sensor2input;
+	pconn: port processing.locationPosition -> locationPosition;
+	resetconnS1: port resetS1 -> sensor1.reset;
+	resetconnS2: port resetS2 -> sensor2.reset;
+
+annex EMV2 {**
+	use behavior GPSEMLibrary::DegradedSM; 
+	component error behavior
+	events
+  	Recovered: recover event;
+	transitions
+  	Degraded -[Recovered]-> Operational;
+  	detections
+  	operational -[sensor1failed]-> resetS1!;
+  	operational -[sensor1failed]-> resetS2!;
+	end component;
+    composite error behavior
+   states
+     [sensor1.Operational and sensor2.Operational 
+      and processing.Operational]-> Operational;
+     [(sensor1.FailStop and sensor2.Operational and processing.Operational)
+      or (sensor1.Operational and sensor2.FailStop and processing.Operational)
+     ]-> Degraded;
+     [(sensor1.FailStop and sensor2.FailStop) 
+      or processing.FailStop]-> FailStop;
+end composite;
+properties
+  EMV2::Description => "Sensor Reset Successful" applies to Recovered;
+  	**};
+end GPS.impl;
+
+device sensor
+features
+	sensedData: out data port;
+	reset: in data port;
+annex EMV2 {**
+	use behavior GPSEMLibrary::FailStopped;
+**};
+end sensor;
+
+device GPSprocessing
+features
+	sensor1input: in data port;
+	sensor2input: in data port;
+	locationPosition: out data port;
+	reset: in data port;
+annex EMV2 {**
+	use behavior GPSEMLibrary::FailStopped;
+**};
+end GPSprocessing;
+
+end figure90;

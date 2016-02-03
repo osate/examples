@@ -1,0 +1,43 @@
+package figure80
+public
+
+device PositionSensor
+features
+  PositionReading: out data port ;
+flows
+  f1: flow source PositionReading {
+    Latency => 2 ms .. 3 ms;
+    };
+annex EMV2 {**
+  use types ErrorLibrary;
+  use behavior ErrorModelLibrary::Simple;
+  error propagations 
+   PositionReading: out propagation  {ServiceOmission};
+  flows
+   ef1:error source PositionReading {ServiceOmission} when Failed;
+end propagations;
+**};
+end PositionSensor;
+
+device SecurePositionSensor extends PositionSensor
+features
+  command: in event data port;
+annex EMV2 {**
+  use types ErrorLibrary;
+  error propagations 
+    command: in propagation  {ServiceOmission};
+  end propagations;
+**};
+end SecurePositionSensor;
+
+device PositionSensorOverride extends PositionSensor
+  annex EMV2 {**
+  use types ErrorLibrary;
+  error propagations 
+    PositionReading: out propagation  {ServiceOmission, ValueError};
+  flows
+    ef2: error source PositionReading {ValueError} when {BadValue};
+  end propagations;
+  **};
+end PositionSensorOverride;
+end figure80;

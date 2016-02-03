@@ -1,0 +1,19 @@
+package figure86
+public
+
+
+
+annex EMV2 {**
+
+	
+	type transformations DataXfer
+use types ErrorLibrary, CommunicationErrors;
+{NoError} -[{LateDelivery}]->{LateDelivery};
+{NoError} -[{ValueCorruption}]-> {ValueError};
+{ValueError} -[{LateDelivery}]-> {ValueError*LateDelivery};
+ all -[{LostMessage}]-> {NoData};
+{NoData} -[]-> {NoData};
+end transformations;
+	
+**};
+end figure86;

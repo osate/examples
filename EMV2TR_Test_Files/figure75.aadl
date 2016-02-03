@@ -1,0 +1,21 @@
+package figure75
+public
+	
+	with EMV2;
+	
+	device PositionSensor
+  features
+    PositionReading: out data port ;
+  annex EMV2 {**
+    use types ErrorLibrary;
+    error propagations 
+    	PositionReading: out propagation {ServiceOmission}; 
+    flows
+	ef1:error source PositionReading {ServiceOmission};
+    end propagations;
+    properties
+	EMV2::likelihood => ARP4761::Remote applies to ef1.ServiceOmission;
+  **};
+end PositionSensor;
+	
+end figure75;

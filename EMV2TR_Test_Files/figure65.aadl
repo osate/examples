@@ -1,0 +1,32 @@
+package figure65
+public
+
+annex EMV2 {**
+	error types
+   NoValue : type;
+   BadValue : type;
+   LateValue : type;
+end types;
+
+error behavior ThreeErrorStates
+events
+   BadValueEvent: error event;
+   NoValueEvent: error event;
+   LateValueEvent: error event;
+states
+   Operational: initial state;
+   BadValueState: state;
+   NoValueState : state;
+   LateValueState: state;
+transitions
+   BadValueTransition : Operational -[BadValueEvent]-> BadValueState;
+   NoValueTransition : Operational -[NoValueEvent]-> NoValueState;
+   LateTransition : Operational-[LateValueEvent]->LateValueState;
+end behavior;
+	
+	
+	
+	
+**};
+
+end figure65;

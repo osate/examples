@@ -1,0 +1,18 @@
+package TripleErrorTypes
+public
+
+annex EMV2 {**
+
+error types
+Data_Fault: type;
+Bad_Data: type;
+No_Data: type;
+Fail_Unkown: type;
+Fail_Stop: type;
+Self_Checked_Fault: type;
+Uncovered_Fault: type;
+
+end types;
+
+**};
+end TripleErrorTypes;

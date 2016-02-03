@@ -1,0 +1,32 @@
+package figure59
+public
+
+with MyBehaviorLibrary, EMV2;
+
+system flight_controller7   -- modified to show  use of recover and repair properties.
+  -- small example of flight controller - get flight data from other
+  -- systems, output data and indicators to other flight systems and display
+  -- systems, output data and indicators to other flight systems and display
+  -- Show DurationDistribution property for recover event
+features
+  current_air_speed: in data port;  -- from ADC
+  current_heading: in data port;  -- from Nav gps
+  system_reset: in event port;  -- added this port to act as a trigger to error model transition
+  new_air_speed: out data port;  -- to engine control
+  fc_error_recovery: out data port;  -- to pilot, copilot MFD
+  --  Top level flight controller error model
+  --  EM description
+annex EMV2 {**                       
+	use types MyBehaviorLibrary;  --  My Type Library, 
+	use behavior MyBehaviorLibrary::ErrorRecovery4;  -- three state error model
+	component error behavior
+	events
+	  E_Rec_Working: recover event when system_reset;  --- want to show that sys-tem_reset event port causes transition to working
+	end component;
+ properties
+  EMV2::DurationDistribution => [ Duration => 1ms..1ms; Distribution => Poisson;] applies to E_Working;
+**};
+end flight_controller7 ;
+
+
+end figure59;

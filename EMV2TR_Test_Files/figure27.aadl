@@ -1,0 +1,21 @@
+package MyExtendedValveErrorLib
+public
+
+with EMV2,MyValveErrorLib;	
+			
+annex EMV2 {**
+error types extends MyValveErrorLib with
+     SlowOpen: type;
+     SlowClose: type;
+     DrippingValve renames type ValveLeak;
+     AllValveError: type set {MoreValveError, SlowOpen, SlowClose};
+properties
+     EMV2::Description => "Lubrication issue" applies to SlowOpen, SlowClose;
+end types;
+**};
+
+
+
+
+end MyExtendedValveErrorLib;
+

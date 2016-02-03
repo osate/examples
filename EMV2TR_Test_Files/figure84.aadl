@@ -1,0 +1,36 @@
+package figure84
+public
+
+
+system test
+	
+end test;
+
+system implementation test.impl
+-- this is figure 84 modified.
+
+subcomponents
+	pc1: processor pc;
+	pc2: processor pc;
+	
+annex EMV2 {**
+	
+	propagation paths
+ -- HeatDissipation : propagation point;
+
+HeatPropagation : pc1.HeatDissipation -> pc2.HeatDissipation;
+
+end paths;
+	
+**};
+
+end test.impl;
+
+processor pc
+		annex EMV2{**
+			propagation paths
+			HeatDissipation: propagation point;
+			end paths;	
+		**};
+		end pc;
+end figure84;

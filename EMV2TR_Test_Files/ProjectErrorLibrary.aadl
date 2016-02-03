@@ -1,0 +1,37 @@
+package ProjectErrorLibrary
+public
+with ProjectErrorLibrary;
+	
+Annex EMV2 {**
+	
+error types
+   NoValue : type;
+   BadValue : type;
+   LateValue : type;
+   
+   -- Definition of the previous error types
+      ThreeErrorSet : type set {NoValue, BadValue, LateValue};
+end types;
+
+error behavior ThreeErrorStates
+use types ProjectErrorLibrary;
+events
+  BadValueEvent: error event;
+  NoValueEvent: error event;
+  LateValueEvent: error event;
+states
+  Operational: initial state;
+  ErrorState: state {ThreeErrorSet};
+
+transitions
+  BadValueTransition : Operational -[BadValueEvent]-> ErrorState{BadValue};
+  NoValueTransition : Operational -[NoValueEvent]-> ErrorState{NoValue};  
+  LateTransition : Operational-[LateValueEvent]-> ErrorState{LateValue}; 
+
+
+end behavior;
+	
+	
+**};
+
+end ProjectErrorLibrary;

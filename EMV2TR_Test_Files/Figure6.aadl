@@ -1,0 +1,39 @@
+package Devices
+public
+device PowerSupply
+features
+ PowerOutlet: provides bus access;
+annex EMV2 {**
+ use types MyErrorLib;
+-- use mappings MyErrorLib::TwoState;
+ use behavior MyErrorLib::TwoState;
+
+error propagations
+  PowerOutlet: out propagation {PowerFailure};
+end propagations;
+component error behavior
+-- details
+end component;
+--properties
+-- details
+**};
+end PowerSupply;
+
+--device Sensor
+--features
+--   SensorReading: out data port ;
+--   PowerSource: in data port;
+--annex EMV2 {**
+-- use types MyErrorLib;
+-- error propagations
+--  SensorReading: out propagation  {BadData, NoData};
+--  PowerSource: in propagation  {PowerFailure};
+-- flows
+--  ErrorSource: error source SensorReading {BadData} when {SensorFailure};    
+---- ErrorSource: error source SensorReading {BadData} when "Transient Sensor Reading Failure";    
+--  ErrorPath :error path PowerSource->SensorReading (NoData) ;    
+--end propagations;
+--**};
+--end sensor;
+
+end Devices;

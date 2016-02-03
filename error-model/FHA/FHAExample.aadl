@@ -39,7 +39,7 @@ with ErrorLibrary, ErrorModelLibrary;
 		description => "No position readings due to sensor failure";
 		comment => "Becomes major hazard, if no rdeundant sensor";
 			])
-			applies to ef1.Failed;
+			applies to ef1;
     **};
   end PositionSensor;
 
@@ -120,7 +120,7 @@ annex EMV2 {**
 		description => "No action due to sensor failure";
 		comment => "Becomes major hazard, if no rdeundant sensor";
 			])
-			applies to Actuator2.ef2.Failed;
+			applies to Actuator2.ef2;
 	**}; 
 
   end AircraftFMS.i;

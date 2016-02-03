@@ -88,8 +88,8 @@ process implementation receiver.with_transitions extends receiver.i
 annex EMV2 {**
 	component error behavior
 	detections
-		Operational-[inevent{LateValue}]->self.triggerrecovery!;
-		Failed-[inevent{NoError}]->self.triggernormal!;
+		Operational-[inevent{LateValue}]->triggerrecovery!;
+		Failed-[inevent{NoError}]->triggernormal!;
 	end component;
 **};
 end receiver.with_transitions;

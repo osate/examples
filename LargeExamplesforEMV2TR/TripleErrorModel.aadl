@@ -1,0 +1,27 @@
+package TripleErrorModel
+public
+
+annex EMV2 {**
+error behavior Example
+-- use types TripleErrorTypes;
+events
+-- both events will have mode-specific occurrence values for 
+-- powered,unpowered
+   Self_Checked_Fault: error event;
+   Uncovered_Fault: error event;
+states
+   Operational: initial state;
+   Fail_Stopped: state;
+   Fail_Unknown: state;
+transitions
+   SelfFail: Operational -[Self_Checked_Fault]-> Fail_Stopped;
+   UFailSFault: Fail_Unknown -[Self_Checked_Fault]-> Fail_Stopped;
+   SFailSFault: Fail_Stopped -[Self_Checked_Fault]-> same state;
+   UncoveredFail: Operational -[Uncovered_Fault]-> Fail_Unknown;
+   UFailUFault: Fail_Unknown -[Uncovered_Fault]-> same state;
+   SFailUFault: Fail_Stopped -[Uncovered_Fault]-> same state;
+end behavior;
+**};
+
+
+end TripleErrorModel;
