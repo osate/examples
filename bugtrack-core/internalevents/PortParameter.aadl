@@ -1,0 +1,27 @@
+package PortParameter
+public
+	
+	subprogram ReadFromPort
+	features
+		inPort: in parameter;
+		outPort: out event data port;
+    end ReadFromPort;
+    
+    thread CallSubprogram
+    features
+    	inPort: in event data port;
+		outPort: out event data port;    	
+    end CallSubprogram;
+    
+    thread implementation CallSubprogram.Imp
+    subcomponents
+    	myReader: subprogram ReadFromPort;
+    	calls
+    		seq: { call1: subprogram myReader;};
+    connections
+    	pc_ok: port myReader.outPort -> outPort;
+    	pc_port: parameter inPort -> call1.inPort; 
+--     	pcb_param: parameter inPort -> myReader.inPort;  error as it points to the subprogram subcomponent, not the call.	
+    end CallSubprogram.Imp;
+		
+end PortParameter;

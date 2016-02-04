@@ -1,0 +1,25 @@
+package parameterconn
+public
+	thread t
+		features
+			inp: in data port;
+			outp: out event data port;
+			exception: out event port;
+	end t;
+	subprogram proc
+		features
+			p1: in parameter;
+			p2: out parameter;
+			exc: out event port;
+	end proc;
+	thread implementation t.i
+		calls
+			seq1: {
+				call1: subprogram proc;
+			};
+		connections
+			c1: parameter inp -> call1.p1;
+			c2: parameter call1.p2 -> outp;
+			cexc: port call1.exc -> exception;
+	end t.i;
+end parameterconn;

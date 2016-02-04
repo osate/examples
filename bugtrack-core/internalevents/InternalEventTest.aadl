@@ -1,0 +1,21 @@
+package InternalEventTest
+public
+	system s
+		features
+			oep:out event port;
+	end s;
+	system implementation s.i
+		subcomponents
+			sub: system sub;
+		internal features
+		ie: event;
+		connections
+			c1: port self.ie -> oep; 
+			c2: port sub.op -> self.ie; 
+	end s.i;
+	
+	system sub
+		features
+			op: out event port;
+	end sub;
+end InternalEventTest; 
