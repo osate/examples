@@ -13,7 +13,7 @@ public
 		end propagations;
 		component error behavior
 		propagations
-		Failstop -[]-> output{ServiceOmission};
+			Failstop -[]-> output{ServiceOmission};
 		end component;
 	**};
 	end sensorinput;
@@ -26,12 +26,17 @@ public
 		use types ErrorLibrary;
 		use behavior ErrorLibrary::FailStop;
 		error propagations
-		input : in propagation {ServiceOmission};
-		output : out propagation {ServiceOmission};
+			input : in propagation {ServiceOmission};
+			output : out propagation {ServiceOmission};
 		flows
 			es1: error source output{ServiceOmission} when FailStop;
 			ep1: error path input -> output;
 		end propagations;
+		
+		component error behavior
+		transitions
+			t0 : Operational -[input{ServiceOmission}]-> FailStop;
+		end component;
 	**};
 	end primary;
 	
@@ -52,9 +57,11 @@ public
 			ep1: error path input -> output;
 		end propagations;
 		component error behavior
+		transitions
+			t0 : Operational -[input{ServiceOmission}]-> FailStop;
 		propagations
-		FailStop -[]-> output{ServiceOmission};
-		Operational -[input{ServiceOmission} and monitor{ServiceOmission}]-> output{ServiceOmission};
+			FailStop -[]-> output{ServiceOmission};
+			Operational -[input{ServiceOmission} and monitor{ServiceOmission}]-> output{ServiceOmission};
 		end component;
 	**};
 	end standby;
