@@ -1,0 +1,52 @@
+package SMErrorTypes
+public
+annex EMV2 {**
+error types extends ErrorLibrary with
+-- SM_PCS related
+	NoCommandSequence renames type ServiceOmission;
+	MissingCommand renames type ItemOmission;
+	NoSteps renames type ServiceOmission;
+	MissedStep renames type ItemOmission;
+	CompletionSignalOmission renames type ItemOmission;
+	NoService renames type ServiceOmission;
+	PowerLoss renames type ServiceOmission;
+-- SM_PCS logical architecture
+	MissingStepCommand renames type ItemOmission;
+-- PCS_SW related
+	StepCountOutOfRange renames type OutOfRange;
+	ResultingPositionOutOfRange renames type OutOfBounds;
+-- Valve control Response
+	DelayedDelivery: type extends ItemTimingError;
+	QuickResponse renames type EarlyDelivery;
+	SlowResponse renames type LateDelivery;
+	DelayedResponse renames type DelayedDelivery;
+-- Valve failures
+	StuckValve: type;
+	StuckOpen: type extends StuckValve;
+	StuckClosed: type extends StuckValve;
+	ValveLeak: type extends StuckValve;
+	IncorrectFlow: type ;
+	ValveFailure: type;
+-- related to device bus
+	MessageLoss renames type ItemOmission;
+	MessageCorruption renames type ValueError;
+-- related to the ECU
+	MissedDeadline renames type LateDelivery;
+	CompletionTiming renames type TimingError;
+-- engine control system
+	IncorrectPosition: type;
+	
+
+	
+	VariableExecutionTime: type;
+-- mechanical failures	
+	StepperMotorFailure: type;
+	ActuatorFailure: type;
+	FCSFailure: type;
+	ECUFailure: type;
+	DeviceBusFailure: type;
+	PowerFailure : type;
+	
+end types;	
+**};
+end SMErrorTypes;

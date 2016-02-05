@@ -1,0 +1,11 @@
+property set PCSProperties is
+	MaxPosition: constant aadlinteger => 250;
+	MaxPercent: constant aadlinteger => 100;
+	MaxStepCount: constant aadlinteger => 15;
+
+-- Nom 600 Min 578 Max 621 steps per second
+	StepDuration : constant Time_Range => 1610 us .. 1730 us ; 
+    MaxStepDuration : constant Time => 1500 us ;
+    FrameDuration : constant Time => 25 ms; -- 24ms in original
+	Description : aadlstring applies to (all);
+end PCSProperties ; 
