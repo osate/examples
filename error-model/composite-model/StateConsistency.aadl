@@ -1,0 +1,103 @@
+package StateConsistency
+
+public
+
+with EMV2;
+
+system GPS
+	features
+		outp: out data port;
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior ErrorLibrary::FailStop;
+	error propagations
+	outp: out propagation {ServiceOmission};
+	flows 
+		es1: error source outp;
+	end propagations;
+	properties
+	EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.1 ; Distribution => Fixed;] applies to Failure;
+**};
+end GPS;
+
+system implementation GPS.impl
+end GPS.impl;
+
+system voter
+	features
+		in1: in data port;
+		in2: in data port;
+		out1: out data port;
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior ErrorLibrary::FailStop;
+	error propagations
+	out1: out propagation {ServiceOmission};
+	in1: in propagation {ServiceOmission};
+	in2: in propagation {ServiceOmission};
+	end propagations;
+	component error behavior
+	propagations
+	Operational -[in1{ServiceOmission} and in2{ServiceOmission}]-> out1{ServiceOmission};
+	end component;
+	properties
+	EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.1 ; Distribution => Fixed;] applies to Failure;
+**};
+end voter;
+
+system DualGPS
+	features
+		outp: out data port;
+annex EMV2 {**
+	use types ErrorLibrary;
+	use behavior ErrorLibrary::FailStop;
+	error propagations
+	outp: out propagation{ServiceOmission};
+	flows 
+		es1: error source outp;
+	end propagations;
+	properties
+		-- probability of failure for DualGPS as a whole
+	EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.3 ; Distribution => Fixed;] applies to Failure;
+**};
+end DualGPS;
+
+
+system implementation DualGPS.parts
+subcomponents
+	sub1 : system GPS.impl;
+	sub2 : system GPS.impl;
+annex EMV2 {**
+	use types ErrorLibrary;
+	composite error behavior
+	states
+		[sub1.FailStop and sub2.FailStop]->FailStop;
+	end composite;
+	-- the combination of failure probability of the two parts should be consistent with the whole
+	properties
+		-- probabil;ity of failure of DualGPS as part. Contributes to the probability in the type
+	EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.3 ; Distribution => Fixed;] applies to Failure;
+**};
+end DualGPS.parts;
+
+
+system implementation DualGPS.dual
+subcomponents
+	sub1 : system GPS.impl;
+	sub2 : system GPS.impl;
+	vote: system voter;
+	connections
+		c1: port sub1.outp -> vote.in1;
+		c2: port sub2.outp -> vote.in1;
+annex EMV2 {**
+	use types ErrorLibrary;
+	composite error behavior
+	states
+		[sub1.FailStop and sub2.FailStop]->FailStop;
+	end composite;
+	properties
+	EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.3 ; Distribution => Fixed;] applies to Failure;
+**};
+end DualGPS.dual;
+
+end StateConsistency;

@@ -78,13 +78,14 @@ annex emv2 {**
 	powersupply: in propagation {NoService};
 	flows
 	esource: error source outport{NoValue} when CriticalModefailure;
+	-- fault tree to reflect FGS as error source.
 	ePath: error path inport{NoValue} -> outport{NoValue};
 	epPower: error path powersupply{NoService} -> outport{NoValue};
 	end propagations;
 	**};
 end FGS;
 
-system implementation FGS.impl
+system implementation FGS.common
 subcomponents
 AP1: system AP;
 AP2: system AP;
@@ -103,6 +104,9 @@ ACtoFGS: port AC.outport -> outport;
 properties
 Actual_Connection_Binding => (reference (network)) 
   applies to FGStoFG1,FGStoFG2,FG1toAP1,FG2toAP2,AP1toAC,AP2toAC,ACtoFGS;
+end FGS.common;
+
+system implementation FGS.composite extends FGS.common
 annex emv2 {**
   use types ErrorModelLibrary;        
   use behavior ErrorModelLibrary::ThreeState;
@@ -120,7 +124,20 @@ composite error behavior
     and 1 ormore (AP1.Failed, FG2.Failed)]->CriticalModefailure ;
 end composite;
 **};
-end FGS.impl;
+end FGS.composite;
+
+system implementation FGS.derive extends FGS.common
+annex emv2 {**
+  use types ErrorModelLibrary;        
+  use behavior ErrorModelLibrary::ThreeState;
+component error behavior 
+transitions
+	Operational -[powersupply{NoService}]-> CriticalModeFailure;
+propagations
+    Operational -[inport]-> outport{NoValue};
+end component;
+**};
+end FGS.derive;
 
 bus PowerSupply
 annex emv2 {**
