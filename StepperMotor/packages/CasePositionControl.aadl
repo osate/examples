@@ -743,6 +743,15 @@ flows
 properties
 	Actual_Processor_Binding => (reference(ECU)) applies to SMS.SM_PCS_App;
 	Actual_Connection_Binding => (reference(Dev_Bus)) applies to SMS.SendPositionChangeCommand;
+annex EMV2{**
+ 		use types SMErrorTypes;
+ 		use behavior ErrorLibrary::FailStop;
+
+ 	composite error behavior 
+ 	states
+ 		[ engine.failstop ]-> FailStop;
+ 	end composite;
+ **};
 end SMS_Operational_Environment.original;
 
 system implementation SMS_Operational_Environment.buffered extends SMS_Operational_Environment.original
