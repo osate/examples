@@ -84,6 +84,10 @@ public
 	annex EMV2 {**
 		use types ErrorLibrary;
 		use behavior ErrorLibrary::FailStop;
+--		component error behavior
+--		transitions
+--		Operational -[primary.output{ServiceOmission} and standby.FailStop]-> FailStop;
+--		end component;
 		composite error behavior
 		states
 		[primary.FailStop and standby.FailStop]-> Failstop;
