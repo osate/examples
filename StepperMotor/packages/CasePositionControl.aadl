@@ -666,10 +666,10 @@ connections
 	SMCommandSignalConnection: feature group SM_ACT.SM_Command_Signals <-> SM_Motor.SM_Command_Signals;
 	-- connection between stepper motor and flow valve
 	ValveConnector: feature SM_Motor.Mechanical_Control_Position -> Mechanical_Control_Position;
-	PowerToACT: bus access Power -> SM_ACT.Power; 
-	PowerToSM: bus access Power -> SM_Motor.power; 
+	PowerToACT: bus access Power <-> SM_ACT.Power; 
+	PowerToSM: bus access Power <-> SM_Motor.power; 
 
-	ACTToDevBus: bus access SM_ACT.DMA <-> DMA;
+	ACTToDevBus: bus access  DMA <-> SM_ACT.DMA ;
 flows
 	flowsink: flow sink Desired_Position -> IncomingDesiredPosition -> SM_PCS_App.flowpath
 	-> SendPositionChangeCommand -> SM_ACT.flowpath -> SMCommandSignalConnection -> SM_Motor.flowsink;
