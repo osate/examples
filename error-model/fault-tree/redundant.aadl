@@ -67,9 +67,9 @@ annex EMV2{**
  	
  	component error behavior
  	transitions
- 		t0 : Operational -[ valuein{ValueCorruption}]-> FailStop;
- 		t1 : Operational -[ valuein{ItemOmission}]-> FailStop;
- 		t2 : Operational -[ valuein{ItemOmission}]-> FailStop;
+ 		t0 : Operational -[ valuein{ItemOmission}]-> FailStop;
+ 		t1 : Operational -[ valuein{ValueCorruption}]-> FailStop;
+ 		t2 : Operational -[ valuein{InconsistentValue}]-> FailStop;
  	end component;
  **};
 end actuator;
@@ -104,6 +104,15 @@ features
 	valuein1 : in data port mydata;
 	valuein2 : in data port mydata;
 	valueout : out data port mydata;
+annex EMV2{**
+ 	use types ErrorLibrary;
+ 	use behavior ErrorLibrary::FailStop;
+ 	error propagations
+ 		valuein1 : in propagation {LateDelivery, OutOfRange};
+ 		valuein2 : in propagation {LateDelivery, OutOfRange};
+ 		valueout : out propagation {ItemOmission,ValueCorruption,InconsistentValue};
+ 	end propagations;
+ **};
 end voter;
 
 process implementation voter.i
