@@ -92,10 +92,11 @@ public
 		use types ErrorLibrary;
 		use behavior ErrorLibrary::FailStop;
 		component error behavior
---		transitions
---		Operational -[primary.output{ServiceOmission} and standby.FailStop]-> FailStop;
+		transitions
+		Operational -[primary.output{ServiceOmission} and standby.output{ServiceOmission}]-> FailStop;
 		propagations
-		Operational-[primary.output{ServiceOmission} and standby.output{ServiceOmission}]->output{ServiceOmission};
+--		Operational-[primary.output{ServiceOmission} and standby.output{ServiceOmission}]->output{ServiceOmission};
+		FailStop-[]-> output{ServiceOmission};
 		end component;
 		composite error behavior
 		states
@@ -114,5 +115,17 @@ public
 			SI: device sensorinput;
 		connections
 			c1: port SI.output -> srb.input;
+annex EMV2{**
+ 	use types ErrorLibrary;
+ 	use behavior ErrorLibrary::FailStop;
+	component error behavior
+	transitions
+		Operational -[srb.output{ServiceOmission}]-> FailStop;
+	end component;
+ 	composite error behavior 
+ 	states
+ 		[ srb.failstop ]-> FailStop;
+ 	end composite;
+ **};
 	end top.i;
 end hiphops;
