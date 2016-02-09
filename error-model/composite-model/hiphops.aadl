@@ -91,15 +91,15 @@ public
 	annex EMV2 {**
 		use types ErrorLibrary;
 		use behavior ErrorLibrary::FailStop;
---		component error behavior
+		component error behavior
 --		transitions
 --		Operational -[primary.output{ServiceOmission} and standby.FailStop]-> FailStop;
---		end component;
+		propagations
+		Operational-[primary.output{ServiceOmission} and standby.output{ServiceOmission}]->output{ServiceOmission};
+		end component;
 		composite error behavior
 		states
 		[primary.FailStop and standby.FailStop]-> Failstop;
---		propagations
---		[primary.output{ServiceOmission} and standby.FailStop]->output{ServiceOmission};
 		end composite;
 	**};
 	end SRB.impl;
