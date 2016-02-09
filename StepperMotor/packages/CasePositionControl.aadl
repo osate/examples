@@ -668,7 +668,7 @@ connections
 	ValveConnector: feature SM_Motor.Mechanical_Control_Position -> Mechanical_Control_Position;
 	PowerToACT: bus access Power <-> SM_ACT.Power; 
 	PowerToSM: bus access Power <-> SM_Motor.power; 
-
+-- XXX TODO when changing the order we get an erro - bus connecting to itself.
 	ACTToDevBus: bus access  DMA <-> SM_ACT.DMA ;
 flows
 	flowsink: flow sink Desired_Position -> IncomingDesiredPosition -> SM_PCS_App.flowpath
