@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ASCII"?>
+<emfta:FTAModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:emfta="http://cmu.edu/emfta" name="event0" description="component main2_composite_Instance in state FailStop">
+  <root name="event0" description="component main2_composite_Instance in state FailStop">
+    <gate>
+      <events name="event1" description="Error event Failure with types &lt;allTypes> on component main2_composite_Instance"/>
+      <events name="event2" description="component actuator in state FailStop">
+        <gate>
+          <events name="event3" description="Error event Failure with types &lt;allTypes> on component actuator"/>
+          <events name="event4" description="Error Propagation on valueintypes {ItemOmission}">
+            <gate>
+              <events name="event10" description="Events from component actuator on valuein with types {ItemOmission}">
+                <gate>
+                  <events name="event5" description="Error source ef0 on component sensor2 from valueout with types {LateDelivery}"/>
+                  <events name="event6" description="Error source ef1 on component sensor2 from valueout with types {OutOfRange}"/>
+                  <events name="event7" description="Error source ef0 on component sensor1 from valueout with types {LateDelivery}"/>
+                  <events name="event8" description="Error source ef1 on component sensor1 from valueout with types {OutOfRange}"/>
+                  <events name="event9" description="Error source cpufail on component cpu with types {ServiceError}"/>
+                </gate>
+              </events>
+            </gate>
+          </events>
+          <events name="event13" description="Error Propagation on valueintypes {ValueCorruption}">
+            <gate>
+              <events name="event14" description="Error source memfail on component mem with types {ServiceError}"/>
+            </gate>
+          </events>
+          <events name="event16" description="Error Propagation on valueintypes {InconsistentValue}">
+            <gate>
+              <events name="event17" description="Error source ef5 on component thr from valueout with types {InconsistentValue}"/>
+            </gate>
+          </events>
+        </gate>
+      </events>
+    </gate>
+  </root>
+</emfta:FTAModel>

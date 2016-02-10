@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ASCII"?>
+<emfta:FTAModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:emfta="http://cmu.edu/emfta" name="event0" description="component main2_transition_Instance in state FailStop">
+  <root name="event0" description="component main2_transition_Instance in state FailStop">
+    <gate>
+      <events name="event1" description="Error event Failure with types &lt;allTypes> on component main2_transition_Instance"/>
+      <events name="event2" description="Error Propagation on actionouttypes {ServiceOmission}">
+        <gate>
+          <events name="event3" description="Events from component main2_transition_Instance on actionout with types {ServiceOmission} (no error source found)"/>
+        </gate>
+      </events>
+    </gate>
+  </root>
+</emfta:FTAModel>

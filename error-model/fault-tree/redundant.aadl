@@ -91,7 +91,7 @@ annex EMV2{**
  		memory   : in propagation {ServiceError};
  	flows
  		ef1 : error path valuein1{LateDelivery,OutOfRange} -> valueout{ItemOmission};
- 		ef2 : error path valuein1{LateDelivery,OutOfRange} -> valueout{ItemOmission};
+ 		ef2 : error path valuein2{LateDelivery,OutOfRange} -> valueout{ItemOmission};
  		ef3 : error path processor{ServiceError} -> valueout{ItemOmission};
  		ef4 : error path memory{ServiceError} -> valueout{ValueCorruption};
  		ef5 : error source valueout{InconsistentValue};
