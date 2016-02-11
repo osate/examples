@@ -1,0 +1,43 @@
+package BusAccess
+public
+
+device SM_ACT 
+features
+	Power: requires bus access Power_Supply;
+end SM_ACT;
+
+device Stepper_Motor
+features
+	Power: requires bus access Power_Supply;
+end Stepper_Motor;
+
+bus Power_Supply
+end Power_Supply;
+
+system SMS
+features
+	Power: requires bus access Power_Supply;
+end SMS;
+
+system implementation SMS.Original
+subcomponents
+	SM_ACT: device SM_ACT;
+	SM_Motor: device Stepper_Motor;
+connections
+	PowerToACT: bus access SM_ACT.Power <-> Power; 
+	PowerToSM: bus access  SM_Motor.power <-> Power; 
+end SMS.Original;
+
+
+system top
+end top;
+
+system implementation top.original
+subcomponents
+	SMS: system SMS.original;
+	Powersupply: bus Power_Supply;
+connections
+	pwrpcs: bus access Powersupply <-> SMS.Power;
+end top.original;
+
+end BusAccess ;
