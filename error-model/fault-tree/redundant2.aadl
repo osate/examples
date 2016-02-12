@@ -93,7 +93,10 @@ features
 	valueout : out data port mydata;
 annex EMV2{**
  	use types ErrorLibrary;
- 	use behavior ErrorLibrary::FailStop;
+ 	-- we use our own three state EBSM.
+ 	-- a computeerror error event leads to Degraded, which as error source generates InconsistentValue
+ 	-- a Failure error event leads to FailStop, which propagates ItemOmission
+ 	use behavior FTErrorLibrary::DegradedFailStop;
  	error propagations
  		valuein1 : in propagation {LateDelivery, OutOfRange};
  		valuein2 : in propagation {LateDelivery, OutOfRange};
@@ -103,34 +106,72 @@ annex EMV2{**
  	flows
  		ef1 : error path valuein1{LateDelivery,OutOfRange} -> valueout{ItemOmission};
  		ef2 : error path valuein2{LateDelivery,OutOfRange} -> valueout{ItemOmission};
+ 		-- ef3 and ef4 are to be used in FTA since there is no refinement in the component error behavior
  		ef3 : error path processor{ServiceError} -> valueout{ItemOmission};
  		ef4 : error path memory{ServiceError} -> valueout{ValueCorruption};
+ 		-- the error source is refined by prop2
  		ef5 : error source valueout{InconsistentValue};
  	end propagations;
  	component error behavior
  	propagations
  	prop1: Operational -[valuein1{LateDelivery, OutOfRange} and valuein2{LateDelivery, OutOfRange}]-> valueout{ItemOmission};
- 	prop2: FailStop -[]-> valueout{ItemOmission};
+ 	prop2: Degraded -[]-> valueout{InconsistentValue};
+ 	prop3: FailStop -[]-> valueout{ItemOmission};
  	end component;
  **};
 end voter_thr;
+
+thread voter_thr1
+	-- this is the voter_thr from Julien's email
+features
+                valuein1 : in data port mydata;
+                valuein2 : in data port mydata;
+                valueout : out data port mydata;
+annex EMV2{**
+ use types ErrorLibrary, FTerrorlibrary;
+ use behavior ErrorLibrary::FailStop;
+ error propagations
+   valuein1 : in propagation {LateDelivery, OutOfRange};
+   valuein2 : in propagation {LateDelivery, OutOfRange};
+   valueout : out propagation {ItemOmission,ValueCorruption,InconsistentValue};
+   processor: in propagation {ServiceError}; 
+   memory   : in propagation {ServiceError};
+ flows
+   ef1 : error path valuein1{LateDelivery,OutOfRange} -> valueout{ItemOmission};
+   ef2 : error path valuein2{LateDelivery,OutOfRange} -> valueout{ItemOmission};
+   -- since there are no out propagation rules in the component error behavior
+   -- the next three flows determine the FTA additions
+   -- There is no need for an out propagation rule since it is an unconditional single propagation mapping.
+   -- Each becomes an OR element in the FTA 
+   ef3 : error path processor{ServiceError} -> valueout{ItemOmission};
+   ef4 : error path memory{ServiceError} -> valueout{ValueCorruption};
+   ef5 : error source valueout{InconsistentValue};
+   -- ef5 indicates that voter_thr is an error source, i.e., there is some voter internal error event as the soruce.
+   -- the user behavior declaration associates an error behavior state machine (EBSM) with a Failure error event.
+   -- If it were a three state EBSM we would not know which state and related error event is the source.
+   -- To address this we can do one of two things:
+   -- 1) connect the EBSM to the error source via component error behavior declaration as done in voter_thr (above)
+   -- 2) add a when clause to the error source declaration.
+   --    when {ComputationError}  : the source is an implicit error event of type ComputationError 
+   --    when FailStop : identifies the state whose incoming transition error event trigger is the source.
+ end propagations;
+ component error behavior
+ propagations
+ -- note these propagation rules do not map valuein1{LateDelivery} and valuein2{OutOfRange}
+ -- in voter_thr the combinations are specified in the rule.
+    p1 : all -[ valuein1{LateDelivery} and valuein2{LateDelivery}]-> valueout{ValueError};
+    p2 : all -[ valuein1{OutOfRange} and valuein2{OutOfRange}]-> valueout{OutOfRange};
+ end component;
+**};
+end voter_thr1;
+
 
 process voter
 features
 	valuein1 : in data port mydata;
 	valuein2 : in data port mydata;
 	valueout : out data port mydata;
-	-- this EMV2 subclause could be left out.
-	-- EMV2 does not require you to have a subclause at each level in the hierarchy.
-annex EMV2{**
- 	use types ErrorLibrary;
- 	use behavior ErrorLibrary::FailStop;
- 	error propagations
- 		valuein1 : in propagation {LateDelivery, OutOfRange};
- 		valuein2 : in propagation {LateDelivery, OutOfRange};
- 		valueout : out propagation {ItemOmission,ValueCorruption,InconsistentValue};
- 	end propagations;
- **};
+	-- No more warning if voter does not include an EMV2 subclause
 end voter;
 
 process implementation voter.i
