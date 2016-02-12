@@ -76,11 +76,6 @@ outport: out data port;
 goCritical: in event port;
 goNonCritical: in event port;
 powersupply : requires bus access PowerSupply;
- modes
-Critical: mode;
-NonCritical: initial mode;
-transCritical: NonCritical -[goCritical]-> Critical;
-transNonCritical: Critical -[goNonCritical]-> NonCritical;
 annex emv2 {**
   use types ErrorModelLibrary;
   use behavior ErrorModelLibrary::ThreeState;
