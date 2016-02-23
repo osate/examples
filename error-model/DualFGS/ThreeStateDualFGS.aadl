@@ -49,7 +49,7 @@ requires modes
   NonCritical: initial mode;
 annex emv2 {**
   use types ErrorModelLibrary;
-  use behavior GPSErrorModelLibrary::ThreeStateAC; 
+  use behavior FGSErrorModelLibrary::ThreeStateAC; 
   error propagations
       FromAP1Port: in propagation {NoValue};
       FromAP2Port: in propagation {NoValue};
@@ -109,7 +109,7 @@ ACtoFGS: port AC.outport -> outport;
 
 annex emv2 {**
   use types ErrorModelLibrary;        
-  use behavior GPSErrorModelLibrary::ThreeState;
+  use behavior ErrorModelLibrary::ThreeState;
 composite error behavior 
  states
     [AP1.Operational and AP2.Operational and FG1.Operational and FG2.Operational 

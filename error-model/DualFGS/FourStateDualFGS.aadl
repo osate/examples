@@ -48,7 +48,7 @@ FromAP2Port: in data port;
 OutPort: out data port;
 annex emv2 {**
   use types ErrorModelLibrary;
-  use behavior GPSErrorModelLibrary::ACThreeState; 
+  use behavior FGSErrorModelLibrary::ACThreeState; 
   error propagations
       FromAP1Port: in propagation {NoValue};
       FromAP2Port: in propagation {NoValue};
@@ -77,7 +77,7 @@ goNonCritical: in event port;
 powersupply : requires bus access PowerSupply;
 annex emv2 {**
   use types ErrorModelLibrary;
-  use behavior ErrorModelLibrary::ThreeState;
+  use behavior FGSErrorModelLibrary::FourState;
   error propagations
 	inport: in propagation {NoValue};
 	outport : out propagation {NoValue};
@@ -108,7 +108,7 @@ AP2toAC: port AP2.outport -> AC.FromAP2Port;
 ACtoFGS: port AC.outport -> outport;
 annex emv2 {**
   use types ErrorModelLibrary;        
-  use behavior GPSErrorModelLibrary::FourState;
+  use behavior FGSErrorModelLibrary::FourState;
 component error behavior
 transitions
   trans1: Operational -[powersupply{NoService}]-> FailStop;

@@ -1,4 +1,4 @@
-package GPSErrorModelLibrary
+package FGSErrorModelLibrary
 public
 annex EMV2 {**
 	error types
@@ -49,4 +49,4 @@ end behavior;
 	end behavior ;
 	
 **};
-end GPSErrorModelLibrary;
+end FGSErrorModelLibrary;
