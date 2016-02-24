@@ -9,7 +9,7 @@ property set Iso_Properties is
    
  
   --Table A-9. The Manage Regulator Mode Function Constant
-  Initialization_Timeout : Timing_Properties::Time => 1 sec
+  Initialization_Timeout : Aadl_Project::Time => 1 sec
     applies to (all);
 --    (Isolette::manage_regulator_mode_mrm,Isolette::manage_monitor_mode_mmm);
 
