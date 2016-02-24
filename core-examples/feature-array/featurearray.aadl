@@ -158,9 +158,9 @@ connections
 -- The idea is to interpret the fact that the same connection is bound to 3 buses means it should be communicated over all three
 	actual_connection_binding => (reference (tripleprotocol)) applies to conn12;
 	actual_connection_binding => (reference (tripleprotocol)) applies to conn23;
-	-- now we want to bind the triplicated connections in the protocol to the HW buses
-	actual_connection_binding => (reference (tripleprotocol)) applies to conn23;
-	actual_connection_binding => (reference (tripleprotocol)) applies to conn23;
+--	-- now we want to bind the triplicated connections in the protocol to the HW buses
+--	actual_connection_binding => (reference (tripleprotocol)) applies to conn23;
+--	actual_connection_binding => (reference (tripleprotocol)) applies to conn23;
 	-- Although we do not get an error message, this does not work. 
 	-- The list in Actual_Connection_Binding represents the hardware components involved in a connection transfer.
 	-- While Actual_Processor_Binding allows a thread to be bound to more than one processor, connections have only one binding.

@@ -176,7 +176,7 @@ properties
    actual_memory_binding =>
       (reference (mem.part2)) applies to part2;
 annex resolute {**
-	prove (check_deos_compliance(this))
+	prove (check_mils_compliance(this))
 **}; 
 end node.impl;
 

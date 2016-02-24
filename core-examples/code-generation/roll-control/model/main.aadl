@@ -70,8 +70,8 @@ properties
 --	    ) applies to module;	
 	
 annex resolute {**
-	prove (check_deos_compliance(this))
-	prove (check_code_generation_compliance (this))
+	prove (check_mils_compliance(this))
+--	prove (check_code_generation_compliance (this))
 **};
 end main.deos;
  
@@ -81,10 +81,10 @@ properties
 	Source_Name => "roll-control_panel" applies to module.p2;
 	Source_Name => "roll-control_roll-control" applies to module.p3;
 	Source_Name => "roll-control_display" applies to module.p4;
-annex resolute {**
-	prove (check_vxworks653_compliance(this))
-	prove (check_code_generation_compliance (this))
-**};
+--annex resolute {**
+--	prove (check_vxworks653_compliance(this))
+--	prove (check_code_generation_compliance (this))
+--**};
 end main.vxworks653;
 
 end roll_control::main;

@@ -75,11 +75,11 @@ subcomponents
 	cores : processor core.i[2];
 connections
 	b0 : bus access l2mem.sysbus   -> sysbus {Latency => 5 ns .. 12 ns;};
-	b1 : bus access cores.l2access -> sysbus {Latency => 5 ms .. 12 ns;};
+	b1 : bus access cores.l2access -> sysbus {Latency => 5 ns .. 12 ns;};
 --  FIXME: we would support something like that in the future
 --	bus access cores[0 .. 1].l2access -> sysbus;
 properties
-	Byte_Count => 2_000_000 applies to l2mem;
+	Memory_Size => 2_000_000 Bytes applies to l2mem;
 end multi_core.dual;
 
 system implementation multi_core.quad
