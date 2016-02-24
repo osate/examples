@@ -1,0 +1,101 @@
+package GPSSystem
+public
+	with GPSParts;
+	
+	system GPS
+	features
+		location: out data port;
+	end GPS;
+	
+	system implementation GPS.parts
+		subcomponents
+			sensor1: device GPSParts::sensor_errorbehavior;
+			sensor2: device GPSParts::sensor_errorbehavior;
+			cpu: processor GPSParts::CPU_errorbehavior;
+			network: bus GPSParts::Network;
+			powersupply1: device GPSParts::PowerSupply;
+	annex EMV2 {**
+		use types ErrorLibrary, GPSErrorLibrary;
+		use behavior GPSErrorLibrary::FailStopState;
+		-- the logic includes knowledge of dual redundenacy of sensors
+		-- the logic is the fault tree equivalent of a RBD
+		-- when we add occurence probabilities we can calculate the failure rate of GPS
+		composite error behavior
+		states
+		[sensor1.FailStop and sensor2.FailStop or cpu.Failstop or network.FailStop or powersupply1.FailStop]-> FailStop;
+		end composite;
+	**};
+	end GPS.parts;
+
+	-- here we are interested in supporting inductive fault impact analysis from a single failure point
+	-- and deductive fault contributor analysis (FTA) of a critical effects 
+	-- These analysis utilize propagation paths between components and error flows or component error behavior of components.
+	-- Starting points for fault impact analysis are error source declarations (or the equivalent in the component erro behavior specification
+	-- i.e., error events mapped into out propagations or transitioning error states, which in turn map into out propagations.
+	-- Starting point for fault contributor analysis is an error state of the GPS, or an outgoing error propagation.
+	system implementation GPS.basic
+		subcomponents
+			sensor1: device GPSParts::sensor_errorbehavior;
+			sensor2: device GPSParts::sensor_errorbehavior;
+			processing: abstract GPSParts::GPSProcessing_errorbehavior;
+			cpu1: processor GPSParts::CPU_errorbehavior;
+			network: bus GPSParts::Network;
+			powersupply1: device GPSParts::PowerSupply;
+		connections
+			-- logical connections
+			s1toproc: port sensor1.sensedData -> processing.inSensor1;
+			s2toproc: port sensor2.sensedData -> processing.inSensor2;
+			proctoext: port processing.location -> location;
+			-- physical network connections
+			s1tonetwork: bus access sensor1.networkaccess <-> network;
+			s2tonetwork: bus access sensor2.networkaccess <-> network;
+			cputonetwork: bus access cpu1.networkaccess <-> network;
+			-- power connections
+			powertos1: feature powersupply1.power -> sensor1.powersource ;
+			powertos2: feature powersupply1.power -> sensor2.powersource ;
+			powertocpu: feature powersupply1.power -> cpu1.powersource ;
+	annex EMV2 {**
+		use types ErrorLibrary, GPSErrorLibrary;
+		use behavior GPSErrorLibrary::FailStopState;
+		error propagations
+			location : out propagation {ServiceOmission,ValueError};
+		end propagations;
+		component error behavior
+		-- mapping of GPS producing GPS output to the GPS out propagation
+		-- since it is a subcomponent single port connected to the GPS port, we could infer the mapping 
+		propagations
+		FTAStart1: all-[processing.location{ServiceOmission}]-> location;
+		end component;
+		composite error behavior
+		states
+		FTAStart2: [processing.FailStop]-> FailStop;
+		end composite;
+	**};
+	end GPS.basic;
+	
+	system implementation GPS.computeerror extends GPS.basic
+		subcomponents
+			processing: refined to abstract GPSParts::GPSProcessing_computeError;
+		annex EMV2 {**
+		component error behavior
+		-- mapping of GPS producing GPS output to the GPS out propagation
+		-- since it is a subcomponent single port connected to the GPS port, we could infer the mapping 
+		propagations
+		FTAComputeErrorStart1: all-[processing.location{ValueError}]-> location{ValueError};
+		end component;
+		composite error behavior
+		states
+		FTAStart2: [processing.Failed{ServiceOmission}]-> FailStop;
+		end composite;
+		**};
+	end GPS.computeerror;
+	
+	system implementation GPS.platform extends GPS.basic
+		properties
+			Actual_Processor_Binding => (reference (cpu1)) applies to processing;
+			Actual_Connection_Binding => (reference (network)) applies to s1toproc;
+			Actual_Connection_Binding => (reference (network)) applies to s2toproc;
+--			Actual_Connection_Binding => (reference (network)) applies to proctoext;
+	end GPS.platform;
+
+end GPSSystem;

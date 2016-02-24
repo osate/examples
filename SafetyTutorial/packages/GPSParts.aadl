@@ -1,0 +1,193 @@
+package GPSParts
+public
+		
+Device sensor
+features
+	sensedData: out data port;
+	networkaccess: requires bus access Network;
+	powersource: in feature ;
+	annex EMV2 {**
+		use types ErrorLibrary, GPSErrorLibrary;
+		error propagations
+			sensedData: out propagation {ServiceOmission};
+			powersource: in propagation {ServiceOmission};
+		flows
+			-- in this abstraction we have the error source as contributor and the incoming power propagation.
+			src1: error source sensedData{ServiceOmission} when {SensorFailure};
+			path1: error path powersource -> sensedData;
+		end propagations;
+	**};
+	end sensor;
+	
+Device sensor_errorbehavior extends sensor
+-- we add component error behavior. In this case we introduce failure modes.
+	annex EMV2 {**
+--		use types ErrorLibrary, GPSErrorLibrary;
+		use behavior ErrorLibrary::FailStop;
+		component error behavior
+		events
+		-- we override Failure to associate an error type with the event
+		 Failure: error event {SensorFailure};
+		 -- transition elaborates error path path1 into an effect on the error state FailStop.
+		 -- FailStop is propagated as specified by outprop. Its contributors are the Failure event and the incoming power failure.
+		transitions
+		powerfail: Operational -[powersource{ServiceOmission}]-> FailStop;
+		propagations
+		outprop: FailStop -[]-> sensedData{ServiceOmission};
+		end component;
+	**};
+	end sensor_errorbehavior;
+	
+Device sensor_recovery extends sensor_errorbehavior
+features
+	reset: in event port; -- initiate reset recovery, which may fail to complete
+	annex EMV2 {**
+		use types ErrorLibrary, GPSErrorLibrary;
+		use behavior ErrorLibrary::FailStop;
+		component error behavior
+		events
+			ResetEvent: recover event when reset;
+		transitions
+			-- reset will be successful with 0.8 probability, and fail with 0.2 probability
+			treset: FailStop -[ ResetEvent ]->
+			    (Operational with 0.8, FailStop with 0.2);
+		end component;
+	**};
+	end sensor_recovery;
+	
+	processor CPU
+		features
+			powersource: in feature;
+			networkaccess: requires bus access Network;
+	annex EMV2 {**
+		use types ErrorLibrary,GPSErrorLibrary;
+		error propagations
+		bindings: out propagation {ServiceOmission};
+		powersource: in propagation {ServiceOmission};
+		flows
+			cpu_es: error source bindings {ServiceOmission} when {CPUFailure};
+		end propagations;
+	**};
+	end CPU;
+	
+	processor CPU_errorbehavior extends CPU
+	 annex EMV2 {**
+		use types ErrorLibrary,GPSErrorLibrary;
+	 	use behavior ErrorLibrary::FailStop;
+	 	component error behavior
+		events
+		-- we override Failure to associate an error type with the event
+		 Failure: error event {CPUFailure};
+		propagations
+		FailStop -[]-> bindings{ServiceOmission};
+	 	end component;
+	 **};
+	end CPU_errorbehavior;
+
+	
+	bus Network
+		features
+			power: in feature;
+	annex EMV2 {**
+		use types ErrorLibrary,GPSErrorLibrary;
+		use behavior ErrorLibrary::FailStop;
+		error propagations
+		bindings: out propagation {ServiceOmission};
+		power: in propagation {ServiceOmission};
+		flows
+			cpu_es: error source bindings {ServiceOmission} when {CPUFailure};
+		end propagations;
+	**};
+	end Network;
+	
+	device PowerSupply
+	features
+		power: out feature;
+	annex EMV2 {**
+		use types ErrorLibrary,GPSErrorLibrary;
+		use behavior ErrorLibrary::FailStop;
+		error propagations
+		power: out propagation {ServiceOmission};
+-- phf: Will we identify this as werror source based on component behavior?
+--		flows
+--			cpu_es: error source power {ServiceOmission} when {PowerSupplyFailure};
+		end propagations;
+	 	component error behavior
+		events
+		-- we override Failure to associate an error type with the event
+		 Failure: error event {PowerSupplyFailure};
+		propagations
+		FailStop -[]-> power{ServiceOmission};
+	 	end component;
+	**};
+	end PowerSupply;
+	
+	abstract GPSProcessing
+	features
+		inSensor1: in data port;
+		inSensor2: in data port;
+		location: out data port;
+	annex EMV2 {**
+		use types ErrorLibrary, GPSErrorLibrary;
+		error propagations
+		inSensor1 : in propagation {ServiceOmission};
+		inSensor2 : in propagation {ServiceOmission};
+		location : out propagation {ServiceOmission, ValueError};
+		processor: in propagation {ServiceOmission};
+		flows
+			s1toloc: error path inSensor1 -> location;
+			s2toloc: error path inSensor2 -> location;
+			ptoloc: error path processor -> location;
+		end propagations;
+	**};
+	end GPSProcessing;
+	
+	abstract GPSProcessing_redundancy extends GPSProcessing
+	-- specify sensor processing logic without an explicit error behavior state machine
+	-- in this case we just deal with the effects of redundant inputs.
+	annex EMV2 {**
+		component error behavior
+		propagations
+			outcond: all-[inSensor1{ServiceOmission} and inSensor2{ServiceOmission}]-> location{ServiceOmission};
+		end component;
+	**};
+	end GPSProcessing_redundancy;
+	
+	abstract GPSProcessing_errorbehavior extends GPSProcessing_redundancy
+	-- specify sensor processing logic with an explicit error behavior state machine.
+	-- We need this if we want to identify the FTA source as state.
+	-- in this case we need to map both error events and incoming propagations into a state.
+	annex EMV2 {**
+		use types ErrorLibrary, GPSErrorLibrary;
+		use behavior GPSErrorLibrary::FailStopState;
+		component error behavior
+		transitions
+			input: Operational -[inSensor1{ServiceOmission} and inSensor2{ServiceOmission}]-> FailStop;
+		propagations
+			outcond: FailStop-[]-> location{ServiceOmission};
+		end component;
+	**};
+	end GPSProcessing_errorbehavior;
+	
+	abstract GPSProcessing_computeError extends GPSProcessing_redundancy
+	-- specify sensor processing logic with an explicit error behavior state machine.
+	-- We need this if we want to identify the FTA source as state.
+	-- in this case we need to map both error events and incoming propagations into a state.
+	-- We use types on the Failed state to distinguish them.
+	annex EMV2 {**
+		use types ErrorLibrary, GPSErrorLibrary;
+		use behavior GPSErrorLibrary::GPSFailed;
+		component error behavior
+		events
+			computeError: error Event;
+		transitions
+			internal: Operational -[computeError]-> Failed{ValueError};
+			input: Operational -[inSensor1 and inSensor2]-> Failed{ServiceOmission};
+		propagations
+			outcond1: Failed{ServiceOmission}-[]-> location{ServiceOmission};
+			outcond2: Failed{ValueError}-[]-> location{ValueError};
+		end component;
+	**};
+	end GPSProcessing_computeError;
+	
+end GPSParts;
