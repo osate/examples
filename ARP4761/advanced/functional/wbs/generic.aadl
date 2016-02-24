@@ -14,7 +14,6 @@ properties
 	WBSPS::IsFunction => true;
 annex EMV2 {**
 	use types WBSFunctionalErrorLib;
-	use behavior WBSFunctionalErrorLib::Twostate;
 
 	error propagations
 		fromElectrical : in propagation {AnyFunctionalError};
