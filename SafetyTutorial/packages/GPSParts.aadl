@@ -11,9 +11,11 @@ features
 		error propagations
 			sensedData: out propagation {ServiceOmission};
 			powersource: in propagation {ServiceOmission};
+			networkaccess: in propagation {ServiceOmission};
 		flows
 			-- in this abstraction we have the error source as contributor and the incoming power propagation.
 			src1: error source sensedData{ServiceOmission} when {SensorFailure};
+			src2: error path networkaccess{ServiceOmission} -> sensedData{ServiceOmission};
 			path1: error path powersource -> sensedData;
 		end propagations;
 	**};
@@ -33,11 +35,12 @@ Device sensor_errorbehavior extends sensor
 		transitions
 		powerfail: Operational -[powersource{ServiceOmission}]-> FailStop;
 		propagations
-		outprop: FailStop -[]-> sensedData{ServiceOmission};
+		outprop1: FailStop -[]-> sensedData{ServiceOmission};
 		end component;
 	**};
 	end sensor_errorbehavior;
-	
+
+-- for modeling availability by allowing recovery	
 Device sensor_recovery extends sensor_errorbehavior
 features
 	reset: in event port; -- initiate reset recovery, which may fail to complete
@@ -62,10 +65,14 @@ features
 	annex EMV2 {**
 		use types ErrorLibrary,GPSErrorLibrary;
 		error propagations
-		bindings: out propagation {ServiceOmission};
-		powersource: in propagation {ServiceOmission};
+			bindings: out propagation {ServiceOmission};
+			powersource: in propagation {ServiceOmission};
+			networkaccess: out propagation {ServiceOmission};
+			networkaccess: in propagation {ServiceOmission};
 		flows
-			cpu_es: error source bindings {ServiceOmission} when {CPUFailure};
+			cpu_es1: error source bindings {ServiceOmission} when {CPUFailure};
+			-- network fails if processor fails since it is driven by processor
+			cpu_es2: error source networkaccess {ServiceOmission} when {CPUFailure};
 		end propagations;
 	**};
 	end CPU;
@@ -80,6 +87,7 @@ features
 		 Failure: error event {CPUFailure};
 		propagations
 		FailStop -[]-> bindings{ServiceOmission};
+		FailStop -[]-> networkaccess{ServiceOmission};
 	 	end component;
 	 **};
 	end CPU_errorbehavior;
@@ -94,8 +102,12 @@ features
 		error propagations
 		bindings: out propagation {ServiceOmission};
 		power: in propagation {ServiceOmission};
+		access: in propagation {ServiceOmission};
+		access: out propagation {ServiceOmission};
 		flows
-			cpu_es: error source bindings {ServiceOmission} when {CPUFailure};
+			cpu_es: error path access{ServiceOmission} -> bindings {ServiceOmission} ;
+			power_es: error path power{ServiceOmission} -> bindings {ServiceOmission} ;
+			own_es: error source bindings {ServiceOmission} when {NetworkFailure};
 		end propagations;
 	**};
 	end Network;
@@ -108,9 +120,8 @@ features
 		use behavior ErrorLibrary::FailStop;
 		error propagations
 		power: out propagation {ServiceOmission};
--- phf: Will we identify this as werror source based on component behavior?
---		flows
---			cpu_es: error source power {ServiceOmission} when {PowerSupplyFailure};
+		flows
+			cpu_es: error source power {ServiceOmission} when {PowerSupplyFailure};
 		end propagations;
 	 	component error behavior
 		events
@@ -132,7 +143,7 @@ features
 		error propagations
 		inSensor1 : in propagation {ServiceOmission};
 		inSensor2 : in propagation {ServiceOmission};
-		location : out propagation {ServiceOmission, ValueError};
+		location : out propagation {ServiceOmission, LowPrecisionData};
 		processor: in propagation {ServiceOmission};
 		flows
 			s1toloc: error path inSensor1 -> location;
@@ -181,11 +192,11 @@ features
 		events
 			computeError: error Event;
 		transitions
-			internal: Operational -[computeError]-> Failed{ValueError};
+			internal: Operational -[computeError]-> Failed{LowPrecisionData}; 
 			input: Operational -[inSensor1 and inSensor2]-> Failed{ServiceOmission};
 		propagations
 			outcond1: Failed{ServiceOmission}-[]-> location{ServiceOmission};
-			outcond2: Failed{ValueError}-[]-> location{ValueError};
+			outcond2: Failed{LowPrecisionData}-[]-> location{LowPrecisionData};
 		end component;
 	**};
 	end GPSProcessing_computeError;

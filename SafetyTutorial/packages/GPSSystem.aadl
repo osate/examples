@@ -58,7 +58,7 @@ public
 		use types ErrorLibrary, GPSErrorLibrary;
 		use behavior GPSErrorLibrary::FailStopState;
 		error propagations
-			location : out propagation {ServiceOmission,ValueError};
+			location : out propagation {ServiceOmission,LowPrecisionData};
 		end propagations;
 		component error behavior
 		-- mapping of GPS producing GPS output to the GPS out propagation
@@ -81,7 +81,7 @@ public
 		-- mapping of GPS producing GPS output to the GPS out propagation
 		-- since it is a subcomponent single port connected to the GPS port, we could infer the mapping 
 		propagations
-		FTAComputeErrorStart1: all-[processing.location{ValueError}]-> location{ValueError};
+		FTAComputeErrorStart1: all-[processing.location{LowPrecisionData}]-> location{LowPrecisionData};
 		end component;
 		composite error behavior
 		states
