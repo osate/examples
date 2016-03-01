@@ -90,13 +90,21 @@ public
 		**};
 	end GPS.computeerror;
 	
-	system implementation GPS.platform extends GPS.basic
+	system implementation GPS.BasicBound extends GPS.basic
 		properties
 			Actual_Processor_Binding => (reference (cpu1)) applies to processing;
 			Actual_Connection_Binding => (reference (network)) applies to s1toproc;
 			Actual_Connection_Binding => (reference (network)) applies to s2toproc;
 --			Actual_Connection_Binding => (reference (network)) applies to proctoext;
-	end GPS.platform;
+	end GPS.BasicBound;
+	
+	system implementation GPS.CEBound extends GPS.computeerror
+		properties
+			Actual_Processor_Binding => (reference (cpu1)) applies to processing;
+			Actual_Connection_Binding => (reference (network)) applies to s1toproc;
+			Actual_Connection_Binding => (reference (network)) applies to s2toproc;
+--			Actual_Connection_Binding => (reference (network)) applies to proctoext;
+	end GPS.CEBound;
 	
 	system implementation GPS.Dual 
 		subcomponents
