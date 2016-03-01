@@ -201,4 +201,31 @@ features
 	**};
 	end GPSProcessing_computeError;
 	
+	abstract GPSVoter 
+		features
+			in1: in data port;
+			in2: in data port;
+			outp: out data port;
+	annex EMV2 {**
+		use types ErrorLibrary, GPSErrorLibrary;
+		error propagations
+		in1 : in propagation {ServiceOmission,LowPrecisionData};
+		in2 : in propagation {ServiceOmission,LowPrecisionData};
+		outp : out propagation {ServiceOmission,LowPrecisionData};
+		processor: in propagation {ServiceOmission};
+		flows
+			s1toloc: error path in1 -> outp;
+			s2toloc: error path in2 -> outp;
+			ptoloc: error path processor -> outp;
+		end propagations;
+		component error behavior
+		propagations
+			outcond: all-[(in1{ServiceOmission} and in2{ServiceOmission}) or processor{ServiceOmission}]-> outp{ServiceOmission};
+			outcondlow1: all-[in1{ServiceOmission} or in2{ServiceOmission} or
+				in1{LowPrecisionData} or in2{LowPrecisionData}
+			]-> outp{LowPrecisionData};
+		end component;
+	**};
+	end GPSVoter;
+	
 end GPSParts;
