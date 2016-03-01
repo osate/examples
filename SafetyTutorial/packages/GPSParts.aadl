@@ -193,7 +193,7 @@ features
 			computeError: error Event;
 		transitions
 			internal: Operational -[computeError]-> Failed{LowPrecisionData}; 
-			input: Operational -[inSensor1 and inSensor2]-> Failed{ServiceOmission};
+			input: Operational -[inSensor1{ServiceOmission} and inSensor2{ServiceOmission}]-> Failed{ServiceOmission};
 		propagations
 			outcond1: Failed{ServiceOmission}-[]-> location{ServiceOmission};
 			outcond2: Failed{LowPrecisionData}-[]-> location{LowPrecisionData};
