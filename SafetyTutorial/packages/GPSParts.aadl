@@ -153,10 +153,10 @@ features
 		inSensor2 : in propagation {ServiceOmission};
 		location : out propagation {ServiceOmission, LowPrecisionData};
 		processor: in propagation {ServiceOmission};
-		flows
-			s1toloc: error path inSensor1 -> location;
-			s2toloc: error path inSensor2 -> location;
-			ptoloc: error path processor -> location;
+		flows 
+			s1toloc: error path inSensor1{ServiceOmission} -> location{ServiceOmission};
+			s2toloc: error path inSensor2{ServiceOmission} -> location{ServiceOmission};
+			ptoloc: error path processor{ServiceOmission} -> location{ServiceOmission};
 		end propagations;
 	**};
 	end GPSProcessing;
