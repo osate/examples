@@ -56,7 +56,7 @@ with ErrorLibrary, ErrorModelLibrary;
         use types ErrorLibrary;
     	use behavior ErrorModelLibrary::Simple;
     	error propagations 
-    	    operation: out propagation {ServiceOmission} ;
+    	    operation: out propagation {ServiceOmission};
     		ActCmd: in propagation  {ServiceOmission,ValueError,ItemOmission};
     	flows
 		 ef1:error sink ActCmd{ValueError};

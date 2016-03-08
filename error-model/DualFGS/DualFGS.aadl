@@ -6,8 +6,8 @@ features
 InPort: in data port;
 OutPort: out data port;
 annex emv2 {**
-	use types ErrorModelLibrary;
-  use behavior ErrorModelLibrary::Simple;        
+	use types FGSErrorModelLibrary;
+  use behavior FGSErrorModelLibrary::Simple;        
 	error propagations
 	OutPort: out propagation {NoValue};
 	end propagations;
@@ -23,8 +23,8 @@ features
 InPort: in data port;
 OutPort: out data port;
 annex emv2 {**
-	use types ErrorModelLibrary;
-  use behavior ErrorModelLibrary::Simple;        
+	use types FGSErrorModelLibrary;
+  use behavior FGSErrorModelLibrary::Simple;        
 	error propagations
 	InPort: in propagation {NoValue};
 	OutPort: out propagation {NoValue};
@@ -44,8 +44,8 @@ FromAP1Port: in data port;
 FromAP2Port: in data port;
 OutPort: out data port;
 annex emv2 {**
-	use types ErrorModelLibrary;
-  use behavior ErrorModelLibrary::Simple; 
+	use types FGSErrorModelLibrary;
+  use behavior FGSErrorModelLibrary::Simple; 
 	error propagations
 	FromAP1Port: in propagation {NoValue};
 	FromAP2Port: in propagation {NoValue};
@@ -70,8 +70,8 @@ powersupply : requires bus access PowerSupply;
 Critical: mode;
 NonCritical: initial mode;
 annex emv2 {**
-	use types ErrorModelLibrary;
-  use behavior ErrorModelLibrary::ThreeState;
+	use types FGSErrorModelLibrary;
+  use behavior FGSErrorModelLibrary::ThreeState;
 	error propagations
 	inport: in propagation {NoValue};
 	outport : out propagation {NoValue};
@@ -108,8 +108,8 @@ end FGS.common;
 
 system implementation FGS.composite extends FGS.common
 annex emv2 {**
-  use types ErrorModelLibrary;        
-  use behavior ErrorModelLibrary::ThreeState;
+  use types FGSErrorModelLibrary;        
+  use behavior FGSErrorModelLibrary::ThreeState;
 composite error behavior 
  states
     [AP1.Operational and AP2.Operational
@@ -128,8 +128,8 @@ end FGS.composite;
 
 system implementation FGS.derive extends FGS.common
 annex emv2 {**
-  use types ErrorModelLibrary;        
-  use behavior ErrorModelLibrary::ThreeState;
+  use types FGSErrorModelLibrary;        
+  use behavior FGSErrorModelLibrary::ThreeState;
 component error behavior 
 transitions
 	Operational -[powersupply{NoService}]-> CriticalModeFailure;
@@ -143,8 +143,8 @@ end FGS.derive;
 
 bus PowerSupply
 annex emv2 {**
-	use types ErrorModelLibrary;
-  use behavior ErrorModelLibrary::Simple;        
+	use types FGSErrorModelLibrary;
+  use behavior FGSErrorModelLibrary::Simple;        
 	error propagations
 	access: out propagation {NoService};
 	flows
@@ -160,8 +160,8 @@ end PowerSupply;
 
 bus EtherSwitch
 annex emv2 {**
-	use types ErrorModelLibrary;
-  use behavior ErrorModelLibrary::Simple;        
+	use types FGSErrorModelLibrary;
+  use behavior FGSErrorModelLibrary::Simple;        
 	error propagations
 	bindings: out propagation {NoService};
 	flows
