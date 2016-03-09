@@ -1,0 +1,16 @@
+package AFGErrorLibrary
+public
+annex EMV2 {**
+	error types extends ErrorLibrary with
+		NoValue renames type ServiceOmission;
+		NoService renames type ServiceOmission;
+	end types;
+
+error behavior ThreeState
+states
+  Operational: initial state; 
+  NonCriticalModeFailure: state; 
+  CriticalModeFailure: state; 
+end behavior;
+**};
+end AFGErrorLibrary;

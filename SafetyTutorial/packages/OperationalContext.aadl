@@ -1,0 +1,20 @@
+package OperationalContext
+public
+	with GPSSystem, AutomatedFlightGuidance;
+with FlightControl;
+	system FlightSystem
+	features
+	pilotInput: in data port;
+	end FlightSystem;
+	
+	system implementation FlightSystem.impl
+	subcomponents
+		gps: system GPSSystem::GPS;
+		autoFlightGuidance: system AutomatedFlightGuidance::AutomatedFlightGuidance;
+		flightControl: system FlightControl::FlightControl;
+	connections
+		gpstoafg: port gps.location -> autoFlightGuidance.position;
+		afgtofc: port autoFlightGuidance.AFGOutput -> flightControl.guidanceCommands;
+		pilottoafg: port pilotInput -> autoFlightGuidance.operatorCommand;
+	end FlightSystem.impl;
+end OperationalContext;

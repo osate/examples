@@ -1,11 +1,12 @@
 package GPSParts
 public
+	with HardwareParts;
 		
 Device sensor
 features
 	sensedData: out data port;
-	networkaccess: requires bus access Network;
-	powersource: in feature ;
+	networkaccess: requires bus access HardwareParts::Network;
+	powersource: in feature HardwareParts::ElectricalPower;
 	annex EMV2 {**
 		use types ErrorLibrary, GPSErrorLibrary;
 		error propagations
@@ -57,81 +58,6 @@ features
 		end component;
 	**};
 	end sensor_recovery;
-	
-	processor CPU
-		features
-			powersource: in feature;
-			networkaccess: requires bus access Network;
-	annex EMV2 {**
-		use types ErrorLibrary,GPSErrorLibrary;
-		error propagations
-			bindings: out propagation {ServiceOmission};
-			powersource: in propagation {ServiceOmission};
-			networkaccess: out propagation {ServiceOmission};
-			networkaccess: in propagation {ServiceOmission};
-		flows
-			cpu_es1: error source bindings {ServiceOmission} when {CPUFailure};
-			-- network fails if processor fails since it is driven by processor
-			cpu_es2: error source networkaccess {ServiceOmission} when {CPUFailure};
-		end propagations;
-	**};
-	end CPU;
-	
-	processor CPU_errorbehavior extends CPU
-	 annex EMV2 {**
-		use types ErrorLibrary,GPSErrorLibrary;
-	 	use behavior ErrorLibrary::FailStop;
-	 	component error behavior
-		events
-		-- we override Failure to associate an error type with the event
-		 Failure: error event {CPUFailure};
-		propagations
-		FailStop -[]-> bindings{ServiceOmission};
-		FailStop -[]-> networkaccess{ServiceOmission};
-	 	end component;
-	 **};
-	end CPU_errorbehavior;
-
-	
-	bus Network
-		features
-			power: in feature;
-	annex EMV2 {**
-		use types ErrorLibrary,GPSErrorLibrary;
-		use behavior ErrorLibrary::FailStop;
-		error propagations
-		bindings: out propagation {ServiceOmission};
-		power: in propagation {ServiceOmission};
-		access: in propagation {ServiceOmission};
-		access: out propagation {ServiceOmission};
-		flows
-			cpu_es: error path access{ServiceOmission} -> bindings {ServiceOmission} ;
-			power_es: error path power{ServiceOmission} -> bindings {ServiceOmission} ;
-			own_es: error source bindings {ServiceOmission} when {NetworkFailure};
-		end propagations;
-	**};
-	end Network;
-	
-	device PowerSupply
-	features
-		power: out feature;
-	annex EMV2 {**
-		use types ErrorLibrary,GPSErrorLibrary;
-		use behavior ErrorLibrary::FailStop;
-		error propagations
-		power: out propagation {ServiceOmission};
-		flows
-			cpu_es: error source power {ServiceOmission} when {PowerSupplyFailure};
-		end propagations;
-	 	component error behavior
-		events
-		-- we override Failure to associate an error type with the event
-		 Failure: error event {PowerSupplyFailure};
-		propagations
-		FailStop -[]-> power{ServiceOmission};
-	 	end component;
-	**};
-	end PowerSupply;
 	
 	abstract GPSProcessing
 	features

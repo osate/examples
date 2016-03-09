@@ -1,0 +1,26 @@
+package FlightControl
+public
+
+system FlightControl
+features
+guidanceCommands: in data port;
+flightSurfaceControl: out feature;
+annex emv2 {**
+	use types AFGErrorLibrary;
+  use behavior ErrorLibrary::FailStop;        
+	error propagations
+	flightSurfaceControl: out propagation {NoService};
+	guidanceCommands: in propagation {NoService};
+	flows
+	fces: error source flightSurfaceControl;
+	fgtofc: error path guidanceCommands -> flightSurfaceControl;
+	end propagations;
+	
+component error behavior
+    propagations  
+       FailStop-[]->flightSurfaceControl{NoService};
+   end component; 
+	**};
+end FlightControl;
+
+end FlightControl;

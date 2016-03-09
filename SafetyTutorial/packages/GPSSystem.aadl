@@ -1,6 +1,7 @@
 package GPSSystem
 public
 	with GPSParts;
+	with HardwareParts;
 	
 	system GPS
 	features
@@ -11,9 +12,9 @@ public
 		subcomponents
 			sensor1: device GPSParts::sensor_errorbehavior;
 			sensor2: device GPSParts::sensor_errorbehavior;
-			cpu: processor GPSParts::CPU_errorbehavior;
-			network: bus GPSParts::Network;
-			powersupply1: device GPSParts::PowerSupply;
+			cpu: processor HardwareParts::CPU_errorbehavior;
+			network: bus HardwareParts::Network;
+			powersupply1: device HardwareParts::PowerSupply;
 	annex EMV2 {**
 		use types ErrorLibrary, GPSErrorLibrary;
 		use behavior GPSErrorLibrary::FailStopState;
@@ -38,9 +39,9 @@ public
 			sensor1: device GPSParts::sensor_errorbehavior;
 			sensor2: device GPSParts::sensor_errorbehavior;
 			processing: abstract GPSParts::GPSProcessing_errorbehavior;
-			cpu1: processor GPSParts::CPU_errorbehavior;
-			network: bus GPSParts::Network;
-			powersupply1: device GPSParts::PowerSupply;
+			cpu1: processor HardwareParts::CPU_errorbehavior;
+			network: bus HardwareParts::Network;
+			powersupply1: device HardwareParts::PowerSupply;
 		connections
 			-- logical connections
 			s1toproc: port sensor1.sensedData -> processing.inSensor1;
@@ -113,10 +114,10 @@ public
 			processing1: abstract GPSParts::GPSProcessing_errorbehavior;
 			processing2: abstract GPSParts::GPSProcessing_errorbehavior;
 			voter: abstract GPSParts::GPSVoter;
-			cpu1: processor GPSParts::CPU_errorbehavior;
-			network: bus GPSParts::Network;
-			powersupply1: device GPSParts::PowerSupply;
-			cpu2: processor GPSParts::CPU_errorbehavior;
+			cpu1: processor HardwareParts::CPU_errorbehavior;
+			network: bus HardwareParts::Network;
+			powersupply1: device HardwareParts::PowerSupply;
+			cpu2: processor HardwareParts::CPU_errorbehavior;
 		connections
 			-- logical connections
 			s1toproc2: port sensor1.sensedData -> processing2.inSensor1;
