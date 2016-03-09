@@ -1,5 +1,6 @@
 package HardwareParts
 public
+with EMV2;
 		
 	processor CPU
 		features
@@ -54,25 +55,28 @@ public
 		end propagations;
 	**};
 	end Network;
-	
+
 	device PowerSupply
 	features
-		power: out feature ElectricalPower;
+		power: out feature;
 	annex EMV2 {**
 		use types ErrorLibrary,GPSErrorLibrary;
 		use behavior ErrorLibrary::FailStop;
 		error propagations
-		power: out propagation {ServiceOmission};
+			power: out propagation {ServiceOmission};
 		flows
 			cpu_es: error source power {ServiceOmission} when {PowerSupplyFailure};
 		end propagations;
 	 	component error behavior
 		events
 		-- we override Failure to associate an error type with the event
-		 Failure: error event {PowerSupplyFailure};
+		 	Failure: error event {PowerSupplyFailure};
 		propagations
-		FailStop -[]-> power{ServiceOmission};
+			FailStop -[]-> power{ServiceOmission};
 	 	end component;
+		properties
+			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.5e-5 ; Distribution => Poisson;] applies to cpu_es.ServiceOmission;
+			
 	**};
 	end PowerSupply;
 	

@@ -1,7 +1,6 @@
 --BLESS_Properties.aadl
 
 property set BLESS_Properties is
-  with AADL_Project;
   Supported_Operators : list of aadlstring applies to ( data );
     --used to define arithmetic operator symbols supported by a type
   Supported_Relations : list of aadlstring applies to ( data );

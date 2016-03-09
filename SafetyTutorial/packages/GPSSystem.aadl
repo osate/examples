@@ -106,6 +106,49 @@ public
 			Actual_Connection_Binding => (reference (network)) applies to s2toproc;
 --			Actual_Connection_Binding => (reference (network)) applies to proctoext;
 	end GPS.CEBound;
+
+	system implementation GPS.single 
+		subcomponents
+			sensor1: device GPSParts::sensor_errorbehavior;
+			sensor2: device GPSParts::sensor_errorbehavior;
+			processing1: abstract GPSParts::GPSProcessing_errorbehavior;
+			voter: abstract GPSParts::GPSVoter;
+			cpu1: processor HardwareParts::CPU_errorbehavior;
+			network: bus HardwareParts::Network;
+			powersupply1: device HardwareParts::PowerSupply;
+			cpu2: processor HardwareParts::CPU_errorbehavior;
+		connections
+			-- logical connections
+			s1toproc: port sensor1.sensedData -> processing1.inSensor1;
+			s2toproc: port sensor2.sensedData -> processing1.inSensor2;
+			proc1tovoter1: port processing1.location -> voter.in1;
+			proc1tovoter2: port processing1.location -> voter.in2;
+			votertoext: port voter.outp -> location;
+			-- physical network connections
+			s1tonetwork: bus access sensor1.networkaccess <-> network;
+			s2tonetwork: bus access sensor2.networkaccess <-> network;
+			cpu1tonetwork: bus access cpu1.networkaccess <-> network;
+			cpu2tonetwork: bus access cpu2.networkaccess <-> network;
+			-- power connections
+			powertos1: feature powersupply1.power -> sensor1.powersource ;
+			powertos2: feature powersupply1.power -> sensor2.powersource ;
+			powertocpu: feature powersupply1.power -> cpu1.powersource ;
+		properties
+			Actual_Processor_Binding => (reference (cpu1)) applies to processing1;
+			Actual_Processor_Binding => (reference (cpu1)) applies to voter;
+			Actual_Connection_Binding => (reference (network)) applies to s1toproc;
+			Actual_Connection_Binding => (reference (network)) applies to s2toproc;
+			Actual_Connection_Binding => (reference (network)) applies to proc1tovoter1;
+			Actual_Connection_Binding => (reference (network)) applies to proc1tovoter2;
+		annex EMV2 {**
+			use types ErrorLibrary, GPSErrorLibrary;
+			use behavior GPSErrorLibrary::FailStopState;
+			composite error behavior
+			states
+				FTAStart: [processing1.FailStop]-> FailStop;
+			end composite;
+		**};
+	end gps.single;
 	
 	system implementation GPS.Dual 
 		subcomponents
@@ -144,6 +187,14 @@ public
 			Actual_Connection_Binding => (reference (network)) applies to s2toproc;
 			Actual_Connection_Binding => (reference (network)) applies to proc1tovoter;
 			Actual_Connection_Binding => (reference (network)) applies to proc2tovoter;
+		annex EMV2 {**
+			use types ErrorLibrary, GPSErrorLibrary;
+			use behavior GPSErrorLibrary::FailStopState;
+			composite error behavior
+			states
+				FTAStart: [processing1.FailStop and processing2.Failstop]-> FailStop;
+			end composite;
+		**};
 	end GPS.Dual;
 
 end GPSSystem;

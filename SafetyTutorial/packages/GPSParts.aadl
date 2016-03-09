@@ -1,6 +1,6 @@
 package GPSParts
 public
-	with HardwareParts;
+	with HardwareParts, emv2;
 		
 Device sensor
 features
@@ -17,8 +17,12 @@ features
 			-- in this abstraction we have the error source as contributor and the incoming power propagation.
 			src1: error source sensedData{ServiceOmission} when {SensorFailure};
 			src2: error path networkaccess{ServiceOmission} -> sensedData{ServiceOmission};
-			path1: error path powersource -> sensedData;
+			path1: error path powersource{ServiceOmission} -> sensedData{ServiceOmission};
 		end propagations;
+		properties
+			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.5e-5 ; Distribution => Poisson;] applies to src1.ServiceOmission;
+			emv2::OccurrenceDistribution => [ ProbabilityValue => 3.5e-5 ; Distribution => Poisson;] applies to networkaccess.ServiceOmission;
+			emv2::OccurrenceDistribution => [ ProbabilityValue => 4.5e-5 ; Distribution => Poisson;] applies to powersource.ServiceOmission;
 	**};
 	end sensor;
 	
@@ -34,9 +38,9 @@ Device sensor_errorbehavior extends sensor
 		 -- transition elaborates error path path1 into an effect on the error state FailStop.
 		 -- FailStop is propagated as specified by outprop. Its contributors are the Failure event and the incoming power failure.
 		transitions
-		powerfail: Operational -[powersource{ServiceOmission}]-> FailStop;
+			powerfail: Operational -[powersource{ServiceOmission}]-> FailStop;
 		propagations
-		outprop1: FailStop -[]-> sensedData{ServiceOmission};
+			outprop1: FailStop -[]-> sensedData{ServiceOmission};
 		end component;
 	**};
 	end sensor_errorbehavior;
@@ -71,10 +75,10 @@ features
 		inSensor2 : in propagation {ServiceOmission};
 		location : out propagation {ServiceOmission, LowPrecisionData};
 		processor: in propagation {ServiceOmission};
-		flows
-			s1toloc: error path inSensor1 -> location;
-			s2toloc: error path inSensor2 -> location;
-			ptoloc: error path processor -> location;
+		flows 
+			s1toloc: error path inSensor1{ServiceOmission} -> location{ServiceOmission};
+			s2toloc: error path inSensor2{ServiceOmission} -> location{ServiceOmission};
+			ptoloc: error path processor{ServiceOmission} -> location{ServiceOmission};
 		end propagations;
 	**};
 	end GPSProcessing;
