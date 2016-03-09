@@ -7,8 +7,12 @@ public
 		CPUFailure: type;
 		PowerSupplyFailure: type;
 		NetworkFailure: type;
+		-- low precision when GPS operates with one sensor only
 		LowPrecisionData: type;
-		GPSProcessingFailedStates: type set {ServiceOmission, LowPrecisionData};
+		-- incorrect data if there is a computing error in the algorithm
+		IncorrectData: type;
+		ObservableGPSErrorTypes: type set {ServiceOmission, LowPrecisionData,IncorrectData};
+		ErraticBehavior: type; -- FlightSystem error propagation type
 		end types;
 -- state machine for simple FailStop behavior
 error behavior FailStopState
@@ -19,7 +23,7 @@ end behavior ;
 error behavior GPSFailed
 states
 	Operational : initial state ;
-	Failed : state {GPSProcessingFailedStates};
+	Failed : state {ObservableGPSErrorTypes};
 end behavior ;
 	**};
 end GPSErrorLibrary;

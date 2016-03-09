@@ -18,6 +18,10 @@ with EMV2;
 			-- network fails if processor fails since it is driven by processor
 			cpu_es2: error source networkaccess {ServiceOmission} when {CPUFailure};
 		end propagations;
+		properties
+			-- these properties should be consistent with the ones in CPU_errorbehavior
+			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.5e-5 ; Distribution => Poisson;] applies to cpu_es1.ServiceOmission;
+			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.5e-5 ; Distribution => Poisson;] applies to cpu_es2.ServiceOmission;
 	**};
 	end CPU;
 	
@@ -33,6 +37,8 @@ with EMV2;
 		FailStop -[]-> bindings{ServiceOmission};
 		FailStop -[]-> networkaccess{ServiceOmission};
 	 	end component;
+		properties
+			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.5e-5 ; Distribution => Poisson;] applies to Failure;
 	 **};
 	end CPU_errorbehavior;
 
@@ -53,6 +59,8 @@ with EMV2;
 			power_es: error path power{ServiceOmission} -> bindings {ServiceOmission} ;
 			own_es: error source bindings {ServiceOmission} when {NetworkFailure};
 		end propagations;
+		properties
+			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.5e-5 ; Distribution => Poisson;] applies to Failure;
 	**};
 	end Network;
 
@@ -76,6 +84,7 @@ with EMV2;
 	 	end component;
 		properties
 			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.5e-5 ; Distribution => Poisson;] applies to cpu_es.ServiceOmission;
+			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.5e-5 ; Distribution => Poisson;] applies to Failure;
 			
 	**};
 	end PowerSupply;

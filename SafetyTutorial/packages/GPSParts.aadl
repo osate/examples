@@ -73,7 +73,7 @@ features
 		error propagations
 		inSensor1 : in propagation {ServiceOmission};
 		inSensor2 : in propagation {ServiceOmission};
-		location : out propagation {ServiceOmission, LowPrecisionData};
+		location : out propagation {ServiceOmission, LowPrecisionData,IncorrectData};
 		processor: in propagation {ServiceOmission};
 		flows 
 			s1toloc: error path inSensor1{ServiceOmission} -> location{ServiceOmission};
@@ -122,12 +122,15 @@ features
 		events
 			computeError: error Event;
 		transitions
-			internal: Operational -[computeError]-> Failed{LowPrecisionData}; 
-			input: Operational -[inSensor1{ServiceOmission} and inSensor2{ServiceOmission}]-> Failed{ServiceOmission};
+			internal: Operational -[computeError]-> Failed{IncorrectData}; 
+			inputNoService: Operational -[inSensor1{ServiceOmission} and inSensor2{ServiceOmission}]-> Failed{ServiceOmission};
 		propagations
 			outcond1: Failed{ServiceOmission}-[]-> location{ServiceOmission};
 			outcond2: Failed{LowPrecisionData}-[]-> location{LowPrecisionData};
+			outcond3: Failed{IncorrectData}-[]-> location{IncorrectData};
 		end component;
+	properties
+		emv2::OccurrenceDistribution => [ ProbabilityValue => 7.5e-4 ; Distribution => Poisson;] applies to computeError;
 	**};
 	end GPSProcessing_computeError;
 	
@@ -139,9 +142,9 @@ features
 	annex EMV2 {**
 		use types ErrorLibrary, GPSErrorLibrary;
 		error propagations
-		in1 : in propagation {ServiceOmission,LowPrecisionData};
-		in2 : in propagation {ServiceOmission,LowPrecisionData};
-		outp : out propagation {ServiceOmission,LowPrecisionData};
+		in1 : in propagation {ObservableGPSErrorTypes};
+		in2 : in propagation {ObservableGPSErrorTypes};
+		outp : out propagation {ObservableGPSErrorTypes};
 		processor: in propagation {ServiceOmission};
 		flows
 			s1toloc: error path in1 -> outp;
@@ -149,12 +152,22 @@ features
 			ptoloc: error path processor -> outp;
 		end propagations;
 		component error behavior
+		events
+			computeError: error Event;
 		propagations
 			outcond: all-[(in1{ServiceOmission} and in2{ServiceOmission}) or processor{ServiceOmission}]-> outp{ServiceOmission};
 			outcondlow1: all-[in1{ServiceOmission} or in2{ServiceOmission} or
 				in1{LowPrecisionData} or in2{LowPrecisionData}
 			]-> outp{LowPrecisionData};
+			-- if we detect one incoming incorrect data we provide low precision data
+			-- it is low precision either because we provide a previous value
+			-- otherwise we would have to omit a value since the valu comparison does not tell us which one is incorrect.
+			outcondincorrect1: all-[in1{IncorrectData} or in2{IncorrectData} ]-> outp{LowPrecisionData};
+			-- if it is a symmetric value error comparison will not detect it
+			outcondincorrect2: all-[computeError or (in1{IncorrectData} and in2{IncorrectData}) ]-> outp{IncorrectData};
 		end component;
+	properties
+		emv2::OccurrenceDistribution => [ ProbabilityValue => 1.0e-6 ; Distribution => Poisson;] applies to computeError;
 	**};
 	end GPSVoter;
 	

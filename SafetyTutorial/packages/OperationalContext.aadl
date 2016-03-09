@@ -1,13 +1,39 @@
 package OperationalContext
 public
 	with GPSSystem, AutomatedFlightGuidance;
-with FlightControl;
+with FlightControl, EMV2;
+
 	system FlightSystem
 	features
 	pilotInput: in data port;
+	
+	annex EMV2 {**
+		use types ErrorLibrary, GPSErrorLibrary;
+		error propagations
+		pilotInput: in propagation {ObservableGPSErrorTypes};
+		ObservableFailure: out propagation {ServiceOmission, ErraticBehavior};
+		flows
+			GPSes: error source ObservableFailure{ObservableGPSErrorTypes};
+		end propagations;
+		propagation paths
+			ObservableFailure: propagation point;
+		end paths;
+		properties
+			-- here we express a requirement that GPS should not fail to provide service more than the specified probability
+			-- This should be met by the FTA based probability analysis.
+			emv2::OccurrenceDistribution => [ ProbabilityValue => 1.5e-5 ; Distribution => Poisson;] applies to ObservableFailure.ServiceOmission;
+			-- here we express a requirement that GPS should only operate in low precision according to the specified probability
+			-- This should be met by the FTA based probability analysis.
+			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.0e-4 ; Distribution => Poisson;] applies to ObservableFailure.ErraticBehavior;
+	**};
 	end FlightSystem;
 	
-	system implementation FlightSystem.impl
+	-- The tier1 configuration utilizes component specifications (types) only
+	-- It relies on the EMV2 information in the type, which represents an abstraction of the implementation fault model
+	-- In order to achieve the reliability required for the FlightSystem we calculate its failure occurrence probability
+	-- based on specified failure occurrences of the subsystems.
+	-- This leads to the (derived) requirement of GPS achieving the specified probability.
+	system implementation FlightSystem.tier1
 	subcomponents
 		gps: system GPSSystem::GPS;
 		autoFlightGuidance: system AutomatedFlightGuidance::AutomatedFlightGuidance;
@@ -16,5 +42,18 @@ with FlightControl;
 		gpstoafg: port gps.location -> autoFlightGuidance.position;
 		afgtofc: port autoFlightGuidance.AFGOutput -> flightControl.guidanceCommands;
 		pilottoafg: port pilotInput -> autoFlightGuidance.operatorCommand;
-	end FlightSystem.impl;
+	end FlightSystem.tier1;
+
+	system implementation FlightSystem.tier2
+	subcomponents
+		gps: system GPSSystem::GPS.CEBound;
+		autoFlightGuidance: system AutomatedFlightGuidance::AutomatedFlightGuidance.functional;
+		flightControl: system FlightControl::FlightControl;
+	connections
+		gpstoafg: port gps.location -> autoFlightGuidance.position;
+		afgtofc: port autoFlightGuidance.AFGOutput -> flightControl.guidanceCommands;
+		pilottoafg: port pilotInput -> autoFlightGuidance.operatorCommand;
+	end FlightSystem.tier2;
+
+
 end OperationalContext;
