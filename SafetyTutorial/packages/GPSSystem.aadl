@@ -2,30 +2,75 @@ package GPSSystem
 public
 	with GPSParts, HardwareParts, EMV2;
 	
+--	-- initially we focus on service failure
+--	-- 	This is reflected in only expressing ServiceOmission as propagation.
+--	system GPS_Failure
+--	features
+--		location: out data port;
+--	annex EMV2 {**
+--		use types ErrorLibrary, GPSErrorLibrary;
+--		error propagations
+--		location: out propagation {ServiceOmission};
+--		flows
+--			GPSes: error source location{ServiceOmission};
+--		end propagations;
+--		properties
+--			-- here we express a requirement that GPS should not fail to provide service more than the specified probability
+--			-- This should be met by the FTA based probability analysis.
+--			emv2::OccurrenceDistribution => [ ProbabilityValue => 1.5e-5 ; Distribution => Poisson;] applies to GPSes.ServiceOmission;
+--	**};
+--	end GPS_Failure;
+	
 	system GPS
 	features
 		location: out data port;
 	annex EMV2 {**
 		use types ErrorLibrary, GPSErrorLibrary;
 		error propagations
-		location: out propagation {ObservableGPSErrorTypes};
+		location: out propagation {ObservableErrorTypes};
 		flows
-			GPSes: error source location{ObservableGPSErrorTypes};
+			GPSes: error source location{ObservableErrorTypes};
 		end propagations;
 		properties
 			-- here we express a requirement that GPS should not fail to provide service more than the specified probability
 			-- This should be met by the FTA based probability analysis.
-			emv2::OccurrenceDistribution => [ ProbabilityValue => 1.5e-5 ; Distribution => Poisson;] applies to GPSes.ServiceOmission;
-			-- here we express a requirement that GPS should only operate in low precision accordin gto the specified probability
-			-- This should be met by the FTA based probability analysis.
-			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.0e-4 ; Distribution => Poisson;] applies to GPSes.LowPrecisionData;
+			emv2::OccurrenceDistribution => [ ProbabilityValue => 1.5e-7 ; Distribution => Poisson;] applies to GPSes.ServiceOmission;
+--        -- initial focus is on service failure
+--			-- here we express a requirement that GPS should only operate in low precision accordin gto the specified probability
+--			-- This should be met by the FTA based probability analysis.
+--			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.0e-4 ; Distribution => Poisson;] applies to GPSes.LowPrecisionData;
 	**};
 	end GPS;
 	
 	-- this is an early parts model without any connectivity between parts
-	-- system engineers make assumptions about the dual redundant nature of the sensors.
 	-- this is expressed in the composite state logic.
-	system implementation GPS.parts
+	-- Single sensor as physical system does not give us the reliability, thus, two sensor configuration
+	system implementation GPS.parts_SingleSensor
+		subcomponents
+			sensor1: device GPSParts::sensor;
+			cpu: processor HardwareParts::CPU_errorbehavior;
+			network: bus HardwareParts::Network;
+			powersupply1: device HardwareParts::PowerSupply;
+	annex EMV2 {**
+		use types ErrorLibrary, GPSErrorLibrary;
+		use behavior GPSErrorLibrary::FailStopState;
+		-- the logic includes knowledge of dual redundenacy of sensors
+		-- the logic is the fault tree equivalent of a RBD
+		-- when we add occursence probabilities we can calculate the failure rate of GPS
+		composite error behavior
+		states
+		[sensor1.FailStop or cpu.Failstop or network.FailStop or powersupply1.FailStop]-> FailStop;
+		end composite;
+	**};
+	end GPS.parts_SingleSensor;
+	
+	system implementation GPS.SingleSensorTransient extends GPS.parts_SingleSensor
+		subcomponents
+			sensor1: refined to device GPSParts::sensor_errorbehavior;
+	end GPS.SingleSensorTransient;
+
+	-- system engineers consider option of two sensors to increase GPS reliability.
+	system implementation GPS.parts_TwoSensor
 		subcomponents
 			sensor1: device GPSParts::sensor_errorbehavior;
 			sensor2: device GPSParts::sensor_errorbehavior;
@@ -43,7 +88,7 @@ public
 		[sensor1.FailStop and sensor2.FailStop or cpu.Failstop or network.FailStop or powersupply1.FailStop]-> FailStop;
 		end composite;
 	**};
-	end GPS.parts;
+	end GPS.parts_TwoSensor;
 
 	-- here we are interested in supporting inductive fault impact analysis from a single failure point
 	-- and deductive fault contributor analysis (FTA) of a critical effects 

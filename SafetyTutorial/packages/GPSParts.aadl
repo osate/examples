@@ -9,18 +9,21 @@ features
 	powersource: in feature HardwareParts::ElectricalPower;
 	annex EMV2 {**
 		use types ErrorLibrary, GPSErrorLibrary;
+		use behavior ErrorLibrary::FailStop;
 		error propagations
 			sensedData: out propagation {ServiceOmission};
 			powersource: in propagation {ServiceOmission};
 			networkaccess: in propagation {ServiceOmission};
 		flows
 			-- in this abstraction we have the error source as contributor and the incoming power propagation.
-			src1: error source sensedData{ServiceOmission} when {SensorFailure};
-			src2: error path networkaccess{ServiceOmission} -> sensedData{ServiceOmission};
-			path1: error path powersource{ServiceOmission} -> sensedData{ServiceOmission};
+			sensorfailsrc: error source sensedData{ServiceOmission} when {SensorFailure};
+			networkimpact: error path networkaccess{ServiceOmission} -> sensedData{ServiceOmission};
+			powerimpact: error path powersource{ServiceOmission} -> sensedData{ServiceOmission};
 		end propagations;
 		properties
-			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.5e-5 ; Distribution => Poisson;] applies to src1.ServiceOmission;
+			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.5e-5 ; Distribution => Poisson;] applies to sensorfailsrc.ServiceOmission;
+			-- probability that the sensor is in failstop. Should be consistent with error source probability
+			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.5e-5 ; Distribution => Poisson;] applies to FailStop;
 			emv2::OccurrenceDistribution => [ ProbabilityValue => 3.5e-5 ; Distribution => Poisson;] applies to networkaccess.ServiceOmission;
 			emv2::OccurrenceDistribution => [ ProbabilityValue => 4.5e-5 ; Distribution => Poisson;] applies to powersource.ServiceOmission;
 	**};
@@ -35,33 +38,18 @@ Device sensor_errorbehavior extends sensor
 		events
 		-- we override Failure to associate an error type with the event
 		 Failure: error event {SensorFailure};
-		 -- transition elaborates error path path1 into an effect on the error state FailStop.
-		 -- FailStop is propagated as specified by outprop. Its contributors are the Failure event and the incoming power failure.
 		transitions
-			powerfail: Operational -[powersource{ServiceOmission}]-> FailStop;
+		-- sensor failure may be transient. We assume a 20% persistent sesnor failure rate.
+			FailureTransition: Operational -[Failure]-> (FailStop with 0.2, Operational with 0.8);
 		propagations
-			outprop1: FailStop -[]-> sensedData{ServiceOmission};
+			SensorFailPropagation: FailStop -[]-> sensedData{ServiceOmission};
 		end component;
+		properties
+			-- failure probability on error event must be consistent with probability on error source
+			-- In our scenario the rate is higher, but transient errors are filtered out according to the transition specification
+			emv2::OccurrenceDistribution => [ ProbabilityValue => 1.0e-4 ; Distribution => Poisson;] applies to Failure.ServiceOmission;
 	**};
 	end sensor_errorbehavior;
-
--- for modeling availability by allowing recovery	
-Device sensor_recovery extends sensor_errorbehavior
-features
-	reset: in event port; -- initiate reset recovery, which may fail to complete
-	annex EMV2 {**
-		use types ErrorLibrary, GPSErrorLibrary;
-		use behavior ErrorLibrary::FailStop;
-		component error behavior
-		events
-			ResetEvent: recover event when reset;
-		transitions
-			-- reset will be successful with 0.8 probability, and fail with 0.2 probability
-			treset: FailStop -[ ResetEvent ]->
-			    (Operational with 0.8, FailStop with 0.2);
-		end component;
-	**};
-	end sensor_recovery;
 	
 	abstract GPSProcessing
 	features
@@ -142,9 +130,9 @@ features
 	annex EMV2 {**
 		use types ErrorLibrary, GPSErrorLibrary;
 		error propagations
-		in1 : in propagation {ObservableGPSErrorTypes};
-		in2 : in propagation {ObservableGPSErrorTypes};
-		outp : out propagation {ObservableGPSErrorTypes};
+		in1 : in propagation {GPSErrorLibrary::ObservableErrorTypes};
+		in2 : in propagation {GPSErrorLibrary::ObservableErrorTypes};
+		outp : out propagation {GPSErrorLibrary::ObservableErrorTypes};
 		processor: in propagation {ServiceOmission};
 		flows
 			s1toloc: error path in1 -> outp;

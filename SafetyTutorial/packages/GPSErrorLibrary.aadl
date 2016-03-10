@@ -11,7 +11,7 @@ public
 		LowPrecisionData: type;
 		-- incorrect data if there is a computing error in the algorithm
 		IncorrectData: type;
-		ObservableGPSErrorTypes: type set {ServiceOmission, LowPrecisionData,IncorrectData};
+		ObservableErrorTypes: type set {ServiceOmission, LowPrecisionData,IncorrectData};
 		ErraticBehavior: type; -- FlightSystem error propagation type
 		end types;
 -- state machine for simple FailStop behavior
@@ -23,7 +23,7 @@ end behavior ;
 error behavior GPSFailed
 states
 	Operational : initial state ;
-	Failed : state {ObservableGPSErrorTypes};
+	Failed : state {ObservableErrorTypes};
 end behavior ;
 	**};
 end GPSErrorLibrary;
