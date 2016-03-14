@@ -1,3 +1,6 @@
 /.aadlbin-gen/
 instances/
 /bin/
+*.emfta
+*.aird
+

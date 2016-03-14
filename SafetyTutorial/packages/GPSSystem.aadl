@@ -2,24 +2,6 @@ package GPSSystem
 public
 	with GPSParts, HardwareParts, EMV2;
 	
---	-- initially we focus on service failure
---	-- 	This is reflected in only expressing ServiceOmission as propagation.
---	system GPS_Failure
---	features
---		location: out data port;
---	annex EMV2 {**
---		use types ErrorLibrary, GPSErrorLibrary;
---		error propagations
---		location: out propagation {ServiceOmission};
---		flows
---			GPSes: error source location{ServiceOmission};
---		end propagations;
---		properties
---			-- here we express a requirement that GPS should not fail to provide service more than the specified probability
---			-- This should be met by the FTA based probability analysis.
---			emv2::OccurrenceDistribution => [ ProbabilityValue => 1.5e-5 ; Distribution => Poisson;] applies to GPSes.ServiceOmission;
---	**};
---	end GPS_Failure;
 	
 	system GPS
 	features
@@ -35,10 +17,6 @@ public
 			-- here we express a requirement that GPS should not fail to provide service more than the specified probability
 			-- This should be met by the FTA based probability analysis.
 			emv2::OccurrenceDistribution => [ ProbabilityValue => 1.5e-7 ; Distribution => Poisson;] applies to GPSes.ServiceOmission;
---        -- initial focus is on service failure
---			-- here we express a requirement that GPS should only operate in low precision accordin gto the specified probability
---			-- This should be met by the FTA based probability analysis.
---			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.0e-4 ; Distribution => Poisson;] applies to GPSes.LowPrecisionData;
 	**};
 	end GPS;
 	
@@ -48,7 +26,7 @@ public
 	system implementation GPS.parts_SingleSensor
 		subcomponents
 			sensor1: device GPSParts::sensor;
-			cpu: processor HardwareParts::CPU_errorbehavior;
+			cpu: processor HardwareParts::CPU;
 			network: bus HardwareParts::Network;
 			powersupply1: device HardwareParts::PowerSupply;
 	annex EMV2 {**
@@ -64,17 +42,31 @@ public
 	**};
 	end GPS.parts_SingleSensor;
 	
-	system implementation GPS.SingleSensorTransient extends GPS.parts_SingleSensor
+	system implementation GPS.SingleSensorTransient 
 		subcomponents
-			sensor1: refined to device GPSParts::sensor_errorbehavior;
+			sensor1: device GPSParts::sensor_transient;
+			cpu: processor HardwareParts::CPU;
+			network: bus HardwareParts::Network;
+			powersupply1: device HardwareParts::PowerSupply;
+	annex EMV2 {**
+		use types ErrorLibrary, GPSErrorLibrary;
+		use behavior GPSErrorLibrary::FailStopState;
+		-- the logic includes knowledge of dual redundenacy of sensors
+		-- the logic is the fault tree equivalent of a RBD
+		-- when we add occursence probabilities we can calculate the failure rate of GPS
+		composite error behavior
+		states
+		[sensor1.FailStop or cpu.Failstop or network.FailStop or powersupply1.FailStop]-> FailStop;
+		end composite;
+	**};
 	end GPS.SingleSensorTransient;
 
 	-- system engineers consider option of two sensors to increase GPS reliability.
 	system implementation GPS.parts_TwoSensor
 		subcomponents
-			sensor1: device GPSParts::sensor_errorbehavior;
-			sensor2: device GPSParts::sensor_errorbehavior;
-			cpu: processor HardwareParts::CPU_errorbehavior;
+			sensor1: device GPSParts::sensor;
+			sensor2: device GPSParts::sensor;
+			cpu: processor HardwareParts::CPU;
 			network: bus HardwareParts::Network;
 			powersupply1: device HardwareParts::PowerSupply;
 	annex EMV2 {**
@@ -93,17 +85,21 @@ public
 	-- here we are interested in supporting inductive fault impact analysis from a single failure point
 	-- and deductive fault contributor analysis (FTA) of a critical effects 
 	-- These analyses utilize propagation paths between components and error flows or component error behavior of components.
-	-- Starting points for fault impact analysis are error source declarations (or the equivalent in the component erro behavior specification
-	-- i.e., error events mapped into out propagations or transitioning error states, which in turn map into out propagations.
-	-- Starting point for fault contributor analysis is an error state of the GPS, or an outgoing error propagation.
+	-- Starting points for fault impact analysis are error source declarations.
+	-- Starting point for fault contributor analysis is an outgoing error propagation of the GPS.
 	-- Note that the redundancy logic is known to the processing unit as it decides what to do when sensor errors are propagated in.
+
 	-- In this configuration the processing software is assumed to have Zero defect, a common assumption made in reliability analysis.
+	-- It includes the error flow specification of GPSProcessing, which is unaware of the redundancy logic.
+	-- At this time the software is not bound to the hardware.
+	-- However, the sensors are connected to the network.
+	-- We also have power connections.
 	system implementation GPS.basic
 		subcomponents
-			sensor1: device GPSParts::sensor_errorbehavior;
-			sensor2: device GPSParts::sensor_errorbehavior;
-			processing: abstract GPSParts::GPSProcessing_errorbehavior;
-			cpu1: processor HardwareParts::CPU_errorbehavior;
+			sensor1: device GPSParts::sensor;
+			sensor2: device GPSParts::sensor;
+			processing: process GPSParts::GPSProcessing;
+			cpu1: processor HardwareParts::CPU;
 			network: bus HardwareParts::Network;
 			powersupply1: device HardwareParts::PowerSupply;
 		connections
@@ -112,44 +108,49 @@ public
 			s2toproc: port sensor2.sensedData -> processing.inSensor2;
 			proctoext: port processing.location -> location;
 			-- physical network connections
-			s1tonetwork: bus access sensor1.networkaccess <-> network;
-			s2tonetwork: bus access sensor2.networkaccess <-> network;
-			cputonetwork: bus access cpu1.networkaccess <-> network;
+			s1tonetwork: bus access sensor1.networkaccess <-> network.networkAccess;
+			s2tonetwork: bus access sensor2.networkaccess <-> network.networkAccess;
+			cputonetwork: bus access cpu1.networkaccess <-> network.networkAccess;
 			-- power connections
 			powertos1: feature powersupply1.power -> sensor1.powersource ;
 			powertos2: feature powersupply1.power -> sensor2.powersource ;
 			powertocpu: feature powersupply1.power -> cpu1.powersource ;
 	annex EMV2 {**
 		use types ErrorLibrary, GPSErrorLibrary;
-		use behavior GPSErrorLibrary::FailStopState;
 		component error behavior
 		-- mapping of GPS producing GPS output to the GPS out propagation
-		-- since it is a subcomponent single port connected to the GPS port, we could infer the mapping 
 		propagations
-		FTAStart1: all-[processing.location{ServiceOmission}]-> location;
+		FTANoServiceStart: all-[processing.location{ServiceOmission}]-> location{ServiceOmission};
 		end component;
-		composite error behavior
-		states
-		FTAStart2: [processing.FailStop]-> FailStop;
-		end composite;
 	**};
 	end GPS.basic;
+
+	-- Now with the GPSProcessing specification that includes the redundancy logic for the sensor inputs.
+	system implementation GPS.BasicRedundancy extends GPS.Basic
+		subcomponents
+			processing: refined to process GPSParts::GPSProcessing_redundancy;
+	end GPS.BasicRedundancy;
+
+	
+	-- here with the GPSProcessing specification that includes the redundancy logic for the sensor inputs via an error state.
+	-- Should produce the same fault tree as BasicRedundancy
+	system implementation GPS.BasicState extends GPS.basic
+		subcomponents
+			processing: refined to process GPSParts::GPSProcessing_redundancyState;
+	end GPS.BasicState;
 	
 	-- In this configuration we include software errors as compute errors that result in
 	system implementation GPS.computeerror extends GPS.basic
 		subcomponents
-			processing: refined to abstract GPSParts::GPSProcessing_computeError;
+			processing: refined to process GPSParts::GPSProcessing_computeError;
 		annex EMV2 {**
 		component error behavior
 		-- mapping of GPS producing GPS output to the GPS out propagation
 		-- since it is a subcomponent single port connected to the GPS port, we could infer the mapping 
 		propagations
-		FTAComputeErrorStart1: all-[processing.location{LowPrecisionData}]-> location{LowPrecisionData};
+		FTASingleSensorOperationStart: all-[processing.location{LowPrecisionData}]-> location{LowPrecisionData};
+		FTAComputeErrorStart: all-[processing.location{IncorrectData}]-> location{IncorrectData};
 		end component;
-		composite error behavior
-		states
-		FTAComputeErrorStart2: [processing.Failed{ServiceOmission}]-> FailStop;
-		end composite;
 		**};
 	end GPS.computeerror;
 	
@@ -158,7 +159,6 @@ public
 			Actual_Processor_Binding => (reference (cpu1)) applies to processing;
 			Actual_Connection_Binding => (reference (network)) applies to s1toproc;
 			Actual_Connection_Binding => (reference (network)) applies to s2toproc;
---			Actual_Connection_Binding => (reference (network)) applies to proctoext;
 	end GPS.BasicBound;
 	
 	system implementation GPS.CEBound extends GPS.computeerror
@@ -166,29 +166,28 @@ public
 			Actual_Processor_Binding => (reference (cpu1)) applies to processing;
 			Actual_Connection_Binding => (reference (network)) applies to s1toproc;
 			Actual_Connection_Binding => (reference (network)) applies to s2toproc;
---			Actual_Connection_Binding => (reference (network)) applies to proctoext;
 	end GPS.CEBound;
 	
 	system implementation GPS.Dual 
 		subcomponents
-			sensor1: device GPSParts::sensor_errorbehavior;
-			sensor2: device GPSParts::sensor_errorbehavior;
-			processing1: abstract GPSParts::GPSProcessing_errorbehavior;
-			processing2: abstract GPSParts::GPSProcessing_errorbehavior;
+			sensor1: device GPSParts::sensor;
+			sensor2: device GPSParts::sensor;
+			processing1: abstract GPSParts::GPSProcessing;
+			processing2: abstract GPSParts::GPSProcessing;
 			voter: abstract GPSParts::GPSVoter;
-			cpu1: processor HardwareParts::CPU_errorbehavior;
+			cpu1: processor HardwareParts::CPU;
 			network: bus HardwareParts::Network;
 			powersupply1: device HardwareParts::PowerSupply;
-			cpu2: processor HardwareParts::CPU_errorbehavior;
+			cpu2: processor HardwareParts::CPU;
 		connections
 			-- logical connections
 			s1toproc2: port sensor1.sensedData -> processing2.inSensor1;
 			s2toproc2: port sensor2.sensedData -> processing2.inSensor2;
-			proc2tovoter: port processing2.location -> voter.in1;
+			proc2tovoter: port processing2.location -> voter.inLocation1;
 			s1toproc: port sensor1.sensedData -> processing1.inSensor1;
 			s2toproc: port sensor2.sensedData -> processing1.inSensor2;
-			proc1tovoter: port processing1.location -> voter.in2;
-			votertoext: port voter.outp -> location;
+			proc1tovoter: port processing1.location -> voter.inLocation2;
+			votertoext: port voter.outLocation -> location;
 			-- physical network connections
 			s1tonetwork: bus access sensor1.networkaccess <-> network;
 			s2tonetwork: bus access sensor2.networkaccess <-> network;
@@ -218,12 +217,8 @@ public
 		end propagations;
 		component error behavior
 		propagations
-			FTAPropagationStart: all -[processing1.location{ServiceOmission}]-> location{ServiceOmission};
+			FTAPropagationStart: all -[voter.outLocation{ServiceOmission}]-> location{ServiceOmission};
 		end component;
-			composite error behavior
-			states
-				FTAStateStart: [processing1.FailStop and processing2.Failstop]-> FailStop;
-			end composite;
 		**};
 	end GPS.Dual;
 

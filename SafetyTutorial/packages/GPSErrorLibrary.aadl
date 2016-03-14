@@ -20,10 +20,23 @@ states
 	Operational : initial state ;
 	FailStop : state ;
 end behavior ;
-error behavior GPSFailed
+error behavior GPSProcessingFailed
 states
 	Operational : initial state ;
-	Failed : state {ObservableErrorTypes};
+	NoService : state ;
+	LowPrecision : state ;
+	Incorrect : state ;
+end behavior ;
+
+error behavior FailStopTransient
+events
+	Failure: error event;
+states
+	Operational : initial state ;
+	FailStop : state ;
+	transitions
+	-- sensor failure may be transient. We assume a 20% persistent sesnor failure rate.
+		FailureTransition: Operational -[Failure]-> (FailStop with 0.2, Operational with 0.8);
 end behavior ;
 	**};
 end GPSErrorLibrary;

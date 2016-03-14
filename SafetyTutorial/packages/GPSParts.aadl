@@ -2,6 +2,9 @@ package GPSParts
 public
 	with HardwareParts, emv2;
 		
+-- Has occurrence probability on error source for flow based FTA
+-- and on state for composite state FTA 
+-- The two values should be consistent 
 Device sensor
 features
 	sensedData: out data port;
@@ -21,36 +24,45 @@ features
 			powerimpact: error path powersource{ServiceOmission} -> sensedData{ServiceOmission};
 		end propagations;
 		properties
-			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.5e-5 ; Distribution => Poisson;] applies to sensorfailsrc.ServiceOmission;
-			-- probability that the sensor is in failstop. Should be consistent with error source probability
-			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.5e-5 ; Distribution => Poisson;] applies to FailStop;
-			emv2::OccurrenceDistribution => [ ProbabilityValue => 3.5e-5 ; Distribution => Poisson;] applies to networkaccess.ServiceOmission;
-			emv2::OccurrenceDistribution => [ ProbabilityValue => 4.5e-5 ; Distribution => Poisson;] applies to powersource.ServiceOmission;
+			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.5e-4 ; Distribution => Poisson;] applies to sensorfailsrc.ServiceOmission;
+			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.5e-4 ; Distribution => Poisson;] applies to Failure;
+-- These incoming propagation probabilities must be uuncommented to pick up failure probability of the power and network
+-- the EMFTA exporter at the moment does not handle acces well.
+--			emv2::OccurrenceDistribution => [ ProbabilityValue => 3.5e-5 ; Distribution => Poisson;] applies to networkaccess.ServiceOmission;
+--			emv2::OccurrenceDistribution => [ ProbabilityValue => 4.5e-5 ; Distribution => Poisson;] applies to powersource.ServiceOmission;
 	**};
 	end sensor;
 	
-Device sensor_errorbehavior extends sensor
--- we add component error behavior. In this case we introduce failure modes.
+-- Here we model transient and persistent failure behavior. 
+-- At the moment EMFTA exporter does not interpret transition branches, thus, does not pick up the correct value.
+Device sensor_transient 
+features
+	sensedData: out data port;
+	networkaccess: requires bus access HardwareParts::Network;
+	powersource: in feature HardwareParts::ElectricalPower;
 	annex EMV2 {**
---		use types ErrorLibrary, GPSErrorLibrary;
-		use behavior ErrorLibrary::FailStop;
+		use types ErrorLibrary, GPSErrorLibrary;
+		use behavior GPSErrorLibrary::FailStopTransient;
+		error propagations
+			sensedData: out propagation {ServiceOmission};
+			powersource: in propagation {ServiceOmission};
+			networkaccess: in propagation {ServiceOmission};
+		end propagations;
 		component error behavior
-		events
-		-- we override Failure to associate an error type with the event
-		 Failure: error event {SensorFailure};
-		transitions
-		-- sensor failure may be transient. We assume a 20% persistent sesnor failure rate.
-			FailureTransition: Operational -[Failure]-> (FailStop with 0.2, Operational with 0.8);
 		propagations
 			SensorFailPropagation: FailStop -[]-> sensedData{ServiceOmission};
 		end component;
 		properties
 			-- failure probability on error event must be consistent with probability on error source
 			-- In our scenario the rate is higher, but transient errors are filtered out according to the transition specification
-			emv2::OccurrenceDistribution => [ ProbabilityValue => 1.0e-4 ; Distribution => Poisson;] applies to Failure.ServiceOmission;
+			emv2::OccurrenceDistribution => [ ProbabilityValue => 1.0e-4 ; Distribution => Poisson;] applies to Failure;
 	**};
-	end sensor_errorbehavior;
+	end sensor_transient;
 	
+	-- This processing unit takes input from two sensors.
+	-- This original specification has flows only.
+	-- Therefore, the flow-based FTA generation does not understand the relation of the two sensor inputs.
+	-- The redundancy of the sensor input is specified in the extension below.
 	abstract GPSProcessing
 	features
 		inSensor1: in data port;
@@ -71,10 +83,11 @@ Device sensor_errorbehavior extends sensor
 	**};
 	end GPSProcessing;
 	
+	-- Here we use the OutGoingPropagationCondition to specify how the inputs map to the output (AND).
+	-- In this specification we have no error behavior states yet, since we are not looking at computational erros yet.
 	abstract GPSProcessing_redundancy extends GPSProcessing
-	-- specify sensor processing logic without an explicit error behavior state machine
-	-- in this case we just deal with the effects of redundant inputs.
 	annex EMV2 {**
+		use types ErrorLibrary, GPSErrorLibrary;
 		component error behavior
 		propagations
 			outcond: all-[inSensor1{ServiceOmission} and inSensor2{ServiceOmission}]-> location{ServiceOmission};
@@ -82,10 +95,10 @@ Device sensor_errorbehavior extends sensor
 	**};
 	end GPSProcessing_redundancy;
 	
-	abstract GPSProcessing_errorbehavior extends GPSProcessing_redundancy
 	-- specify sensor processing logic with an explicit error behavior state machine.
 	-- We need this if we want to identify the FTA source as state.
-	-- in this case we need to map both error events and incoming propagations into a state.
+	-- in this case we need to map incoming propagations into a state.
+	abstract GPSProcessing_redundancyState extends GPSProcessing
 	annex EMV2 {**
 		use types ErrorLibrary, GPSErrorLibrary;
 		use behavior GPSErrorLibrary::FailStopState;
@@ -96,63 +109,64 @@ Device sensor_errorbehavior extends sensor
 			outcond: FailStop-[]-> location{ServiceOmission};
 		end component;
 	**};
-	end GPSProcessing_errorbehavior;
+	end GPSProcessing_redundancyState;
 	
-	abstract GPSProcessing_computeError extends GPSProcessing_redundancy
+	abstract GPSProcessing_computeError extends GPSProcessing
 	-- specify sensor processing logic with an explicit error behavior state machine.
 	-- We need this if we want to identify the FTA source as state.
 	-- in this case we need to map both error events and incoming propagations into a state.
-	-- We use types on the Failed state to distinguish them.
 	annex EMV2 {**
 		use types ErrorLibrary, GPSErrorLibrary;
-		use behavior GPSErrorLibrary::GPSFailed;
+		use behavior GPSErrorLibrary::GPSProcessingFailed;
 		component error behavior
 		events
 			computeError: error Event;
 		transitions
-			internal: Operational -[computeError]-> Failed{IncorrectData}; 
-			inputNoService: Operational -[inSensor1{ServiceOmission} and inSensor2{ServiceOmission}]-> Failed{ServiceOmission};
+			internal: Operational -[computeError]-> Incorrect; 
+			inputNoService: Operational -[inSensor1{ServiceOmission} and inSensor2{ServiceOmission}]-> NoService;
+			inputNoService2: Incorrect -[inSensor1{ServiceOmission} and inSensor2{ServiceOmission}]-> NoService;
 		propagations
-			outcond1: Failed{ServiceOmission}-[]-> location{ServiceOmission};
-			outcond2: Failed{LowPrecisionData}-[]-> location{LowPrecisionData};
-			outcond3: Failed{IncorrectData}-[]-> location{IncorrectData};
+			outNoService: NoService-[]-> location{ServiceOmission};
+			outLowPrecision: Operational-[inSensor1{ServiceOmission} or inSensor2{ServiceOmission}]-> location{LowPrecisionData};
+			outComputeErrorEfect: Incorrect-[]-> location{IncorrectData};
 		end component;
 	properties
 		emv2::OccurrenceDistribution => [ ProbabilityValue => 7.5e-4 ; Distribution => Poisson;] applies to computeError;
 	**};
 	end GPSProcessing_computeError;
 	
+	-- This is a voter if the flight system is designed to use two instances of a GPS in order to achieve the desired reliability.
 	abstract GPSVoter 
 		features
-			in1: in data port;
-			in2: in data port;
-			outp: out data port;
+			inLocation1: in data port;
+			inLocation2: in data port;
+			outLocation: out data port;
 	annex EMV2 {**
 		use types ErrorLibrary, GPSErrorLibrary;
 		error propagations
-		in1 : in propagation {GPSErrorLibrary::ObservableErrorTypes};
-		in2 : in propagation {GPSErrorLibrary::ObservableErrorTypes};
-		outp : out propagation {GPSErrorLibrary::ObservableErrorTypes};
+		inLocation1 : in propagation {GPSErrorLibrary::ObservableErrorTypes};
+		inLocation2 : in propagation {GPSErrorLibrary::ObservableErrorTypes};
+		outLocation : out propagation {GPSErrorLibrary::ObservableErrorTypes};
 		processor: in propagation {ServiceOmission};
 		flows
-			s1toloc: error path in1 -> outp;
-			s2toloc: error path in2 -> outp;
-			ptoloc: error path processor -> outp;
+			s1toloc: error path inLocation1 -> outLocation;
+			s2toloc: error path inLocation2 -> outLocation;
+			ptoloc: error path processor -> outLocation;
 		end propagations;
 		component error behavior
 		events
 			computeError: error Event;
 		propagations
-			outcond: all-[(in1{ServiceOmission} and in2{ServiceOmission}) or processor{ServiceOmission}]-> outp{ServiceOmission};
-			outcondlow1: all-[in1{ServiceOmission} or in2{ServiceOmission} or
-				in1{LowPrecisionData} or in2{LowPrecisionData}
-			]-> outp{LowPrecisionData};
+			outcond: all-[(inLocation1{ServiceOmission} and inLocation2{ServiceOmission}) or processor{ServiceOmission}]-> outLocation{ServiceOmission};
+			outcondlow1: all-[inLocation1{ServiceOmission} or inLocation2{ServiceOmission} or
+				inLocation1{LowPrecisionData} or inLocation2{LowPrecisionData}
+			]-> outLocation{LowPrecisionData};
 			-- if we detect one incoming incorrect data we provide low precision data
 			-- it is low precision either because we provide a previous value
 			-- otherwise we would have to omit a value since the valu comparison does not tell us which one is incorrect.
-			outcondincorrect1: all-[in1{IncorrectData} or in2{IncorrectData} ]-> outp{LowPrecisionData};
+			outcondincorrect1: all-[inLocation1{IncorrectData} or inLocation2{IncorrectData} ]-> outLocation{LowPrecisionData};
 			-- if it is a symmetric value error comparison will not detect it
-			outcondincorrect2: all-[computeError or (in1{IncorrectData} and in2{IncorrectData}) ]-> outp{IncorrectData};
+			outcondincorrect2: all-[computeError or (inLocation1{IncorrectData} and inLocation2{IncorrectData}) ]-> outLocation{IncorrectData};
 		end component;
 	properties
 		emv2::OccurrenceDistribution => [ ProbabilityValue => 1.0e-6 ; Distribution => Poisson;] applies to computeError;

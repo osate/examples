@@ -3,7 +3,11 @@ public
 with HardwareParts;
 with EMV2;
 
-system FlightGuidance
+-- Flight guidance is an abstract system 
+-- We may later decide to turn it into a software component that needs to bound to a processor.
+-- We represents its failure potential by a error behavior state machine with
+-- an occurrence probability on the error event.
+abstract FlightGuidance
 features
 InPort: in data port;
 OutPort: out data port;
@@ -23,7 +27,11 @@ annex emv2 {**
    **};
 end FlightGuidance;
 
-system AutoPilot
+-- Autopilot is an abstract system 
+-- We may later decide to turn it into a software component that needs to bound to a processor.
+-- We represents its failure potential by a error behavior state machine with
+-- an occurrence probability on the error event.
+abstract AutoPilot
 features
 InPort: in data port;
 OutPort: out data port;
@@ -45,7 +53,10 @@ component error behavior
 	**};
 end AutoPilot;
 
-system AFGVoter
+-- The voter will be used in a configuration that replicates the flight guidance Autopilot pair 
+-- the idea is to illustrate replicated channels and their allocation
+-- to a two processor or three processor platform, which affects their reliability figures.
+abstract AFGVoter
 features
 FromAP1Port: in data port;
 FromAP2Port: in data port;
@@ -68,6 +79,10 @@ component error behavior
 end AFGVoter;
 
 
+-- This is the system that takes GPS input and provides automated flight guidance.
+-- In a manual  mode the pilot flies the aircraft directly.
+-- thus, auto flight guidance operation can have a lower reliability target, since the
+-- pilot is typically considered to be a reliable backup.
 system AutomatedFlightGuidance
 features
 position : in data port;
@@ -91,22 +106,19 @@ annex emv2 {**
 	properties
 	-- We specify the failure rate of AFG as the error source.
 	-- external impact is accounted for separately.
-	emv2::OccurrenceDistribution => [ ProbabilityValue => 1.0e-9 ; Distribution => Poisson;] applies to AFGOutput.NoValue;
+	emv2::OccurrenceDistribution => [ ProbabilityValue => 1.0e-9 ; Distribution => Poisson;] applies to esource.Novalue;
 	**};
 end AutomatedFlightGuidance;
 
+-- This is a functional implementation 
 system implementation AutomatedFlightGuidance.functional
 subcomponents
 AutoPilot: system AutoPilot;
 FlightGuidance: system FlightGuidance;
-network: bus HardwareParts::Network;
 connections
 AFGtoFG: port position -> FlightGuidance.inport;
 FGtoAP: port FlightGuidance.outport -> AutoPilot.inport;
 APtoAFG: port AutoPilot.outport -> AFGOutput;
-properties
-Actual_Connection_Binding => (reference (network)) 
-  applies to AFGtoFG,FGtoAP,APtoAFG;
 annex emv2 {**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
 	use types AFGErrorLibrary;
   use behavior ErrorLibrary::FailStop;        
@@ -122,5 +134,8 @@ component error behavior
    end component;**};
 end AutomatedFlightGuidance.functional;
 
+-- to come: an implementation with a hardware platform
+-- and a dual channel implementation.
+-- This is to show the same points as the DualFGS example.
 
 end AutomatedFlightGuidance;
