@@ -10,14 +10,25 @@ flightSurfaceControl: out data port;
 annex emv2 {**
 	use types AFGErrorLibrary;
  	error propagations
-	flightSurfaceControl: out propagation {NoService};
-	guidanceCommands: in propagation {NoService};
+	flightSurfaceControl: out propagation {NoService,ErraticBehavior};
+	guidanceCommands: in propagation {NoService,ErraticValue};
 	flows
 	fces: error source flightSurfaceControl{NoService};
-	fgtofc: error path guidanceCommands{NoService} -> flightSurfaceControl{NoService};
+	fgtofcNo: error path guidanceCommands{NoService} -> flightSurfaceControl{NoService};
+	fgtofcErratic: error path guidanceCommands{ErraticValue} -> flightSurfaceControl{ErraticBehavior};
 	end propagations;
 	
 	properties
+	EMV2::hazards => 
+	([	crossreference => "1.1.2";
+		failure => "Loss of flight control";
+		phases => ("all");
+		severity => ARP4761::Hazardous;
+		likelihood => ARP4761::Remote;
+		description => "Loss of flight control leads to non-operational flight surface";
+		comment => "Becomes critical hazard.";
+			])
+			applies to fces;
 	-- Here we express the failure rate of the flight control unit itself through the eror source.
 	emv2::OccurrenceDistribution => [ ProbabilityValue => 0.7e-9 ; Distribution => Poisson;] applies to fces;
 	**};

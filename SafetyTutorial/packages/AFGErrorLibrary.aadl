@@ -4,6 +4,10 @@ annex EMV2 {**
 	error types extends ErrorLibrary with
 		NoValue renames type ServiceOmission;
 		NoService renames type ServiceOmission;
+		ErraticBehavior: type; -- FlightSystem error propagation type
+		NoPilotInput: type;
+		ErraticPilotInput: type;
+		ErraticValue: type;
 	end types;
 
 error behavior ThreeState

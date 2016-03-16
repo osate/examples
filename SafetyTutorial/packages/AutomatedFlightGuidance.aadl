@@ -94,19 +94,31 @@ annex emv2 {**
   use behavior ErrorLibrary::FailStop;
 	error propagations
 	position: in propagation {NoValue};
-	operatorCommand: in propagation {NoValue};
-	AFGOutput : out propagation {NoValue};
+	operatorCommand: in propagation {NoPilotInput,ErraticPilotInput};
+	AFGOutput : out propagation {NoValue,ErraticValue};
 	powersupply: in propagation {NoService};
 	flows
-	esource: error source AFGOutput{NoValue} ;
+	AFGsource: error source AFGOutput{NoValue} ;
 	-- fault tree to reflect FGS as error source.
-	ePath: error path position{NoValue} -> AFGOutput{NoValue};
+	GPSPath: error path position{NoValue} -> AFGOutput{NoValue};
+	NoPilotPath: error path operatorCommand{NoPilotInput} -> AFGOutput{NoValue};
+	ErraticPilotPath: error path operatorCommand{ErraticPilotInput} -> AFGOutput{ErraticValue};
 	epPower: error path powersupply{NoService} -> AFGOutput{NoValue};
 	end propagations;
 	properties
+	EMV2::hazards => 
+	([	crossreference => "1.1.3";
+		failure => "Loss of automated flight guidance";
+		phases => ("all");
+		severity => ARP4761::Major;
+		likelihood => ARP4761::Remote;
+		description => "Loss of automated flight guidance leads to manual flight control.";
+		comment => "This becomes major hazard in critical flight situations.";
+			])
+			applies to AFGsource;
 	-- We specify the failure rate of AFG as the error source.
 	-- external impact is accounted for separately.
-	emv2::OccurrenceDistribution => [ ProbabilityValue => 1.0e-9 ; Distribution => Poisson;] applies to esource.Novalue;
+	emv2::OccurrenceDistribution => [ ProbabilityValue => 1.0e-9 ; Distribution => Poisson;] applies to AFGsource.Novalue;
 	**};
 end AutomatedFlightGuidance;
 

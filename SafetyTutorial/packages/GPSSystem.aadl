@@ -13,10 +13,20 @@ public
 		flows
 			GPSes: error source location{ObservableErrorTypes};
 		end propagations;
-		properties
+	properties
+	EMV2::hazards => 
+	([	crossreference => "1.1.1";
+		failure => "Loss of GPS locations";
+		phases => ("all");
+		severity => ARP4761::Hazardous;
+		likelihood => ARP4761::Remote;
+		description => "No position readings due to GPS failure";
+		comment => "Becomes critical hazard, if no redundant GPS";
+			])
+			applies to GPSes;
 			-- here we express a requirement that GPS should not fail to provide service more than the specified probability
 			-- This should be met by the FTA based probability analysis.
-			emv2::OccurrenceDistribution => [ ProbabilityValue => 1.5e-7 ; Distribution => Poisson;] applies to GPSes.ServiceOmission;
+	emv2::OccurrenceDistribution => [ ProbabilityValue => 1.5e-7 ; Distribution => Poisson;] applies to GPSes.ServiceOmission;
 	**};
 	end GPS;
 	
@@ -42,6 +52,10 @@ public
 	**};
 	end GPS.parts_SingleSensor;
 	
+		-- the logic includes knowledge of dual redundency of sensors
+		-- the logic is the fault tree equivalent of a RBD
+		-- when we add occurrence probabilities we can calculate the failure rate of GPS
+	-- This logic is not yet interpreted correctly when generating emfta files.
 	system implementation GPS.SingleSensorTransient 
 		subcomponents
 			sensor1: device GPSParts::sensor_transient;
@@ -51,9 +65,6 @@ public
 	annex EMV2 {**
 		use types ErrorLibrary, GPSErrorLibrary;
 		use behavior GPSErrorLibrary::FailStopState;
-		-- the logic includes knowledge of dual redundenacy of sensors
-		-- the logic is the fault tree equivalent of a RBD
-		-- when we add occursence probabilities we can calculate the failure rate of GPS
 		composite error behavior
 		states
 		[sensor1.FailStop or cpu.Failstop or network.FailStop or powersupply1.FailStop]-> FailStop;
@@ -108,8 +119,10 @@ public
 			s2toproc: port sensor2.sensedData -> processing.inSensor2;
 			proctoext: port processing.location -> location;
 			-- physical network connections
-			s1tonetwork: bus access sensor1.networkaccess <-> network.networkAccess;
-			s2tonetwork: bus access sensor2.networkaccess <-> network.networkAccess;
+			s1tonetwork: bus access   sensor1.networkaccess <-> network.networkAccess;
+			s2tonetwork: bus access   sensor2.networkaccess <-> network.networkAccess;
+--			networktos1: bus access  network.networkAccess -> sensor1.networkaccess;
+--			networktos2: bus access  network.networkAccess -> sensor2.networkaccess;
 			cputonetwork: bus access cpu1.networkaccess <-> network.networkAccess;
 			-- power connections
 			powertos1: feature powersupply1.power -> sensor1.powersource ;

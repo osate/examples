@@ -8,18 +8,28 @@ with FlightControl, EMV2;
 	-- It has a safety requirement that leads to a particular reliability value.
 	-- From this we derive the expected reliability of the GPS.
 	-- If the design of the GPS cannot achieve this value, we consider a design with two GPS instances and a GPSvoter.
+
+	-- The flight system is used as the root for hazard analysis. 
+	-- Three subsystems have been identified as hazard sources, one of them the GPS.
+	-- The FHA can be run on the tier1 implementation.
+	
+	-- The flight system is also used as the root for fault impact analysis (aka. FMEA).
+	-- This analysis can be run on both the teir1 and tier2 implementation.
+	-- The report presents the impact of error sources within the flight system as well as external sources (pilot input)
 	
 	system FlightSystem
 	features
 	pilotInput: in data port;
 	ObservableFailure: out feature;
 	annex EMV2 {**
-		use types ErrorLibrary, GPSErrorLibrary;
+		use types ErrorLibrary, AFGErrorLibrary,GPSErrorLibrary;
 		error propagations
-		pilotInput: in propagation {ObservableErrorTypes};
+		pilotInput: in propagation {NoPilotInput, ErraticPilotInput};
 		ObservableFailure: out propagation {ServiceOmission, ErraticBehavior};
 		flows
 			GPSes: error source ObservableFailure{ObservableErrorTypes};
+			ErraticPilot: error path pilotInput{ErraticPilotInput} -> ObservableFailure{ErraticBehavior};
+			NoPilot: error path pilotInput{NoPilotInput} -> ObservableFailure{ServiceOmission};
 		end propagations;
 		properties
 			-- here we express a requirement that GPS should not fail to provide service more than the specified probability
@@ -54,7 +64,7 @@ with FlightControl, EMV2;
 		-- we map its output (physical control of flight surface) to the observable point
 		-- at the flight system level. 
 		propagations
-		FTAObservaleFailureStart: all-[flightControl.flightSurfaceControl{ServiceOmission}]-> ObservableFailure;
+		FTAObservableFailureStart: all-[flightControl.flightSurfaceControl{ServiceOmission}]-> ObservableFailure;
 		end component;
 	**};
 	end FlightSystem.tier1;
@@ -68,6 +78,7 @@ with FlightControl, EMV2;
 		gpstoafg: port gps.location -> autoFlightGuidance.position;
 		afgtofc: port autoFlightGuidance.AFGOutput -> flightControl.guidanceCommands;
 		pilottoafg: port pilotInput -> autoFlightGuidance.operatorCommand;
+		fceffect: feature flightControl.flightSurfaceControl -> ObservableFailure;
 	annex EMV2 {**
 		use types ErrorLibrary;
 		component error behavior
@@ -75,7 +86,7 @@ with FlightControl, EMV2;
 		-- we map its output (physical control of flight surface) to the observable point
 		-- at the flight system level. 
 		propagations
-		FTAObservaleFailureStart: all-[flightControl.flightSurfaceControl{ServiceOmission}]-> ObservableFailure;
+		FTAObservableFailureStart: all-[flightControl.flightSurfaceControl{ServiceOmission}]-> ObservableFailure;
 		end component;
 	**};
 	end FlightSystem.tier2;
@@ -101,7 +112,7 @@ with FlightControl, EMV2;
 		-- we map its output (physical control of flight surface) to the observable point
 		-- at the flight system level. 
 		propagations
-		FTAObservaleFailureStart: all-[flightControl.flightSurfaceControl{ServiceOmission}]-> ObservableFailure;
+		FTAObservableFailureStart: all-[flightControl.flightSurfaceControl{ServiceOmission}]-> ObservableFailure;
 		end component;
 	**};
 	end FlightSystem.DualGPS;

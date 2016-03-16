@@ -12,7 +12,6 @@ public
 		-- incorrect data if there is a computing error in the algorithm
 		IncorrectData: type;
 		ObservableErrorTypes: type set {ServiceOmission, LowPrecisionData,IncorrectData};
-		ErraticBehavior: type; -- FlightSystem error propagation type
 		end types;
 -- state machine for simple FailStop behavior
 error behavior FailStopState
