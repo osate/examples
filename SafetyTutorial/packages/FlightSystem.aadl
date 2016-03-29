@@ -27,18 +27,23 @@ with FlightControl, EMV2;
 		pilotInput: in propagation {NoPilotInput, ErraticPilotInput};
 		ObservableFailure: out propagation {ServiceOmission, ErraticBehavior};
 		flows
-			GPSes: error source ObservableFailure{ObservableErrorTypes};
+			NoFlightSystem: error source ObservableFailure{ServiceOmission} when {FlightSystemfailure};
+			ErraticFlightSystem: error source ObservableFailure{ErraticBehavior};
 			ErraticPilot: error path pilotInput{ErraticPilotInput} -> ObservableFailure{ErraticBehavior};
 			NoPilot: error path pilotInput{NoPilotInput} -> ObservableFailure{ServiceOmission};
 		end propagations;
 		properties
-			-- here we express a requirement that GPS should not fail to provide service more than the specified probability
-			-- This should be met by the FTA based probability analysis.
-			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.5e-9 ; Distribution => Poisson;] applies to ObservableFailure.ServiceOmission;
-     -- Initial focus on subsystem/service failure
-			-- here we express a requirement that GPS should only operate in low precision according to the specified probability
-			-- This should be met by the FTA based probability analysis.
-			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.0e-4 ; Distribution => Poisson;] applies to ObservableFailure.ErraticBehavior;
+			-- requirement that flight system should not fail to provide service 
+			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.5e-9 ; Distribution => Poisson;] 
+			applies to ObservableFailure.ServiceOmission;
+			-- a requirement that GPS should only operate erratically
+			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.0e-4 ; Distribution => Poisson;] 
+			applies to ObservableFailure.ErraticBehavior;
+			-- assumed probability of pilot error
+			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.0e-6 ; Distribution => Poisson;] 
+			applies to pilotInput.ServiceOmission;
+			emv2::OccurrenceDistribution => [ ProbabilityValue => 7.0e-6 ; Distribution => Poisson;] 
+			applies to pilotInput.ErraticPilotInput;
 	**};
 	end FlightSystem;
 	
@@ -49,14 +54,14 @@ with FlightControl, EMV2;
 	-- This leads to the (derived) requirement of GPS achieving the specified probability.
 	system implementation FlightSystem.tier1
 	subcomponents
-		gps: system GPSSystem::GPS;
-		autoFlightGuidance: system AutomatedFlightGuidance::AutomatedFlightGuidance;
-		flightControl: system FlightControl::FlightControl;
+		LocationProvider: system GPSSystem::GPS;
+		AutoFlightGuidance: system AutomatedFlightGuidance::AutomatedFlightGuidance;
+		FlightControl: system FlightControl::FlightControl;
 	connections
-		gpstoafg: port gps.location -> autoFlightGuidance.position;
-		afgtofc: port autoFlightGuidance.AFGOutput -> flightControl.guidanceCommands;
-		pilottoafg: port pilotInput -> autoFlightGuidance.operatorCommand;
-		fceffect: feature flightControl.flightSurfaceControl -> ObservableFailure;
+		gpstoafg: port LocationProvider.location -> AutoFlightGuidance.position;
+		afgtofc: port autoFlightGuidance.AFGOutput -> FlightControl.guidanceCommands;
+		PilottoAfg: port pilotInput -> autoFlightGuidance.operatorCommand;
+		FlightControlEffect: feature flightControl.flightSurfaceControl -> ObservableFailure;
 	annex EMV2 {**
 		use types ErrorLibrary;
 		component error behavior
@@ -64,44 +69,28 @@ with FlightControl, EMV2;
 		-- we map its output (physical control of flight surface) to the observable point
 		-- at the flight system level. 
 		propagations
-		FTAObservableFailureStart: all-[flightControl.flightSurfaceControl{ServiceOmission}]-> ObservableFailure;
+		FTAObservableFailureStart: all-[FlightControl.flightSurfaceControl{ServiceOmission}]-> ObservableFailure{ServiceOmission};
 		end component;
 	**};
 	end FlightSystem.tier1;
 
-	system implementation FlightSystem.tier2
+	system implementation FlightSystem.tier2 extends FlightSystem.tier1
 	subcomponents
-		gps: system GPSSystem::GPS.CEBound;
-		autoFlightGuidance: system AutomatedFlightGuidance::AutomatedFlightGuidance.functional;
-		flightControl: system FlightControl::FlightControl;
-	connections
-		gpstoafg: port gps.location -> autoFlightGuidance.position;
-		afgtofc: port autoFlightGuidance.AFGOutput -> flightControl.guidanceCommands;
-		pilottoafg: port pilotInput -> autoFlightGuidance.operatorCommand;
-		fceffect: feature flightControl.flightSurfaceControl -> ObservableFailure;
-	annex EMV2 {**
-		use types ErrorLibrary;
-		component error behavior
-		-- flight control service represents the service of the flight system
-		-- we map its output (physical control of flight surface) to the observable point
-		-- at the flight system level. 
-		propagations
-		FTAObservableFailureStart: all-[flightControl.flightSurfaceControl{ServiceOmission}]-> ObservableFailure;
-		end component;
-	**};
+		LocationProvider: refined to system GPSSystem::GPS.CEBound;
+		AutoFlightGuidance: refined to system AutomatedFlightGuidance::AutomatedFlightGuidance.functional;
 	end FlightSystem.tier2;
 
 
 	system implementation FlightSystem.DualGPS
 	subcomponents
-		gps1: system GPSSystem::GPS.CEBound;
-		gps2: system GPSSystem::GPS.CEBound;
+		LocationProvider1: system GPSSystem::GPS.CEBound;
+		LocationProvider2: system GPSSystem::GPS.CEBound;
 		voter: abstract GPSParts::GPSVoter; 
-		autoFlightGuidance: system AutomatedFlightGuidance::AutomatedFlightGuidance.functional;
-		flightControl: system FlightControl::FlightControl;
+		AutoFlightGuidance: system AutomatedFlightGuidance::AutomatedFlightGuidance.functional;
+		FlightControl: system FlightControl::FlightControl;
 	connections
-		gps1tovoter: port gps1.location -> voter.inLocation1;
-		gps2tovoter: port gps2.location -> voter.inLocation2;
+		gps1tovoter: port LocationProvider1.location -> voter.inLocation1;
+		gps2tovoter: port LocationProvider2.location -> voter.inLocation2;
 		votertoafg: port voter.outLocation -> autoFlightGuidance.position;
 		afgtofc: port autoFlightGuidance.AFGOutput -> flightControl.guidanceCommands;
 		pilottoafg: port pilotInput -> autoFlightGuidance.operatorCommand;

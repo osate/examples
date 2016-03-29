@@ -80,8 +80,10 @@ with EMV2;
 	 	component error behavior
 	 	events
 	 	  PowerFailure: error event;
+		transitions
+			Operational -[PowerFailure]-> FailStop;
 		propagations
-			all -[PowerFailure]-> power{ServiceOmission};
+			all -[FailStop]-> power{ServiceOmission};
 	 	end component;
 		properties
 			emv2::OccurrenceDistribution => [ ProbabilityValue => 3.5e-5 ; Distribution => Poisson;] applies to power.ServiceOmission;

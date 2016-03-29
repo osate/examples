@@ -7,6 +7,7 @@ public
 -- The two values should be consistent 
 Device sensor
 features
+	satelliteSignal: in feature;
 	sensedData: out data port;
 	networkaccess: requires bus access HardwareParts::Network;
 	powersource: in feature HardwareParts::ElectricalPower;
@@ -14,22 +15,24 @@ features
 		use types ErrorLibrary, GPSErrorLibrary;
 		use behavior ErrorLibrary::FailStop;
 		error propagations
+			satelliteSignal: in propagation {NoSignal,LowSignal};
 			sensedData: out propagation {ServiceOmission};
 			powersource: in propagation {ServiceOmission};
 			networkaccess: in propagation {ServiceOmission};
 		flows
 			-- in this abstraction we have the error source as contributor and the incoming power propagation.
-			sensorfailsrc: error source sensedData{ServiceOmission} when {SensorFailure};
+			sensorfailsrc: error source sensedData{ServiceOmission};-- when {SensorFailure};
+			satelliteimpact: error path satelliteSignal{NoSignal} -> sensedData{ServiceOmission};
 			networkimpact: error path networkaccess{ServiceOmission} -> sensedData{ServiceOmission};
 			powerimpact: error path powersource{ServiceOmission} -> sensedData{ServiceOmission};
 		end propagations;
 		properties
 			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.5e-4 ; Distribution => Poisson;] applies to sensorfailsrc.ServiceOmission;
-			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.5e-4 ; Distribution => Poisson;] applies to Failure;
--- These incoming propagation probabilities must be uuncommented to pick up failure probability of the power and network
--- the EMFTA exporter at the moment does not handle acces well.
---			emv2::OccurrenceDistribution => [ ProbabilityValue => 3.5e-5 ; Distribution => Poisson;] applies to networkaccess.ServiceOmission;
---			emv2::OccurrenceDistribution => [ ProbabilityValue => 4.5e-5 ; Distribution => Poisson;] applies to powersource.ServiceOmission;
+			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.5e-4 ; Distribution => Poisson;] applies to FailStop;
+-- these incoming occurence values are documented assumptions
+-- they are used if no connection or binding existing with this as destination. Otherwise, the values from the origin are used. 
+			emv2::OccurrenceDistribution => [ ProbabilityValue => 3.5e-5 ; Distribution => Poisson;] applies to networkaccess.ServiceOmission;
+			emv2::OccurrenceDistribution => [ ProbabilityValue => 4.5e-5 ; Distribution => Poisson;] applies to powersource.ServiceOmission;
 	**};
 	end sensor;
 	
@@ -49,6 +52,9 @@ features
 			networkaccess: in propagation {ServiceOmission};
 		end propagations;
 		component error behavior
+		transitions
+		-- sensor failure may be transient. We assume a 20% persistent sesnor failure rate.
+			FailureTransition: Operational -[Failure]-> (FailStop with 0.2, Operational with 0.8);
 		propagations
 			SensorFailPropagation: FailStop -[]-> sensedData{ServiceOmission};
 		end component;
@@ -58,9 +64,9 @@ features
 			emv2::OccurrenceDistribution => [ ProbabilityValue => 1.0e-4 ; Distribution => Poisson;] applies to Failure;
 	**};
 	end sensor_transient;
-	
+	 
 	-- This processing unit takes input from two sensors.
-	-- This original specification has flows only.
+	-- This original specification has flows  only.
 	-- Therefore, the flow-based FTA generation does not understand the relation of the two sensor inputs.
 	-- The redundancy of the sensor input is specified in the extension below.
 	abstract GPSProcessing

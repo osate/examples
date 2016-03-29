@@ -5,13 +5,16 @@ public
 	
 	system GPS
 	features
+		satelliteSignal: in feature;	
 		location: out data port;
 	annex EMV2 {**
 		use types ErrorLibrary, GPSErrorLibrary;
 		error propagations
+		satelliteSignal: in propagation {NoSignal, LowSignal};
 		location: out propagation {ObservableErrorTypes};
 		flows
-			GPSes: error source location{ObservableErrorTypes};
+			GPSAsErrorSource: error source location{ObservableErrorTypes};
+			SatelliteError: error path satelliteSignal{NoSignal} -> location{ServiceOmission}; 
 		end propagations;
 	properties
 	EMV2::hazards => 
@@ -23,10 +26,17 @@ public
 		description => "No position readings due to GPS failure";
 		comment => "Becomes critical hazard, if no redundant GPS";
 			])
-			applies to GPSes;
-			-- here we express a requirement that GPS should not fail to provide service more than the specified probability
-			-- This should be met by the FTA based probability analysis.
-	emv2::OccurrenceDistribution => [ ProbabilityValue => 1.5e-7 ; Distribution => Poisson;] applies to GPSes.ServiceOmission;
+		applies to GPSAsErrorSource;
+	-- requirement of probability that GPS should not fail to provide service
+	-- This should be met by the FTA based probability analysis.
+	emv2::OccurrenceDistribution => [ ProbabilityValue => 2.5e-7 ; Distribution => Poisson;] 
+	applies to GPSAsErrorSource.ServiceOmission;
+	-- failure contribution by the lack of stallite signal
+	emv2::OccurrenceDistribution => [ ProbabilityValue => 1.7e-7 ; Distribution => Poisson;] 
+	applies to satelliteSignal.ServiceOmission;
+	-- Total outoging probability of occurrence associated with the error propagation
+	emv2::OccurrenceDistribution => [ ProbabilityValue => 1.7e-7 ; Distribution => Poisson;] 
+	applies to location.ServiceOmission;
 	**};
 	end GPS;
 	
@@ -35,7 +45,7 @@ public
 	-- Single sensor as physical system does not give us the reliability, thus, two sensor configuration
 	system implementation GPS.parts_SingleSensor
 		subcomponents
-			sensor1: device GPSParts::sensor;
+			SatelliteSignalReceiver1: device GPSParts::sensor;
 			cpu: processor HardwareParts::CPU;
 			network: bus HardwareParts::Network;
 			powersupply1: device HardwareParts::PowerSupply;
@@ -47,7 +57,9 @@ public
 		-- when we add occursence probabilities we can calculate the failure rate of GPS
 		composite error behavior
 		states
-		[sensor1.FailStop or cpu.Failstop or network.FailStop or powersupply1.FailStop]-> FailStop;
+		[SatelliteSignalReceiver1.FailStop or cpu.Failstop 
+			or network.FailStop or powersupply1.FailStop
+		]-> FailStop;
 		end composite;
 	**};
 	end GPS.parts_SingleSensor;
@@ -58,7 +70,7 @@ public
 	-- This logic is not yet interpreted correctly when generating emfta files.
 	system implementation GPS.SingleSensorTransient 
 		subcomponents
-			sensor1: device GPSParts::sensor_transient;
+			SatelliteSignalReceiver1: device GPSParts::sensor_transient;
 			cpu: processor HardwareParts::CPU;
 			network: bus HardwareParts::Network;
 			powersupply1: device HardwareParts::PowerSupply;
@@ -67,7 +79,7 @@ public
 		use behavior GPSErrorLibrary::FailStopState;
 		composite error behavior
 		states
-		[sensor1.FailStop or cpu.Failstop or network.FailStop or powersupply1.FailStop]-> FailStop;
+		[SatelliteSignalReceiver1.FailStop or cpu.Failstop or network.FailStop or powersupply1.FailStop]-> FailStop;
 		end composite;
 	**};
 	end GPS.SingleSensorTransient;
@@ -75,8 +87,8 @@ public
 	-- system engineers consider option of two sensors to increase GPS reliability.
 	system implementation GPS.parts_TwoSensor
 		subcomponents
-			sensor1: device GPSParts::sensor;
-			sensor2: device GPSParts::sensor;
+			SatelliteSignalReceiver1: device GPSParts::sensor;
+			SatelliteSignalReceiver2: device GPSParts::sensor;
 			cpu: processor HardwareParts::CPU;
 			network: bus HardwareParts::Network;
 			powersupply1: device HardwareParts::PowerSupply;
@@ -88,7 +100,7 @@ public
 		-- when we add occursence probabilities we can calculate the failure rate of GPS
 		composite error behavior
 		states
-		[sensor1.FailStop and sensor2.FailStop or cpu.Failstop or network.FailStop or powersupply1.FailStop]-> FailStop;
+		[SatelliteSignalReceiver1.FailStop and SatelliteSignalReceiver2.FailStop or cpu.Failstop or network.FailStop or powersupply1.FailStop]-> FailStop;
 		end composite;
 	**};
 	end GPS.parts_TwoSensor;
@@ -107,27 +119,30 @@ public
 	-- We also have power connections.
 	system implementation GPS.basic
 		subcomponents
-			sensor1: device GPSParts::sensor;
-			sensor2: device GPSParts::sensor;
+			SatelliteSignalReceiver1: device GPSParts::sensor;
+			SatelliteSignalReceiver2: device GPSParts::sensor;
 			processing: process GPSParts::GPSProcessing;
 			cpu1: processor HardwareParts::CPU;
 			network: bus HardwareParts::Network;
 			powersupply1: device HardwareParts::PowerSupply;
 		connections
 			-- logical connections
-			s1toproc: port sensor1.sensedData -> processing.inSensor1;
-			s2toproc: port sensor2.sensedData -> processing.inSensor2;
+			sattoSatelliteSignalReceiver1: feature satelliteSignal -> SatelliteSignalReceiver1.satelliteSignal ;
+			sattoSatelliteSignalReceiver2: feature satelliteSignal -> SatelliteSignalReceiver2.satelliteSignal ;
+			s1toproc: port SatelliteSignalReceiver1.sensedData -> processing.inSensor1;
+			s2toproc: port SatelliteSignalReceiver2.sensedData -> processing.inSensor2;
 			proctoext: port processing.location -> location;
 			-- physical network connections
-			s1tonetwork: bus access   sensor1.networkaccess <-> network.networkAccess;
-			s2tonetwork: bus access   sensor2.networkaccess <-> network.networkAccess;
---			networktos1: bus access  network.networkAccess -> sensor1.networkaccess;
---			networktos2: bus access  network.networkAccess -> sensor2.networkaccess;
+			s1tonetwork: bus access   SatelliteSignalReceiver1.networkaccess <-> network.networkAccess;
+			s2tonetwork: bus access   SatelliteSignalReceiver2.networkaccess <-> network.networkAccess;
+--			networktos1: bus access  network.networkAccess -> SatelliteSignalReceiver1.networkaccess;
+--			networktos2: bus access  network.networkAccess -> SatelliteSignalReceiver2.networkaccess;
 			cputonetwork: bus access cpu1.networkaccess <-> network.networkAccess;
 			-- power connections
-			powertos1: feature powersupply1.power -> sensor1.powersource ;
-			powertos2: feature powersupply1.power -> sensor2.powersource ;
+			powertos1: feature powersupply1.power -> SatelliteSignalReceiver1.powersource ;
+			powertos2: feature powersupply1.power -> SatelliteSignalReceiver2.powersource ;
 			powertocpu: feature powersupply1.power -> cpu1.powersource ;
+			powertonetwork: feature powersupply1.power -> network.power ;
 	annex EMV2 {**
 		use types ErrorLibrary, GPSErrorLibrary;
 		component error behavior
@@ -183,8 +198,8 @@ public
 	
 	system implementation GPS.Dual 
 		subcomponents
-			sensor1: device GPSParts::sensor;
-			sensor2: device GPSParts::sensor;
+			SatelliteSignalReceiver1: device GPSParts::sensor;
+			SatelliteSignalReceiver2: device GPSParts::sensor;
 			processing1: abstract GPSParts::GPSProcessing;
 			processing2: abstract GPSParts::GPSProcessing;
 			voter: abstract GPSParts::GPSVoter;
@@ -194,21 +209,23 @@ public
 			cpu2: processor HardwareParts::CPU;
 		connections
 			-- logical connections
-			s1toproc2: port sensor1.sensedData -> processing2.inSensor1;
-			s2toproc2: port sensor2.sensedData -> processing2.inSensor2;
+			sattoSatelliteSignalReceiver1: feature satelliteSignal -> SatelliteSignalReceiver1.satelliteSignal ;
+			sattoSatelliteSignalReceiver2: feature satelliteSignal -> SatelliteSignalReceiver2.satelliteSignal ;
+			s1toproc2: port SatelliteSignalReceiver1.sensedData -> processing2.inSensor1;
+			s2toproc2: port SatelliteSignalReceiver2.sensedData -> processing2.inSensor2;
 			proc2tovoter: port processing2.location -> voter.inLocation1;
-			s1toproc: port sensor1.sensedData -> processing1.inSensor1;
-			s2toproc: port sensor2.sensedData -> processing1.inSensor2;
+			s1toproc1: port SatelliteSignalReceiver1.sensedData -> processing1.inSensor1;
+			s2toproc1: port SatelliteSignalReceiver2.sensedData -> processing1.inSensor2;
 			proc1tovoter: port processing1.location -> voter.inLocation2;
 			votertoext: port voter.outLocation -> location;
 			-- physical network connections
-			s1tonetwork: bus access sensor1.networkaccess <-> network;
-			s2tonetwork: bus access sensor2.networkaccess <-> network;
+			s1tonetwork: bus access SatelliteSignalReceiver1.networkaccess <-> network;
+			s2tonetwork: bus access SatelliteSignalReceiver2.networkaccess <-> network;
 			cpu1tonetwork: bus access cpu1.networkaccess <-> network;
 			cpu2tonetwork: bus access cpu2.networkaccess <-> network;
 			-- power connections
-			powertos1: feature powersupply1.power -> sensor1.powersource ;
-			powertos2: feature powersupply1.power -> sensor2.powersource ;
+			powertos1: feature powersupply1.power -> SatelliteSignalReceiver1.powersource ;
+			powertos2: feature powersupply1.power -> SatelliteSignalReceiver2.powersource ;
 			powertocpu: feature powersupply1.power -> cpu1.powersource ;
 		properties
 			-- note that the voter is on the same processor as one of the processing units.
@@ -216,8 +233,10 @@ public
 			Actual_Processor_Binding => (reference (cpu1)) applies to processing1;
 			Actual_Processor_Binding => (reference (cpu2)) applies to processing2;
 			Actual_Processor_Binding => (reference (cpu1)) applies to voter;
-			Actual_Connection_Binding => (reference (network)) applies to s1toproc;
-			Actual_Connection_Binding => (reference (network)) applies to s2toproc;
+			Actual_Connection_Binding => (reference (network)) applies to s1toproc1;
+			Actual_Connection_Binding => (reference (network)) applies to s2toproc1;
+			Actual_Connection_Binding => (reference (network)) applies to s1toproc2;
+			Actual_Connection_Binding => (reference (network)) applies to s2toproc2;
 			Actual_Connection_Binding => (reference (network)) applies to proc1tovoter;
 			Actual_Connection_Binding => (reference (network)) applies to proc2tovoter;
 		annex EMV2 {**

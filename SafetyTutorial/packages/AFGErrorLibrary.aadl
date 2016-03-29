@@ -8,6 +8,7 @@ annex EMV2 {**
 		NoPilotInput: type;
 		ErraticPilotInput: type;
 		ErraticValue: type;
+		FlightSystemfailure: type;
 	end types;
 
 error behavior ThreeState
