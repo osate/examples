@@ -11,7 +11,7 @@ with EMV2;
 	-- Such consistency checks will be added later.
 	processor CPU
 		features
-			powersource: in feature ElectricalPower;
+	powersource: in data port HardwareParts::ElectricalPower; -- XXX in feature but V3 branch cannot handle this
 			networkaccess: requires bus access Network;
 	annex EMV2 {**
 		use types ErrorLibrary,GPSErrorLibrary;
@@ -41,7 +41,7 @@ with EMV2;
 	-- the analysis should pick up the probability from this identified state.
 	bus Network
 		features
-			power: in feature ElectricalPower;
+		power: in data port HardwareParts::ElectricalPower; -- XXX in feature but V3 branch cannot handle this
 			networkAccess: provides bus access Network;
 	annex EMV2 {**
 		use types ErrorLibrary,GPSErrorLibrary;
