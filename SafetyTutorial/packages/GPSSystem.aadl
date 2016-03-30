@@ -133,11 +133,11 @@ public
 			s2toproc: port SatelliteSignalReceiver2.sensedData -> processing.inSensor2;
 			proctoext: port processing.location -> location;
 			-- physical network connections
-			s1tonetwork: bus access   SatelliteSignalReceiver1.networkaccess <-> network.networkAccess;
-			s2tonetwork: bus access   SatelliteSignalReceiver2.networkaccess <-> network.networkAccess;
---			networktos1: bus access  network.networkAccess -> SatelliteSignalReceiver1.networkaccess;
---			networktos2: bus access  network.networkAccess -> SatelliteSignalReceiver2.networkaccess;
-			cputonetwork: bus access cpu1.networkaccess <-> network.networkAccess;
+			s1tonetwork: bus access   network <->SatelliteSignalReceiver1.networkaccess  ;
+			s2tonetwork: bus access   network <->SatelliteSignalReceiver2.networkaccess ;
+--			networktos1: bus access  network -> SatelliteSignalReceiver1.networkaccess;
+--			networktos2: bus access  network -> SatelliteSignalReceiver2.networkaccess;
+			cputonetwork: bus access cpu1.networkaccess <-> network;
 			-- power connections
 			powertos1: feature powersupply1.power -> SatelliteSignalReceiver1.powersource ;
 			powertos2: feature powersupply1.power -> SatelliteSignalReceiver2.powersource ;

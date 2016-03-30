@@ -10,7 +10,7 @@ features
 	satelliteSignal: in feature;
 	sensedData: out data port;
 	networkaccess: requires bus access HardwareParts::Network;
-	powersource: in data port HardwareParts::ElectricalPower; -- XXX in feature but V3 branch cannot handle this
+	powersource: in feature;
 	annex EMV2 {**
 		use types ErrorLibrary, GPSErrorLibrary;
 		use behavior ErrorLibrary::FailStop;
@@ -42,7 +42,7 @@ Device sensor_transient
 features
 	sensedData: out data port;
 	networkaccess: requires bus access HardwareParts::Network;
-	powersource: in data port HardwareParts::ElectricalPower; -- XXX in feature but V3 branch cannot handle this
+	powersource: in feature;
 	annex EMV2 {**
 		use types ErrorLibrary, GPSErrorLibrary;
 		use behavior GPSErrorLibrary::FailStopTransient;

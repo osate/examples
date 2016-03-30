@@ -11,7 +11,7 @@ with EMV2;
 	-- Such consistency checks will be added later.
 	processor CPU
 		features
-	powersource: in data port HardwareParts::ElectricalPower; -- XXX in feature but V3 branch cannot handle this
+	powersource: in feature ;
 			networkaccess: requires bus access Network;
 	annex EMV2 {**
 		use types ErrorLibrary,GPSErrorLibrary;
@@ -41,21 +41,21 @@ with EMV2;
 	-- the analysis should pick up the probability from this identified state.
 	bus Network
 		features
-		power: in data port HardwareParts::ElectricalPower; -- XXX in feature but V3 branch cannot handle this
-			networkAccess: provides bus access Network;
+		power: in feature;
+--			networkAccess: provides bus access Network;
 	annex EMV2 {**
 		use types ErrorLibrary,GPSErrorLibrary;
 		use behavior GPSErrorLibrary::FailStopState;
 		error propagations
 		bindings: out propagation {ServiceOmission};
 		power: in propagation {ServiceOmission};
-		networkAccess: in propagation {ServiceOmission};
-		networkAccess: out propagation {ServiceOmission};
+		access: in propagation {ServiceOmission};
+		access: out propagation {ServiceOmission};
 		flows
-			cpu_es: error path networkAccess{ServiceOmission} -> bindings {ServiceOmission} ;
+			cpu_es: error path access{ServiceOmission} -> bindings {ServiceOmission} ;
 			power_es: error path power{ServiceOmission} -> bindings {ServiceOmission} ;
 			network_binding_es: error source bindings {ServiceOmission} when {NetworkFailure};
-			network_access_es: error source networkAccess {ServiceOmission} when {NetworkFailure};
+			network_access_es: error source access {ServiceOmission} when {NetworkFailure};
 		end propagations;
 		properties
 			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.5e-5 ; Distribution => Poisson;] applies to network_binding_es.ServiceOmission;
