@@ -79,7 +79,7 @@ features
 		error propagations
 		inSensor1 : in propagation {ServiceOmission};
 		inSensor2 : in propagation {ServiceOmission};
-		location : out propagation {ServiceOmission, LowPrecisionData,IncorrectData};
+		location : out propagation {ServiceOmission};--, LowPrecisionData,IncorrectData};
 		processor: in propagation {ServiceOmission};
 		flows 
 			s1toloc: error path inSensor1{ServiceOmission} -> location{ServiceOmission};
@@ -128,13 +128,13 @@ features
 		events
 			computeError: error Event;
 		transitions
-			internal: Operational -[computeError]-> Incorrect; 
+			internal: Operational -[computeError]-> NoService; 
 			inputNoService: Operational -[inSensor1{ServiceOmission} and inSensor2{ServiceOmission}]-> NoService;
-			inputNoService2: Incorrect -[inSensor1{ServiceOmission} and inSensor2{ServiceOmission}]-> NoService;
+--			inputNoService2: Incorrect -[inSensor1{ServiceOmission} and inSensor2{ServiceOmission}]-> NoService;
 		propagations
 			outNoService: NoService-[]-> location{ServiceOmission};
-			outLowPrecision: Operational-[inSensor1{ServiceOmission} or inSensor2{ServiceOmission}]-> location{LowPrecisionData};
-			outComputeErrorEfect: Incorrect-[]-> location{IncorrectData};
+--			outLowPrecision: Operational-[inSensor1{ServiceOmission} or inSensor2{ServiceOmission}]-> location{LowPrecisionData};
+--			outComputeErrorEfect: Incorrect-[]-> location{IncorrectData};
 		end component;
 	properties
 		emv2::OccurrenceDistribution => [ ProbabilityValue => 7.5e-4 ; Distribution => Poisson;] applies to computeError;

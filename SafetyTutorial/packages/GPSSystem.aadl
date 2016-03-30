@@ -171,15 +171,15 @@ public
 	system implementation GPS.computeerror extends GPS.basic
 		subcomponents
 			processing: refined to process GPSParts::GPSProcessing_computeError;
-		annex EMV2 {**
-		component error behavior
-		-- mapping of GPS producing GPS output to the GPS out propagation
-		-- since it is a subcomponent single port connected to the GPS port, we could infer the mapping 
-		propagations
-		FTASingleSensorOperationStart: all-[processing.location{LowPrecisionData}]-> location{LowPrecisionData};
-		FTAComputeErrorStart: all-[processing.location{IncorrectData}]-> location{IncorrectData};
-		end component;
-		**};
+--		annex EMV2 {**
+--		component error behavior
+--		-- mapping of GPS producing GPS output to the GPS out propagation
+--		-- since it is a subcomponent single port connected to the GPS port, we could infer the mapping 
+--		propagations
+----		FTASingleSensorOperationStart: all-[processing.location{LowPrecisionData}]-> location{LowPrecisionData};
+--		FTAComputeErrorStart: all-[processing.location{IncorrectData}]-> location{IncorrectData};
+--		end component;
+--		**};
 	end GPS.computeerror;
 	
 	system implementation GPS.BasicBound extends GPS.basic
