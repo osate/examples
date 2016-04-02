@@ -176,7 +176,7 @@ public
 		-- mapping of GPS producing GPS output to the GPS out propagation
 		-- since it is a subcomponent single port connected to the GPS port, we could infer the mapping 
 		propagations
---		FTASingleSensorOperationStart: all-[processing.location{LowPrecisionData}]-> location{LowPrecisionData};
+		FTASingleSensorOperationStart: all-[processing.location{LowPrecisionData}]-> location{LowPrecisionData};
 		FTAComputeErrorStart: all-[processing.location{IncorrectData}]-> location{IncorrectData};
 		end component;
 		**};
