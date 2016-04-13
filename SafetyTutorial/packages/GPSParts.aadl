@@ -129,8 +129,8 @@ features
 			computeError: error Event;
 		transitions
 			internal: Operational -[computeError]-> Incorrect; 
-			inputNoService: Operational -[inSensor1{ServiceOmission} and inSensor2{ServiceOmission}]-> NoService;
-			inputNoService2: Incorrect -[inSensor1{ServiceOmission} and inSensor2{ServiceOmission}]-> NoService;
+			inputNoService: all -[inSensor1{ServiceOmission} and inSensor2{ServiceOmission}]-> NoService;
+--			inputNoService2: Incorrect -[inSensor1{ServiceOmission} and inSensor2{ServiceOmission}]-> NoService;
 		propagations
 			outNoService: NoService-[]-> location{ServiceOmission};
 			outLowPrecision: Operational-[inSensor1{ServiceOmission} or inSensor2{ServiceOmission}]-> location{LowPrecisionData};
