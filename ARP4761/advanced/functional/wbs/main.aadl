@@ -111,7 +111,7 @@ subcomponents
 	preventmotion         : system functional::WheelBrake::Generic::GenericFunction.basic;
 connections
 	c11 : feature fromElectrical -> decelerateonground.fromElectrical;
-	c12 : feature fromHydraulic -> decelerateonground.fromHydraulic;
+	c12 : feature fromHydraulic -> decelerateonground.fromHydraulic; 
 	c13 : feature fromAlert -> decelerateonground.fromAlert;
 	c14 : feature fromSteering -> decelerateonground.fromSteering;
 	c15 : feature fromStatus -> decelerateonground.fromStatus;	
@@ -139,15 +139,6 @@ annex EMV2 {**
 	use types WBSFunctionalErrorLib;
 	use behavior WBSFunctionalErrorLib::TwostateWBS;
 
-
-	error propagations
-		fromElectrical : in propagation{AnyFunctionalError};
-		fromHydraulic  : in propagation{AnyFunctionalError};
-		fromAlert      : in propagation{AnyFunctionalError};
-		fromSteering   : in propagation{AnyFunctionalError};
-		fromStatus     : in propagation{AnyFunctionalError};
-
-	end propagations;	
 
 	
 	composite error behavior
