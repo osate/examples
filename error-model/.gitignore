@@ -1,6 +1,8 @@
 /.aadlbin-gen/
 .svn/
 instances/
+fta/
+representations.aird
 /bin/
 /xtend-gen/
 .metadata/

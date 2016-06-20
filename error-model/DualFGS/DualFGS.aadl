@@ -121,7 +121,7 @@ composite error behavior
      FG1.Operational and AP1.Operational]-> NoncriticalModeFailure;
     [AC.Failed or 
     1 ormore (AP1.Failed, FG1.Failed) 
-    and 1 ormore (AP1.Failed, FG2.Failed)]->CriticalModefailure ;
+    and 1 ormore (AP1.Failed, FG2.Failed) and network.Failed ]->CriticalModefailure ;
 end composite;
 **};
 end FGS.composite;

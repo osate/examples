@@ -242,11 +242,6 @@ public
 		annex EMV2 {**
 			use types ErrorLibrary, GPSErrorLibrary;
 			use behavior GPSErrorLibrary::FailStopState;
-		error propagations
-		location: out propagation {ServiceOmission,LowPrecisionData};
-		flows
-			GPSes: error source location{ServiceOmission,LowPrecisionData};
-		end propagations;
 		component error behavior
 		propagations
 			FTAPropagationStart: all -[voter.outLocation{ServiceOmission}]-> location{ServiceOmission};

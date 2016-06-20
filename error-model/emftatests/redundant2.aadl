@@ -1,9 +1,10 @@
-package fault_tree::redundant2
+package redundant2
 public
 
 data mydata
 end mydata;
 
+-- cpu as example with error source as leaf of bindings
 processor cpu
 annex EMV2 {**
 	use types errorlibrary;
@@ -15,6 +16,8 @@ annex EMV2 {**
 **};
 end cpu;
 
+
+-- memory as example with error source as leaf of bindings
 memory mem
 annex EMV2 {**
 	use types errorlibrary;
@@ -27,6 +30,7 @@ annex EMV2 {**
 end mem;
 
 
+-- bus as example with error source as leaf of bindings
 bus transport
 annex EMV2 {**
 	use types errorlibrary;
@@ -38,6 +42,7 @@ annex EMV2 {**
 **};
 end transport;
 
+-- sensor as source of two errors
 device sensor
 features
 	valueout : out data port mydata;
@@ -53,6 +58,7 @@ annex EMV2{**
  **};
 end sensor;
 
+-- actuator passes through errors and maps them into service omission
 device actuator
 features
 	valuein : in data port mydata;
@@ -69,6 +75,9 @@ annex EMV2{**
  **};
 end actuator;
 
+-- actuator.failstate elaborates error behavior with state machine
+-- incoming errors are elaborated into a transition to failstop.
+-- failstop propagates as service omission
 device implementation actuator.failstate
 annex EMV2{**
  	use types ErrorLibrary;
@@ -86,6 +95,8 @@ annex EMV2{**
 end actuator.failstate;
 
 
+-- internal error events result in degraded or failstop
+-- incoming propagation on both inputs results in item omission
 thread voter_thr
 features
 	valuein1 : in data port mydata;
@@ -122,7 +133,8 @@ annex EMV2{**
 end voter_thr;
 
 thread voter_thr1
-	-- this is the voter_thr from Julien's email
+	-- in this case out of range on both results in out of range
+	-- similarly late delivery on both results in late delivery
 features
                 valuein1 : in data port mydata;
                 valuein2 : in data port mydata;
@@ -133,7 +145,7 @@ annex EMV2{**
  error propagations
    valuein1 : in propagation {LateDelivery, OutOfRange};
    valuein2 : in propagation {LateDelivery, OutOfRange};
-   valueout : out propagation {ItemOmission,ValueCorruption,InconsistentValue};
+   valueout : out propagation {ItemOmission,ValueCorruption,InconsistentValue, LateDelivery};
    processor: in propagation {ServiceError}; 
    memory   : in propagation {ServiceError};
  flows
@@ -159,7 +171,7 @@ annex EMV2{**
  propagations
  -- note these propagation rules do not map valuein1{LateDelivery} and valuein2{OutOfRange}
  -- in voter_thr the combinations are specified in the rule.
-    p1 : all -[ valuein1{LateDelivery} and valuein2{LateDelivery}]-> valueout{ValueError};
+    p1 : all -[ valuein1{LateDelivery} and valuein2{LateDelivery}]-> valueout{LateDelivery};
     p2 : all -[ valuein1{OutOfRange} and valuein2{OutOfRange}]-> valueout{OutOfRange};
  end component;
 **};
@@ -183,8 +195,24 @@ connections
 	c2 : port thr.valueout -> valueout;
 end voter.i;
 
-system main2
+process implementation voter.i1
+subcomponents
+	thr : thread voter_thr1;
+connections
+	c0 : port valuein1 -> thr.valuein1;
+	c1 : port valuein2 -> thr.valuein2;
+	c2 : port thr.valueout -> valueout;
+end voter.i1;
 
+system main2
+	features
+		externaleffect: out feature;
+		annex EMV2 {**
+			use types ErrorLibrary;
+			error propagations
+			externaleffect: out propagation {ServiceOmission};
+			end propagations;
+		**};
 end main2;
 
 -- in this configuration we map the actuator fail state into the top system fail state.
@@ -221,9 +249,43 @@ annex EMV2{**
  **};
 end main2.composite;
 
--- In this configuration we map the outgoing propagation from the actuator to the state of the top system.
--- This is done independent of the actuator fail state, i.e., we can model pass through of incoming propagations
--- without having to represent them as error state.
+system implementation main2.compositesametype
+subcomponents
+	sensor1 : device sensor;
+	sensor2 : device sensor;
+	voter   : process voter.i1;
+	actuator : device actuator.failstate;
+	
+	cpu : processor cpu;
+	mem : memory mem;
+	
+	mybus : bus transport;
+connections
+	c0 : port sensor1.valueout -> voter.valuein1;
+	c1 : port sensor2.valueout -> voter.valuein2;
+	c2 : port voter.valueout -> actuator.valuein;
+properties
+	actual_processor_binding => (reference (cpu)) applies to voter;
+	actual_memory_binding => (reference (mem)) applies to voter;
+	Actual_Connection_Binding => (reference (mybus)) applies to c0;
+	Actual_Connection_Binding => (reference (mybus)) applies to c1;
+	Actual_Connection_Binding => (reference (mybus)) applies to c2;
+annex EMV2{**
+ 	use types ErrorLibrary;
+ 	use behavior ErrorLibrary::FailStop;
+ 	component error behavior
+ 	transitions
+ 	Operational -[actuator.actionout{ServiceOmission}]-> FailStop;
+ 	end component;
+ 	composite error behavior 
+ 	states
+ 		[ actuator.failstop ]-> FailStop;
+ 	end composite;
+ **};
+end main2.compositesametype;
+
+-- In this configuration we map the outgoing propagation from the actuator to the outgoing propagation of main2.
+-- Voter maps any error on both incoming (AND) to omission
 system implementation main2.transition
 subcomponents
 	sensor1 : device sensor;
@@ -249,10 +311,10 @@ annex EMV2{**
  	use types ErrorLibrary;
  	use behavior ErrorLibrary::FailStop;
 	component error behavior
-	transitions
-		Operational -[actuator.actionout{ServiceOmission}]-> FailStop;
+		propagations
+		all -[actuator.actionout{ServiceOmission}]-> externaleffect{ServiceOmission};
 	end component;
  **};
 end main2.transition;
 
-end fault_tree::redundant2;
+end redundant2;

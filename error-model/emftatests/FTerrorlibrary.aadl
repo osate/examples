@@ -16,6 +16,7 @@ states
 transitions
 	FirstFailure : Operational -[ ComputeError ]-> Degraded ;
 	SecondFailure : Degraded -[ Failure ]-> FailStop ;
+	DirectFailure : Operational -[ Failure ]-> FailStop ;
 end behavior ;
 		
 	**};

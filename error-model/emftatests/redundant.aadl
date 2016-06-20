@@ -1,4 +1,4 @@
-package fault_tree::redundant
+package redundant
 public
 
 data mydata
@@ -7,6 +7,7 @@ end mydata;
 processor cpu
 annex EMV2 {**
 	use types errorlibrary;
+ 	use behavior ErrorLibrary::FailStop;
 	error propagations
 		bindings: out propagation {ServiceError};
 	flows
@@ -18,6 +19,7 @@ end cpu;
 memory mem
 annex EMV2 {**
 	use types errorlibrary;
+ 	use behavior ErrorLibrary::FailStop;
 	error propagations
 		bindings: out propagation {ServiceError};
 	flows
@@ -30,6 +32,7 @@ end mem;
 bus transport
 annex EMV2 {**
 	use types errorlibrary;
+ 	use behavior ErrorLibrary::FailStop;
 	error propagations
 		bindings: out propagation {ServiceError};
 	flows
@@ -45,7 +48,7 @@ annex EMV2{**
  	use types ErrorLibrary;
  	use behavior ErrorLibrary::FailStop;
  	error propagations
- 		valueout : out propagation {LateDelivery, OutOfRange};
+ 		valueout : out propagation {SequenceOmission, LateDelivery, OutOfRange};
  	flows
  		ef0 : error source valueout{LateDelivery};
  		ef1 : error source valueout{OutOfRange};
@@ -56,20 +59,20 @@ end sensor;
 device actuator
 features
 	valuein : in data port mydata;
+	effect: out feature;
 annex EMV2{**
  	use types ErrorLibrary;
  	use behavior ErrorLibrary::FailStop;
  	error propagations
  		valuein : in propagation {ItemOmission,ValueCorruption,InconsistentValue};
- 	flows
- 		ef1 : error sink valuein{ItemOmission,ValueCorruption,InconsistentValue};
+ 		effect: out propagation {ServiceOmission};
  	end propagations;
  	
  	component error behavior
- 	transitions
- 		t0 : Operational -[ valuein{ItemOmission}]-> FailStop;
- 		t1 : Operational -[ valuein{ValueCorruption}]-> FailStop;
- 		t2 : Operational -[ valuein{InconsistentValue}]-> FailStop;
+ 	propagations
+ 		t0 : Operational -[ valuein{ItemOmission}]-> effect{ServiceOmission};
+ 		t1 : Operational -[ valuein{ValueCorruption}]-> effect{ServiceOmission};
+ 		t2 : Operational -[ valuein{InconsistentValue}]-> effect{ServiceOmission};
  	end component;
  **};
 end actuator;
@@ -104,15 +107,6 @@ features
 	valuein1 : in data port mydata;
 	valuein2 : in data port mydata;
 	valueout : out data port mydata;
-annex EMV2{**
- 	use types ErrorLibrary;
- 	use behavior ErrorLibrary::FailStop;
- 	error propagations
- 		valuein1 : in propagation {LateDelivery, OutOfRange};
- 		valuein2 : in propagation {LateDelivery, OutOfRange};
- 		valueout : out propagation {ItemOmission,ValueCorruption,InconsistentValue};
- 	end propagations;
- **};
 end voter;
 
 process implementation voter.i
@@ -129,7 +123,11 @@ system main
 end main;
 
 
-system implementation main.i
+-- composite error behavior specification
+-- Does not pick up contributions from CPU, memory, bus since they do not affect the FailStop state of voter.
+-- Those are propagated as flows through outgoing propagations rather than related to state.
+-- The composite error behavior expression can be expanded to include them
+system implementation main.compositestate
 subcomponents
 	sensor1 : device sensor;
 	sensor2 : device sensor;
@@ -156,10 +154,9 @@ annex EMV2{**
 
  	composite error behavior 
  	states
- 		[ sensor1.failstop and sensor2.failstop ]-> FailStop;
- 		[ actuator.failstop ]-> FailStop;
- 	end composite;
+ 		[ sensor1.failstop and sensor2.failstop or actuator.failstop or voter.thr.FailStop]-> FailStop;
+  	end composite;
  **};
-end main.i;
+end main.compositestate;
 
-end fault_tree::redundant;
+end redundant;
