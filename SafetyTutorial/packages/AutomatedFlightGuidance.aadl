@@ -119,6 +119,7 @@ annex emv2 {**
 	-- We specify the failure rate of AFG as the error source.
 	-- external impact is accounted for separately.
 	emv2::OccurrenceDistribution => [ ProbabilityValue => 1.0e-9 ; Distribution => Poisson;] applies to AFGsource.Novalue;
+	emv2::OccurrenceDistribution => [ ProbabilityValue => 2.4e-9 ; Distribution => Poisson;] applies to powersupply.ServiceOmission;
 	**};
 end AutomatedFlightGuidance;
 

@@ -31,7 +31,7 @@ with EMV2;
 		properties
 			-- these properties should be consistent with the ones in CPU_errorbehavior
 			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.8e-5 ; Distribution => Poisson;] applies to cpu_es1.ServiceOmission;
-			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.7e-5 ; Distribution => Poisson;] applies to FailStop;
+			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.8e-5 ; Distribution => Poisson;] applies to FailStop;
 	**};
 	end CPU;
 	
@@ -86,9 +86,8 @@ with EMV2;
 			all -[FailStop]-> power{ServiceOmission};
 	 	end component;
 		properties
-			emv2::OccurrenceDistribution => [ ProbabilityValue => 3.5e-5 ; Distribution => Poisson;] applies to power.ServiceOmission;
+			emv2::OccurrenceDistribution => [ ProbabilityValue => 3.5e-5 ; Distribution => Poisson;] applies to power_es.ServiceOmission;
 			emv2::OccurrenceDistribution => [ ProbabilityValue => 3.5e-5 ; Distribution => Poisson;] applies to FailStop;
-			emv2::OccurrenceDistribution => [ ProbabilityValue => 3.6e-5 ; Distribution => Poisson;] applies to PowerFailure;
 			
 	**};
 	end PowerSupply;

@@ -29,14 +29,14 @@ public
 		applies to GPSAsErrorSource;
 	-- requirement of probability that GPS should not fail to provide service
 	-- This should be met by the FTA based probability analysis.
-	emv2::OccurrenceDistribution => [ ProbabilityValue => 2.5e-7 ; Distribution => Poisson;] 
-	applies to GPSAsErrorSource.ServiceOmission;
+	emv2::OccurrenceDistribution => [ ProbabilityValue => 0.8e-7 ; Distribution => Poisson;] 
+	applies to GPSAsErrorSource.ObservableErrorTypes;
 	-- failure contribution by the lack of stallite signal
-	emv2::OccurrenceDistribution => [ ProbabilityValue => 1.7e-7 ; Distribution => Poisson;] 
-	applies to satelliteSignal.ServiceOmission;
+	emv2::OccurrenceDistribution => [ ProbabilityValue => 0.9e-7 ; Distribution => Poisson;] 
+	applies to satelliteSignal.NoSignal;
 	-- Total outoging probability of occurrence associated with the error propagation
 	emv2::OccurrenceDistribution => [ ProbabilityValue => 1.7e-7 ; Distribution => Poisson;] 
-	applies to location.ServiceOmission;
+	applies to location.ObservableErrorTypes;
 	**};
 	end GPS;
 	
@@ -68,7 +68,7 @@ public
 		-- the logic is the fault tree equivalent of a RBD
 		-- when we add occurrence probabilities we can calculate the failure rate of GPS
 	-- This logic is not yet interpreted correctly when generating emfta files.
-	system implementation GPS.SingleSensorTransient 
+	system implementation GPS.parts_SingleSensorTransient 
 		subcomponents
 			SatelliteSignalReceiver1: device GPSParts::sensor_transient;
 			cpu: processor HardwareParts::CPU;
@@ -82,7 +82,7 @@ public
 		[1 ormore(SatelliteSignalReceiver1.FailStop , cpu.Failstop , network.FailStop , powersupply1.FailStop)]-> FailStop;
 		end composite;
 	**};
-	end GPS.SingleSensorTransient;
+	end GPS.parts_SingleSensorTransient;
 
 	-- system engineers consider option of two sensors to increase GPS reliability.
 	system implementation GPS.parts_TwoSensor
@@ -213,10 +213,10 @@ public
 			sattoSatelliteSignalReceiver2: feature satelliteSignal -> SatelliteSignalReceiver2.satelliteSignal ;
 			s1toproc2: port SatelliteSignalReceiver1.sensedData -> processing2.inSensor1;
 			s2toproc2: port SatelliteSignalReceiver2.sensedData -> processing2.inSensor2;
-			proc2tovoter: port processing2.location -> voter.inLocation1;
+			proc2tovoter: port processing2.location -> voter.inLocation2;
 			s1toproc1: port SatelliteSignalReceiver1.sensedData -> processing1.inSensor1;
 			s2toproc1: port SatelliteSignalReceiver2.sensedData -> processing1.inSensor2;
-			proc1tovoter: port processing1.location -> voter.inLocation2;
+			proc1tovoter: port processing1.location -> voter.inLocation1;
 			votertoext: port voter.outLocation -> location;
 			-- physical network connections
 			s1tonetwork: bus access SatelliteSignalReceiver1.networkaccess <-> network;

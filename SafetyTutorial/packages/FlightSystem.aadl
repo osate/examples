@@ -41,7 +41,7 @@ with FlightControl, EMV2;
 			applies to ObservableFailure.ErraticBehavior;
 			-- assumed probability of pilot error
 			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.0e-6 ; Distribution => Poisson;] 
-			applies to pilotInput.ServiceOmission;
+			applies to pilotInput.NoPilotInput;
 			emv2::OccurrenceDistribution => [ ProbabilityValue => 7.0e-6 ; Distribution => Poisson;] 
 			applies to pilotInput.ErraticPilotInput;
 	**};
