@@ -251,6 +251,7 @@ with ErrorLibrary, ErrorBehaviorLibrary;
       sensedPosition: port StabilatorPositionSensor.PositionReading -> StabilatorController.Position;
       Stabilator1Cmd: port StabilatorController.ActCmd -> StabAct1.ActCmd;
       Stabilator2Cmd: port StabilatorController.ActCmd -> StabAct2.ActCmd;
+      -- this connection has an intentional error message
       vtx: port EGI.TrueAirSpeed -> StabilatorController.TrueAirSpeed;
     flows
          critical1: end to end flow StabilatorPositionSensor.f1 -> sensedPosition -> StabilatorController.fp
