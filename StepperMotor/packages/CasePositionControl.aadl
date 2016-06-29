@@ -55,7 +55,7 @@ annex EMV2 {**
 	error propagations
 	Commanded_Position : out propagation { MissingCommand, NoCommandSequence, TimingError, RateError};
 	-- out of range for PCC and out of bounds on resulting position
-	Commanded_Position : not out propagation { StepCountOutOfRange,ResultingPositionOutOfRange, DelayedResponse};
+	Commanded_Position : not out propagation { StepCountOutOfRange,ResultingPositionOutOfRange};
 	-- on feature group vs. on the individual elements of a feature group
 	end propagations;
 	**};
@@ -73,7 +73,7 @@ annex EMV2 {**
 	error propagations
 	Commanded_Position : out propagation { MissingCommand, NoCommandSequence, TimingError, RateError};
 	-- out of range for PCC and out of bounds on resulting position
-	Commanded_Position : not out propagation { StepCountOutOfRange,ResultingPositionOutOfRange, DelayedResponse};
+	Commanded_Position : not out propagation { StepCountOutOfRange,ResultingPositionOutOfRange};
 	-- on feature group vs. on the individual elements of a feature group
 	end propagations;
 	**};
@@ -141,7 +141,7 @@ annex EMV2 {**
 	-- out of bounds captures the error that the resulting position of the position change may be outside its bounds
 	Commanded_Position : out propagation {MissingCommand, NoCommandSequence, TimingError,RateError};
 	-- out of range refers to the position change value
-	Commanded_Position : not out propagation {StepCountOutOfRange,SubtleValueError,ResultingPositionOutOfRange,DelayedResponse};
+	Commanded_Position : not out propagation {StepCountOutOfRange,SubtleValueError,ResultingPositionOutOfRange};
 	Desired_Position : in propagation {MissingCommand, NoCommandSequence,OutOfRange};
 	Desired_Position : not in propagation {DelayedResponse};
 	-- impact of processor
@@ -223,7 +223,7 @@ annex EMV2 {**
 	-- out of bounds captures the error that the resulting position of the position change may be outside its bounds
 	Commanded_Position : out propagation {MissingCommand, NoCommandSequence, TimingError,RateError};
 	-- out of range refers to the position change value
-	Commanded_Position : not out propagation {StepCountOutOfRange,SubtleValueError,ResultingPositionOutOfRange, DelayedResponse};
+	Commanded_Position : not out propagation {StepCountOutOfRange,SubtleValueError,ResultingPositionOutOfRange};
 	Desired_Position : in propagation {MissingCommand, NoCommandSequence,OutOfRange};
 	Desired_Position : not in propagation {DelayedResponse};
 
@@ -288,7 +288,7 @@ annex EMV2 {**
 	error propagations
 	Commanded_Position : in propagation { MissingCommand, NoCommandSequence, TimingError, RateError};
 	-- out of range for PCC and out of bounds on resulting position
-	Commanded_Position : not in propagation { StepCountOutOfRange,ResultingPositionOutOfRange, DelayedResponse};
+	Commanded_Position : not in propagation { StepCountOutOfRange,ResultingPositionOutOfRange};
 	-- on feature group vs. on the individual elements of a feature group
 	SM_Command_Signals.SM_Cmd : out propagation {MissingStepCommand,NoCommandSequence,SlowResponse};
 	SM_Command_Signals.SM_Cmd : not out propagation {DelayedResponse};
@@ -404,7 +404,7 @@ annex EMV2 {**
 	error propagations
 	Commanded_Position : in propagation { MissingCommand, NoCommandSequence, TimingError, RateError};
 	-- out of range for PCC and out of bounds on resulting position
-	Commanded_Position : not in propagation { OutOfRange, DelayedResponse};
+	Commanded_Position : not in propagation { OutOfRange};
 	
 	power : in propagation {NoService};
 	
