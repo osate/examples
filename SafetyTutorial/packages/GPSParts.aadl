@@ -69,25 +69,26 @@ features
 	-- This original specification has flows  only.
 	-- Therefore, the flow-based FTA generation does not understand the relation of the two sensor inputs.
 	-- The redundancy of the sensor input is specified in the extension below.
-	abstract GPSProcessing
-	features
-		inSensor1: in data port;
-		inSensor2: in data port;
-		location: out data port;
-	annex EMV2 {**
-		use types ErrorLibrary, GPSErrorLibrary;
-		error propagations
-		inSensor1 : in propagation {ServiceOmission};
-		inSensor2 : in propagation {ServiceOmission};
-		location : out propagation {ServiceOmission, LowPrecisionData,IncorrectData};
-		processor: in propagation {ServiceOmission};
-		flows 
-			s1toloc: error path inSensor1{ServiceOmission} -> location{ServiceOmission};
-			s2toloc: error path inSensor2{ServiceOmission} -> location{ServiceOmission};
-			ptoloc: error path processor{ServiceOmission} -> location{ServiceOmission};
-		end propagations;
-	**};
-	end GPSProcessing;
+abstract GPSProcessing
+features
+  inSensor1: in data port;
+  inSensor2: in data port;
+  location: out data port;
+annex EMV2 {**
+use types ErrorLibrary, GPSErrorLibrary;
+error propagations
+ inSensor1 : in propagation {ServiceOmission};
+ inSensor2 : in propagation {ServiceOmission};
+ location : out propagation {ServiceOmission, LowPrecisionData,IncorrectData};
+ processor: in propagation {ServiceOmission};
+flows 
+ s1toloc: error path inSensor1{ServiceOmission} -> location{ServiceOmission};
+ s2toloc: error path inSensor2{ServiceOmission} -> location{ServiceOmission};
+ ptoloc: error path processor{ServiceOmission} -> location{ServiceOmission};
+ gpssrc: error source location{LowPrecisionData, IncorrectData};
+end propagations;
+**};
+end GPSProcessing;
 	
 	-- Here we use the OutGoingPropagationCondition to specify how the inputs map to the output (AND).
 	-- In this specification we have no error behavior states yet, since we are not looking at computational erros yet.
@@ -117,30 +118,34 @@ features
 	**};
 	end GPSProcessing_redundancyState;
 	
-	abstract GPSProcessing_computeError extends GPSProcessing
 	-- specify sensor processing logic with an explicit error behavior state machine.
 	-- We need this if we want to identify the FTA source as state.
 	-- in this case we need to map both error events and incoming propagations into a state.
-	annex EMV2 {**
-		use types ErrorLibrary, GPSErrorLibrary;
-		use behavior GPSErrorLibrary::GPSProcessingFailed;
-		component error behavior
-		events
-			computeError: error Event;
-		transitions
-			internal: Operational -[computeError]-> Incorrect; 
-			inputNoService: all -[inSensor1{ServiceOmission} and inSensor2{ServiceOmission}]-> NoService;
---			inputNoService2: Incorrect -[inSensor1{ServiceOmission} and inSensor2{ServiceOmission}]-> NoService;
-		propagations
-			outNoService: NoService-[]-> location{ServiceOmission};
-			outLowPrecision: Operational-[inSensor1{ServiceOmission} or inSensor2{ServiceOmission}]-> location{LowPrecisionData};
-			outComputeErrorEfect: Incorrect-[]-> location{IncorrectData};
-			processorNoService: all-[processor {ServiceOmission}]-> location{ServiceOmission};
-		end component;
-	properties
-		emv2::OccurrenceDistribution => [ ProbabilityValue => 7.5e-4 ; Distribution => Poisson;] applies to computeError;
-	**};
-	end GPSProcessing_computeError;
+abstract GPSProcessing_computeError extends GPSProcessing
+annex EMV2 {**
+  use types ErrorLibrary, GPSErrorLibrary;
+  use behavior GPSErrorLibrary::GPSProcessingFailed;
+  component error behavior
+  events
+	computeError: error Event;
+  transitions
+    internal: Operational -[computeError]-> Incorrect; 
+    lowPrecision: all -[inSensor1{ServiceOmission} 
+    	or inSensor2{ServiceOmission}]-> LowPrecision;
+    inputNoService: all -[inSensor1{ServiceOmission} 
+    	and inSensor2{ServiceOmission}]-> NoService;
+    CPUNoService: all -[processor {ServiceOmission}]-> NoService;
+  propagations
+	outNoService: NoService-[]-> location{ServiceOmission};
+	outLowPrecision: LowPrecision-[]-> location{LowPrecisionData};
+	outComputeErrorEfect: Incorrect-[]-> location{IncorrectData};
+  end component;
+  properties
+	emv2::OccurrenceDistribution => [ ProbabilityValue => 7.5e-4 ; 
+		Distribution => Poisson;
+	] applies to computeError;
+**};
+end GPSProcessing_computeError;
 	
 	-- This is a voter if the flight system is designed to use two instances of a GPS in order to achieve the desired reliability.
 	abstract GPSVoter 
