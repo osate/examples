@@ -1,0 +1,316 @@
+--
+--
+--  Model for the AADL tutorial at ESWeek 2016.
+--  See details at https://wiki.sei.cmu.edu/aadl/index.php/ESWeek_Tutorial
+--
+--  Copyright Carnegie Mellon Software Engineering Institute, 2016.
+--
+
+package emsoft2016::integration
+
+public
+
+with emsoft2016::devices;
+with emsoft2016::software;
+with emsoft2016::platform;
+
+system integration 
+end integration;
+
+system implementation integration.generic
+subcomponents
+-- input devices
+	obstacle_camera : device emsoft2016::devices::camera;
+	obstacle_radar : device emsoft2016::devices::radar;
+	wheel_sensor : device emsoft2016::devices::speed_wheel_sensor;
+	laser_sensor : device emsoft2016::devices::speed_laser_sensor;
+	gps1 : device emsoft2016::devices::gps.impl1;
+	gps2 : device emsoft2016::devices::gps.impl2;
+	
+-- software
+    image_acquisition : process emsoft2016::software::image_acquisition.i;
+    radar_acquisition : process emsoft2016::software::radar_acquisition.i;
+    
+    speed_estimate    : process emsoft2016::software::speed_estimate.i;
+    
+    position_voter    : process emsoft2016::software::position_voter.i;
+    
+    obstacle_detection : process emsoft2016::software::obstacle_detection.i;
+    
+    obstacle_distance_evaluation : process emsoft2016::software::obstacle_distance_evaluation.i;
+    
+    speed_threshold_calculation : process emsoft2016::software::speed_threshold_computation.i;
+    
+    speed_controller : process emsoft2016::software::speed_controller.i;
+    
+    emergency_detection : process emsoft2016::software::emergency_detection.i;
+    
+    warning_activation : process emsoft2016::software::warning_activation.i;
+	
+-- output devices
+	warning_alert : device emsoft2016::devices::warning_device;
+	brake         : device emsoft2016::devices::brake;
+	acceleration  : device emsoft2016::devices::acceleration;
+connections
+-- obstacle camera to image acquisition
+   c000 : port obstacle_camera.picture -> image_acquisition.picture;
+
+-- obstacle radar to radar acquisition
+   c010 : port obstacle_radar.distance_estimate -> radar_acquisition.obstacle_distance; 
+
+-- speed wheel sensor to speed estimate
+   c020 : port wheel_sensor.speed -> speed_estimate.wheel_sensor;
+
+-- laser sensor to speed estimate
+   c030 : port laser_sensor.speed -> speed_estimate.laser_sensor;
+
+-- GPS1 to GPS voter
+	c040 : port gps1.position -> position_voter.position1;
+	
+-- GPS2 to GPS voter
+	c050 : port gps2.position -> position_voter.position2;
+	
+-- Image acquisition to obstacle detection
+   c060 : port image_acquisition.obstacle_detected -> obstacle_detection.camera; 
+
+-- Radar acquisition to obstacle detection
+   c070 : port radar_acquisition.obstacle_detected -> obstacle_detection.radar;
+
+-- obstacle detection to obstacle distance evaluation
+   c080 : port obstacle_detection.obstacle_detected -> obstacle_distance_evaluation.obstacle_detected;
+
+-- obstacle distance evaluation to emergency detection
+   c090 : port obstacle_distance_evaluation.obstacle_distance -> emergency_detection.obstacle_distance; 
+
+-- emergency detection to warning activation
+   c100 : port emergency_detection.emergency_detected -> warning_activation.emergency_detected;
+   
+-- warning activation to warning device 
+   c110 : port warning_activation.activate_warning -> warning_alert.warning; 
+   
+-- speed estimate to speed threshold computation
+
+   c120 : port speed_estimate.speed -> speed_threshold_calculation.current_speed;
+
+-- speed estimate to speed controller
+	c130 : port speed_estimate.speed -> speed_controller.current_speed;
+
+-- speed estimate to obstacle distance evaluation
+	c140 : port speed_estimate.speed -> obstacle_distance_evaluation.current_speed;
+
+-- speed estimate to emergency detection
+	c150 : port speed_estimate.speed -> emergency_detection.current_speed;
+	
+-- emergency detection to speed controller
+	c160 : port emergency_detection.emergency_detected -> speed_controller.emergency_detected;
+	
+-- speed threshold computation to speed controller
+	c170 : port speed_threshold_calculation.threshold -> speed_controller.threshold;
+	
+-- position voter to speed controller
+	c180 : port position_voter.position -> speed_controller.position;
+	
+-- position voter to speed threshold computation
+	c190 : port position_voter.position -> speed_threshold_calculation.position;
+	
+-- speed controller to brake 
+	c200 : port speed_controller.cmd -> brake.cmd; 
+	
+-- speed controller to acceleration
+	c210 : port speed_controller.cmd -> acceleration.cmd;
+flows
+    --  From the camera to the warning device
+	f0 : end to end flow 	obstacle_camera.f0 -> c000 ->
+							image_acquisition.f0 -> c060 ->
+							obstacle_detection.f0 -> c080 ->
+							obstacle_distance_evaluation.f1 -> c090 ->
+							emergency_detection.f1 -> c100 ->
+							warning_activation.f0 -> c110 ->
+							warning_alert.f0 {Latency => 700ms .. 900 ms;};	
+    --  From the camera to the brake
+	f1 : end to end flow 	obstacle_camera.f0 -> c000 ->
+							image_acquisition.f0 -> c060 ->
+							obstacle_detection.f0 -> c080 ->
+							obstacle_distance_evaluation.f1 -> c090 ->
+							emergency_detection.f1 -> c160 ->
+							speed_controller.f3 -> c200 ->
+							brake.f0;	
+    --  From the camera to the acceleration
+	f2 : end to end flow 	obstacle_camera.f0 -> c000 ->
+							image_acquisition.f0 -> c060 ->
+							obstacle_detection.f0 -> c080 ->
+							obstacle_distance_evaluation.f1 -> c090 ->
+							emergency_detection.f1 -> c160 ->
+							speed_controller.f3 -> c210 ->
+							acceleration.f0;
+	-- From the wheel speed sensor to brake
+	f3 : end to end flow wheel_sensor.f0 -> c020 -> 
+	                     speed_estimate.f0 -> c120 ->
+	                     speed_threshold_calculation.f1 -> c170 ->
+	                     speed_controller.f2 -> c200 ->
+	                     brake.f0;
+	f4 : end to end flow wheel_sensor.f0 -> c020 -> 
+	                     speed_estimate.f0 -> c130 ->
+	                     speed_controller.f1 -> c200 ->
+	                     brake.f0;
+	                     
+	-- From the wheel speed sensor to acceleration
+	f5 : end to end flow wheel_sensor.f0 -> c020 -> 
+	                     speed_estimate.f0 -> c120 ->
+	                     speed_threshold_calculation.f1 -> c170 ->
+	                     speed_controller.f2 -> c210 ->
+	                     acceleration.f0;
+	f6 : end to end flow wheel_sensor.f0 -> c020 -> 
+	                     speed_estimate.f0 -> c130 ->
+	                     speed_controller.f1 -> c210 ->
+	                     acceleration.f0;	
+	                     
+	-- From the laser speed sensor to brake
+	f7 : end to end flow laser_sensor.f0 -> c030 -> 
+	                     speed_estimate.f1 -> c120 ->
+	                     speed_threshold_calculation.f1 -> c170 ->
+	                     speed_controller.f2 -> c200 ->
+	                     brake.f0;
+	                     
+	f8 : end to end flow laser_sensor.f0 -> c030 -> 
+	                     speed_estimate.f1 -> c130 ->
+	                     speed_controller.f1 -> c200 ->
+	                     brake.f0;	
+	                     	
+	-- From the laser speed sensor to acceleration
+	f9 : end to end flow laser_sensor.f0 -> c030 -> 
+	                     speed_estimate.f1 -> c120 ->
+	                     speed_threshold_calculation.f1 -> c170 ->
+	                     speed_controller.f2 -> c210 ->
+	                     acceleration.f0;
+	                     
+	f10 : end to end flow laser_sensor.f0 -> c030 -> 
+	                     speed_estimate.f1 -> c130 ->
+	                     speed_controller.f1 -> c210 ->
+	                     acceleration.f0;		
+	
+	-- From gps1 to brake
+	f11 : end to end flow gps1.f0 -> c040 ->
+	                      position_voter.f0 -> c190 ->
+	                      speed_threshold_calculation.f0 -> c170 ->
+	                      speed_controller.f2 -> c200 ->
+	                      brake.f0;	 
+	f12 : end to end flow gps1.f0 -> c040 ->
+	                      position_voter.f0 -> c180 ->
+	                      speed_controller.f0 -> c200 ->
+	                      brake.f0;	                     
+	-- From gps1 to acceleration
+	f13 : end to end flow gps1.f0 -> c040 ->
+	                      position_voter.f0 -> c190 ->
+	                      speed_threshold_calculation.f0 -> c170 ->
+	                      speed_controller.f2 -> c210 ->
+	                      acceleration.f0;	 
+	f14 : end to end flow gps1.f0 -> c040 ->
+	                      position_voter.f0 -> c180 ->
+	                      speed_controller.f0 -> c210 ->
+	                      acceleration.f0;	  
+
+	-- From gps2 to brake
+	f15 : end to end flow gps2.f0 -> c040 ->
+	                      position_voter.f0 -> c190 ->
+	                      speed_threshold_calculation.f0 -> c170 ->
+	                      speed_controller.f2 -> c200 ->
+	                      brake.f0;	 
+	f16 : end to end flow gps2.f0 -> c040 ->
+	                      position_voter.f0 -> c180 ->
+	                      speed_controller.f0 -> c200 ->
+	                      brake.f0;	 
+	                                          
+	-- From gps2 to acceleration
+	f17 : end to end flow gps2.f0 -> c050 ->
+	                      position_voter.f1 -> c190 ->
+	                      speed_threshold_calculation.f0 -> c170 ->
+	                      speed_controller.f2 -> c210 ->
+	                      acceleration.f0;	 
+	f18 : end to end flow gps2.f0 -> c050 ->
+	                      position_voter.f1 -> c180 ->
+	                      speed_controller.f0 -> c210 ->
+	                      acceleration.f0;	 
+
+	                      	
+	-- From wheel speed sensor to warning device
+	f19 : end to end flow wheel_sensor.f0 -> c020 -> 
+	                     speed_estimate.f0 -> c140 ->
+						 obstacle_distance_evaluation.f0 -> c090 ->
+						 emergency_detection.f1 -> c100 ->
+						 warning_activation.f0 -> c110 ->
+						 warning_alert.f0;	
+						 
+	f20 : end to end flow wheel_sensor.f0 -> c020 -> 
+	                     speed_estimate.f0 -> c150 ->
+						 emergency_detection.f0 -> c100 ->
+						 warning_activation.f0 -> c110 ->
+						 warning_alert.f0;	
+
+	-- From laser speed sensor to warning device
+	f21 : end to end flow laser_sensor.f0 -> c030 -> 
+	                     speed_estimate.f1 -> c140 ->
+						 obstacle_distance_evaluation.f0 -> c090 ->
+						 emergency_detection.f1 -> c100 ->
+						 warning_activation.f0 -> c110 ->
+						 warning_alert.f0;	
+						 
+	f22 : end to end flow laser_sensor.f0 -> c030 -> 
+	                     speed_estimate.f1 -> c150 ->
+						 emergency_detection.f0 -> c100 ->
+						 warning_activation.f0 -> c110 ->
+						 warning_alert.f0;							 
+--properties
+--	Timing => immediate applies to 	c000, c010, c020, c030, c040, c050, c060, c070, c080, c090,
+--									c100, c110, c120, c130, c140, c150, c160, c170, c180, c190,
+--									c200, c210;
+annex EMV2 {**
+	use types 		ErrorLibrary;
+	use behavior  	ErrorLibrary::FailStop;
+
+	composite error behavior
+	states
+		[brake.FailStop and acceleration.FailStop]-> FailStop;
+	end composite;
+**};						 	
+end integration.generic;
+
+
+system implementation integration.implementation1 extends integration.generic
+subcomponents
+	ecu1 : processor emsoft2016::platform::ecu_can_one_connector;
+	ecu2 : processor emsoft2016::platform::ecu_can_one_connector;
+	can  : bus emsoft2016::platform::can;
+connections
+	b0 : bus access ecu1.socket <-> can;
+	b1 : bus access ecu2.socket <-> can;
+properties
+	Actual_Connection_Binding => (reference (can)) applies to c080, c120, c130, c140, c150, c180, c190;
+	Actual_Processor_Binding => (reference (ecu1)) applies to image_acquisition, radar_acquisition, speed_estimate, position_voter, obstacle_detection;
+	Actual_Processor_Binding => (reference (ecu2)) applies to obstacle_distance_evaluation, speed_threshold_calculation, speed_controller, emergency_detection, warning_activation;
+end integration.implementation1;
+
+
+system implementation integration.implementation2 extends integration.generic
+subcomponents
+	ecu1 : processor emsoft2016::platform::ecu_rs232_one_connector;
+	ecu2 : processor emsoft2016::platform::ecu_rs232_one_connector;
+	ecu3 : processor emsoft2016::platform::ecu_rs232_two_connectors;
+	bus1  : bus emsoft2016::platform::rs232;
+	bus2  : bus emsoft2016::platform::rs232;
+connections
+	b0 : bus access ecu1.socket <-> bus1;
+	b1 : bus access ecu2.socket <-> bus2;
+	b2 : bus access ecu3.socket1 <-> bus1; 
+	b3 : bus access ecu3.socket2 <-> bus2; 
+properties
+	Actual_Connection_Binding => (reference (bus1)) applies to c080, c120, c130, c140, c150;
+	Actual_Connection_Binding => (reference (bus2)) applies to c180, c190;
+	Actual_Processor_Binding => (reference (ecu1)) applies to image_acquisition, radar_acquisition, speed_estimate, obstacle_detection;
+	Actual_Processor_Binding => (reference (ecu2)) applies to position_voter;
+	Actual_Processor_Binding => (reference (ecu3)) applies to obstacle_distance_evaluation, speed_threshold_calculation, speed_controller, emergency_detection, warning_activation;
+end integration.implementation2;
+
+
+
+end emsoft2016::integration;

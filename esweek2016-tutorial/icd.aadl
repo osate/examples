@@ -1,0 +1,55 @@
+--
+--
+--  Model for the AADL tutorial at ESWeek 2016.
+--  See details at https://wiki.sei.cmu.edu/aadl/index.php/ESWeek_Tutorial
+--
+--  Copyright Carnegie Mellon Software Engineering Institute, 2016.
+--
+
+package emsoft2016::icd
+
+public
+
+with base_types;
+with data_model;
+
+data gps_position 
+properties
+	data_size => 50 Bytes;
+	data_model::data_representation => Array;
+end gps_position;
+
+data speed extends base_types::unsigned_16
+end speed;
+
+data picture 
+properties
+	data_size => 600 KByte;
+	data_model::data_representation => array;
+end picture; 
+
+data boolean
+properties
+	data_size => 1 bits;
+end boolean;
+
+data speed_command_type
+properties
+	data_model::data_representation => enum;
+	data_model::enumerators => ("brake", "accel");
+	Data_Size => 2 bits;
+end speed_command_type;
+
+data speed_command
+end speed_command;
+
+data implementation speed_command.i
+subcomponents
+	kind : data speed_command_type;
+	value : data base_types::unsigned_16;
+end speed_command.i;
+
+data distance extends base_types::unsigned_32
+end distance;
+
+end emsoft2016::icd;

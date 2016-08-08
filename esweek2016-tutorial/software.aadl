@@ -1,0 +1,685 @@
+--
+--
+--  Model for the AADL tutorial at ESWeek 2016.
+--  See details at https://wiki.sei.cmu.edu/aadl/index.php/ESWeek_Tutorial
+--
+--  Copyright Carnegie Mellon Software Engineering Institute, 2016.
+--
+
+package emsoft2016::software
+
+public
+
+
+with emsoft2016::icd; 
+with sei;
+with emsoft2016::platform;
+
+-------------------------
+--  Image Acquisition  --
+-------------------------
+
+process image_acquisition
+features
+	picture           : in data port emsoft2016::icd::picture;
+	obstacle_detected : out data port emsoft2016::icd::boolean;
+flows
+	f0 : flow path picture -> obstacle_detected;
+annex EMV2 {**
+	use types 		ErrorLibrary;
+	use behavior  	ErrorLibrary::FailStop;
+
+	error propagations
+		picture : in propagation {ItemOmission};
+		obstacle_detected : out propagation {ItemOmission,OutOfRange};
+		processor : in propagation {ServiceError};
+	flows
+		ef0 : error path picture{ItemOmission} -> obstacle_detected{ItemOmission};
+		ef1 : error path picture{ItemOmission} -> obstacle_detected{OutOfRange};
+		ef2 : error path processor{ServiceError} -> obstacle_detected{ItemOmission};
+	end propagations;
+
+	component error behavior
+	transitions
+		t0 : Operational -[processor{ServiceError}]-> FailStop;
+		t1 : FailStop -[processor{NoError}]-> Operational;
+	propagations
+	   	p1 : FailStop -[]-> obstacle_detected{ItemOmission};
+	end component;
+**};
+end image_acquisition;
+
+process implementation image_acquisition.i
+subcomponents
+	thr_acq : thread image_acquisition_thr.i;
+connections
+	c0 : port picture -> thr_acq.picture;
+	c1 : port thr_acq.obstacle_detected -> obstacle_detected;
+flows
+	f0 : flow path picture -> c0 -> thr_acq.f0 -> c1 -> obstacle_detected;
+end image_acquisition.i;
+
+thread image_acquisition_thr
+features
+	picture           : in data port emsoft2016::icd::picture;
+	obstacle_detected : out data port emsoft2016::icd::boolean;
+flows
+	f0 : flow path picture -> obstacle_detected;
+properties
+	sei::mipsbudget   => 25.0 MIPS;
+	Dispatch_Protocol => Periodic;
+	Period            => 50ms;
+	compute_execution_time => 10 ms .. 40 ms;
+	reference_processor => classifier (emsoft2016::platform::ecu);
+	sei::instructionsperdispatch => 1.24 kipd .. 1.25 mipd; 
+end image_acquisition_thr;
+
+thread implementation image_acquisition_thr.i
+end image_acquisition_thr.i;
+
+-------------------------
+--  Radar Acquisition  --
+-------------------------
+
+process radar_acquisition
+features
+	obstacle_distance : in data port emsoft2016::icd::distance;
+	obstacle_detected : out data port emsoft2016::icd::boolean;
+flows
+	f0 : flow path obstacle_distance -> obstacle_detected;
+annex EMV2 {**
+	use types 		ErrorLibrary;
+	use behavior  	ErrorLibrary::FailStop;
+
+	error propagations
+		obstacle_distance : in propagation {ItemOmission,OutOfRange};
+		obstacle_detected : out propagation {ItemOmission,OutOfRange};
+		processor : in propagation {ServiceError};
+	flows
+		ef0 : error path obstacle_distance{ItemOmission} -> obstacle_detected{ItemOmission};
+		ef1 : error path obstacle_distance{ItemOmission} -> obstacle_detected{OutOfRange};
+		ef3 : error path obstacle_distance{OutOfRange} -> obstacle_detected{OutOfRange};
+		ef2 : error path processor{ServiceError} -> obstacle_detected{ItemOmission};
+	end propagations;
+
+	component error behavior
+	transitions
+		t0 : Operational -[processor{ServiceError}]-> FailStop;
+		t1 : FailStop -[processor{NoError}]-> Operational;
+	propagations
+	   	p1 : FailStop -[]-> obstacle_detected{ItemOmission};
+	end component;
+**};
+end radar_acquisition;
+
+process implementation radar_acquisition.i
+subcomponents
+	thr : thread radar_acquisition_thr.i;
+connections
+	c0 : port obstacle_distance -> thr.obstacle_distance;
+	c1 : port thr.obstacle_detected -> obstacle_detected;
+flows
+	f0 : flow path obstacle_distance -> c0 -> thr.f0 -> c1 -> obstacle_detected;
+end radar_acquisition.i;
+
+thread radar_acquisition_thr
+features
+	obstacle_distance : in data port emsoft2016::icd::distance;
+	obstacle_detected : out data port emsoft2016::icd::boolean;
+flows
+	f0 : flow path obstacle_distance -> obstacle_detected;
+properties
+	Dispatch_Protocol => Periodic;
+	Period            => 10ms;
+	sei::mipsbudget   => 4.0 MIPS;
+end radar_acquisition_thr;
+
+thread implementation radar_acquisition_thr.i
+end radar_acquisition_thr.i;
+
+----------------------
+--  Speed Estimate  --
+----------------------
+
+process speed_estimate
+features
+	wheel_sensor : in data port emsoft2016::icd::speed;
+	laser_sensor : in data port emsoft2016::icd::speed;
+	speed        : out data port emsoft2016::icd::speed;
+flows
+	f0 : flow path wheel_sensor -> speed;
+	f1 : flow path laser_sensor -> speed;
+annex EMV2 {**
+	use types 		ErrorLibrary;
+	use behavior  	ErrorLibrary::FailStop;
+
+	error propagations
+		wheel_sensor : in propagation {ItemOmission,OutOfRange};
+		laser_sensor : in propagation {ItemOmission,OutOfRange};
+		speed : out propagation {ItemOmission,OutOfRange};
+		processor : in propagation {ServiceError};
+	flows
+		ef0 : error path wheel_sensor{ItemOmission} -> speed{ItemOmission};
+		ef1 : error path wheel_sensor{OutOfRange} -> speed{OutOfRange};
+		ef2 : error path laser_sensor{ItemOmission} -> speed{ItemOmission};
+		ef3 : error path laser_sensor{OutOfRange} -> speed{OutOfRange};
+		ef4 : error path processor{ServiceError} -> speed{ItemOmission};
+	end propagations;
+
+	component error behavior
+	transitions
+		t0 : Operational -[processor{ServiceError}]-> FailStop;
+		t1 : FailStop -[processor{NoError}]-> Operational;
+	propagations
+	   	p1 : FailStop -[]-> speed{ItemOmission};
+	end component;
+**};
+end speed_estimate;
+
+process implementation speed_estimate.i
+subcomponents
+	thr : thread speed_estimate_thr.i;
+connections
+	c0 : port wheel_sensor -> thr.wheel_sensor;
+	c1 : port laser_sensor -> thr.laser_sensor;
+	c2 : port thr.speed -> speed;
+flows
+	f0 : flow path wheel_sensor -> c0 -> thr.f0 -> c2 -> speed;
+	f1 : flow path laser_sensor -> c1 -> thr.f1 -> c2 -> speed;
+end speed_estimate.i;
+
+thread speed_estimate_thr
+features
+	wheel_sensor : in data port emsoft2016::icd::speed;
+	laser_sensor : in data port emsoft2016::icd::speed;
+	speed        : out data port emsoft2016::icd::speed;
+flows
+	f0 : flow path wheel_sensor -> speed;
+	f1 : flow path laser_sensor -> speed;
+properties
+	Dispatch_Protocol => Periodic;
+	Period            => 8ms;
+	sei::mipsbudget   => 8.0 MIPS;
+end speed_estimate_thr;
+
+thread implementation speed_estimate_thr.i
+end speed_estimate_thr.i;
+
+--------------------------
+--  Obstacle Detection  --
+--------------------------
+
+process obstacle_detection
+features
+	camera : in data port emsoft2016::icd::boolean;
+	radar : in data port emsoft2016::icd::boolean;
+	obstacle_detected : out data port emsoft2016::icd::boolean;
+flows
+	f0 : flow path camera -> obstacle_detected;
+	f1 : flow path radar -> obstacle_detected;
+annex EMV2 {**
+	use types 		ErrorLibrary;
+	use behavior  	ErrorLibrary::FailStop;
+
+	error propagations
+		camera : in propagation {ItemOmission,OutOfRange};
+		radar : in propagation {ItemOmission,OutOfRange};
+		obstacle_detected : out propagation {ItemOmission,OutOfRange};
+		processor : in propagation {ServiceError};
+	flows
+		ef0 : error path camera{ItemOmission} -> obstacle_detected{ItemOmission};
+		ef1 : error path radar{ItemOmission} -> obstacle_detected{ItemOmission};
+		ef2 : error path camera{ItemOmission} -> obstacle_detected{OutOfRange};
+		ef3 : error path radar{ItemOmission} -> obstacle_detected{OutOfRange};
+		ef4 : error path processor{ServiceError} -> obstacle_detected{ItemOmission};
+		ef5 : error path camera{OutOfRange} -> obstacle_detected{OutOfRange};
+		ef6 : error path radar{OutOfRange} -> obstacle_detected{OutOfRange};
+		ef7 : error path processor{ServiceError} -> obstacle_detected{ItemOmission};
+
+	end propagations;
+
+	component error behavior
+	transitions
+		t0 : Operational -[processor{ServiceError}]-> FailStop;
+		t1 : FailStop -[processor{NoError}]-> Operational;
+	propagations
+	   	p1 : FailStop -[]-> obstacle_detected{ItemOmission};
+	end component;
+**};
+end obstacle_detection;
+
+process implementation obstacle_detection.i
+subcomponents
+	thr : thread obstacle_detection_thr;
+connections
+	c0 : port camera -> thr.camera;
+	c1 : port radar -> thr.radar;
+	c2 : port thr.obstacle_detected -> obstacle_detected;
+flows
+	f0 : flow path camera -> c0 -> thr.f0 -> c2 -> obstacle_detected;
+	f1 : flow path radar -> c1 -> thr.f1 -> c2 -> obstacle_detected;
+end obstacle_detection.i;
+
+thread obstacle_detection_thr
+features
+	camera : in data port emsoft2016::icd::boolean;
+	radar : in data port emsoft2016::icd::boolean;
+	obstacle_detected : out data port emsoft2016::icd::boolean;
+flows
+	f0 : flow path camera -> obstacle_detected;
+	f1 : flow path radar -> obstacle_detected;
+properties
+	Dispatch_Protocol => Periodic;
+	Period            => 100ms;
+	Compute_Execution_Time => 20 ms .. 50 ms; 
+	sei::mipsbudget   => 10.0 MIPS; 
+	sei::instructionsperdispatch => 0.9 kipd .. 0.98 mipd; 
+	reference_processor => classifier (emsoft2016::platform::ecu);
+end obstacle_detection_thr;
+
+------------------------------------
+--  Obstacle Distance Evaluation  --
+------------------------------------
+
+process obstacle_distance_evaluation
+features
+	current_speed : in data port emsoft2016::icd::speed;
+	obstacle_detected : in data port emsoft2016::icd::boolean;
+	obstacle_distance : out data port emsoft2016::icd::distance;
+flows
+	f0 : flow path current_speed -> obstacle_distance;
+	f1 : flow path obstacle_detected -> obstacle_distance;
+annex EMV2 {**
+	use types 		ErrorLibrary;
+	use behavior  	ErrorLibrary::FailStop;
+
+	error propagations
+		current_speed : in propagation {ItemOmission,OutOfRange};
+		obstacle_detected : in propagation {ItemOmission,OutOfRange};
+		obstacle_distance : out propagation {ItemOmission,OutOfRange};
+		processor : in propagation {ServiceError};
+	flows
+		ef0 : error path current_speed{ItemOmission} -> obstacle_distance{ItemOmission};
+		ef1 : error path obstacle_detected{ItemOmission} -> obstacle_distance{ItemOmission};
+		ef2 : error path current_speed{OutOfRange} -> obstacle_distance{OutOfRange};
+		ef3 : error path obstacle_detected{OutOfRange} -> obstacle_distance{OutOfRange};
+		ef4 : error path processor{ServiceError} -> obstacle_distance{ItemOmission};
+	end propagations;
+
+	component error behavior
+	transitions
+		t0 : Operational -[processor{ServiceError}]-> FailStop;
+		t1 : FailStop -[processor{NoError}]-> Operational;
+	propagations
+	   	p1 : FailStop -[]-> obstacle_distance{ItemOmission};
+	end component;
+**};
+end obstacle_distance_evaluation;
+
+process implementation obstacle_distance_evaluation.i
+subcomponents
+	thr : thread obstacle_distance_evaluation_thr;
+connections
+	c0 : port current_speed -> thr.current_speed;
+	c1 : port obstacle_detected -> thr.obstacle_detected;
+	c2 : port thr.obstacle_distance -> obstacle_distance;
+flows
+	f0 : flow path current_speed -> c0 -> thr.f0 -> c2 -> obstacle_distance;
+	f1 : flow path obstacle_detected -> c1 -> thr.f1 -> c2 -> obstacle_distance;
+end obstacle_distance_evaluation.i;
+
+thread obstacle_distance_evaluation_thr
+features
+	current_speed : in data port emsoft2016::icd::speed;
+	obstacle_detected : in data port emsoft2016::icd::boolean;
+	obstacle_distance : out data port emsoft2016::icd::distance;
+flows
+	f0 : flow path current_speed -> obstacle_distance;
+	f1 : flow path obstacle_detected -> obstacle_distance;
+properties
+	Dispatch_Protocol => Periodic;
+	Period            => 10ms;
+	sei::mipsbudget   => 8.0 MIPS;
+end obstacle_distance_evaluation_thr;
+
+---------------------------
+--  Emergency Detection  --
+---------------------------
+
+process emergency_detection
+features
+	current_speed : in data port emsoft2016::icd::speed;
+	obstacle_distance : in data port emsoft2016::icd::distance;
+	emergency_detected : out data port emsoft2016::icd::boolean;
+flows
+	f0 : flow path current_speed -> emergency_detected;
+	f1 : flow path obstacle_distance -> emergency_detected;
+annex EMV2 {**
+	use types 		ErrorLibrary;
+	use behavior  	ErrorLibrary::FailStop;
+
+	error propagations
+		current_speed : in propagation {ItemOmission,OutOfRange};
+		obstacle_distance : in propagation {ItemOmission,OutOfRange};
+		emergency_detected : out propagation {ItemOmission,OutOfRange};
+		processor : in propagation {ServiceError};
+	flows
+		ef0 : error path current_speed{ItemOmission} -> emergency_detected{ItemOmission};
+		ef1 : error path obstacle_distance{ItemOmission} -> emergency_detected{ItemOmission};
+		ef2 : error path current_speed{ItemOmission} -> emergency_detected{OutOfRange};
+		ef3 : error path obstacle_distance{ItemOmission} -> emergency_detected{OutOfRange};
+		ef4 : error path processor{ServiceError} -> emergency_detected{ItemOmission};
+		ef5 : error path current_speed{OutOfRange} -> emergency_detected{OutOfRange};
+		ef6 : error path obstacle_distance{OutOfRange} -> emergency_detected{OutOfRange};
+	end propagations;
+
+	component error behavior
+	transitions
+		t0 : Operational -[processor{ServiceError}]-> FailStop;
+		
+		t1 : FailStop -[processor{NoError}]-> Operational;
+	propagations
+	   	p1 : FailStop -[]-> emergency_detected{ItemOmission};
+	end component;
+**};
+end emergency_detection;
+
+process implementation emergency_detection.i
+subcomponents
+	thr : thread emergency_detection_thr;
+connections
+	c0 : port current_speed -> thr.current_speed;
+	c1 : port obstacle_distance -> thr.obstacle_distance;
+	c2 : port thr.emergency_detected -> emergency_detected;
+flows 
+	f0 : flow path current_speed -> c0 -> thr.f0 -> c2 -> emergency_detected;
+	f1 : flow path obstacle_distance -> c1 -> thr.f1 -> c2 -> emergency_detected;
+end emergency_detection.i;
+
+thread emergency_detection_thr
+features
+	current_speed : in data port emsoft2016::icd::speed;
+	obstacle_distance : in data port emsoft2016::icd::distance;
+	emergency_detected : out data port emsoft2016::icd::boolean;
+flows
+	f0 : flow path current_speed -> emergency_detected;
+	f1 : flow path obstacle_distance -> emergency_detected;
+properties
+	Dispatch_Protocol => Periodic;
+	Period            => 4ms;
+	sei::mipsbudget   => 5.0 MIPS;
+end emergency_detection_thr;
+
+--------------------------
+--  Warning Activation  --
+--------------------------
+
+process warning_activation
+features
+	emergency_detected : in data port emsoft2016::icd::boolean;
+	activate_warning   : out data port emsoft2016::icd::boolean;
+flows
+	f0 : flow path emergency_detected -> activate_warning;
+annex EMV2 {**
+	use types 		ErrorLibrary;
+	use behavior  	ErrorLibrary::FailStop;
+
+	error propagations
+		emergency_detected : in propagation {ItemOmission,OutOfRange};
+		activate_warning : out propagation {ItemOmission,OutOfRange};
+		processor : in propagation {ServiceError};
+	flows
+		ef0 : error path emergency_detected{ItemOmission} -> activate_warning{ItemOmission};
+		ef1 : error path emergency_detected{OutOfRange} -> activate_warning{OutOfRange};
+		ef4 : error path processor{ServiceError} -> activate_warning{ItemOmission};
+		ef5 : error path processor{ServiceError} -> activate_warning{ItemOmission};
+	end propagations;
+
+	component error behavior
+	transitions
+		t0 : Operational -[processor{ServiceError}]-> FailStop;
+		
+		t1 : FailStop -[processor{NoError}]-> Operational;
+	propagations
+	   	p1 : FailStop -[]-> activate_warning{ItemOmission};
+	end component;
+**};
+end warning_activation;
+
+process implementation warning_activation.i
+subcomponents
+	thr : thread warning_activation_thr;
+connections
+	c0 : port emergency_detected -> thr.emergency_detected;
+	c1 : port thr.activate_warning -> activate_warning;
+flows
+	f0 : flow path emergency_detected -> c0 -> thr.f0 -> c1 -> activate_warning;
+end warning_activation.i;
+
+thread warning_activation_thr
+features
+	emergency_detected : in data port emsoft2016::icd::boolean;
+	activate_warning   : out data port emsoft2016::icd::boolean;
+flows
+	f0 : flow path emergency_detected -> activate_warning;
+properties
+	Dispatch_Protocol => Periodic;
+	Period            => 2ms;
+	sei::mipsbudget   => 5.0 MIPS;
+end warning_activation_thr;
+
+----------------------
+--  Position Voter  --
+----------------------
+
+process position_voter
+features
+	position1 : in data port emsoft2016::icd::gps_position;
+	position2 : in data port emsoft2016::icd::gps_position;
+	position  : out data port emsoft2016::icd::gps_position;
+flows
+	f0 : flow path position1 -> position;
+	f1 : flow path position2 -> position;
+annex EMV2 {**
+	use types 		ErrorLibrary;
+	use behavior  	ErrorLibrary::FailStop;
+
+	error propagations
+		position1 : in propagation {ItemOmission,OutOfRange};
+		position2 : in propagation {ItemOmission,OutOfRange};
+		position : out propagation {ItemOmission,OutOfRange};
+		processor : in propagation {ServiceError};
+	flows
+		ef00 : error path position1{ItemOmission} -> position{ItemOmission};
+		ef01 : error path position1{OutOfRange} -> position{OutOfRange};
+		ef10 : error path position2{ItemOmission} -> position{ItemOmission};
+		ef11 : error path position2{OutOfRange} -> position{OutOfRange};
+		ef4 : error path processor{ServiceError} -> position{ItemOmission};
+	end propagations;
+
+	component error behavior
+	transitions
+		t0 : Operational -[processor{ServiceError}]-> FailStop;
+		t1 : FailStop -[processor{NoError}]-> Operational;
+	propagations
+	   	p1 : FailStop -[]-> position{ItemOmission};
+	end component;
+**};
+end position_voter;
+
+process implementation position_voter.i
+subcomponents
+	thr : thread position_voter_thr;
+connections
+	c0 : port position1 -> thr.position1;
+	c1 : port position2 -> thr.position2;
+	c2 : port thr.position -> position;
+flows
+	f0 : flow path position1 -> c0 -> thr.f0 -> c2 -> position;
+	f1 : flow path position2 -> c1 -> thr.f1 -> c2 -> position;
+end position_voter.i;
+
+thread position_voter_thr
+features
+	position1 : in data port emsoft2016::icd::gps_position;
+	position2 : in data port emsoft2016::icd::gps_position;
+	position  : out data port emsoft2016::icd::gps_position;
+flows
+	f0 : flow path position1 -> position;
+	f1 : flow path position2 -> position;
+properties
+	Dispatch_Protocol => Periodic;
+	Period            => 12ms;
+	sei::mipsbudget   => 8.0 MIPS;
+end position_voter_thr;
+
+-----------------------------------
+--  Speed Threshold Computation  --
+-----------------------------------
+
+process speed_threshold_computation
+features
+	position      : in data port emsoft2016::icd::gps_position;
+	current_speed : in data port emsoft2016::icd::speed;
+	threshold     : out data port emsoft2016::icd::speed;
+flows
+	f0 : flow path position -> threshold;
+	f1 : flow path current_speed -> threshold;
+annex EMV2 {**
+	use types 		ErrorLibrary;
+	use behavior  	ErrorLibrary::FailStop;
+
+	error propagations
+		position : in propagation {ItemOmission,OutOfRange};
+		current_speed : in propagation {ItemOmission,OutOfRange};
+		threshold : out propagation {ItemOmission,OutOfRange};
+		processor : in propagation {ServiceError};
+	flows
+		ef0 : error path position{ItemOmission} -> threshold{ItemOmission};
+		ef1 : error path position{OutOfRange} -> threshold{OutOfRange};
+		ef2 : error path current_speed{ItemOmission} -> threshold{ItemOmission};
+		ef3 : error path current_speed{OutOfRange} -> threshold{OutOfRange};
+		ef4 : error path processor{ServiceError} -> threshold{ItemOmission};
+	end propagations;
+
+	component error behavior
+	transitions
+		t0 : Operational -[processor{ServiceError}]-> FailStop;
+		t1 : FailStop -[processor{NoError}]-> Operational;
+	propagations
+	   	p1 : FailStop -[]-> threshold{ItemOmission};
+	end component;
+**};
+end speed_threshold_computation;
+
+process implementation speed_threshold_computation.i
+subcomponents
+	thr : thread speed_threshold_computation_thr;
+connections
+	c0 : port position -> thr.position;
+	c1 : port current_speed -> thr.current_speed;
+	c2 : port thr.threshold -> threshold;
+flows
+	f0 : flow path position -> c0 -> thr.f0 -> c2 -> threshold;
+	f1 : flow path current_speed -> c1 -> thr.f1 -> c2 -> threshold;
+end speed_threshold_computation.i; 
+
+thread speed_threshold_computation_thr
+features
+	position      : in data port emsoft2016::icd::gps_position;
+	current_speed : in data port emsoft2016::icd::speed;
+	threshold     : out data port emsoft2016::icd::speed;
+flows
+	f0 : flow path position -> threshold;
+	f1 : flow path current_speed -> threshold;
+properties
+	Dispatch_Protocol => Periodic;
+	Period            => 4ms;
+	sei::mipsbudget   => 5.0 MIPS;
+end speed_threshold_computation_thr;
+
+------------------------
+--  Speed Controller  --
+------------------------
+
+process speed_controller
+features
+	position      			: in data port emsoft2016::icd::gps_position;
+	current_speed		 	: in data port emsoft2016::icd::speed;
+	threshold     			: in data port emsoft2016::icd::speed;
+	emergency_detected     	: in data port emsoft2016::icd::boolean;
+	cmd           			: out data port emsoft2016::icd::speed_command;
+flows
+	f0 : flow path position -> cmd;
+	f1 : flow path current_speed -> cmd;
+	f2 : flow path threshold -> cmd;
+	f3 : flow path emergency_detected -> cmd;
+annex EMV2 {**
+	use types 		ErrorLibrary;
+	use behavior  	ErrorLibrary::FailStop;
+
+	error propagations
+		position : in propagation {ItemOmission,OutOfRange};
+		current_speed : in propagation {ItemOmission,OutOfRange};
+		threshold : in propagation {ItemOmission,OutOfRange};
+		emergency_detected : in propagation {ItemOmission,OutOfRange};
+		cmd : out propagation {ItemOmission,OutOfRange};
+		processor : in propagation {ServiceError};
+	flows
+		ef00 : error path position{ItemOmission} -> cmd{ItemOmission};
+		ef01 : error path position{OutOfRange} -> cmd{OutOfRange};
+		ef10 : error path current_speed{ItemOmission} -> cmd{ItemOmission};
+		ef11 : error path current_speed{OutOfRange} -> cmd{OutOfRange};
+		ef20 : error path threshold{ItemOmission} -> cmd{ItemOmission};
+		ef21 : error path threshold{OutOfRange} -> cmd{OutOfRange};
+		ef30 : error path emergency_detected{ItemOmission} -> cmd{ItemOmission};
+		ef31 : error path emergency_detected{OutOfRange} -> cmd{OutOfRange};
+		ef40 : error path processor{ServiceError} -> cmd{ItemOmission};
+	end propagations;
+
+	component error behavior
+	transitions
+		t0 : Operational -[processor{ServiceError}]-> FailStop;
+		t1 : FailStop -[processor{NoError}]-> Operational;
+	propagations
+	   	p1 : FailStop -[]-> cmd{ItemOmission};
+	end component;
+**};
+end speed_controller;
+
+process implementation speed_controller.i
+subcomponents
+	thr : thread speed_controller_thr;
+connections
+	c0 : port position -> thr.position;
+	c1 : port current_speed -> thr.current_speed;
+	c2 : port threshold -> thr.threshold;
+	c3 : port emergency_detected -> thr.emergency_detected;
+	c4 : port thr.cmd -> cmd;
+flows
+	f0 : flow path position -> c0 -> thr.f0 -> c4 -> cmd;
+	f1 : flow path current_speed -> c1 -> thr.f1 -> c4 -> cmd;
+	f2 : flow path threshold -> c2 -> thr.f2 -> c4 -> cmd;
+	f3 : flow path emergency_detected -> c3 -> thr.f3 -> c4 -> cmd;
+end speed_controller.i;
+
+thread speed_controller_thr
+features
+	position      : in data port emsoft2016::icd::gps_position;
+	current_speed : in data port emsoft2016::icd::speed;
+	threshold     : in data port emsoft2016::icd::speed;
+	emergency_detected     	: in data port emsoft2016::icd::boolean;
+	cmd           : out data port emsoft2016::icd::speed_command.i;
+flows
+	f0 : flow path position -> cmd;
+	f1 : flow path current_speed -> cmd;
+	f2 : flow path threshold -> cmd;
+	f3 : flow path emergency_detected -> cmd;
+properties
+	Dispatch_Protocol => Periodic;
+	Period            => 5ms;
+	sei::mipsbudget   => 5.0 MIPS;
+end speed_controller_thr;
+
+end emsoft2016::software;
+  

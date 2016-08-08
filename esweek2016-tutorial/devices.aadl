@@ -1,0 +1,369 @@
+--
+--
+--  Model for the AADL tutorial at ESWeek 2016.
+--  See details at https://wiki.sei.cmu.edu/aadl/index.php/ESWeek_Tutorial
+--
+--  Copyright Carnegie Mellon Software Engineering Institute, 2016.
+--
+
+package emsoft2016::devices
+
+
+public
+
+with emsoft2016::icd;
+with emv2;
+with arp4761;
+ 
+-----------------------------------
+--  Camera and Object Detection  --
+-----------------------------------
+   
+device camera
+features
+	picture : out data port emsoft2016::icd::picture;
+flows
+	f0 : flow source picture;
+properties 
+	Period => 200ms;
+	compute_execution_time => 20 ms .. 50 ms;
+annex EMV2 {**
+	use types 		ErrorLibrary;
+
+	error propagations
+		picture : out propagation {ItemOmission};
+	flows
+		ef0 : error source picture{ItemOmission};
+	end propagations;
+
+	properties
+		emv2::severity => ARP4761::Major applies to picture;
+		emv2::likelihood => ARP4761::Probable applies to picture;
+		emv2::hazards => 
+			([	crossreference => "N/A";
+				failure => "ItemOmission";
+				phases => ("all");
+				description => "No picture from the camera";
+				comment => "Would impact the detection of obstacle if the radar is not working as well";
+			])
+			applies to picture.ItemOmission;
+**};	
+end camera;
+
+device radar
+features
+	distance_estimate : out data port emsoft2016::icd::distance;
+flows
+	f0 : flow source distance_estimate;
+properties 
+	Period => 10ms;
+	compute_execution_time => 6 ms .. 8 ms;
+annex EMV2 {**
+	use types 		ErrorLibrary;
+
+	error propagations
+		distance_estimate : out propagation {ItemOmission,OutOfRange};
+	flows
+		ef0 : error source distance_estimate{ItemOmission,OutOfRange};
+	end propagations;
+
+	properties
+		emv2::severity => ARP4761::Major applies to distance_estimate.ItemOmission;
+		emv2::likelihood => ARP4761::Probable applies to distance_estimate.ItemOmission;
+		emv2::hazards => 
+			([	crossreference => "N/A";
+				failure => "ItemOmission";
+				phases => ("all");
+				description => "No information from the Radar";
+				comment => "Error if both the camera and the radar does not send any value";
+			])
+			applies to distance_estimate.ItemOmission;
+
+		emv2::severity => ARP4761::Minor applies to distance_estimate.OutOfRange;
+		emv2::likelihood => ARP4761::Probable applies to distance_estimate.OutOfRange;
+		emv2::hazards => 
+			([	crossreference => "N/A";
+				failure => "OutOfRange";
+				phases => ("all");
+				description => "Invalid distance sent by the radar";
+				comment => "First occurrences of invalid data Should be handled by the distance estimator.";
+			])
+			applies to distance_estimate.OutOfRange;
+**};
+end radar;
+ 
+---------------------
+--  Speed Sensors  --
+---------------------
+
+device speed_sensor
+features
+	speed : out data port emsoft2016::icd::speed;
+flows
+	f0 : flow source speed;
+annex EMV2 {**
+	use types 		ErrorLibrary;
+
+	error propagations
+		speed : out propagation {ItemOmission,OutOfRange};
+	flows
+		ef0 : error source speed{ItemOmission,OutOfRange};
+	end propagations;
+
+	properties
+		emv2::severity => ARP4761::Major applies to speed.OutOfRange;
+		emv2::likelihood => ARP4761::Probable applies to speed.OutOfRange;
+		emv2::severity => ARP4761::Major applies to speed.ItemOmission;
+		emv2::likelihood => ARP4761::Probable applies to speed.ItemOmission;
+**};
+end speed_sensor; 
+
+device speed_wheel_sensor extends speed_sensor
+properties
+	Period => 10ms;
+	compute_execution_time => 6 ms .. 9 ms;
+annex EMV2 {**
+	properties
+		emv2::hazards => 
+			([	crossreference => "N/A";
+				failure => "OutOfRange";
+				phases => ("all");
+				description => "Invalid value from wheel sensor";
+				comment => "The speed sensor sends invalid value. This should be then discovered and handled by the speed controller.";
+			])
+			applies to speed.OutOfRange;	
+			
+		emv2::hazards => 
+			([	crossreference => "N/A";
+				failure => "ItemOmission";
+				phases => ("all");
+				description => "No speed from wheel sensor";
+				comment => "The sensor does not sendn any speed, might be an error if all sensors does not send a consistent value";
+			])
+			applies to speed.ItemOmission;
+**};
+end speed_wheel_sensor;
+
+device speed_laser_sensor extends speed_sensor
+properties
+	Period => 10ms;
+	compute_execution_time => 6 ms .. 9 ms;
+annex EMV2 {**
+	properties
+		emv2::hazards => 
+			([	crossreference => "N/A";
+				failure => "OutOfRange";
+				phases => ("all");
+				description => "Invalid value from laser sensor";
+				comment => "The speed sensor sends invalid value. This should be then discovered and handled by the speed controller.";
+			])
+			applies to speed.OutOfRange;	
+			
+		emv2::hazards => 
+			([	crossreference => "N/A";
+				failure => "ItemOmission";
+				phases => ("all");
+				description => "No speed from laser sensor";
+				comment => "The sensor does not sendn any speed, might be an error if all sensors does not send a consistent value";
+			])
+			applies to speed.ItemOmission;
+**};
+end speed_laser_sensor;
+
+------------------
+--  GPS device  --
+------------------ 
+
+device gps
+features
+	position : out data port emsoft2016::icd::gps_position;
+flows
+	f0 : flow source position;
+annex EMV2 {**
+	use types 		ErrorLibrary;
+
+	error propagations
+		position : out propagation {ItemOmission,OutOfRange};
+	flows
+		ef0 : error source position{ItemOmission,OutOfRange};
+	end propagations;
+
+	properties
+		emv2::severity => ARP4761::Major applies to position;
+		emv2::likelihood => ARP4761::Probable applies to position;			
+		emv2::OccurrenceDistribution => [ ProbabilityValue => 3.4e-5 ; Distribution => Fixed;] applies to position.OutOfRange;
+			
+**};
+end gps;
+
+device implementation gps.impl1
+properties
+	Period => 6ms;
+annex EMV2 {**
+	use types 		ErrorLibrary;
+
+	error propagations
+		position : out propagation {ItemOmission,OutOfRange};
+	flows
+		ef0 : error source position{ItemOmission};
+		ef1 : error source position{OutOfRange};
+	end propagations;
+
+	properties
+		emv2::severity => ARP4761::Major applies to position;
+		emv2::likelihood => ARP4761::Probable applies to position;
+		emv2::hazards => 
+			([	crossreference => "N/A";
+				failure => "ItemOmission";
+				phases => ("all");
+				description => "No value from the gps from vendor1";
+				comment => "No value from the GPS, may then be an issue if the voter has no position from all gps";
+			])
+			applies to position.ItemOmission;
+		emv2::hazards => 
+			([	crossreference => "N/A";
+				failure => "OutOfRange";
+				phases => ("all");
+				description => "Invalid value from the gps";
+				comment => "Invalid value from the GPS that can then trigger issue in the position voter";
+			])
+			applies to position.OutOfRange;
+			
+		emv2::OccurrenceDistribution => [ ProbabilityValue => 3.4e-5 ; Distribution => Fixed;] applies to position.OutOfRange;
+			
+**};
+end gps.impl1;
+
+device implementation gps.impl2
+properties
+	Period => 9ms;
+annex EMV2 {**
+	use types 		ErrorLibrary;
+
+	error propagations
+		position : out propagation {ItemOmission,OutOfRange};
+	flows
+		ef0 : error source position{ItemOmission};
+		ef1 : error source position{OutOfRange};
+	end propagations;
+
+	properties
+		emv2::severity => ARP4761::Major applies to position;
+		emv2::likelihood => ARP4761::Probable applies to position;
+		emv2::hazards => 
+			([	crossreference => "N/A";
+				failure => "ItemOmission";
+				phases => ("all");
+				description => "No value from the gps from vendor2";
+				comment => "No value from the GPS, may then be an issue if the voter has no position from all gps";
+			])
+			applies to position.ItemOmission;
+		emv2::hazards => 
+			([	crossreference => "N/A";
+				failure => "OutOfRange";
+				phases => ("all");
+				description => "Invalid value from the gps from vendor2";
+				comment => "Invalid value from the GPS that can then trigger issue in the position voter";
+			])
+			applies to position.OutOfRange;
+			
+		emv2::OccurrenceDistribution => [ ProbabilityValue => 3.4e-5 ; Distribution => Fixed;] applies to position.OutOfRange;	
+**};
+end gps.impl2;
+
+----------------------
+--  Warning Device  --
+----------------------
+
+device warning_device
+features
+	warning : in data port emsoft2016::icd::boolean;
+flows
+	f0 : flow sink warning;
+properties
+	Period => 500ms;
+	Deadline => 400ms;
+	Compute_Execution_Time => 20ms .. 50ms;
+annex EMV2 {**
+	use types 		ErrorLibrary;
+	use behavior  	ErrorLibrary::FailStop;
+
+	error propagations
+		warning : in propagation {ItemOmission,OutOfRange};
+	flows
+		ef0 : error sink warning{ItemOmission,OutOfRange};
+	end propagations;
+	
+	component error behavior
+	events
+		Reset : recover event;
+	transitions
+		t0 : Operational -[warning{ItemOmission}]-> FailStop;
+		t1 : Operational -[warning{OutOfRange}]-> FailStop;
+		t2 : FailStop -[Reset]-> Operational;
+	end component;
+**};
+end warning_device;
+
+-------------
+--  Brake  --
+-------------
+
+device brake
+features
+	cmd : in data port emsoft2016::icd::speed_command.i;
+flows
+	f0 : flow sink cmd;
+properties
+	Period => 2ms;
+annex EMV2 {**
+	use types 		ErrorLibrary;
+	use behavior  	ErrorLibrary::FailStop;
+
+	error propagations
+		cmd : in propagation {ItemOmission,OutOfRange};
+	flows
+		ef0 : error sink cmd{ItemOmission,OutOfRange};
+	end propagations;
+	
+	component error behavior
+	events
+		Reset : recover event;
+	transitions
+		t0 : Operational -[cmd{ItemOmission}]-> FailStop;
+		t1 : Operational -[cmd{OutOfRange}]-> FailStop;
+		t2 : FailStop -[Reset]-> Operational;
+	end component;
+**};
+end brake;
+
+device acceleration
+features
+	cmd : in data port emsoft2016::icd::speed_command.i;
+flows
+	f0 : flow sink cmd;
+properties
+	Period => 2ms;
+annex EMV2 {**
+	use types 		ErrorLibrary;
+	use behavior  	ErrorLibrary::FailStop;
+
+	error propagations
+		cmd : in propagation {ItemOmission,OutOfRange};
+	flows
+		ef0 : error sink cmd{ItemOmission,OutOfRange};
+	end propagations;
+	
+	
+	component error behavior
+	events
+		Reset : recover event;
+	transitions
+		t0 : Operational -[cmd{ItemOmission}]-> FailStop;
+		t1 : Operational -[cmd{OutOfRange}]-> FailStop;
+		t2 : FailStop -[Reset]-> Operational;
+	end component;
+**};
+end acceleration;
+
+end emsoft2016::devices;
