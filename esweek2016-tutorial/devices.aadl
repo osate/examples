@@ -12,6 +12,7 @@ package emsoft2016::devices
 public
 
 with emsoft2016::icd;
+with emsoft2016::platform;
 with emv2;
 with arp4761;
  
@@ -170,106 +171,6 @@ annex EMV2 {**
 **};
 end speed_laser_sensor;
 
-------------------
---  GPS device  --
------------------- 
-
-device gps
-features
-	position : out data port emsoft2016::icd::gps_position;
-flows
-	f0 : flow source position;
-annex EMV2 {**
-	use types 		ErrorLibrary;
-
-	error propagations
-		position : out propagation {ItemOmission,OutOfRange};
-	flows
-		ef0 : error source position{ItemOmission,OutOfRange};
-	end propagations;
-
-	properties
-		emv2::severity => ARP4761::Major applies to position;
-		emv2::likelihood => ARP4761::Probable applies to position;			
-		emv2::OccurrenceDistribution => [ ProbabilityValue => 3.4e-5 ; Distribution => Fixed;] applies to position.OutOfRange;
-			
-**};
-end gps;
-
-device implementation gps.impl1
-properties
-	Period => 6ms;
-annex EMV2 {**
-	use types 		ErrorLibrary;
-
-	error propagations
-		position : out propagation {ItemOmission,OutOfRange};
-	flows
-		ef0 : error source position{ItemOmission};
-		ef1 : error source position{OutOfRange};
-	end propagations;
-
-	properties
-		emv2::severity => ARP4761::Major applies to position;
-		emv2::likelihood => ARP4761::Probable applies to position;
-		emv2::hazards => 
-			([	crossreference => "N/A";
-				failure => "ItemOmission";
-				phases => ("all");
-				description => "No value from the gps from vendor1";
-				comment => "No value from the GPS, may then be an issue if the voter has no position from all gps";
-			])
-			applies to position.ItemOmission;
-		emv2::hazards => 
-			([	crossreference => "N/A";
-				failure => "OutOfRange";
-				phases => ("all");
-				description => "Invalid value from the gps";
-				comment => "Invalid value from the GPS that can then trigger issue in the position voter";
-			])
-			applies to position.OutOfRange;
-			
-		emv2::OccurrenceDistribution => [ ProbabilityValue => 3.4e-5 ; Distribution => Fixed;] applies to position.OutOfRange;
-			
-**};
-end gps.impl1;
-
-device implementation gps.impl2
-properties
-	Period => 9ms;
-annex EMV2 {**
-	use types 		ErrorLibrary;
-
-	error propagations
-		position : out propagation {ItemOmission,OutOfRange};
-	flows
-		ef0 : error source position{ItemOmission};
-		ef1 : error source position{OutOfRange};
-	end propagations;
-
-	properties
-		emv2::severity => ARP4761::Major applies to position;
-		emv2::likelihood => ARP4761::Probable applies to position;
-		emv2::hazards => 
-			([	crossreference => "N/A";
-				failure => "ItemOmission";
-				phases => ("all");
-				description => "No value from the gps from vendor2";
-				comment => "No value from the GPS, may then be an issue if the voter has no position from all gps";
-			])
-			applies to position.ItemOmission;
-		emv2::hazards => 
-			([	crossreference => "N/A";
-				failure => "OutOfRange";
-				phases => ("all");
-				description => "Invalid value from the gps from vendor2";
-				comment => "Invalid value from the GPS that can then trigger issue in the position voter";
-			])
-			applies to position.OutOfRange;
-			
-		emv2::OccurrenceDistribution => [ ProbabilityValue => 3.4e-5 ; Distribution => Fixed;] applies to position.OutOfRange;	
-**};
-end gps.impl2;
 
 ----------------------
 --  Warning Device  --
@@ -311,7 +212,7 @@ end warning_device;
 
 device brake
 features
-	cmd : in data port emsoft2016::icd::speed_command.i;
+	cmd : in data port emsoft2016::icd::brake_cmd;
 flows
 	f0 : flow sink cmd;
 properties
@@ -339,7 +240,7 @@ end brake;
 
 device acceleration
 features
-	cmd : in data port emsoft2016::icd::speed_command.i;
+	cmd : in data port emsoft2016::icd::speed_cmd;
 flows
 	f0 : flow sink cmd;
 properties
@@ -365,5 +266,39 @@ annex EMV2 {**
 	end component;
 **};
 end acceleration;
+
+device panel
+features
+	increase_speed : in event port;
+	decrease_speed : in event port;
+end panel;
+
+device screen
+features
+	tire_pressure : in data port emsoft2016::icd::pressure;
+	desired_speed : in data port emsoft2016::icd::speed;
+	actual_speed : in data port emsoft2016::icd::speed;
+	warning : in data port emsoft2016::icd::boolean;
+	entertainment_infos : in data port emsoft2016::icd::entertainment_infos;
+end screen;
+
+device tpms
+features
+	pressure : out data port emsoft2016::icd::pressure;
+end tpms;
+
+device bluetooth_controller
+features
+	bt        : requires bus access emsoft2016::platform::bluetooth;
+	music     : out data port emsoft2016::icd::music.i;
+	contacts  : out data port emsoft2016::icd::contacts.i;
+end bluetooth_controller;
+
+device speaker
+features
+	music  : in data port emsoft2016::icd::music.i;
+flows
+	f0 : flow sink music;
+end speaker;
 
 end emsoft2016::devices;

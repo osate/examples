@@ -116,4 +116,7 @@ properties
                           PerByte => 2 ms .. 5 ms; ];
 end rs232;
 
+bus bluetooth
+end bluetooth;
+
 end emsoft2016::platform;
