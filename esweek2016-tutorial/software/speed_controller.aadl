@@ -35,26 +35,35 @@ annex EMV2 {**
 	use behavior  	ErrorLibrary::FailStop;
 
 	error propagations
-		obstacle_position : in propagation {ItemOmission,OutOfRange};
+		obstacle_position : in propagation {ItemOmission};
 		current_speed : in propagation {ItemOmission,OutOfRange};
-		desired_speed : in propagation {OutOfRange};
+		desired_speed : in propagation {ItemOmission,OutOfRange};
 		brake_cmd : out propagation {ItemOmission,OutOfRange};
 		speed_cmd : out propagation {ItemOmission,OutOfRange};
+		warning : out propagation {ItemOmission};
 		processor : in propagation {ServiceError};
 	flows
-		ef00 : error path obstacle_position{ItemOmission}  -> brake_cmd{ItemOmission};
-		ef01 : error path obstacle_position{OutOfRange}    -> brake_cmd{OutOfRange};
+		ef00 : error path obstacle_position{ItemOmission}  -> brake_cmd{OutOfRange};
+		ef01 : error path obstacle_position{ItemOmission}  -> brake_cmd{ItemOmission};
 		ef02 : error path current_speed{ItemOmission}      -> brake_cmd{ItemOmission};
 		ef03 : error path current_speed{OutOfRange}        -> brake_cmd{OutOfRange};
 		ef05 : error path desired_speed{OutOfRange}        -> brake_cmd{OutOfRange};
 		ef06 : error path processor{ServiceError}          -> brake_cmd{ItemOmission};
 		
-		ef10 : error path obstacle_position{ItemOmission}  -> speed_cmd{ItemOmission};
-		ef11 : error path obstacle_position{OutOfRange}    -> speed_cmd{OutOfRange};
+		ef10 : error path obstacle_position{ItemOmission}  -> speed_cmd{OutOfRange};
+		ef11 : error path obstacle_position{ItemOmission}  -> speed_cmd{ItemOmission};
 		ef12 : error path current_speed{ItemOmission}      -> speed_cmd{ItemOmission};
 		ef13 : error path current_speed{OutOfRange}        -> speed_cmd{OutOfRange};
 		ef15 : error path desired_speed{OutOfRange}        -> speed_cmd{OutOfRange};
 		ef16 : error path processor{ServiceError}          -> speed_cmd{ItemOmission};
+		
+		ef20 : error path obstacle_position{ItemOmission}  -> warning{ItemOmission};
+		ef21 : error path current_speed{ItemOmission}      -> warning{ItemOmission};
+		ef22 : error path current_speed{OutOfRange}        -> warning{ItemOmission};
+		ef23 : error path desired_speed{OutOfRange}        -> warning{ItemOmission};
+		ef24 : error path processor{ServiceError}          -> warning{ItemOmission};
+		
+		ef30 : error sink desired_speed{ItemOmission};
 	end propagations;
 
 	component error behavior

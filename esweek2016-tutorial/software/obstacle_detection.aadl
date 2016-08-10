@@ -24,18 +24,13 @@ annex EMV2 {**
 	error propagations
 		camera : in propagation {ItemOmission,OutOfRange};
 		radar : in propagation {ItemOmission,OutOfRange};
-		obstacle_position : out propagation {ItemOmission,OutOfRange};
+		obstacle_position : out propagation {ItemOmission};
 		processor : in propagation {ServiceError};
 	flows
 		ef0 : error path camera{ItemOmission} -> obstacle_position{ItemOmission};
 		ef1 : error path radar{ItemOmission} -> obstacle_position{ItemOmission};
-		ef2 : error path camera{ItemOmission} -> obstacle_position{OutOfRange};
-		ef3 : error path radar{ItemOmission} -> obstacle_position{OutOfRange};
-		ef4 : error path processor{ServiceError} -> obstacle_position{ItemOmission};
-		ef5 : error path camera{OutOfRange} -> obstacle_position{OutOfRange};
-		ef6 : error path radar{OutOfRange} -> obstacle_position{OutOfRange};
-		ef7 : error path processor{ServiceError} -> obstacle_position{ItemOmission};
-
+		ef2 : error path processor{ServiceError} -> obstacle_position{ItemOmission};
+		ef3 : error path processor{ServiceError} -> obstacle_position{ItemOmission};
 	end propagations;
 
 	component error behavior

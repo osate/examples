@@ -6,22 +6,54 @@ with emsoft2016::icd;
 process panel_control
 features
 	increase_speed : in event port;
-	decrease_speed : out event port;
+	decrease_speed : in event port;
 	current_speed : in data port emsoft2016::icd::speed;
-	tire_pressure : in data port emsoft2016::icd::pressure;
+	desired_speed : out data port emsoft2016::icd::speed;
+	tire_pressure_in : in data port emsoft2016::icd::pressure;
+	tire_pressure_out : out data port emsoft2016::icd::pressure;
+annex EMV2 {**
+	use types 		ErrorLibrary;
+	use behavior  	ErrorLibrary::FailStop;
+
+	error propagations
+		current_speed : in propagation {ItemOmission,OutOfRange};
+		desired_speed : out propagation {ItemOmission,OutOfRange};
+		tire_pressure_out : out propagation {OutOfRange};
+		increase_speed : in propagation {ItemOmission};
+		decrease_speed : in propagation {ItemOmission};
+		tire_pressure_in : in propagation {OutOfRange};
+	flows
+		ef0 : error path current_speed{ItemOmission} -> desired_speed{ItemOmission};
+		ef1 : error path current_speed{OutOfRange} -> desired_speed{OutOfRange};
+		ef2 : error path tire_pressure_in{OutOfRange} -> desired_speed{OutOfRange};
+		ef3 : error path increase_speed{ItemOmission} -> desired_speed{OutOfRange};
+		ef4 : error path decrease_speed{ItemOmission} -> desired_speed{OutOfRange};
+		ef5 : error source desired_speed{OutOfRange};
+		ef6 : error source desired_speed{ItemOmission};
+	end propagations;
+**};
 end panel_control;
 
 process implementation panel_control.i
 subcomponents
 	thr : thread panel_control_thr;
+connections
+	c0 : port increase_speed -> thr.increase_speed;
+	c1 : port decrease_speed -> thr.decrease_speed;
+	c2 : port current_speed -> thr.current_speed;
+	c3 : port tire_pressure_in -> thr.tire_pressure_in;
+	c4 : port thr.tire_pressure_out -> tire_pressure_out;
+	c5 : port thr.desired_speed -> desired_speed;
 end panel_control.i;
 
 thread panel_control_thr
 features
 	increase_speed : in event port;
-	decrease_speed : out event port;
+	decrease_speed : in event port;
 	current_speed : in data port emsoft2016::icd::speed;
-	tire_pressure : in data port emsoft2016::icd::pressure;
+	desired_speed : out data port emsoft2016::icd::speed;
+	tire_pressure_in : in data port emsoft2016::icd::pressure;
+	tire_pressure_out : out data port emsoft2016::icd::pressure;
 end panel_control_thr;
 
 end emsoft2016::software::panel_control;

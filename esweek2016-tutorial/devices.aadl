@@ -172,40 +172,6 @@ annex EMV2 {**
 end speed_laser_sensor;
 
 
-----------------------
---  Warning Device  --
-----------------------
-
-device warning_device
-features
-	warning : in data port emsoft2016::icd::boolean;
-flows
-	f0 : flow sink warning;
-properties
-	Period => 500ms;
-	Deadline => 400ms;
-	Compute_Execution_Time => 20ms .. 50ms;
-annex EMV2 {**
-	use types 		ErrorLibrary;
-	use behavior  	ErrorLibrary::FailStop;
-
-	error propagations
-		warning : in propagation {ItemOmission,OutOfRange};
-	flows
-		ef0 : error sink warning{ItemOmission,OutOfRange};
-	end propagations;
-	
-	component error behavior
-	events
-		Reset : recover event;
-	transitions
-		t0 : Operational -[warning{ItemOmission}]-> FailStop;
-		t1 : Operational -[warning{OutOfRange}]-> FailStop;
-		t2 : FailStop -[Reset]-> Operational;
-	end component;
-**};
-end warning_device;
-
 -------------
 --  Brake  --
 -------------
@@ -271,6 +237,18 @@ device panel
 features
 	increase_speed : out event port;
 	decrease_speed : out event port;
+annex EMV2 {**
+	use types 		ErrorLibrary;
+	use behavior  	ErrorLibrary::FailStop;
+
+	error propagations
+		increase_speed : out propagation {ItemOmission};
+		decrease_speed : out propagation {ItemOmission};
+	flows
+		ef0 : error source increase_speed{ItemOmission};
+		ef1 : error source decrease_speed{ItemOmission};
+	end propagations;
+**};
 end panel;
 
 device screen
@@ -280,6 +258,24 @@ features
 	actual_speed : in data port emsoft2016::icd::speed;
 	warning : in data port emsoft2016::icd::boolean;
 	entertainment_infos : in data port emsoft2016::icd::entertainment_infos;
+annex EMV2 {**
+	use types 		ErrorLibrary;
+	use behavior  	ErrorLibrary::FailStop;
+
+	error propagations
+		tire_pressure : in propagation {OutOfRange};
+		desired_speed : in propagation {ItemOmission,OutOfRange};
+		actual_speed : in propagation {ItemOmission,OutOfRange};
+		warning : in propagation {ItemOmission};
+	flows
+		ef0 : error sink tire_pressure{OutOfRange};
+		ef1 : error sink desired_speed{ItemOmission};
+		ef2 : error sink desired_speed{OutOfRange};
+		ef3 : error sink actual_speed{ItemOmission};
+		ef4 : error sink actual_speed{OutOfRange};
+		ef5 : error sink warning{ItemOmission};
+	end propagations;
+**};
 end screen;
 
 device tpms
