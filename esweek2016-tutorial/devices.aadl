@@ -53,7 +53,7 @@ end camera;
 
 device radar
 features
-	distance_estimate : out data port emsoft2016::icd::distance;
+	distance_estimate : out data port emsoft2016::icd::obstacle_position.i;
 flows
 	f0 : flow source distance_estimate;
 properties 
@@ -269,8 +269,8 @@ end acceleration;
 
 device panel
 features
-	increase_speed : in event port;
-	decrease_speed : in event port;
+	increase_speed : out event port;
+	decrease_speed : out event port;
 end panel;
 
 device screen

@@ -11,7 +11,12 @@ package emsoft2016::integration
 public
 
 with emsoft2016::devices;
-with emsoft2016::software;
+with emsoft2016::software::image_acquisition;
+with emsoft2016::software::obstacle_detection;
+with emsoft2016::software::panel_control;
+with emsoft2016::software::speed_controller;
+with emsoft2016::software::speed_voter;
+with emsoft2016::software::entertainment;
 with emsoft2016::platform;
 
 system integration
@@ -33,13 +38,15 @@ subcomponents
 	bluetooth_ctrl     : device emsoft2016::devices::bluetooth_controller;
 
 -- software
-    image_acquisition : process emsoft2016::software::image_acquisition.i;
-    obstacle_detection : process emsoft2016::software::obstacle_detection.i;
+    image_acquisition : process emsoft2016::software::image_acquisition::image_acquisition.i;
+    obstacle_detection : process emsoft2016::software::obstacle_detection::obstacle_detection.i;
     
-    speed_voter   : process emsoft2016::software::speed_voter.i;
-    speed_ctrl    : process emsoft2016::software::speed_controller.i;
+    panel_controller : process emsoft2016::software::panel_control::panel_control.i;
+    
+    speed_voter   : process emsoft2016::software::speed_voter::speed_voter.i;
+    speed_ctrl    : process emsoft2016::software::speed_controller::speed_controller.i;
 
-    entertainment : process emsoft2016::software::entertainment.i;
+    entertainment : process emsoft2016::software::entertainment::entertainment.i;
     
 -- output devices
 	brake         : device emsoft2016::devices::brake;
@@ -48,6 +55,17 @@ subcomponents
 	speaker       : device emsoft2016::devices::speaker;
 connections
     c00 : port obstacle_camera.picture -> image_acquisition.picture;
+    c01 : port image_acquisition.obstacle_detected -> obstacle_detection.camera; 
+    c02 : port obstacle_radar.distance_estimate -> obstacle_detection.radar;
+    c03 : port obstacle_detection.obstacle_position -> speed_ctrl.obstacle_position;
+    c04 : port wheel_sensor.speed -> speed_voter.wheel_sensor;
+    c05 : port laser_sensor.speed -> speed_voter.laser_sensor;
+    c06 : port speed_voter.speed -> speed_ctrl.current_speed;
+    c07 : port speed_voter.speed -> screen.actual_speed;
+    c08 : port speed_ctrl.speed_cmd -> acceleration.cmd;
+    c09 : port speed_ctrl.brake_cmd -> brake.cmd;
+    c10 : port speed_ctrl.warning -> screen.warning;
+--    c11 : port panel.desired_speed -> spee
 annex EMV2 {**
 	use types 		ErrorLibrary;
 	use behavior  	ErrorLibrary::FailStop;

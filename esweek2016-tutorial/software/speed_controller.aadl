@@ -1,0 +1,154 @@
+package emsoft2016::software::speed_controller
+
+public
+
+with emsoft2016::icd; 
+with sei;
+
+------------------------
+--  Speed Controller  --
+------------------------
+
+process speed_controller
+features
+	obstacle_position : in data port emsoft2016::icd::obstacle_position.i;
+	current_speed     : in data port emsoft2016::icd::speed;
+	desired_speed     : in data port emsoft2016::icd::speed;
+	brake_cmd         : out data port emsoft2016::icd::brake_cmd;
+	speed_cmd         : out data port emsoft2016::icd::speed_cmd;
+	warning           : out data port emsoft2016::icd::boolean;
+flows
+	f00 : flow path obstacle_position -> speed_cmd;
+	f01 : flow path current_speed -> speed_cmd;
+	f02 : flow path desired_speed -> speed_cmd;
+	
+	f10 : flow path obstacle_position -> brake_cmd;
+	f11 : flow path current_speed -> brake_cmd;
+	f12 : flow path desired_speed -> brake_cmd;
+
+	f20 : flow path obstacle_position -> warning;
+	f21 : flow path current_speed -> warning;
+	f22 : flow path desired_speed -> warning;
+	
+annex EMV2 {**
+	use types 		ErrorLibrary;
+	use behavior  	ErrorLibrary::FailStop;
+
+	error propagations
+		obstacle_position : in propagation {ItemOmission,OutOfRange};
+		current_speed : in propagation {ItemOmission,OutOfRange};
+		desired_speed : in propagation {OutOfRange};
+		brake_cmd : out propagation {ItemOmission,OutOfRange};
+		speed_cmd : out propagation {ItemOmission,OutOfRange};
+		processor : in propagation {ServiceError};
+	flows
+		ef00 : error path obstacle_position{ItemOmission}  -> brake_cmd{ItemOmission};
+		ef01 : error path obstacle_position{OutOfRange}    -> brake_cmd{OutOfRange};
+		ef02 : error path current_speed{ItemOmission}      -> brake_cmd{ItemOmission};
+		ef03 : error path current_speed{OutOfRange}        -> brake_cmd{OutOfRange};
+		ef05 : error path desired_speed{OutOfRange}        -> brake_cmd{OutOfRange};
+		ef06 : error path processor{ServiceError}          -> brake_cmd{ItemOmission};
+		
+		ef10 : error path obstacle_position{ItemOmission}  -> speed_cmd{ItemOmission};
+		ef11 : error path obstacle_position{OutOfRange}    -> speed_cmd{OutOfRange};
+		ef12 : error path current_speed{ItemOmission}      -> speed_cmd{ItemOmission};
+		ef13 : error path current_speed{OutOfRange}        -> speed_cmd{OutOfRange};
+		ef15 : error path desired_speed{OutOfRange}        -> speed_cmd{OutOfRange};
+		ef16 : error path processor{ServiceError}          -> speed_cmd{ItemOmission};
+	end propagations;
+
+	component error behavior
+	transitions
+		t0 : Operational -[processor{ServiceError}]-> FailStop;
+		t1 : FailStop -[processor{NoError}]-> Operational;
+	propagations
+	   	p0 : FailStop -[]-> speed_cmd{ItemOmission};
+	   	p1 : FailStop -[]-> brake_cmd{ItemOmission};
+	end component;
+**};
+end speed_controller;
+
+process implementation speed_controller.i
+subcomponents
+	accel_thr : thread speed_controller_accel_thr;
+	brake_thr : thread speed_controller_brake_thr;
+	warning_thr : thread speed_controller_warning_thr;
+connections
+	c00 : port obstacle_position    -> accel_thr.obstacle_position;
+	c01 : port current_speed        -> accel_thr.current_speed;
+	c02 : port desired_speed        -> accel_thr.desired_speed;
+	c03 : port accel_thr.speed_cmd  -> speed_cmd;
+
+	c10 : port obstacle_position    -> brake_thr.obstacle_position;
+	c11 : port current_speed        -> brake_thr.current_speed;
+	c12 : port desired_speed        -> brake_thr.desired_speed;
+	c13 : port brake_thr.brake_cmd  -> brake_cmd;
+
+	c20 : port obstacle_position    -> warning_thr.obstacle_position;
+	c21 : port current_speed        -> warning_thr.current_speed;
+	c22 : port desired_speed        -> warning_thr.desired_speed;
+	c23 : port warning_thr.warning  -> warning;
+flows
+	f00 : flow path obstacle_position -> c00 -> accel_thr.f0 -> c03 -> speed_cmd;
+	f01 : flow path current_speed -> c01 -> accel_thr.f1 -> c03 -> speed_cmd;
+	f02 : flow path desired_speed -> c02 -> accel_thr.f2 -> c03 -> speed_cmd;
+	
+	f10 : flow path obstacle_position  -> c10 -> brake_thr.f0 -> c13 -> brake_cmd;
+	f11 : flow path current_speed      -> c11 -> brake_thr.f1 -> c13 -> brake_cmd;
+	f12 : flow path desired_speed      -> c12 -> brake_thr.f2 -> c13 -> brake_cmd;
+	
+	f20 : flow path obstacle_position    -> c20 -> warning_thr.f0 -> c23 -> warning;
+	f21 : flow path current_speed        -> c21 -> warning_thr.f1 -> c23 -> warning;
+	f22 : flow path desired_speed        -> c22 -> warning_thr.f2 -> c23 -> warning;
+end speed_controller.i;
+
+thread speed_controller_warning_thr
+features
+	obstacle_position : in data port emsoft2016::icd::obstacle_position.i;
+	current_speed     : in data port emsoft2016::icd::speed;
+	desired_speed     : in data port emsoft2016::icd::speed;
+	warning         : out data port emsoft2016::icd::boolean;
+flows
+	f0 : flow path obstacle_position -> warning;
+	f1 : flow path current_speed -> warning;
+	f2 : flow path desired_speed -> warning;
+properties
+	Dispatch_Protocol => Periodic;
+	Period            => 5ms;
+	sei::mipsbudget   => 5.0 MIPS;
+end speed_controller_warning_thr;
+
+thread speed_controller_brake_thr
+features
+	obstacle_position : in data port emsoft2016::icd::obstacle_position.i;
+	current_speed     : in data port emsoft2016::icd::speed;
+	desired_speed     : in data port emsoft2016::icd::speed;
+	brake_cmd         : out data port emsoft2016::icd::brake_cmd;
+flows
+	f0 : flow path obstacle_position -> brake_cmd;
+	f1 : flow path current_speed -> brake_cmd;
+	f2 : flow path desired_speed -> brake_cmd;
+properties
+	Dispatch_Protocol => Periodic;
+	Period            => 5ms;
+	sei::mipsbudget   => 5.0 MIPS;
+end speed_controller_brake_thr;
+
+thread speed_controller_accel_thr
+features
+	obstacle_position : in data port emsoft2016::icd::obstacle_position.i;
+	current_speed     : in data port emsoft2016::icd::speed;
+	desired_speed     : in data port emsoft2016::icd::speed;
+	speed_cmd         : out data port emsoft2016::icd::speed_cmd;
+flows
+	f0 : flow path obstacle_position -> speed_cmd;
+	f1 : flow path current_speed -> speed_cmd;
+	f2 : flow path desired_speed -> speed_cmd;
+properties
+	Dispatch_Protocol => Periodic;
+	Period            => 5ms;
+	sei::mipsbudget   => 5.0 MIPS;
+end speed_controller_accel_thr;
+
+
+end emsoft2016::software::speed_controller;

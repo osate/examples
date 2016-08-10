@@ -1,0 +1,81 @@
+package emsoft2016::software::obstacle_detection
+
+public
+
+with emsoft2016::icd; 
+with sei;
+
+--------------------------
+--  Obstacle Detection  --
+--------------------------
+
+process obstacle_detection
+features
+	camera : in data port emsoft2016::icd::obstacle_position.i;
+	radar : in data port emsoft2016::icd::obstacle_position.i;
+	obstacle_position : out data port emsoft2016::icd::obstacle_position.i;
+flows
+	f0 : flow path camera -> obstacle_position;
+	f1 : flow path radar -> obstacle_position;
+annex EMV2 {**
+	use types 		ErrorLibrary;
+	use behavior  	ErrorLibrary::FailStop;
+
+	error propagations
+		camera : in propagation {ItemOmission,OutOfRange};
+		radar : in propagation {ItemOmission,OutOfRange};
+		obstacle_position : out propagation {ItemOmission,OutOfRange};
+		processor : in propagation {ServiceError};
+	flows
+		ef0 : error path camera{ItemOmission} -> obstacle_position{ItemOmission};
+		ef1 : error path radar{ItemOmission} -> obstacle_position{ItemOmission};
+		ef2 : error path camera{ItemOmission} -> obstacle_position{OutOfRange};
+		ef3 : error path radar{ItemOmission} -> obstacle_position{OutOfRange};
+		ef4 : error path processor{ServiceError} -> obstacle_position{ItemOmission};
+		ef5 : error path camera{OutOfRange} -> obstacle_position{OutOfRange};
+		ef6 : error path radar{OutOfRange} -> obstacle_position{OutOfRange};
+		ef7 : error path processor{ServiceError} -> obstacle_position{ItemOmission};
+
+	end propagations;
+
+	component error behavior
+	transitions
+		t0 : Operational -[processor{ServiceError}]-> FailStop;
+		t1 : FailStop -[processor{NoError}]-> Operational;
+	propagations
+	   	p1 : FailStop -[]-> obstacle_position{ItemOmission};
+	end component;
+**};
+end obstacle_detection;
+
+process implementation obstacle_detection.i
+subcomponents
+	thr : thread obstacle_detection_thr;
+connections
+	c0 : port camera -> thr.camera;
+	c1 : port radar -> thr.radar;
+	c2 : port thr.obstacle_detected -> obstacle_position;
+flows
+	f0 : flow path camera -> c0 -> thr.f0 -> c2 -> obstacle_position;
+	f1 : flow path radar -> c1 -> thr.f1 -> c2 -> obstacle_position;
+end obstacle_detection.i;
+
+thread obstacle_detection_thr
+features
+	camera : in data port emsoft2016::icd::obstacle_position.i;
+	radar : in data port emsoft2016::icd::obstacle_position.i;
+	obstacle_detected : out data port emsoft2016::icd::obstacle_position.i;
+flows
+	f0 : flow path camera -> obstacle_detected;
+	f1 : flow path radar -> obstacle_detected;
+properties
+	Dispatch_Protocol => Periodic;
+	Period            => 100ms;
+	Compute_Execution_Time => 20 ms .. 50 ms; 
+	sei::mipsbudget   => 10.0 MIPS; 
+	sei::instructionsperdispatch => 0.9 kipd .. 0.98 mipd; 
+--	reference_processor => classifier (emsoft2016::platform::ecu);
+end obstacle_detection_thr;
+
+
+end emsoft2016::software::obstacle_detection;

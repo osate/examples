@@ -1,0 +1,27 @@
+package emsoft2016::software::panel_control
+public
+
+with emsoft2016::icd;
+
+process panel_control
+features
+	increase_speed : in event port;
+	decrease_speed : out event port;
+	current_speed : in data port emsoft2016::icd::speed;
+	tire_pressure : in data port emsoft2016::icd::pressure;
+end panel_control;
+
+process implementation panel_control.i
+subcomponents
+	thr : thread panel_control_thr;
+end panel_control.i;
+
+thread panel_control_thr
+features
+	increase_speed : in event port;
+	decrease_speed : out event port;
+	current_speed : in data port emsoft2016::icd::speed;
+	tire_pressure : in data port emsoft2016::icd::pressure;
+end panel_control_thr;
+
+end emsoft2016::software::panel_control;
