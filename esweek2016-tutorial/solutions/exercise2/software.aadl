@@ -1,0 +1,64 @@
+package emsoft2016::solutions::exercise2::software
+public
+	with emsoft2016::solutions::exercise1::datamodel;
+	with emsoft2016::solutions::exercise1::software;
+
+	--
+	--  We extend the description from the previous example and bring the capability
+	--  to interface with the devices from the outside. Here, we want to have the capability
+	--  to be able to interface with the sensors.
+	--
+
+	thread filtering_thr extends emsoft2016::solutions::exercise1::software::filtering_thr
+	features
+		raw_value0       : in data port emsoft2016::solutions::exercise1::datamodel::temperature;
+		raw_value1       : in data port emsoft2016::solutions::exercise1::datamodel::temperature;
+	properties
+		dispatch_protocol => periodic;
+		period => 10 sec;	
+	end filtering_thr;
+
+	process filtering extends emsoft2016::solutions::exercise1::software::filtering
+	features
+		raw_value0       : in data port emsoft2016::solutions::exercise1::datamodel::temperature;
+		raw_value1       : in data port emsoft2016::solutions::exercise1::datamodel::temperature;
+	end filtering;
+	
+	process implementation filtering.i extends emsoft2016::solutions::exercise1::software::filtering.i
+	subcomponents
+		thr : refined to thread filtering_thr;
+	connections
+		c1 : port raw_value0 -> thr.raw_value0;
+		c2 : port raw_value1 -> thr.raw_value1;
+	end filtering.i;
+	
+	--
+	--  We extend the description from the previous example and bring the capability
+	--  to interface with the devices from the outside. Here, we want to have the capability
+	--  to be able to interface with the heater and cooler.
+	--
+	
+	thread air_conditioner_thr extends emsoft2016::solutions::exercise1::software::air_conditioner_thr
+	features
+		activate_heater : out event port;
+		activate_cooler : out event port;
+	properties
+		dispatch_protocol => periodic;
+		period => 10 sec;
+	end air_conditioner_thr;
+	
+	process air_conditioner extends emsoft2016::solutions::exercise1::software::air_conditioner
+	features
+		activate_heater : out event port;
+		activate_cooler : out event port;
+	end air_conditioner;
+	
+	process implementation air_conditioner.i extends emsoft2016::solutions::exercise1::software::air_conditioner.i
+	subcomponents
+		thr : refined to thread air_conditioner_thr;
+	connections
+		c1 : port thr.activate_cooler -> activate_cooler;
+		c2 : port thr.activate_heater -> activate_heater;
+	end air_conditioner.i;
+
+end emsoft2016::solutions::exercise2::software;

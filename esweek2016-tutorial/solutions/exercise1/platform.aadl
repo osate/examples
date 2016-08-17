@@ -1,0 +1,12 @@
+package emsoft2016::solutions::exercise1::platform
+public
+
+	bus ethernet
+	end ethernet;
+
+	processor arm
+	features
+		eth_socket : requires bus access ethernet;
+	end arm;
+	
+end emsoft2016::solutions::exercise1::platform;

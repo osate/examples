@@ -1,0 +1,122 @@
+--
+--
+--  Model for the AADL tutorial at ESWeek 2016.
+--  See details at https://wiki.sei.cmu.edu/aadl/index.php/ESWeek_Tutorial
+--
+--  Copyright Carnegie Mellon Software Engineering Institute, 2016.
+--
+
+package emsoft2016::platform
+
+public
+
+with SEI;
+with emv2;
+with arp4761;
+
+processor ecu 
+properties 
+	SEI::MIPSCapacity => 50.0 MIPS; 
+annex EMV2 {**
+	use types 		ErrorLibrary;
+	use behavior  	ErrorLibrary::FailStop;
+
+	error propagations
+		bindings : out propagation {ServiceError};
+	flows
+		fsoft : error source bindings{ServiceError};
+		fhard : error source bindings{ServiceError};
+	end propagations;
+
+	component error behavior
+	events
+		SoftwareError : error event;
+		HardwareError : error event;
+		Reset         : recover event;
+	transitions
+		Operational -[SoftwareError]-> FailStop; 
+		Operational -[HardwareError]-> FailStop;
+		FailStop      -[Reset]->         Operational;
+	propagations
+		normal       : Operational -[]-> bindings {NoError};
+		fs           : FailStop -[]-> bindings{ServiceError};  
+	end component;
+	properties
+		emv2::severity => ARP4761::Major applies to SoftwareError;
+		emv2::likelihood => ARP4761::Probable applies to SoftwareError;
+		emv2::hazards => 
+			([	crossreference => "N/A";
+				failure => "SoftwareFault";
+				phases => ("all");
+				description => "Software failure from the platform (OS exception, etc.)";
+				comment => "Impact all components that are controlled by this software";
+			])
+			applies to SoftwareError;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.35e-5 ; Distribution => Poisson;] applies to SoftwareError;
+
+
+		emv2::severity => ARP4761::Major applies to HardwareError;
+		emv2::likelihood => ARP4761::Probable applies to HardwareError;
+		emv2::hazards => 
+			([	crossreference => "N/A";
+				failure => "HardwareFault";
+				phases => ("all");
+				description => "Hardware failure from the platform (OS exception, etc.)";
+				comment => "Impact all components that are controlled by this processor";
+			])
+			applies to HardwareError;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.35e-5 ; Distribution => Poisson;] applies to HardwareError;
+**};	
+end ecu;
+
+
+processor ecu_can_one_connector extends ecu
+features
+	socket : requires bus access can;
+end ecu_can_one_connector;
+
+
+processor ecu_rs232_one_connector extends ecu
+features
+	socket : requires bus access rs232;
+end ecu_rs232_one_connector;
+
+processor ecu_can_two_connectors extends ecu
+features
+	socket1 : requires bus access can;
+	socket2 : requires bus access can;
+end ecu_can_two_connectors;
+
+processor ecu_rs232_two_connectors extends ecu
+features
+	socket1 : requires bus access rs232;
+	socket2 : requires bus access rs232;
+end ecu_rs232_two_connectors;
+
+--
+-- About CAN and bus bandwidth
+-- Check http://www.canopen.us/faq/0143.htm
+-- and http://www.esacademy.com/en/library/calculators/can-best-and-worst-case-calculator.html
+-- for having an evaluator for the bus bandwidth estimation.
+--
+
+bus can
+properties
+	Latency => 1 Ms .. 1 Ms;
+	SEI::BandWidthCapacity => 500000.0 bitsps; 
+	Transmission_Time => [ Fixed => 10 ms .. 30ms;
+                          PerByte => 1 us .. 10 us; ];
+end can;
+
+bus rs232
+properties
+	Latency => 1 Ms .. 1 Ms;
+	SEI::BandWidthCapacity => 5.0 KBytesps; 
+	Transmission_Time => [ Fixed => 200 ms .. 500ms;
+                          PerByte => 2 ms .. 5 ms; ];
+end rs232;
+
+bus bluetooth
+end bluetooth;
+
+end emsoft2016::platform;
