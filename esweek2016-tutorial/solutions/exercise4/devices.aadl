@@ -6,6 +6,7 @@ public
 	device sensor extends emsoft2016::solutions::exercise3::devices::sensor
 	annex EMV2 {**
 		use types errorlibrary;
+		use behavior errorlibrary::failstop;
 
 		error propagations
 			temp : out propagation {latedelivery,outofbounds};
@@ -13,6 +14,11 @@ public
 			ef0 : error source temp{latedelivery};
 			ef1 : error source temp{outofbounds};
 		end propagations;
+
+		component error behavior
+		propagations
+			operational -[failure]->temp{latedelivery};
+		end component;
 
 		properties
 			emv2::severity => ARP4761::Major applies to ef0,ef1;
@@ -39,26 +45,38 @@ public
 	device heater extends emsoft2016::solutions::exercise3::devices::heater
 	annex EMV2 {**
 		use types errorlibrary;
+		use behavior errorlibrary::failstop;
 
 		error propagations
-			operate : in propagation {latedelivery,outofbounds};
+			operate : in propagation {latedelivery,serviceerror};
 		flows
 			ef0 : error sink operate{latedelivery};
-			ef1 : error sink operate{outofbounds};
+			ef1 : error sink operate{serviceerror};
 		end propagations;
+		
+		component error behavior
+		transitions
+			t0 : operational -[operate{serviceerror}]->failstop;
+		end component;
 	**};
 	end heater;
 	
 	device cooler extends emsoft2016::solutions::exercise3::devices::cooler
 	annex EMV2 {**
 		use types errorlibrary;
-
+		use behavior errorlibrary::failstop;
+		
 		error propagations
-			operate : in propagation {latedelivery,outofbounds};
+			operate : in propagation {latedelivery,serviceerror};
 		flows
 			ef0 : error sink operate{latedelivery};
-			ef1 : error sink operate{outofbounds};
+			ef1 : error sink operate{serviceerror};
 		end propagations;
+		
+		component error behavior
+		transitions
+			t0 : operational -[operate{serviceerror}]->failstop;
+		end component;
 	**};
 	end cooler;
 
