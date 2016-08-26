@@ -4,7 +4,7 @@ public
 	with emsoft2016::solutions::exercise4::devices;
 	with emsoft2016::solutions::exercise3::integration;
 	with emsoft2016::solutions::exercise4::platform;
-	
+
 	system integration extends emsoft2016::solutions::exercise3::integration::integration
 	end integration;
 
@@ -64,8 +64,6 @@ public
 		actual_connection_binding => (reference (discrete_sensor1)) applies to sensor1_to_filter;
 		actual_connection_binding => (reference (discrete_heater)) applies to ac_to_heater;
 		actual_connection_binding => (reference (discrete_cooler)) applies to ac_to_cooler;
-		
-
 	end integration.distributed;	
 
 end emsoft2016::solutions::exercise4::integration;
