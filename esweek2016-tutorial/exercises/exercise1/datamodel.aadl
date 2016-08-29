@@ -1,0 +1,17 @@
+package emsoft2016::exercises::exercise1::datamodel
+public
+
+	with data_model;
+
+	data temperature
+	properties
+		Data_Model::Data_Representation => integer;
+		data_size => 4 bytes;
+	end temperature;
+	
+	data boolean
+	properties
+		Data_Model::Data_Representation => boolean;
+	end boolean;
+	
+end emsoft2016::exercises::exercise1::datamodel;

@@ -1,0 +1,49 @@
+package emsoft2016::exercises::exercise1::software
+public
+	with data_model;
+	with emsoft2016::exercises::exercise1::datamodel;
+
+
+	thread filtering_thr
+	features
+		corrected_value : out data port emsoft2016::exercises::exercise1::datamodel::temperature;
+	properties
+		dispatch_protocol => periodic;
+		period => 10 sec;	
+	end filtering_thr;
+
+	process filtering
+	features
+		corrected_value : out data port emsoft2016::exercises::exercise1::datamodel::temperature;
+	end filtering;
+	
+	process implementation filtering.i
+	subcomponents
+		thr : thread filtering_thr;
+	connections
+		c0 : port thr.corrected_value -> corrected_value;
+	end filtering.i;
+	
+	
+	thread air_conditioner_thr
+	features
+		corrected_value : in data port emsoft2016::exercises::exercise1::datamodel::temperature;
+	properties
+		dispatch_protocol => periodic;
+		period => 10 sec;
+	end air_conditioner_thr;
+	
+	process air_conditioner
+	features
+		corrected_value : in data port emsoft2016::exercises::exercise1::datamodel::temperature;
+	end air_conditioner;
+	
+	process implementation air_conditioner.i
+	subcomponents
+		thr : thread air_conditioner_thr;
+	connections
+		c0 : port corrected_value -> thr.corrected_value;
+	end air_conditioner.i;
+
+
+end emsoft2016::exercises::exercise1::software;
