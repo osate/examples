@@ -1,0 +1,72 @@
+package emsoft2016::exercises::exercise4::platform
+public
+
+	with emsoft2016::exercises::exercise1::platform;
+	with emv2;
+	
+	bus ethernet extends emsoft2016::exercises::exercise1::platform::ethernet
+	annex EMV2 {**
+		use types errorlibrary;
+	
+
+		error propagations
+			bindings : out propagation {serviceerror,timingerror};
+		flows
+			noservice : error source bindings{serviceerror};
+			timing    : error source bindings{timingerror};
+		end propagations;
+		properties
+			emv2::severity => ARP4761::Major applies to noservice;
+			emv2::likelihood => ARP4761::Probable applies to noservice;
+			emv2::hazards => 
+			([	crossreference => "N/A";
+				failure => "No service";
+				phases => ("all");
+				description => "The bus can be out of service";
+				comment => "Interference, unintentional signal jamming, etc";
+			])
+			applies to noservice;
+			
+			emv2::severity => ARP4761::Major applies to timing;
+			emv2::likelihood => ARP4761::Probable applies to timing;
+			emv2::hazards => 
+			([	crossreference => "N/A";
+				failure => "Inaccurate timing";
+				phases => ("all");
+				description => "Because of protocols, the timing can have some issues: late/early data, etc.";
+				comment => "";
+			])
+			applies to timing;
+	**};
+	end ethernet;
+	
+	bus discrete extends emsoft2016::exercises::exercise1::platform::discrete
+	end discrete;
+
+	processor arm extends emsoft2016::exercises::exercise1::platform::arm
+	features
+		eth_socket : refined to requires bus access ethernet;
+	annex EMV2 {**
+		use types errorlibrary;
+	
+
+		error propagations
+			bindings : out propagation {serviceomission};
+		flows
+			notworking : error source bindings{serviceomission};
+		end propagations;
+		properties
+			emv2::severity => ARP4761::Major applies to notworking;
+			emv2::likelihood => ARP4761::Probable applies to notworking;
+			emv2::hazards => 
+			([	crossreference => "N/A";
+				failure => "SoftwareFault or Hardware Failure";
+				phases => ("all");
+				description => "Impact the components that run on the platform";
+				comment => "It can be a software or hardware error";
+			])
+			applies to notworking;
+	**}; 
+	end arm;
+	
+end emsoft2016::exercises::exercise4::platform;
