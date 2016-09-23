@@ -169,7 +169,9 @@ end GPSProcessing_computeError;
 		events
 			computeError: error Event;
 		propagations
-			outcond: all-[1 ormore(inLocation1{ServiceOmission} and inLocation2{ServiceOmission}, processor{ServiceOmission})]-> outLocation{ServiceOmission};
+		-- used to be a single condition making use of expressions in ormore
+			outcond1: all-[inLocation1{ServiceOmission} and inLocation2{ServiceOmission}]-> outLocation{ServiceOmission};
+			outcond2: all-[processor{ServiceOmission}]-> outLocation{ServiceOmission};
 			outcondlow1: all-[inLocation1{ServiceOmission} or inLocation2{ServiceOmission} or
 				inLocation1{LowPrecisionData} or inLocation2{LowPrecisionData}
 			]-> outLocation{LowPrecisionData};
@@ -178,7 +180,9 @@ end GPSProcessing_computeError;
 			-- otherwise we would have to omit a value since the valu comparison does not tell us which one is incorrect.
 			outcondincorrect1: all-[inLocation1{IncorrectData} or inLocation2{IncorrectData} ]-> outLocation{LowPrecisionData};
 			-- if it is a symmetric value error comparison will not detect it
-			outcondincorrect2: all-[1 ormore(computeError ,inLocation1{IncorrectData} and inLocation2{IncorrectData}) ]-> outLocation{IncorrectData};
+		-- used to be a single condition making use of expressions in ormore
+			outcondincorrect21: all-[computeError ]-> outLocation{IncorrectData};
+			outcondincorrect22: all-[inLocation1{IncorrectData} and inLocation2{IncorrectData} ]-> outLocation{IncorrectData};
 		end component;
 	properties
 		emv2::OccurrenceDistribution => [ ProbabilityValue => 1.0e-6 ; Distribution => Poisson;] applies to computeError;
