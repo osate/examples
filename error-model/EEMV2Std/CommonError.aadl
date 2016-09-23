@@ -1,0 +1,98 @@
+package fault_tree::common_error
+public
+
+with ErrorLibrary;
+
+data mydata
+end mydata;
+
+device sensor
+features
+valueout : out data port mydata;
+annex EMV2{**
+use types ErrorLibrary;
+use behavior ErrorLibrary::FailStop;
+error propagations
+valueout : out propagation {LateDelivery};
+flows
+ef0 : error source valueout{LateDelivery};
+end propagations;
+**};
+end sensor;
+
+system computing
+features
+valuein : in data port mydata;
+valueout1 : out data port mydata;
+valueout2 : out data port mydata;
+annex EMV2{**
+use types ErrorLibrary;
+use behavior ErrorLibrary::FailStop;
+error propagations
+valuein : in propagation {LateDelivery};
+valueout1 : out propagation {ServiceError};
+valueout2 : out propagation {ServiceError};
+flows
+ef0 : error path valuein{LateDelivery} -> valueout1{ServiceError};
+ef1 : error path valuein{LateDelivery} -> valueout2{ServiceError};
+end propagations;
+component error behavior
+propagations
+p1: FailStop-[]-> valueout1{ServiceOmission};
+p2: FailStop-[]-> valueout2{ServiceOmission};
+io1: all-[valuein{LateDelivery}]-> valueout1{ServiceOmission};
+io2: all-[valuein{LateDelivery}]-> valueout2{ServiceOmission};
+end component;
+**};
+end computing;
+
+device actuator
+features
+valuein : in data port mydata;
+annex EMV2{**
+use types ErrorLibrary;
+use behavior ErrorLibrary::FailStop;
+error propagations
+valuein : in propagation {ServiceError};
+flows
+ef0 : error sink valuein{ServiceError};
+end propagations;
+
+component error behavior
+events
+ reset: recover event;
+transitions
+    t0 : operational -[valuein{ServiceError}]-> failstop;
+    t1 : failstop -[reset]-> Operational;
+    t2 : failstop -[valuein{NoError}]-> Operational;
+end component;
+
+**};
+end actuator;
+
+system main
+end main;
+
+system implementation main.i
+subcomponents
+s0 : device sensor;
+c0 : system computing;
+a0 : device actuator;
+a1 : device actuator;
+connections
+conn0 : port s0.valueout -> c0.valuein;
+conn1 : port c0.valueout1 -> a0.valuein;
+conn2 : port c0.valueout2 -> a1.valuein;
+annex EMV2{**
+use types ErrorLibrary;
+use behavior ErrorLibrary::FailStop;
+
+composite error behavior
+states
+    [a0.failstop and a1.failstop ]-> failstop;
+end composite;
+
+**};
+end main.i;
+
+end fault_tree::common_error;

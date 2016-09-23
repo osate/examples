@@ -1,6 +1,8 @@
 /.aadlbin-gen/
 .svn/
 instances/
+diagrams/
 /bin/
 /xtend-gen/
 .metadata/
+fta/
