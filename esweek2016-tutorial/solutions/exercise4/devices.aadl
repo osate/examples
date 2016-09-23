@@ -1,0 +1,83 @@
+package emsoft2016::solutions::exercise4::devices
+public
+	with emsoft2016::solutions::exercise3::devices;
+	with emv2;
+
+	device sensor extends emsoft2016::solutions::exercise3::devices::sensor
+	annex EMV2 {**
+		use types errorlibrary;
+		use behavior errorlibrary::failstop;
+
+		error propagations
+			temp : out propagation {latedelivery,outofbounds};
+		flows
+			ef0 : error source temp{latedelivery};
+			ef1 : error source temp{outofbounds};
+		end propagations;
+
+		component error behavior
+		propagations
+			operational -[failure]->temp{latedelivery};
+		end component;
+
+		properties
+			emv2::severity => ARP4761::Major applies to ef0,ef1;
+			emv2::likelihood => ARP4761::Probable applies to ef0,ef1;
+			emv2::hazards => 
+			([	crossreference => "N/A";
+				failure => "Late Value";
+				phases => ("all");
+				description => "Late delivery. The value still arrives.";
+				comment => "";
+			])
+			applies to ef0;
+			emv2::hazards => 
+			([	crossreference => "N/A";
+				failure => "Out Of Bounds";
+				phases => ("all");
+				description => "Values is not within planned bounds.";
+				comment => "";
+			])
+			applies to ef1;
+	**};
+	end sensor;
+	
+	device heater extends emsoft2016::solutions::exercise3::devices::heater
+	annex EMV2 {**
+		use types errorlibrary;
+		use behavior errorlibrary::failstop;
+
+		error propagations
+			operate : in propagation {latedelivery,serviceerror};
+		flows
+			ef0 : error sink operate{latedelivery};
+			ef1 : error sink operate{serviceerror};
+		end propagations;
+		
+		component error behavior
+		transitions
+			t0 : operational -[operate{serviceerror}]->failstop;
+		end component;
+	**};
+	end heater;
+	
+	device cooler extends emsoft2016::solutions::exercise3::devices::cooler
+	annex EMV2 {**
+		use types errorlibrary;
+		use behavior errorlibrary::failstop;
+		
+		error propagations
+			operate : in propagation {latedelivery,serviceerror};
+		flows
+			ef0 : error sink operate{latedelivery};
+			ef1 : error sink operate{serviceerror};
+		end propagations;
+		
+		component error behavior
+		transitions
+			t0 : operational -[operate{serviceerror}]->failstop;
+		end component;
+	**};
+	end cooler;
+
+end emsoft2016::solutions::exercise4::devices;

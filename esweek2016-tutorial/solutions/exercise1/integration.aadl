@@ -1,0 +1,40 @@
+package emsoft2016::solutions::exercise1::integration
+public
+
+	with emsoft2016::solutions::exercise1::software;
+	with emsoft2016::solutions::exercise1::platform;
+	
+	system integration
+	end integration;
+	
+	system implementation integration.functional
+	subcomponents
+		filtering : process emsoft2016::solutions::exercise1::software::filtering;
+		ac        : process emsoft2016::solutions::exercise1::software::air_conditioner;
+	connections
+		filtering_to_ac : port filtering.corrected_value -> ac.corrected_value;
+	end integration.functional;
+	
+	system implementation integration.local extends integration.functional
+	subcomponents
+		cpu : processor emsoft2016::solutions::exercise1::platform::arm;
+	properties
+		actual_processor_binding => (reference (cpu)) applies to filtering;
+		actual_processor_binding => (reference (cpu)) applies to ac;
+	end integration.local;
+
+	system implementation integration.distributed extends integration.functional
+	subcomponents
+		cpu0 : processor emsoft2016::solutions::exercise1::platform::arm;
+		cpu1 : processor emsoft2016::solutions::exercise1::platform::arm;
+		eth0 : bus emsoft2016::solutions::exercise1::platform::ethernet;
+	connections
+		cpu0_eth : bus access eth0 <-> cpu0.eth_socket;
+		cpu1_eth : bus access eth0 <-> cpu1.eth_socket;
+	properties
+		actual_processor_binding => (reference (cpu0)) applies to filtering;
+		actual_processor_binding => (reference (cpu1)) applies to ac;
+		actual_connection_binding => (reference (eth0)) applies to filtering_to_ac;
+	end integration.distributed;
+
+end emsoft2016::solutions::exercise1::integration;

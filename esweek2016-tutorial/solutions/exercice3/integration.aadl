@@ -1,0 +1,77 @@
+package emsoft2016::solutions::exercise3::integration
+public
+	with emsoft2016::solutions::exercise3::software;
+	with emsoft2016::solutions::exercise3::devices;
+	with emsoft2016::solutions::exercise2::integration;
+	with emsoft2016::solutions::exercise1::platform;
+	
+	system integration extends emsoft2016::solutions::exercise2::integration::integration
+	end integration;
+
+
+	system implementation integration.functional extends emsoft2016::solutions::exercise2::integration::integration.functional
+	subcomponents
+		heater : refined to device emsoft2016::solutions::exercise3::devices::heater;
+		cooler : refined to device emsoft2016::solutions::exercise3::devices::cooler;
+		sensor0   : refined to device emsoft2016::solutions::exercise3::devices::sensor;
+		sensor1   : refined to device emsoft2016::solutions::exercise3::devices::sensor;
+	    filtering : refined to process emsoft2016::solutions::exercise3::software::filtering.i;
+	    ac        : refined to process emsoft2016::solutions::exercise3::software::air_conditioner.i;
+	flows
+		etef0 : end to end flow sensor0.f0 -> sensor0_to_filter -> filtering.f0 -> filtering_to_ac -> ac.f0 -> ac_to_cooler -> cooler.f0;
+		etef1 : end to end flow sensor0.f0 -> sensor0_to_filter -> filtering.f0 -> filtering_to_ac -> ac.f1 -> ac_to_heater -> heater.f0;
+		etef2 : end to end flow sensor1.f0 -> sensor1_to_filter -> filtering.f1 -> filtering_to_ac -> ac.f0 -> ac_to_cooler -> cooler.f0;
+		etef3 : end to end flow sensor1.f0 -> sensor1_to_filter -> filtering.f1 -> filtering_to_ac -> ac.f1 -> ac_to_heater -> heater.f0;
+	properties
+		period =>  500 ms applies to sensor0;
+		period =>  500 ms applies to sensor1;
+		period => 1000 ms applies to filtering;
+		period => 30 sec applies to ac;
+		period => 60 sec applies to heater;
+		period => 60 sec applies to cooler;
+		latency => 5 sec .. 10 sec applies to etef0;
+		latency => 5 sec .. 10 sec applies to etef1;
+		latency => 5 sec .. 10 sec applies to etef2;
+		latency => 5 sec .. 10 sec applies to etef3;
+	end integration.functional;
+	
+	system implementation integration.local extends integration.functional
+	subcomponents
+		cpu : processor emsoft2016::solutions::exercise1::platform::arm;
+		discrete_sensor0 : bus emsoft2016::solutions::exercise1::platform::discrete;
+		discrete_sensor1 : bus emsoft2016::solutions::exercise1::platform::discrete;
+		discrete_heater : bus emsoft2016::solutions::exercise1::platform::discrete;
+		discrete_cooler : bus emsoft2016::solutions::exercise1::platform::discrete;		
+	properties
+		actual_processor_binding => (reference (cpu)) applies to filtering;
+		actual_processor_binding => (reference (cpu)) applies to ac;
+		actual_connection_binding => (reference (discrete_sensor0)) applies to sensor0_to_filter;
+		actual_connection_binding => (reference (discrete_sensor1)) applies to sensor1_to_filter;
+		actual_connection_binding => (reference (discrete_heater)) applies to ac_to_heater;
+		actual_connection_binding => (reference (discrete_cooler)) applies to ac_to_cooler;
+	end integration.local;
+
+	system implementation integration.distributed extends integration.functional
+	subcomponents
+		cpu0 : processor emsoft2016::solutions::exercise1::platform::arm;
+		cpu1 : processor emsoft2016::solutions::exercise1::platform::arm;
+		eth0 : bus emsoft2016::solutions::exercise1::platform::ethernet;
+		discrete_sensor0 : bus emsoft2016::solutions::exercise1::platform::discrete;
+		discrete_sensor1 : bus emsoft2016::solutions::exercise1::platform::discrete;
+		discrete_heater : bus emsoft2016::solutions::exercise1::platform::discrete;
+		discrete_cooler : bus emsoft2016::solutions::exercise1::platform::discrete;
+	connections
+		cpu0_eth : bus access eth0 <-> cpu0.eth_socket;
+		cpu1_eth : bus access eth0 <-> cpu1.eth_socket;
+	properties
+		actual_processor_binding => (reference (cpu0)) applies to filtering;
+		actual_processor_binding => (reference (cpu1)) applies to ac;
+		actual_connection_binding => (reference (eth0)) applies to filtering_to_ac;
+		actual_connection_binding => (reference (discrete_sensor0)) applies to sensor0_to_filter;
+		actual_connection_binding => (reference (discrete_sensor1)) applies to sensor1_to_filter;
+		actual_connection_binding => (reference (discrete_heater)) applies to ac_to_heater;
+		actual_connection_binding => (reference (discrete_cooler)) applies to ac_to_cooler;
+	end integration.distributed;	
+	
+
+end emsoft2016::solutions::exercise3::integration;

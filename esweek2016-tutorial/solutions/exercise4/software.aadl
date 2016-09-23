@@ -1,0 +1,52 @@
+package emsoft2016::solutions::exercise4::software
+public
+	with emsoft2016::solutions::exercise1::datamodel;
+	with emsoft2016::solutions::exercise3::software;
+
+	process filtering extends emsoft2016::solutions::exercise3::software::filtering
+	end filtering;
+	
+	process implementation filtering.i extends emsoft2016::solutions::exercise3::software::filtering.i
+	annex EMV2 {**
+		use types 		errorlibrary;
+
+		error propagations
+			raw_value0 : in propagation {latedelivery,outofbounds};
+			raw_value1 : in propagation {latedelivery,outofbounds};
+			corrected_value : out propagation {latedelivery,serviceerror};
+			processor : in propagation {serviceerror};
+		flows
+			ef0 : error path raw_value0{latedelivery} -> corrected_value{latedelivery};
+			ef1 : error path raw_value0{outofbounds} -> corrected_value{latedelivery};
+			ef2 : error path raw_value0{latedelivery} -> corrected_value{latedelivery};
+			ef3 : error path raw_value0{outofbounds} -> corrected_value{latedelivery};
+			ef4 : error path processor{serviceerror} -> corrected_value{serviceerror};
+		end propagations;
+	**};
+	end filtering.i;
+
+	
+	process air_conditioner extends emsoft2016::solutions::exercise3::software::air_conditioner
+	end air_conditioner;
+	
+	process implementation air_conditioner.i extends emsoft2016::solutions::exercise3::software::air_conditioner.i
+	annex EMV2 {**
+		use types 		errorlibrary;
+
+		error propagations
+		 	corrected_value : in propagation {latedelivery,serviceerror};
+		 	activate_cooler : out propagation {latedelivery,serviceerror};
+		 	activate_heater : out propagation {latedelivery,serviceerror};
+			processor : in propagation {serviceerror};
+		flows
+			ef0 : error path corrected_value{latedelivery} -> activate_cooler{latedelivery};
+			ef1 : error path corrected_value{serviceerror} -> activate_cooler{latedelivery};
+			ef2 : error path processor{serviceerror} -> activate_cooler{serviceerror};
+			ef3 : error path corrected_value{latedelivery} -> activate_heater{latedelivery};
+			ef4 : error path corrected_value{serviceerror} -> activate_heater{latedelivery};
+			ef5 : error path processor{serviceerror} -> activate_heater{serviceerror};
+		end propagations;
+	**};
+	end air_conditioner.i;
+
+end emsoft2016::solutions::exercise4::software;

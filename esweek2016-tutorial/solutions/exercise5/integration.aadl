@@ -1,0 +1,34 @@
+package emsoft2016::solutions::exercise5::integration
+public
+	with emsoft2016::solutions::exercise4::integration;
+	with emsoft2016::solutions::exercise5::platform;
+	with security_properties;
+	
+	system integration extends emsoft2016::solutions::exercise4::integration::integration
+	end integration;
+
+	system implementation integration.local extends emsoft2016::solutions::exercise4::integration::integration.local
+	properties
+		security_properties::exposure => 0 applies to sensor0, sensor1, 
+		                                              cooler, heater, cpu, 
+		                                              discrete_cooler,discrete_heater ;
+	end integration.local;
+
+	system implementation integration.distributed_wired extends emsoft2016::solutions::exercise4::integration::integration.distributed
+	properties
+		security_properties::exposure => 0 applies to cooler, heater, cpu0, cpu1, eth0,
+		                                              discrete_cooler,discrete_heater ;
+		security_properties::exposure => 50 applies to sensor0, sensor1;
+	end integration.distributed_wired;
+	
+	system implementation integration.distributed_wireless extends emsoft2016::solutions::exercise4::integration::integration.distributed
+	subcomponents
+		eth0 : refined to bus emsoft2016::solutions::exercise5::platform::wifi;
+	properties
+		security_properties::exposure => 0 applies to cooler, heater, cpu0, cpu1, 
+		                                              discrete_cooler,discrete_heater ;
+		security_properties::exposure => 80 applies to eth0;
+		security_properties::exposure => 50 applies to sensor0, sensor1;
+	end integration.distributed_wireless;	
+
+end emsoft2016::solutions::exercise5::integration;

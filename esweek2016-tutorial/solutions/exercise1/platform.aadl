@@ -1,0 +1,21 @@
+package emsoft2016::solutions::exercise1::platform
+public
+
+	bus ethernet
+	properties
+		Transmission_Time => [  Fixed => 1 ms .. 2ms;
+								PerByte => 1 us .. 10 us; ];
+	end ethernet;
+	
+	bus discrete
+	properties
+		Transmission_Time => [  Fixed => 100 ms .. 300ms;
+								PerByte => 100 us .. 1000 us; ];
+	end discrete;
+
+	processor arm
+	features
+		eth_socket : requires bus access ethernet;
+	end arm;
+	
+end emsoft2016::solutions::exercise1::platform;
