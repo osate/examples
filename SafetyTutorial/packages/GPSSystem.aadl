@@ -36,7 +36,7 @@ public
 	applies to satelliteSignal.NoSignal;
 	-- Total outoging probability of occurrence associated with the error propagation
 	emv2::OccurrenceDistribution => [ ProbabilityValue => 1.7e-7 ; Distribution => Poisson;] 
-	applies to location.ObservableErrorTypes;
+	applies to location.ServiceOmission;
 	**};
 	end GPS;
 	
