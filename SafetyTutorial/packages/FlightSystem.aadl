@@ -77,7 +77,7 @@ with FlightControl, EMV2;
 	system implementation FlightSystem.tier2 extends FlightSystem.tier1
 	subcomponents
 		LocationProvider: refined to system GPSSystem::GPS.CEBound;
-		AutoFlightGuidance: refined to system AutomatedFlightGuidance::AutomatedFlightGuidance.functional;
+--		AutoFlightGuidance: refined to system AutomatedFlightGuidance::AutomatedFlightGuidance.functional;
 	end FlightSystem.tier2;
 
 
