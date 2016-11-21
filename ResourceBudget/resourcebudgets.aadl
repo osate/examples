@@ -106,25 +106,28 @@ end APP.impl;
 
 processor powerpc
 features
-	power: in data port Power;
+	power: in feature Electricity;
 properties
 	SEI::PowerBudget => 0.8 w applies to power;
 	SEI::MIPSCapacity => 1.2 mips;
+	SEI::GrossWeight => 0.05 kg;
 end powerpc;
 
 bus CANbus
 features
-	power: in data port Power;
+	power: in feature Electricity;
 properties
 	SEI::PowerBudget => 0.8 w applies to power;
+	SEI::GrossWeight => 0.1 kg;
 end CANbus;
 
 
 memory main_memory
 features
-	power: in data port Power;
+	power: in feature Electricity;
 properties
 	SEI::PowerBudget => 0.8 w applies to power;
+	SEI::GrossWeight => 0.05 kg;
 end main_memory;
 
 system DCA
@@ -134,7 +137,7 @@ system DCA
 	actuatorOut: out data port actuatecmd;
 	properties
 		SEI::MIPSBudget => 2.0 mips;
-end mysapp;
+end DCA;
 
 system implementation DCA.tier1
 subcomponents
@@ -157,7 +160,7 @@ end DCA.tier2;
 system platform
 features
 	canbusaccess: provides bus access CANbus;
-	power: in data port Power;
+	power: in feature Electricity;
 properties
 	SEI::PowerBudget => 0.8 w applies to power;
 	SEI::MIPSCapacity => 2.4 mips;
@@ -168,6 +171,12 @@ subcomponents
   cpu: processor powerpc;
   ram: memory main_memory;
   canbus: bus CANbus;
+connections
+	p1: feature power -> cpu.power;
+	p2: feature power -> ram.power;
+	p3: feature power -> canbus.power;
+properties
+	SEI::NetWeight => 0.35 kg;
 end platform.single ;
 
 system implementation platform.dual
@@ -175,11 +184,13 @@ subcomponents
   pc1: processor powerpc;
   pc2: processor powerpc;
   M: memory main_memory;
+properties
+	SEI::NetWeight => 0.35 kg;
 end platform.dual ;
 
 device sensor
 features
-	power: in data port Power;
+	power: in feature Electricity;
 	canbusaccess: requires bus access CANbus;
 properties
 	SEI::GrossWeight => 0.18 kg;
@@ -190,7 +201,7 @@ end sensor;
 
 device actuator
 features
-	power: in data port Power;
+	power: in feature Electricity;
 	canbusaccess: requires bus access CANbus;
 properties
 	SEI::GrossWeight => 0.3 kg;
@@ -201,6 +212,7 @@ end actuator;
 
 system DCS
 features
+	power: in feature Electricity;
 	canbusaccess: provides bus access CANbus;
 	sensor1in : in data port SensorData;
 	sensor2In: in data port SensorData;
@@ -211,18 +223,24 @@ system implementation DCS.singletier0
 	subcomponents
 		app: system DCA;
 		hw: system platform;
+	connections
+		p1: feature power -> hw.power;
 end DCS.singletier0;
 
 system implementation DCS.singletier1
 	subcomponents
 		app: system DCA.tier1;
 		hw: system platform.single;
+	connections
+		p1: feature power -> hw.power;
 end DCS.singletier1;
 
 system implementation DCS.singletier2
 	subcomponents
 		app: system DCA.tier2;
 		hw: system platform.single;
+	connections
+		p1: feature power -> hw.power;
 	properties
 		Reference_Processor => classifier (powerpc);
 end DCS.singletier2;
@@ -231,16 +249,18 @@ system implementation DCS.dualtier2
 	subcomponents
 		app: system DCA.tier2;
 		hw: system platform.dual;
+	connections
+		p1: feature power -> hw.power;
 	properties
 		Reference_Processor => classifier (powerpc);
 end DCS.dualtier2;
 
 system SCS
 features
-	power: in data port Power;
+	power: in feature Electricity;
 properties
 	SEI::PowerBudget => 2.5w applies to power;
-	SEI::WeightLimit => 1.2 kg;
+	SEI::WeightLimit => 2.5 kg;
 end SCS;
 
 system implementation SCS.tier0
@@ -249,8 +269,11 @@ system implementation SCS.tier0
 		sensor1: device sensor;
 		sensor2: device sensor;
 		actuator: device actuator;
---	connections
---		
+	connections
+		p1: feature power -> dcs.power;
+		p2: feature power -> sensor1.power;
+		p3: feature power -> sensor2.power;
+		p4: feature power -> actuator.power;
 end SCS.tier0;
 
 system implementation SCS.tier1 extends SCS.tier0
@@ -268,11 +291,49 @@ system implementation SCS.dualtier2 extends SCS.tier1
 		dcs: refined to system DCS.dualtier2;
 end SCS.dualtier2;
 
-abstract Power
-end Power;
+abstract Electricity
+end Electricity;
 
 abstract Mass
 end Mass;
+
+system ElectrialPowerSupply
+	features
+		Supplier: out feature Electricity;
+	properties
+		SEI::GrossWeight => 1.2 kg;
+		SEI::PowerSupply => 40.0 W applies to Supplier;
+end ElectrialPowerSupply;
+
+system ElectricGrid
+	features
+		Supplier: in feature Electricity;
+		Consumer: out feature Electricity;
+	properties
+		SEI::GrossWeight => 0.9 kg;
+		SEI::PowerCapacity => 40.0 W ;
+end ElectricGrid;
+
+system MySystem
+	
+end MySystem;
+
+system implementation MySystem.Tier0
+	subcomponents
+		EPSU: system ElectrialPowerSupply;
+		Grid: system ElectricGrid;
+		scs: system SCS.tier0;
+	connections
+		psupply: feature EPSU.Supplier -> Grid.Supplier;
+		pconsume: feature Grid.Consumer -> scs.power;
+properties
+	SEI::WeightLimit => 3.0 kg;
+end MySystem.Tier0;
+
+system implementation MySystem.Tier2 extends MySystem.Tier0
+	subcomponents
+		scs: refined to system SCS.tier2;
+end MySystem.Tier2;
 
 
 end resourcebudgets;
