@@ -39,7 +39,8 @@ end actuator_output_thread;
 
 thread filterApp
 features
-   sensorraw: in data port SensorData;
+   sensorraw1: in data port SensorData;
+   sensorraw2: in data port SensorData;
    sensorfiltered: out data port SensorData;
  properties
    Stack_Size => 25 Kbyte;
@@ -64,8 +65,10 @@ end controlApp;
 
 process IOP
 features
-   sensorin: in data port SensorData;
-   senseout: out data port SensorData;
+   sensorin1: in data port SensorData;
+   senseout1: out data port SensorData;
+   sensorin2: in data port SensorData;
+   senseout2: out data port SensorData;
    controlin: in event data port actuatecmd;
    actuatorout: out event data port actuatecmd;
 properties
@@ -74,20 +77,24 @@ end IOP;
 
 process implementation IOP.impl
 subcomponents
-   sense : thread sensor_sense_thread;
+   sense1 : thread sensor_sense_thread;
+   sense2 : thread sensor_sense_thread;
    actuate : thread actuator_output_thread;
 connections
    incomingactuate : port controlin -> actuate.controlin;
    outgoingactuate : port actuate.actuate -> actuatorout;
-   incomongsense: port sensorin -> sense.signalin;
-   outgoingsense : port sense.signalout -> senseout;
+   incomongsense1: port sensorin1 -> sense1.signalin;
+   outgoingsense1 : port sense1.signalout -> senseout1;
+   incomongsense2: port sensorin2 -> sense2.signalin;
+   outgoingsense2 : port sense2.signalout -> senseout2;
 end IOP.impl;
 
 
 process APP
 features
-   samplingin: in data port SensorData ;
-controlout: out data port actuatecmd ;
+   samplingin1: in data port SensorData ;
+   samplingin2: in data port SensorData ;
+	controlout: out data port actuatecmd ;
 properties
 	SEI::MIPSBudget => 0.7 mips;
 end APP;
@@ -98,8 +105,9 @@ subcomponents
    control    :  thread controlApp;
 connections
    filtertocontrol: port filter.sensorfiltered -> control.sensorfiltered;
-   incoming : port control.actuatesensor -> controlout;
-   outgoing : port samplingin -> filter.sensorraw; 
+   outgoing : port control.actuatesensor -> controlout;
+   incoming1 : port samplingin1 -> filter.sensorraw1; 
+   incoming2 : port samplingin1 -> filter.sensorraw2; 
 end APP.impl;
 
 -- computer hardware platform
@@ -107,6 +115,8 @@ end APP.impl;
 processor powerpc
 features
 	power: in feature Electricity;
+	cb: requires bus access CANbus;
+	pci: requires bus access PCI;
 properties
 	SEI::PowerBudget => 0.8 w applies to power;
 	SEI::MIPSCapacity => 1.2 mips;
@@ -119,12 +129,23 @@ features
 properties
 	SEI::PowerBudget => 0.8 w applies to power;
 	SEI::GrossWeight => 0.1 kg;
+	SEI::BandWidthCapacity => 200.0 KBytesps;
 end CANbus;
+
+bus PCI
+features
+	power: in feature Electricity;
+properties
+	SEI::PowerBudget => 0.4 w applies to power;
+	SEI::GrossWeight => 0.05 kg;
+	SEI::BandWidthCapacity => 20.0 MBytesps;
+end PCI;
 
 
 memory main_memory
 features
 	power: in feature Electricity;
+	pci: requires bus access PCI;
 properties
 	SEI::PowerBudget => 0.8 w applies to power;
 	SEI::GrossWeight => 0.05 kg;
@@ -144,10 +165,11 @@ subcomponents
    iop  : process IOP;
    app  : process APP;
 connections
-   sampledData: port iop.senseout ->
- app.samplingin;
-   controlData: port app.controlout -> 
-iop.controlin;
+   sampledData1: port iop.senseout1 -> app.samplingin1;
+   sampledData2: port iop.senseout2 -> app.samplingin2;
+   controlData: port app.controlout -> iop.controlin;
+   sense1: port sensor1in -> iop.sensorin1;
+   sense2: port sensor2In -> iop.sensorin2;
 end DCA.tier1;
 
 system implementation DCA.tier2 extends DCA.tier1
@@ -171,10 +193,14 @@ subcomponents
   cpu: processor powerpc;
   ram: memory main_memory;
   canbus: bus CANbus;
+  pci: bus PCI;
 connections
 	p1: feature power -> cpu.power;
 	p2: feature power -> ram.power;
 	p3: feature power -> canbus.power;
+	cb1: bus access canbus <-> cpu.cb;
+	extcb: bus access canbus <-> canbusaccess;
+	pci1: bus access pci <-> cpu.pci;
 properties
 	SEI::NetWeight => 0.35 kg;
 end platform.single ;
@@ -184,6 +210,19 @@ subcomponents
   pc1: processor powerpc;
   pc2: processor powerpc;
   M: memory main_memory;
+  canbus: bus CANbus;
+  pcibus : bus PCI;
+connections
+	p1: feature power -> pc1.power;
+	p12: feature power -> pc2.power;
+	p2: feature power -> M.power;
+	p3: feature power -> canbus.power;
+	cb1: bus access canbus <-> pc1.cb;
+	cb2: bus access canbus <-> pc2.cb;
+	extcb: bus access canbus <-> canbusaccess;
+	pci1: bus access pc1.pci <-> pcibus;
+	pci2: bus access pc2.pci <-> pcibus;
+	pci3: bus access M.pci <-> pcibus;
 properties
 	SEI::NetWeight => 0.35 kg;
 end platform.dual ;
@@ -192,6 +231,7 @@ device sensor
 features
 	power: in feature Electricity;
 	canbusaccess: requires bus access CANbus;
+	sensorout: out data port SensorData;
 properties
 	SEI::GrossWeight => 0.18 kg;
 	SEI::PowerBudget => 0.45 w applies to power;
@@ -203,6 +243,7 @@ device actuator
 features
 	power: in feature Electricity;
 	canbusaccess: requires bus access CANbus;
+	actuatorin: in data port actuatecmd;
 properties
 	SEI::GrossWeight => 0.3 kg;
 	SEI::PowerBudget => 0.8 w applies to power;
@@ -221,38 +262,44 @@ end DCS;
 
 system implementation DCS.singletier0
 	subcomponents
-		app: system DCA;
+		dca: system DCA;
 		hw: system platform;
 	connections
 		p1: feature power -> hw.power;
+		extcb: bus access hw.canbusaccess <-> canbusaccess;
+		data1: port sensor1in -> dca.sensor1in;
+		data2: port sensor2In -> dca.sensor2In;
+		data3: port dca.actuatorOut -> actuatorOut;
 end DCS.singletier0;
 
-system implementation DCS.singletier1
+system implementation DCS.singletier1 extends DCS.singletier0
 	subcomponents
-		app: system DCA.tier1;
-		hw: system platform.single;
-	connections
-		p1: feature power -> hw.power;
+		hw: refined to system platform.single;
+	properties
+		Reference_Processor => classifier (powerpc);
 end DCS.singletier1;
 
-system implementation DCS.singletier2
+system implementation DCS.singletier2 extends DCS.singletier1
 	subcomponents
-		app: system DCA.tier2;
-		hw: system platform.single;
-	connections
-		p1: feature power -> hw.power;
+		dca: refined to system DCA.tier2;
 	properties
-		Reference_Processor => classifier (powerpc);
+		Actual_Processor_Binding => (reference (hw.cpu)) applies to dca.app.filter, dca.app.control;
+		Actual_Processor_Binding => (reference (hw.cpu)) applies to dca.iop.sense1, dca.iop.sense2,dca.iop.actuate;
 end DCS.singletier2;
 
-system implementation DCS.dualtier2
+
+
+system implementation DCS.dualtier2 extends DCS.singletier0
 	subcomponents
-		app: system DCA.tier2;
-		hw: system platform.dual;
-	connections
-		p1: feature power -> hw.power;
+		dca: refined to system DCA.tier2;
+		hw: refined to system platform.dual;
 	properties
 		Reference_Processor => classifier (powerpc);
+		Actual_Processor_Binding => (reference (hw.pc1)) applies to dca.app.filter, dca.app.control;
+		Actual_Processor_Binding => (reference (hw.pc2)) applies to dca.iop.sense1, dca.iop.sense2,dca.iop.actuate;
+		-- allocate SW connections to PCI bus. 
+		Actual_Connection_Binding => (reference (hw.pcibus)) applies to dca.app.filtertocontrol;
+		Actual_Connection_Binding => (reference (hw.pcibus)) applies to dca.sampledData1, dca.sampledData2, dca.controlData;
 end DCS.dualtier2;
 
 system SCS
@@ -274,18 +321,29 @@ system implementation SCS.tier0
 		p2: feature power -> sensor1.power;
 		p3: feature power -> sensor2.power;
 		p4: feature power -> actuator.power;
+		cb1: bus access dcs.canbusaccess <-> sensor1.canbusaccess;
+		cb2: bus access dcs.canbusaccess <-> sensor2.canbusaccess;
+		cb3: bus access dcs.canbusaccess <-> actuator.canbusaccess;
+		data1: feature sensor1.sensorout -> dcs.sensor1in;
+		data2: feature sensor2.sensorout -> dcs.sensor2In;
+		data3: feature dcs.actuatorOut -> actuator.actuatorin;
 end SCS.tier0;
 
 system implementation SCS.tier1 extends SCS.tier0
 	subcomponents
 		dcs: refined to system DCS.singletier1;
+	properties
+		Actual_Connection_Binding => (reference (dcs.hw.CANbus)) applies to data1,data2, data3;
 end SCS.tier1;
 
+-- this configuration produces load on the CANbus.
+-- It also allows us to assess MIPS and memory budget allocations
 system implementation SCS.tier2 extends SCS.tier1
 	subcomponents
 		dcs: refined to system DCS.singletier2;
 end SCS.tier2;
 
+-- this configuration produces bandwidth demand on the CANbus and PCI bus.
 system implementation SCS.dualtier2 extends SCS.tier1
 	subcomponents
 		dcs: refined to system DCS.dualtier2;
@@ -318,6 +376,7 @@ system MySystem
 	
 end MySystem;
 
+-- use this as system root for electrical power consumption and weight
 system implementation MySystem.Tier0
 	subcomponents
 		EPSU: system ElectrialPowerSupply;
@@ -330,6 +389,7 @@ properties
 	SEI::WeightLimit => 3.0 kg;
 end MySystem.Tier0;
 
+-- use this as system root for electrical power consumption and weight
 system implementation MySystem.Tier2 extends MySystem.Tier0
 	subcomponents
 		scs: refined to system SCS.tier2;
