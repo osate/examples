@@ -19,11 +19,13 @@ with FlightControl, EMV2;
 	
 	system FlightSystem
 	features
+	satelliteSignal: in feature;	
 	pilotInput: in data port;
 	ObservableFailure: out feature;
 	annex EMV2 {**
 		use types ErrorLibrary, AFGErrorLibrary,GPSErrorLibrary;
 		error propagations
+		satelliteSignal: in propagation {NoSignal, LowSignal};
 		pilotInput: in propagation {NoPilotInput, ErraticPilotInput};
 		ObservableFailure: out propagation {ServiceOmission, ErraticBehavior};
 		flows
@@ -31,6 +33,7 @@ with FlightControl, EMV2;
 			ErraticFlightSystem: error source ObservableFailure{ErraticBehavior};
 			ErraticPilot: error path pilotInput{ErraticPilotInput} -> ObservableFailure{ErraticBehavior};
 			NoPilot: error path pilotInput{NoPilotInput} -> ObservableFailure{ServiceOmission};
+			SatelliteError: error path satelliteSignal{NoSignal} -> ObservableFailure{ServiceOmission}; 
 		end propagations;
 		properties
 			-- requirement that flight system should not fail to provide service 
@@ -58,6 +61,7 @@ with FlightControl, EMV2;
 		AutoFlightGuidance: system AutomatedFlightGuidance::AutomatedFlightGuidance;
 		FlightControl: system FlightControl::FlightControl;
 	connections
+		satellite: feature satelliteSignal -> LocationProvider.satelliteSignal;
 		gpstoafg: port LocationProvider.location -> AutoFlightGuidance.position;
 		afgtofc: port autoFlightGuidance.AFGOutput -> FlightControl.guidanceCommands;
 		PilottoAfg: port pilotInput -> autoFlightGuidance.operatorCommand;

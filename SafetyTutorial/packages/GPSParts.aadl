@@ -130,7 +130,7 @@ annex EMV2 {**
 	computeError: error Event;
   transitions
     internal: Operational -[computeError]-> Incorrect; 
-    lowPrecision: all -[inSensor1{ServiceOmission} 
+    lowPrecision: Operational -[inSensor1{ServiceOmission} 
     	or inSensor2{ServiceOmission}]-> LowPrecision;
     inputNoService: all -[inSensor1{ServiceOmission} 
     	and inSensor2{ServiceOmission}]-> NoService;
