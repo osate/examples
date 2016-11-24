@@ -85,8 +85,8 @@ subcomponents
 	s1 : system s1;
 	s1r : system s1_reverse;
 connections
--- Here, the two feature group matches.
--- So, no integration issues.
+-- Here, the two feature group match.
+-- All port connections get expanded in both directions
 	c1 : feature group s1.f <-> s1r.f;
 end main.i1;
 

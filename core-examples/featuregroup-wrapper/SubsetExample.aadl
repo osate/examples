@@ -1,0 +1,72 @@
+package SubsetExample
+
+public
+
+data mydata
+end mydata;
+
+bus genericbus
+end genericbus;
+
+feature group fgsub1
+features
+	f1 : in data port mydata;
+	f2 : in data port mydata;	
+end fgsub1;
+
+feature group fgsub2
+features
+	f3 : in data port mydata;
+	f4 : in data port mydata;	
+	b1: provides bus access genericbus;
+end fgsub2;
+
+
+-- Here, we have all
+-- the features within the same feature group.
+feature group fgfull
+features
+	f1 : out data port mydata;
+	f2 : out data port mydata;
+	f3 : out data port mydata;
+	f4 : out data port mydata;	
+	b1: requires bus access genericbus;
+end fgfull;
+
+--  sfull uses the feature group with
+--  all the features.
+system sfull
+features
+	f : feature group fgfull;
+end sfull;
+
+
+--  sbus uses the bus feature group
+system sub2
+features
+	f : feature group fgsub2;
+end sub2;
+
+
+--  sport uses the ports feature group.
+system sub1
+features
+	f : feature group fgsub1;
+end sub1;
+
+system main
+end main;
+
+
+--  We use Subset matching to allow DDS type of support.
+system implementation main.subset
+subcomponents
+	sfull 	: system sfull;
+	sub1 : system sub1;
+	sub2 : system sub2;
+connections
+	sub1c : feature group sfull.f -> sub1.f {Classifier_Matching_Rule => subset;};
+	sub2c : feature group sfull.f <-> sub2.f {Classifier_Matching_Rule => subset;};
+end main.subset;
+
+end SubsetExample;
