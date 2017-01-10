@@ -36,7 +36,7 @@ public
 	applies to satelliteSignal.NoSignal;
 	-- Total outoging probability of occurrence associated with the error propagation
 	emv2::OccurrenceDistribution => [ ProbabilityValue => 1.7e-7 ; Distribution => Poisson;] 
-	applies to location.ServiceOmission; -- TODO reference to ObservableTypes is not resolved.
+	applies to location.ServiceOmission; -- TODO reference to ServiceOmission in Observables (or to Observables) is not resolved.
 	**};
 	end GPS;
 	
