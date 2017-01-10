@@ -32,7 +32,7 @@ annex EMV2 {**
 	error behavior Twostate
 	states
 		Operational:initial state;
-		failed:state ;
+		failed:state {TotalWBLossAnunciated,TotalWBLossUnanunciated,PartialSymmetricalWBLossUnAnunciated,PartialSymmetricalWBLossanunciated};
 	end behavior;
 	
 	
