@@ -42,10 +42,10 @@ annex EMV2 {**
 	states
 		Operational:initial state;
 --		failed : state WBErrorSet;
--- WORK
---		failed:state {TotalWBLoss,PartialSymmetricalWBLoss,AssymetricalWBLoss,InadvertentWB};
 -- NOT WORKING
-		failed:state {TotalWBLossAnunciated,TotalWBLossUnanunciated,PartialSymmetricalWBLoss,AssymetricalWBLoss,InadvertentWB};
+--		failed:state {TotalWBLoss,PartialSymmetricalWBLoss,AssymetricalWBLoss,InadvertentWB};
+-- WORKING: TODO Needed to list the subtypes explicitly so they could be referenced in containment path
+		failed:state {TotalWBLossAnunciated,TotalWBLossUnanunciated,PartialSymmetricalWBLossUnanunciated,PartialSymmetricalWBLossAnunciated,AssymetricalWBLoss,InadvertentWB};
 	end behavior;
 **};
 end WBSFunctionalErrorLib;
