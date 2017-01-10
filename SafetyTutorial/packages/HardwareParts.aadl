@@ -83,7 +83,7 @@ with EMV2;
 		transitions
 			Operational -[PowerFailure]-> FailStop;
 		propagations
-			all -[FailStop]-> power{ServiceOmission};
+			FailStop -[]-> power{ServiceOmission};
 	 	end component;
 		properties
 			emv2::OccurrenceDistribution => [ ProbabilityValue => 3.5e-5 ; Distribution => Poisson;] applies to power_es.ServiceOmission;
