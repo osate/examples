@@ -338,7 +338,7 @@ annex EMV2 {**
 	properties
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.2 ; Distribution => Fixed;] applies to e1;
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.1 ; Distribution => Fixed;] applies to e2;
-		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.4 ; Distribution => Fixed;] applies to r2_1.Failed;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.4 ; Distribution => Fixed;] applies to ^r2_1@Failed;
 **};	
 end assembly.i2;
 
@@ -391,8 +391,8 @@ annex EMV2 {**
 	end composite;
 	-- Rule C13: must be consistent for recv1.Failed and e1 and inconsistent for recv2 and e2
 	properties
-		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.1 ; Distribution => Fixed;] applies to recv1.Failed;
-		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.1 ; Distribution => Fixed;] applies to recv2.Operational;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.1 ; Distribution => Fixed;] applies to ^recv1@Failed;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.1 ; Distribution => Fixed;] applies to ^recv2@Operational;
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.1 ; Distribution => Fixed;] applies to e1;
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.2 ; Distribution => Fixed;] applies to e2;	
 **};	

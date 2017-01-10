@@ -18,9 +18,9 @@ use types TripleErrorTypes;
 error propagations 
    A : in propagation {Data_Fault};
    B : in propagation {Data_Fault};
-   O : out propagation {Data_Fault};
+   O : out propagation {No_Data,Bad_Data};--subtypes of Data_Fault
 flows
- es: error source O{Data_Fault};
+ es: error source O{Data_Fault}; 
  ep1: error path A -> O{Bad_Data}; 
  ep2: error path B-> O{Bad_Data};  
  es2: error sink A;   
