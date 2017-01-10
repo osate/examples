@@ -79,10 +79,10 @@ annex EMV2 {**
 			[PositionSensor.FailStop]-> FailStop;
 		end composite;  
 	properties  
-		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.1 ; Distribution => Fixed;] applies to Actuator2.FailStop;
-		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.2 ; Distribution => Fixed;] applies to Actuator1.FailStop;
-		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.5 ; Distribution => Fixed;] applies to PositionSensor.FailStop;
-		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.3 ; Distribution => Fixed;] applies to FMSProcessor.FailStop;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.1 ; Distribution => Fixed;] applies to ^Actuator2@FailStop;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.2 ; Distribution => Fixed;] applies to ^Actuator1@FailStop;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.5 ; Distribution => Fixed;] applies to ^PositionSensor@FailStop;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.3 ; Distribution => Fixed;] applies to ^FMSProcessor@FailStop;
 		
 	**};
   end AircraftFMS.i;
