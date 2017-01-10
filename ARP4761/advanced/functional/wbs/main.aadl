@@ -74,8 +74,8 @@ annex EMV2 {**
 	
 	properties
 		-- Probability evaluated according to AIR6110, page 49
-		EMV2::OccurrenceDistribution => [ ProbabilityValue => 5.0e-3 ; Distribution => Poisson;] applies to alternate.Failed;
-		EMV2::OccurrenceDistribution => [ ProbabilityValue => 5.0e-3 ; Distribution => Poisson;] applies to emergency.Failed;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 5.0e-3 ; Distribution => Poisson;] applies to ^alternate@Failed;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 5.0e-3 ; Distribution => Poisson;] applies to ^emergency@Failed;
  **};
 end DecelerateOnGround.basic;
 
