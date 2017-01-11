@@ -214,13 +214,13 @@ flows
 	                      acceleration.f0;	  
 
 	-- From gps2 to brake
-	f15 : end to end flow gps2.f0 -> c040 ->
-	                      position_voter.f0 -> c190 ->
+	f15 : end to end flow gps2.f0 -> c050 ->
+	                      position_voter.f1 -> c190 ->
 	                      speed_threshold_calculation.f0 -> c170 ->
 	                      speed_controller.f2 -> c200 ->
 	                      brake.f0;	 
-	f16 : end to end flow gps2.f0 -> c040 ->
-	                      position_voter.f0 -> c180 ->
+	f16 : end to end flow gps2.f0 -> c050 ->
+	                      position_voter.f1 -> c180 ->
 	                      speed_controller.f0 -> c200 ->
 	                      brake.f0;	 
 	                                          
