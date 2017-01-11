@@ -1,0 +1,160 @@
+			package legalETEFlowSegmentsTypeTest
+			public
+				abstract a1
+				features
+					da1: provides data access;
+					af1: feature;
+					dp1: in data port a3.i;
+					edp1: in event data port a3.i;
+					fg1: feature group fgt1;
+				flows
+					fpath1: flow path af1 -> af1;
+				end a1;
+				
+				abstract implementation a1.i
+				subcomponents
+					asub1: abstract a2.i;
+				calls sequence1: {
+					call1: subprogram subp1.i;
+				};
+				connections
+					fconn1: feature asub1.af2 -> asub1.af2;
+				flows
+					--EndToEndFlow (at ETEConnectionFlow)
+					etef1: end to end flow asub1.fpath2 -> etef2 -> asub1.fpath2;
+					--Connection (at ETEConnectionFlow)
+					etef2: end to end flow asub1.fpath2 -> fconn1 -> asub1.fpath2;
+					--DataAccess (at ETEConnectionFlow)
+					etef3: end to end flow asub1.fpath2 -> da1 -> asub1.fpath2;
+					--FlowSpecification (at ETEConnectionFlow)
+					etef4: end to end flow asub1.fpath2 -> fpath1 -> asub1.fpath2;
+					--Subcomponent (at ETEConnectionFlow)
+					etef5: end to end flow asub1.fpath2 -> asub1 -> asub1.fpath2;
+					
+					--EndToEndFlow (at ETESubcomponentFlow)
+					etef6: end to end flow etef2 -> fconn1 -> asub1.fpath2;
+					--Connection (at ETESubcomponentFlow)
+					etef7: end to end flow fconn1 -> fconn1 -> asub1.fpath2;
+					--DataAccess (at ETESubcomponentFlow, first and last segments)
+					etef8: end to end flow da1 -> fconn1 -> da1;
+					--DataAccess (at ETESubcomponentFlow, intermediate segment)
+					etef9: end to end flow asub1.fpath2 -> fconn1 -> da1 -> fconn1 -> asub1.fpath2;
+					--FlowSpecification (at ETESubcomponentFlow)
+					etef10: end to end flow fpath1 -> fconn1 -> asub1.fpath2;
+					--Subcomponent (at ETESubcomponentFlow)
+					etef11: end to end flow asub1 -> fconn1 -> asub1.fpath2;
+					
+					--DataPort.EndToEndFlow
+					etef12: end to end flow dp1.etef34 -> fconn1 -> asub1.fpath2;
+					--DataPort.Connection
+					etef13: end to end flow dp1.fconn3 -> fconn1 -> asub1.fpath2;
+					--DataPort.DataAccess
+					etef14: end to end flow dp1.da3 -> fconn1 -> asub1.fpath2;
+					--DataPort.FlowSpecification
+					etef15: end to end flow dp1.fpath3 -> fconn1 -> asub1.fpath2;
+					--DataPort.Subcomponent
+					etef16: end to end flow dp1.asub3 -> fconn1 -> asub1.fpath2;
+					
+					--EventDataPort.EndToEndFlow
+					etef17: end to end flow edp1.etef34 -> fconn1 -> asub1.fpath2;
+					--EventDataPort.Connection
+					etef18: end to end flow edp1.fconn3 -> fconn1 -> asub1.fpath2;
+					--EventDataPort.DataAccess
+					etef19: end to end flow edp1.da3 -> fconn1 -> asub1.fpath2;
+					--EventDataPort.FlowSpecification
+					etef20: end to end flow edp1.fpath3 -> fconn1 -> asub1.fpath2;
+					--EventDataPort.Subcomponent
+					etef21: end to end flow edp1.asub3 -> fconn1 -> asub1.fpath2;
+					
+					--FeatureGroup.DataAccess
+					etef22: end to end flow fg1.da4 -> fconn1 -> asub1.fpath2;
+					
+					--Subcomponent.EndToEndFlow
+					etef23: end to end flow asub1.etef33 -> fconn1 -> asub1.fpath2;
+					--Subcomponent.Connection
+					etef24: end to end flow asub1.fconn2 -> fconn1 -> asub1.fpath2;
+					--Subcomponent.DataAccess
+					etef25: end to end flow asub1.da2 -> fconn1 -> asub1.fpath2;
+					--Subcomponent.FlowSpecification
+					etef26: end to end flow asub1.fpath2 -> fconn1 -> asub1.fpath2;
+					--Subcomponent.Subcomponent
+					etef27: end to end flow asub1.asub2 -> fconn1 -> asub1.fpath2;
+					
+					--SubprogramCall.EndToEndFlow
+					etef28: end to end flow call1.etef35 -> fconn1 -> asub1.fpath2;
+					--SubprogramCall.Connection
+					etef29: end to end flow call1.fconn4 -> fconn1 -> asub1.fpath2;
+					--SubprogramCall.DataAccess
+					etef30: end to end flow call1.da5 -> fconn1 -> asub1.fpath2;
+					--SubprogramCall.FlowSpecification
+					etef31: end to end flow call1.fpath4 -> fconn1 -> asub1.fpath2;
+					--SubprogramCall.Subcomponent
+					etef32: end to end flow call1.asub4 -> fconn1 -> asub1.fpath2;
+				end a1.i;
+				
+				abstract a2
+				features
+					af2: feature;
+					da2: provides data access;
+				flows
+					fpath2: flow path af2 -> af2;
+				end a2;
+				
+				abstract implementation a2.i
+				subcomponents
+					asub2: abstract a2;
+				connections
+					fconn2: feature asub2.af2 -> asub2.af2;
+				flows
+					etef33: end to end flow asub2.fpath2 -> fconn2 -> asub2.fpath2;
+				end a2.i;
+				
+				abstract a3
+				features
+					da3: provides data access;
+					af3: feature;
+				flows
+					fpath3: flow path af3 -> af3;
+				end a3;
+				
+				abstract implementation a3.i
+				subcomponents
+					asub3: abstract a2;
+				connections
+					fconn3: feature asub3.af2 -> asub3.af2;
+				flows
+					etef34: end to end flow asub3.fpath2 -> fconn3 -> asub3.fpath2;
+				end a3.i;
+				
+				feature group fgt1
+				features
+					da4: provides data access;
+				end fgt1;
+				
+				subprogram subp1
+				features
+					param1: in parameter a3.i;
+					da5: requires data access;
+					af4: feature;
+				flows
+					fpath4: flow path af4 -> af4;
+				end subp1;
+				
+				subprogram implementation subp1.i
+				subcomponents
+					asub4: abstract a3.i;
+				connections
+					fconn4: feature asub4.af3 -> asub4.af3;
+				flows
+					--Parameter.EndToEndFlow
+					etef35: end to end flow param1.etef34 -> fconn4 -> asub4.fpath3;
+					--Parameter.Connection
+					etef36: end to end flow param1.fconn3 -> fconn4 -> asub4.fpath3;
+					--Parameter.DataAccess
+					etef37: end to end flow param1.da3 -> fconn4 -> asub4.fpath3;
+					--Parameter.FlowSpecification
+					etef38: end to end flow param1.fpath3 -> fconn4 -> asub4.fpath3;
+					--Parameter.Subcomponent
+					etef39: end to end flow param1.asub3 -> fconn4 -> asub4.fpath3;
+				end subp1.i;
+			end legalETEFlowSegmentsTypeTest;
