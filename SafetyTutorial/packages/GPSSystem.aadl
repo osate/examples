@@ -11,7 +11,7 @@ public
 		use types ErrorLibrary, GPSErrorLibrary;
 		error propagations
 		satelliteSignal: in propagation {NoSignal, LowSignal};
-		location: out propagation {ServiceOmission, LowPrecisionData,IncorrectData};-- TODO {ObservableErrorTypes};
+		location: out propagation {ObservableErrorTypes};--{ServiceOmission, LowPrecisionData,IncorrectData};-- TODO {ObservableErrorTypes};
 		flows
 			GPSAsErrorSource: error source location {ServiceOmission, LowPrecisionData,IncorrectData};--{ObservableErrorTypes};
 			SatelliteError: error path satelliteSignal{NoSignal} -> location{ServiceOmission}; 
@@ -26,7 +26,7 @@ public
 		description => "No position readings due to GPS failure";
 		comment => "Becomes critical hazard, if no redundant GPS";
 			])
-		applies to GPSAsErrorSource;
+		applies to GPSAsErrorSource.ServiceOmission;
 	-- requirement of probability that GPS should not fail to provide service
 	-- This should be met by the FTA based probability analysis.
 	emv2::OccurrenceDistribution => [ ProbabilityValue => 0.8e-7 ; Distribution => Poisson;] 
