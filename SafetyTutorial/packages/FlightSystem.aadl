@@ -67,7 +67,7 @@ with FlightControl, EMV2;
 		PilottoAfg: port pilotInput -> autoFlightGuidance.operatorCommand;
 		FlightControlEffect: feature flightControl.flightSurfaceControl -> ObservableFailure;
 	annex EMV2 {**
-		use types ErrorLibrary;
+		use types ErrorLibrary,GPSErrorLibrary;
 		component error behavior
 		-- flight control service represents the service of the flight system
 		-- we map its output (physical control of flight surface) to the observable point
@@ -75,6 +75,23 @@ with FlightControl, EMV2;
 		propagations
 		FTAObservableFailureStart: all-[FlightControl.flightSurfaceControl{ServiceOmission}]-> ObservableFailure{ServiceOmission};
 		end component;
+		connection error 
+		SatSrc: error source satellite{NoSignal};
+		end connection;
+		properties
+	EMV2::hazards => 
+	([	crossreference => "7.7.7";
+		failure => "Sat connection mismatch";
+		phases => ("all");
+		severity => ARP4761::Major;
+		likelihood => ARP4761::Remote;
+		description => "Absence of satellite signal leads to manual flight control.";
+		comment => "This becomes major hazard in critical flight situations.";
+			])
+			applies to SatSrc;
+		emv2::OccurrenceDistribution => 
+		[ ProbabilityValue => 7.7e-5 ; Distribution => Poisson;] 
+		applies to SatSrc.NoSignal;
 	**};
 	end FlightSystem.tier1;
 
