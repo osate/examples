@@ -15,6 +15,7 @@ public
 		flows
 			GPSAsErrorSource: error source location {ServiceOmission, LowPrecisionData,IncorrectData};--{ObservableErrorTypes};
 			SatelliteError: error path satelliteSignal{NoSignal} -> location{ServiceOmission}; 
+			SatelliteError1: error path satelliteSignal{LowSignal} -> location{LowPrecisionData}; 
 		end propagations;
 	properties
 	EMV2::hazards => 
