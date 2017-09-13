@@ -21,7 +21,7 @@ features
 			networkaccess: in propagation {ServiceOmission};
 		flows
 			-- in this abstraction we have the error source as contributor and the incoming power propagation.
-			sensorfailsrc: error source sensedData{ServiceOmission};-- when {SensorFailure};
+			sensorfailsrc: error source sensedData{ServiceOmission} when {SensorFailure};
 			satelliteimpact: error path satelliteSignal{NoSignal} -> sensedData{ServiceOmission};
 			networkimpact: error path networkaccess{ServiceOmission} -> sensedData{ServiceOmission};
 			powerimpact: error path powersource{ServiceOmission} -> sensedData{ServiceOmission};
