@@ -152,54 +152,54 @@ annex EMV2 {**
 	end composite;
  
 	properties
-		EMV2::hazards => 
+		ARP4761::hazards => 
               ([      crossreference => "AIR6110 page 36";
               failure => "Total Loss of wheel braking - Unannunciated loss of wheel braking";
               phases => ("Landing", "RTO");
               description => "Crew detects the failure when the brakes are operated. The crew uses spoilers and thrust reversers to the maximum extent possible. This may result in a runway overrun.";
+				FailureConditionClassification => Hazardous;
+				QualitativeProbabilityObjective => Remote;
               comment => "";
               ])
               applies to Failed.TotalWBLossAnunciated;
-	EMV2::Severity => ARP4761::Hazardous applies to Failed.TotalWBLossAnunciated;
-	EMV2::Likelihood => ARP4761::Remote applies to Failed.TotalWBLossAnunciated;
               
 
 
-	EMV2::hazards => 
+	ARP4761::hazards => 
               ([      crossreference => "AIR6110 page 36";
               failure => "Total Loss of wheel braking - Annunciated loss of wheel braking";
               phases => ("Landing");
               description => "Crew selects a more suitable airport, notifies emergency ground support, and prepares occupants for runway overrun. The crew uses spoilers and thrust reversers to the maximum extent possible.";
+				FailureConditionClassification => Hazardous;
+				QualitativeProbabilityObjective => Remote;
               comment => "";
               ])
 		applies to Failed.TotalWBLossUnanunciated;
-	EMV2::Severity => ARP4761::Hazardous applies to Failed.TotalWBLossUnanunciated;      
-	EMV2::Likelihood => ARP4761::Remote applies to Failed.TotalWBLossUnanunciated;
 	-- Probability should be 5e-7 according to AIR6110, page 49
 	EMV2::OccurrenceDistribution => [ ProbabilityValue => 5.0e-7 ; Distribution => Poisson;] applies to Failed.TotalWBLossUnanunciated;
               
-	EMV2::hazards => 
+	ARP4761::hazards => 
               ([      crossreference => "AIR6110 page 36";
               failure => "Partial Symmetrical Loss of Wheel Braking - Unannunciated partial symmetrical loss of wheel braking";
               phases => ("Landing or RTO");
               description => "The crew detects the failure when the brakes are used. Crew uses available wheel braking, spoilers and thrust reversers available to maximum extent to decelerate the aircraft. The temperature on wheels of the loaded brakes increases and could reach point where wheel/fire failure occurs. Depending on number of brakes lost result could be an overrun.";
+ 				FailureConditionClassification => Hazardous;
+				QualitativeProbabilityObjective => Remote;
               comment => "Potentially catastrophic – to be confirmed by analysis";
               ])
               applies to Failed.PartialSymmetricalWBLossUnAnunciated;
-	EMV2::Severity => ARP4761::Hazardous applies to Failed.PartialSymmetricalWBLossUnAnunciated;      
-	EMV2::Likelihood => ARP4761::Remote applies to Failed.PartialSymmetricalWBLossUnAnunciated;      
               
               
-	EMV2::hazards => 
+	ARP4761::hazards => 
               ([      crossreference => "AIR6110 page 36";
               failure => "Partial Symmetrical Loss of Wheel Braking - Annunciated partial symmetrical loss of wheel braking";
               phases => ("Landing");
               description => "The crew is aware that there is a partial loss of braking before landing. Crew uses wheel braking, spoilers and thrust reversers available to maximum extent to decelerate the aircraft. The temperature on wheels of the loaded brakes increases and could reach point where wheel/fire failure occurs. Depending on number of brakes lost result could be an overrun.";
+ 				FailureConditionClassification => Major;
+				QualitativeProbabilityObjective => Remote;
               comment => "";
               ])
               applies to Failed.PartialSymmetricalWBLossanunciated;
-	EMV2::Severity => ARP4761::Major applies to Failed.PartialSymmetricalWBLossanunciated;   
-	EMV2::Likelihood => ARP4761::Remote applies to Failed.PartialSymmetricalWBLossanunciated;             
  **};
 end DecelerateWheels.basic;
 

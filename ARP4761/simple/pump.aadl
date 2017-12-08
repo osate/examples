@@ -31,13 +31,13 @@ annex EMV2 {**
 	end component;
 	
 	properties
-		EMV2::severity => ARP4761::Major applies to HydraulicError;
-		EMV2::likelihood => ARP4761::Probable applies to HydraulicError;
-		EMV2::hazards => 
+		ARP4761::hazards => 
 			([	crossreference => "ARP4761 page 275 figure L9";
 				failure => "Hydraulic Error on a pump";
 				phases => ("TBD");
 				description => "Loss of one pump";
+				FailureConditionClassification => Major;
+				QualitativeProbabilityObjective => Probable;
 				comment => "Major hazard if both pumps are lost";
 			])
 			applies to HydraulicError;

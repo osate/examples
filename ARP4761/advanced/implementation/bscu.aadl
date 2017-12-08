@@ -116,13 +116,13 @@ annex EMV2 {**
 		p1 : Failed -[]-> valid{NoValue};
 	end component;
 	properties
-		EMV2::severity => ARP4761::Minor applies to InvalidReport;
-		EMV2::likelihood => ARP4761::Probable applies to InvalidReport;
-		EMV2::hazards => 
+		ARP4761::hazards => 
 			([	crossreference => "TBD";
 				failure => "Invalid Report from BSCU Monitor";
 				phases => ("TBD");
 				description => "Report from a Monitor that causes an invalid switch to the alternate mode";
+				FailureConditionClassification => Minor;
+				QualitativeProbabilityObjective => Probable;
 				comment => "Minor Hazard";
 			])
 			applies to InvalidReport;
@@ -174,16 +174,16 @@ annex EMV2 {**
 		[mon.operational and cmd.operational]-> Operational;
 	end composite;
 	properties
-		EMV2::hazards => 
+		ARP4761::hazards => 
 		([	crossreference => "ARP4761 figure L4 page 215";
 			failure => "Failure of the BSCU, either from the monitor, the command or both";
 			phases => ("all");
 			description => "Failure of a BSCU";
+				FailureConditionClassification => Major;
+				QualitativeProbabilityObjective => Probable;
 			comment => "Would be critical if two subsystem (primary and redundant) are deffective";
 		])
 		applies to Failed;
-		EMV2::severity => ARP4761::Major applies to Failed;
-		EMV2::likelihood => ARP4761::Probable applies to Failed;
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 3.3e-5 ; Distribution => Fixed;] applies to Failed;
 **};
 end bscu_subsystem.generic;
@@ -235,13 +235,13 @@ annex EMV2 {**
 		-- EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.30e-5 ; Distribution => Fixed;] applies to InternalError;
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 3.6e-6 ; Distribution => Poisson;] applies to InternalError;
 	
-		EMV2::severity => ARP4761::Hazardous applies to InternalError;
-		EMV2::likelihood => ARP4761::ExtremelyImprobable applies to InternalError;
-		EMV2::hazards => 
+		ARP4761::hazards => 
 			([	crossreference => "ARP4761 figure L4 page 215";
 				failure => "";
 				phases => ("all");
 				description => "BSCU validity monitor incorrectly report a Failure causing switch to alternate";
+				FailureConditionClassification => Hazardous;
+				QualitativeProbabilityObjective => ExtremelyImprobable;
 				comment => "";
 			])
 			applies to InternalError;
@@ -290,11 +290,13 @@ annex EMV2 {**
 	
 	
 	properties
-			EMV2::hazards => 
+			ARP4761::hazards => 
 		([	crossreference => "TBD";
 			failure => "No power line";
 			phases => ("TBD");
 			description => "Permanent failure of power supply source";
+				FailureConditionClassification => Hazardous;
+				QualitativeProbabilityObjective => Remote;
 			comment => "Would be critical if both power supplies are lost";
 		])
 		applies to pwr1, pwr2;
@@ -337,11 +339,13 @@ annex EMV2 {**
 	end composite;
 	
 	properties
-			EMV2::hazards => 
+			ARP4761::hazards => 
 		([	crossreference => "TBD";
 			failure => "No power line";
 			phases => ("TBD");
 			description => "Permanent failure of power supply source";
+				FailureConditionClassification => Hazardous;
+				QualitativeProbabilityObjective => Remote;
 			comment => "Would be critical if both power supplies are lost";
 		])
 		applies to pwr1, pwr2;

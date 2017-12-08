@@ -29,37 +29,37 @@ annex EMV2 {**
 		normal : Operational -[]-> socket{NoError};
 	end component;
 	properties
-		EMV2::severity => ARP4761::Major applies to socket.NoPower;
-		EMV2::likelihood => ARP4761::Probable applies to socket.NoPower;
-		EMV2::hazards => 
+		ARP4761::hazards => 
 			([	crossreference => "ARP4761 page 277 figure 9";
 				failure => "Loss of one power source, might be critical if both are lost (primary and redundant)";
 				phases => ("Landing", "RTO");
 				description => "Loss of Electrical Power to BSCU";
+				FailureConditionClassification => Major;
+				QualitativeProbabilityObjective => Probable;
 				comment => "Major hazard if both power are lost";
 			])
 			applies to socket.NoPower;
 		EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.35e-5 ; Distribution => Poisson;] applies to socket.NoPower;
 --		EMV2::OccurrenceDistribution => [ ProbabilityValue => 6.75e-5 ; Distribution => Fixed;] applies to socket.NoPower;
 
-		EMV2::severity => ARP4761::Catastrophic applies to Explode;		
-		EMV2::likelihood =>  ARP4761::ExtremelyImprobable applies to Explode;
-		EMV2::hazards => 
+		ARP4761::hazards => 
 			([	crossreference => "TBD";
 				failure => "Battery Explode";
 				phases => ("all");
 				description => "Battery Explode, major hazard";
+				FailureConditionClassification => Catastrophic;
+				QualitativeProbabilityObjective => ExtremelyImprobable;
 				comment => "Have a physical impact on the surrounding components";
 			])
 			applies to Explode;
 			
-		EMV2::severity => ARP4761::Major applies to Depleted;		
-		EMV2::likelihood => ARP4761::Probable applies to Depleted;
-		EMV2::hazards => 
+		ARP4761::hazards => 
 			([	crossreference => "TBD";
 				failure => "Battery Depleted";
 				phases => ("all");
 				description => "No more power in the battery";
+				FailureConditionClassification => Major;
+				QualitativeProbabilityObjective => Probable;
 				comment => "Can be an issue if redundant battery is failing also";
 			])
 			applies to Depleted;

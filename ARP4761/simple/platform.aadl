@@ -35,11 +35,13 @@ annex EMV2 {**
 	properties
 		EMV2::severity => ARP4761::Major applies to SoftwareFailure;
 		EMV2::likelihood => ARP4761::Probable applies to SoftwareFailure;
-		EMV2::hazards => 
+		ARP4761::hazards => 
 			([	crossreference => "TBD";
 				failure => "";
 				phases => ("all");
 				description => "Software failure from the platform (OS exception, etc.)";
+				FailureConditionClassification => Major;
+				QualitativeProbabilityObjective => Probable;
 				comment => "Impact all components that are controlled by this software";
 			])
 			applies to SoftwareFailure;
@@ -84,13 +86,13 @@ annex EMV2 {**
 		pfail  : Failed -[]-> bindings{HardwareFailure};
 	end component;
 	properties
-		EMV2::severity => ARP4761::Major applies to InternalFailure;
-		EMV2::likelihood => ARP4761::Probable applies to InternalFailure;
-		EMV2::hazards => 
+		ARP4761::hazards => 
 			([	crossreference => "TBD";
 				failure => "";
 				phases => ("all");
 				description => "Hardware Failure (processor, device, etc.)";
+				FailureConditionClassification => Major;
+				QualitativeProbabilityObjective => Probable;
 				comment => "Impact all software components associated to the hardware";
 			])
 			applies to InternalFailure;
@@ -138,13 +140,13 @@ annex EMV2 {**
 		psoft  : Failed -[]-> processor{SoftwareFailure};
 	end component;
 	properties
-		EMV2::severity => ARP4761::Major applies to SoftwareFailure;
-		EMV2::likelihood => ARP4761::Probable applies to SoftwareFailure;
-		EMV2::hazards => 
+		ARP4761::hazards => 
 			([	crossreference => "TBD";
 				failure => "";
 				phases => ("all");
 				description => "Software failure from the platform (OS exception, etc.)";
+				FailureConditionClassification => Major;
+				QualitativeProbabilityObjective => Probable;
 				comment => "Impact all components that are controlled by this software";
 			])
 			applies to SoftwareFailure;
