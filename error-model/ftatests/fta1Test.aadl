@@ -1,4 +1,4 @@
-package Emfta1test
+package fta1test
 
 
 -- example of simple composite error state with an AND operator.
@@ -10,8 +10,8 @@ public
 
 system s
 annex EMV2 {**
-	use types Emfta1test;
-	use behavior Emfta1test::Simple;
+	use types fta1test;
+	use behavior fta1test::Simple;
 **};
 end s;
 
@@ -24,8 +24,8 @@ subcomponents
 	s2 : system s;
 
 annex EMV2 {**
-	use types Emfta1test;
-	use behavior Emfta1test::Simple;
+	use types fta1test;
+	use behavior fta1test::Simple;
 	
 	composite error behavior
 		states
@@ -66,4 +66,4 @@ annex EMV2 {**
 	
 **};
 
-end Emfta1test;
+end fta1test;

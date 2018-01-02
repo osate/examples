@@ -1,10 +1,11 @@
-package Emfta2test
+package fta3Test
 public
-
 
 -- This test uses a composite error state declaration with an AND that references
 -- the last two subcomponents in a flow. For each we trace backward along propagations
 -- to include the input to the subcomponent.
+-- Compared to fta2Test the subcomponents include their own error state machine resulting
+-- in additional events for their failure.
 
 data mydata
 end mydata;
@@ -42,6 +43,23 @@ annex EMV2 {**
 **};	
 end sensor;
 
+device actuator
+features
+	datain : in data port mydata; 
+	dataout : out data port mydata;
+annex EMV2 {**
+	use types ErrorModelLibrary;
+	use behavior ErrorModelLibrary::Simple;
+	error propagations
+		dataout : out propagation {BadValue};
+		datain : in propagation {BadValue};
+	flows
+		f0 : error source dataout {BadValue};
+		f1 : error path datain {BadValue} -> dataout {BadValue};
+	end propagations;
+**};	
+end actuator;
+
 system main
 end main;
 
@@ -51,9 +69,13 @@ subcomponents
 	s2 : system s;
 	sens1 : device sensor;
 	sens2 : device sensor;
+	act1 : device actuator;
+	act2 : device actuator;
 connections
-	c0 : port sens1.dataout -> s1.datain;
-	c1 : port sens2.dataout -> s2.datain;
+	c0 : port sens1.dataout -> act1.datain;
+	c1 : port sens2.dataout -> act2.datain;
+	c2 : port act1.dataout -> s1.datain;
+	c3 : port act2.dataout -> s2.datain;
 annex EMV2 {**
 	use types ErrorModelLibrary;
 	use behavior ErrorModelLibrary::Simple;
@@ -66,4 +88,4 @@ annex EMV2 {**
 **};
 end main.i;
 
-end Emfta2test;
+end fta3Test;
