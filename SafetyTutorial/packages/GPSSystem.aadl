@@ -11,7 +11,7 @@ public
 		use types ErrorLibrary, GPSErrorLibrary;
 		error propagations
 		satelliteSignal: in propagation {NoSignal, LowSignal};
-		location: out propagation {ObservableErrorTypes};--{ServiceOmission, LowPrecisionData,IncorrectData};-- TODO {ObservableErrorTypes};
+		location: out propagation {ServiceOmission, LowPrecisionData,IncorrectData};-- TODO {ObservableErrorTypes};
 		flows
 			GPSAsErrorSource: error source location {ServiceOmission, LowPrecisionData,IncorrectData};--{ObservableErrorTypes};
 			SatelliteError: error path satelliteSignal{NoSignal} -> location{ServiceOmission}; 
@@ -80,7 +80,9 @@ public
 		use behavior GPSErrorLibrary::FailStopState;
 		composite error behavior
 		states
-		[1 ormore(SatelliteSignalReceiver1.FailStop , cpu.Failstop , network.FailStop , powersupply1.FailStop)]-> FailStop;
+		[1 ormore(SatelliteSignalReceiver1.FailStop , cpu.Failstop , 
+			network.FailStop , powersupply1.FailStop
+		)]-> FailStop;
 		end composite;
 	**};
 	end GPS.parts_SingleSensorTransient;
@@ -101,7 +103,9 @@ public
 		-- when we add occursence probabilities we can calculate the failure rate of GPS
 		composite error behavior
 		states
-		[SatelliteSignalReceiver1.FailStop and SatelliteSignalReceiver2.FailStop or cpu.Failstop or network.FailStop or powersupply1.FailStop]-> FailStop;
+		[(SatelliteSignalReceiver1.FailStop and SatelliteSignalReceiver2.FailStop )
+			or cpu.Failstop or network.FailStop or powersupply1.FailStop
+		]-> FailStop;
 		end composite;
 	**};
 	end GPS.parts_TwoSensor;
@@ -146,11 +150,20 @@ public
 			powertonetwork: feature powersupply1.power -> network.power ;
 	annex EMV2 {**
 		use types ErrorLibrary, GPSErrorLibrary;
+		use behavior GPSErrorLibrary::FailStopState;
 		component error behavior
 		-- mapping of GPS producing GPS output to the GPS out propagation
+		transitions
+			t1: Operational -[processing.location{ServiceOmission}]-> FailStop;
 		propagations
 		FTANoServiceStart: all-[processing.location{ServiceOmission}]-> location{ServiceOmission};
 		end component;
+--		composite error behavior
+--		states
+--		[1 ormore(SatelliteSignalReceiver1.FailStop , cpu1.Failstop 
+--			, network.FailStop , powersupply1.FailStop)
+--		]-> FailStop;
+--		end composite;
 	**};
 	end GPS.basic;
 

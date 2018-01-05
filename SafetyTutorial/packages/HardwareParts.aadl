@@ -17,12 +17,12 @@ with EMV2;
 		use types ErrorLibrary,GPSErrorLibrary;
 	 	use behavior GPSErrorLibrary::FailStopState;
 		error propagations
-			bindings: out propagation {ServiceOmission};
+			bindings: out propagation {ServiceOmission, ValueError};
 			powersource: in propagation {ServiceOmission};
 			networkaccess: in propagation {ServiceOmission};
 			networkaccess: out propagation {ServiceOmission};
 		flows
-			cpu_es1: error source bindings {ServiceOmission} when {CPUFailure};
+			cpu_es1: error source bindings {ServiceOmission, ValueError} when {CPUFailure};
 		end propagations;
 	 	component error behavior
 		propagations
