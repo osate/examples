@@ -1,6 +1,5 @@
 package AutomatedFlightGuidance
 public
-with HardwareParts;
 with EMV2;
 
 -- Flight guidance is an abstract system 
@@ -12,10 +11,14 @@ features
 InPort: in data port;
 OutPort: out data port;
 annex emv2 {**                                                                                                                                                                                                                                                                                                         
-	use types AFGErrorLibrary;
+	use types AFGErrorLibrary, GPSErrorLibrary;
   use behavior ErrorLibrary::FailStop;        
 	error propagations
-	OutPort: out propagation {NoService};
+	InPort: in propagation {NoService,LowPrecisionData,IncorrectData};
+	OutPort: out propagation {NoService,LowPrecisionData,IncorrectData};
+	flows
+		noserviceflow: error path InPort{NoService} -> OutPort{NoService};
+		valueflow: error path InPort{LowPrecisionData,IncorrectData} -> OutPort{LowPrecisionData,IncorrectData};
 	end propagations;
 	
 	component error behavior
@@ -34,13 +37,20 @@ end FlightGuidance;
 abstract AutoPilot
 features
 InPort: in data port;
+OperatorCmd: in data port;
 OutPort: out data port;
 annex emv2 {**
-	use types AFGErrorLibrary;
+	use types AFGErrorLibrary,GPSErrorLibrary;
   use behavior ErrorLibrary::FailStop;        
 	error propagations
-	InPort: in propagation {NoValue};
-	OutPort: out propagation {NoValue};
+	InPort: in propagation {NoService,LowPrecisionData,IncorrectData};
+	OperatorCmd: in propagation {NoPilotInput, ErraticPilotInput};
+	OutPort: out propagation {NoService,ErraticValue};
+	flows
+		noserviceflow: error path InPort{NoService} -> OutPort{NoService};
+		valueflow: error path InPort{LowPrecisionData,IncorrectData} -> OutPort{ErraticValue};
+		operatorflow: error path OperatorCmd{NoPilotInput} -> OutPort{NoService};
+		operatorflowerratic: error path OperatorCmd{ErraticPilotInput} -> OutPort{ErraticValue};
 	end propagations;
 	
 component error behavior
@@ -95,32 +105,32 @@ annex emv2 {**
 	error propagations
 	position: in propagation {ServiceOmission, LowPrecisionData,IncorrectData};--{ObservableErrorTypes};
 	operatorCommand: in propagation {NoPilotInput,ErraticPilotInput};
-	AFGOutput : out propagation {NoValue,ErraticValue};
+	AFGOutput : out propagation {NoService,ErraticValue};
 	powersupply: in propagation {NoService};
 	flows
 	AFGsource1: error source AFGOutput{ErraticValue} when NonCriticalModeFailure;
 	-- fault tree to reflect FGS as error source.
---	GPSPath: error path position{NoValue} -> AFGOutput{NoValue};
-	GPSPath1: error sink position{ServiceOmission,LowPrecisionData} ;
-	NoPilotPath: error path operatorCommand{NoPilotInput} -> AFGOutput{NoValue};
+	GPSPath: error path position{NoService} -> AFGOutput{NoService};
+	GPSPath1: error sink position{LowPrecisionData} ;
+	NoPilotPath: error path operatorCommand{NoPilotInput} -> AFGOutput{NoService};
 	ErraticPilotPath: error path operatorCommand{ErraticPilotInput} -> AFGOutput{ErraticValue};
-	epPower: error path powersupply{NoService} -> AFGOutput{NoValue};
-	AFGsource: error source AFGOutput{NoValue} when CriticalModeFailure;
+	epPower: error path powersupply{NoService} -> AFGOutput{NoService};
+	AFGsource: error source AFGOutput{NoService} when CriticalModeFailure;
 	end propagations;
 	properties
 	EMV2::hazards => 
 	([	crossreference => "1.1.3";
 		failure => "Loss of automated flight guidance";
 		phases => ("all");
-		severity => 3;
-		likelihood => C;
+		severity => ARP4761::Major;
+		likelihood => ARP4761::Frequent;
 		description => "Loss of automated flight guidance leads to manual flight control.";
 		comment => "This becomes major hazard in critical flight situations.";
 			])
 			applies to AFGsource;
 	-- We specify the failure rate of AFG as the error source.
 	-- external impact is accounted for separately.
-	emv2::OccurrenceDistribution => [ ProbabilityValue => 1.0e-9 ; Distribution => Poisson;] applies to AFGsource.Novalue;
+	emv2::OccurrenceDistribution => [ ProbabilityValue => 1.0e-9 ; Distribution => Poisson;] applies to AFGsource.NoService, CriticalModeFailure;
 	emv2::OccurrenceDistribution => [ ProbabilityValue => 2.4e-9 ; Distribution => Poisson;] applies to powersupply.NoService;
 	**};
 end AutomatedFlightGuidance;
@@ -134,13 +144,16 @@ connections
 AFGtoFG: port position -> FlightGuidance.inport;
 FGtoAP: port FlightGuidance.outport -> AutoPilot.inport;
 APtoAFG: port AutoPilot.outport -> AFGOutput;
+pilotinput: port operatorCommand -> AutoPilot.OperatorCmd;
 annex emv2 {**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
-	use types AFGErrorLibrary;
+	use types AFGErrorLibrary,GPSErrorLibrary;
   use behavior AFGErrorLibrary::ThreeState;        
 	error propagations
 	bindings: out propagation {NoService};
 	flows
 	esource: error source bindings{NoService} when CriticalModeFailure;
+	evote: error path position{ServiceOmission} -> AFGOutput{NoValue};
+	evote2: error path position{LowPrecisionData,IncorrectData} -> AFGOutput{ErraticValue};
 	end propagations;
 	
 component error behavior

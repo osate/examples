@@ -9,11 +9,12 @@ public
 		location: out data port;
 	annex EMV2 {**
 		use types ErrorLibrary, GPSErrorLibrary;
+		use behavior GPSErrorLibrary::FailStopState;
 		error propagations
 		satelliteSignal: in propagation {NoSignal, LowSignal};
-		location: out propagation {ServiceOmission, LowPrecisionData,IncorrectData};-- TODO {ObservableErrorTypes};
+		location: out propagation {ServiceOmission, LowPrecisionData,IncorrectData};
 		flows
-			GPSAsErrorSource: error source location {ServiceOmission, LowPrecisionData,IncorrectData};--{ObservableErrorTypes};
+			GPSAsErrorSource: error source location {ServiceOmission, LowPrecisionData,IncorrectData};
 			SatelliteError: error path satelliteSignal{NoSignal} -> location{ServiceOmission}; 
 			SatelliteError1: error path satelliteSignal{LowSignal} -> location{LowPrecisionData}; 
 		end propagations;
@@ -31,19 +32,20 @@ public
 	-- requirement of probability that GPS should not fail to provide service
 	-- This should be met by the FTA based probability analysis.
 	emv2::OccurrenceDistribution => [ ProbabilityValue => 0.8e-7 ; Distribution => Poisson;] 
-	applies to GPSAsErrorSource.ServiceOmission;
+	applies to GPSAsErrorSource.ServiceOmission, FailStop;
 	-- failure contribution by the lack of stallite signal
 	emv2::OccurrenceDistribution => [ ProbabilityValue => 0.9e-7 ; Distribution => Poisson;] 
 	applies to satelliteSignal.NoSignal;
-	-- Total outoging probability of occurrence associated with the error propagation
+	-- Total outgoing probability of occurrence associated with the error propagation, i.e., incoming plus error source
 	emv2::OccurrenceDistribution => [ ProbabilityValue => 1.7e-7 ; Distribution => Poisson;] 
-	applies to location.ServiceOmission; -- TODO reference to ServiceOmission in Observables (or to Observables) is not resolved.
+	applies to location.ServiceOmission; 
 	**};
 	end GPS;
 	
 	-- this is an early parts model without any connectivity between parts
 	-- this is expressed in the composite state logic.
-	-- Single sensor as physical system does not give us the reliability, thus, two sensor configuration
+	-- Single sensor as physical system does not give us the reliability
+	-- thus, we will also explore a two sensor configuration
 	system implementation GPS.parts_SingleSensor
 		subcomponents
 			SatelliteSignalReceiver1: device GPSParts::sensor;
@@ -53,9 +55,10 @@ public
 	annex EMV2 {**
 		use types ErrorLibrary, GPSErrorLibrary;
 		use behavior GPSErrorLibrary::FailStopState;
-		-- the logic includes knowledge of dual redundenacy of sensors
-		-- the logic is the fault tree equivalent of a RBD
-		-- when we add occursence probabilities we can calculate the failure rate of GPS
+		component error behavior
+		propagations
+		FailStop -[]-> location{ServiceOmission}; 
+		end component;
 		composite error behavior
 		states
 		[1 ormore(SatelliteSignalReceiver1.FailStop , cpu.Failstop 
@@ -65,10 +68,9 @@ public
 	**};
 	end GPS.parts_SingleSensor;
 	
-		-- the logic includes knowledge of dual redundency of sensors
-		-- the logic is the fault tree equivalent of a RBD
-		-- when we add occurrence probabilities we can calculate the failure rate of GPS
-	-- This logic is not yet interpreted correctly when generating emfta files.
+		-- the logic includes error behavior of a sensor that has both permanent and transient failures
+		-- when we add occurrence probabilities we can calculate the failure rate of GPS 
+		-- we take into account the branch probability for permanent failure
 	system implementation GPS.parts_SingleSensorTransient 
 		subcomponents
 			SatelliteSignalReceiver1: device GPSParts::sensor_transient;
@@ -99,22 +101,23 @@ public
 		use types ErrorLibrary, GPSErrorLibrary;
 		use behavior GPSErrorLibrary::FailStopState;
 		-- the logic includes knowledge of dual redundenacy of sensors
-		-- the logic is the fault tree equivalent of a RBD
-		-- when we add occursence probabilities we can calculate the failure rate of GPS
+		-- the logic is the fault tree equivalent of a RBD with the sensors in an AND
+		-- when we add occurrence probabilities we can calculate the failure rate of GPS
 		composite error behavior
 		states
-		[(SatelliteSignalReceiver1.FailStop and SatelliteSignalReceiver2.FailStop )
-			or cpu.Failstop or network.FailStop or powersupply1.FailStop
+		[1 ormore(SatelliteSignalReceiver1.FailStop and SatelliteSignalReceiver2.FailStop ,
+			 cpu.Failstop , network.FailStop , powersupply1.FailStop)
 		]-> FailStop;
 		end composite;
 	**};
 	end GPS.parts_TwoSensor;
 
-	-- here we are interested in supporting inductive fault impact analysis from a single failure point
-	-- and deductive fault contributor analysis (FTA) of a critical effects 
+
+	-- here we are interested in supporting fault impact analysis from a single failure point
+	-- and fault tree analysis (FTA) of a critical effects 
 	-- These analyses utilize propagation paths between components and error flows or component error behavior of components.
 	-- Starting points for fault impact analysis are error source declarations.
-	-- Starting point for fault contributor analysis is an outgoing error propagation of the GPS.
+	-- Starting point for fault tree analysis is an outgoing error propagation of the GPS.
 	-- Note that the redundancy logic is known to the processing unit as it decides what to do when sensor errors are propagated in.
 
 	-- In this configuration the processing software is assumed to have Zero defect, a common assumption made in reliability analysis.
@@ -140,8 +143,6 @@ public
 			-- physical network connections
 			s1tonetwork: bus access   network <->SatelliteSignalReceiver1.networkaccess  ;
 			s2tonetwork: bus access   network <->SatelliteSignalReceiver2.networkaccess ;
---			networktos1: bus access  network -> SatelliteSignalReceiver1.networkaccess;
---			networktos2: bus access  network -> SatelliteSignalReceiver2.networkaccess;
 			cputonetwork: bus access cpu1.networkaccess <-> network;
 			-- power connections
 			powertos1: feature powersupply1.power -> SatelliteSignalReceiver1.powersource ;
@@ -156,14 +157,9 @@ public
 		transitions
 			t1: Operational -[processing.location{ServiceOmission}]-> FailStop;
 		propagations
-		FTANoServiceStart: all-[processing.location{ServiceOmission}]-> location{ServiceOmission};
+		FTANoServiceStart: all-[processing.location{ServiceOmission}]-> 
+		    location{ServiceOmission};
 		end component;
---		composite error behavior
---		states
---		[1 ormore(SatelliteSignalReceiver1.FailStop , cpu1.Failstop 
---			, network.FailStop , powersupply1.FailStop)
---		]-> FailStop;
---		end composite;
 	**};
 	end GPS.basic;
 
@@ -240,7 +236,8 @@ public
 			-- power connections
 			powertos1: feature powersupply1.power -> SatelliteSignalReceiver1.powersource ;
 			powertos2: feature powersupply1.power -> SatelliteSignalReceiver2.powersource ;
-			powertocpu: feature powersupply1.power -> cpu1.powersource ;
+			powertocpu1: feature powersupply1.power -> cpu1.powersource ;
+			powertocpu2: feature powersupply1.power -> cpu2.powersource ;
 		properties
 			-- note that the voter is on the same processor as one of the processing units.
 			-- The failure of CPU1 will take out the GPS. Thus, limited value in replicating CPUs and processing.

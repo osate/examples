@@ -86,9 +86,8 @@ with EMV2;
 			FailStop -[]-> power{ServiceOmission};
 	 	end component;
 		properties
-			emv2::OccurrenceDistribution => [ ProbabilityValue => 3.5e-5 ; Distribution => Poisson;] applies to power_es.ServiceOmission;
-			emv2::OccurrenceDistribution => [ ProbabilityValue => 3.5e-5 ; Distribution => Poisson;] applies to FailStop;
-			
+			emv2::OccurrenceDistribution => [ ProbabilityValue => 3.5e-7 ; Distribution => Poisson;] 
+			applies to power_es.ServiceOmission, FailStop, PowerFailure;
 	**};
 	end PowerSupply;
 	
