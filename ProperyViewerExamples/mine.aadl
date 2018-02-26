@@ -1,0 +1,27 @@
+property set mine is
+	Location : type record (
+		X : aadlinteger;
+		Y : aadlinteger;
+	);
+
+	Position : mine::Location applies to (device);
+	
+	
+	Length_Unit : type units (
+		mm,
+		cm => mm * 10,
+		meter => cm * 100,
+		km => meter * 1000 );
+
+	Length : type aadlreal 1.5 meter .. 4.5 meter units mine::Length_Unit ;
+
+	Car_Length : mine::Length applies to (device);
+	
+	
+	Localized_Name : type record (
+		US : aadlstring;
+		Germany : aadlstring;
+	);
+	
+	Car_Name : mine::Localized_Name applies to (device);
+end mine;
