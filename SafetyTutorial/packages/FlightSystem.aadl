@@ -112,11 +112,16 @@ with FlightControl, EMV2;
 	**};
 	end FlightSystem.tier1;
 
-	system implementation FlightSystem.tier2 extends FlightSystem.tier1
+	system implementation FlightSystem.tier2CEBound extends FlightSystem.tier1
 	subcomponents
 		GPS: refined to system GPSSystem::GPS.CEBound;
 		AutoFlightGuidance: refined to system AutomatedFlightGuidance::AutomatedFlightGuidance.functional;
-	end FlightSystem.tier2;
+	end FlightSystem.tier2CEBound;
+	system implementation FlightSystem.tier2CE extends FlightSystem.tier1
+	subcomponents
+		GPS: refined to system GPSSystem::GPS.computeerror;
+		AutoFlightGuidance: refined to system AutomatedFlightGuidance::AutomatedFlightGuidance.functional;
+	end FlightSystem.tier2CE;
 
 
 	system implementation FlightSystem.DualGPS
@@ -170,6 +175,16 @@ with FlightControl, EMV2;
 	subcomponents
 		GPS: refined to system GPSSystem::GPS.parts_TwoSensor;
 	end FlightSystem.PartsTwoSensorGPS;
+	
+	system implementation FlightSystem.TwoSensorGPS extends FlightSystem.tier1
+	subcomponents
+		GPS: refined to system GPSSystem::GPS.BasicRedundancy;
+	end FlightSystem.TwoSensorGPS;
+	
+	system implementation FlightSystem.TwoSensorGPSState extends FlightSystem.tier1
+		subcomponents
+			GPS: refined to system GPSSystem::GPS.BasicState;
+	end FlightSystem.TwoSensorGPSState;
 
 	-- parts model to evaluate occurrence probability early in process (similar to RBD) with redundancy logic expressed by composite state declaration
 	system implementation FlightSystem.DualGPSSingleSensor

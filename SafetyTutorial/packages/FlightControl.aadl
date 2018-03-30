@@ -16,7 +16,7 @@ annex emv2 {**
 	guidanceCommands: in propagation {NoService,ErraticValue};
 	powersupply: in propagation {NoService};
 	flows
-	fces: error source flightSurfaceControl{NoService};
+	fces: error source flightSurfaceControl{NoService} if "SourcePeterCondition";
 	fgtofcNo: error path guidanceCommands{NoService} -> flightSurfaceControl{NoService};
 	fgtofcErratic: error path guidanceCommands{ErraticValue} -> flightSurfaceControl{ErraticBehavior};
 	epPower: error path powersupply{NoService} -> flightSurfaceControl{NoService};
