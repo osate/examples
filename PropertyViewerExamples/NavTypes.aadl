@@ -1,0 +1,23 @@
+-- Taken from page 145 of the AADL 2.2 Spec
+package Nav_Types 
+public
+	data GPS
+		properties
+			Data_Size => 30 Bytes;
+	end GPS;
+	
+	data INS
+		properties
+			Data_Size => 20 Bytes;
+	end INS;
+	
+	data Position_ECEF
+		properties
+			Data_Size => 30 Bytes;
+	end Position_ECEF;
+		
+	data Position_NED
+		properties
+			Data_Size => 30 Bytes;
+	end Position_NED;
+end Nav_Types;

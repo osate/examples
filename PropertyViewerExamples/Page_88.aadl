@@ -1,0 +1,22 @@
+package Page_88
+public
+	with Base_Types;
+	
+	thread Prime_Reporter
+		features
+			Received_Prime : in event data port Base_Types::Integer;
+		properties
+			Dispatch_Protocol => Timed;
+	end Prime_Reporter;
+	
+	thread Prime_Reporter_One extends Prime_Reporter
+		features
+			Received_Prime : refined to in event data port Base_Types::Integer {
+				Compute_Entrypoint_Source_Text => "Primes.On_Received_Prime_One";
+			};
+		properties
+			Period => 9 Sec; 
+			Priority => 45;
+			Compute_Entrypoint_Source_Text => "Primes.Report_One";
+	end Prime_Reporter_One;
+end Page_88;
