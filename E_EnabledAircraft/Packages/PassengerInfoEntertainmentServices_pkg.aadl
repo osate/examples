@@ -4,7 +4,7 @@
 
 package PassengerInfoEntertainmentServices_pkg
 public
-	with  AirCraftAirFrame_Pkg;
+	with AirCraftAirFrame_Pkg, SecurityProps;
 	
 	system passengerInfoEntertainmentServices
 		features
@@ -13,6 +13,9 @@ public
 			-- bus access
 			aircraftDataNetworkInterface: requires bus access AirCraftAirFrame_Pkg::aircraftDataNetwork;
 		    internalWirelessAccess: requires bus access AircraftAirframe_Pkg::internalWirelessNetwork;
+		properties
+			SecurityProps::level => low;
+			SecurityProps::partition => entertainment;		
 	end passengerInfoEntertainmentServices;
 --	
 -- this is an alternative configuration where the aircraftDataNetwork is part of the airframe

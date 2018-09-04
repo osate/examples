@@ -1,10 +1,9 @@
 -- Copyright 2018 Carnegie Mellon University. See Notice.txt
 -- [Distribution Statement A] Approved for public release and unlimited distribution.
-
 package AircraftControl_pkg
 -- This package contains classifiers for the aircraft control ( AC)system.
 public
-	with OperationalEnvironment_pkg,  AircraftAirframe_pkg;
+	with OperationalEnvironment_pkg, AircraftAirframe_pkg, SecurityProps;
 
 -- This is a model of the aircraft control system (AC)
 	system aircraftControl
@@ -17,6 +16,9 @@ public
 			closedNetworkAccess: provides bus access AircraftAirframe_pkg::closedNetwork;
 			aeroDataLink_AC: in out event data port;
 			satelliteDataLink_AC: in out event data port;
+		properties
+			SecurityProps::partition => avionics;
+			SecurityProps::level => critical;
 	end aircraftControl;
 
 	system implementation aircraftControl.basic
@@ -42,10 +44,9 @@ public
 			commBetweenControlandSatellite: feature flightAndEmbeddedControlSystems.closedNetworkInterface <-> satelliteDataLink_AC;
 			commBetweenControlandGround: feature flightAndEmbeddedControlSystems.closedNetworkInterface <-> aeroDataLink_AC;
 	end aircraftControl.basic;
-	
+
 -- 
 -- Components for control of the aircraft
-
 	system flightAndEmbeddedControlSystems
 		features
 			closedNetworkInterface: in out data port;
@@ -65,7 +66,4 @@ public
 		features
 			pilotInterface: in out data port;
 	end pilot;
-
-
-	
 end AircraftControl_pkg;
