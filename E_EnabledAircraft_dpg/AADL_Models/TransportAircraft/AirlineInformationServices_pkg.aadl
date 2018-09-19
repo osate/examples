@@ -1,0 +1,69 @@
+
+-- Copyright 2018 Carnegie Mellon University. See Notice.txt
+-- Distribution Statement A: Approved for Public Release; Distribution is Unlimited.
+
+package AirlineInformationServices_pkg
+
+public
+
+	-- This package contains classifiers for the Airline Information Services (AIS) system.
+	
+	with  OperationalEnvironment_pkg, AircraftAirframe_pkg;
+	
+	system airlineInformationServices
+		features
+	-- external data interfaces
+		satelliteDataLink_AIS: in out event data port;
+		externalWirlessAccessPointInterface: in out event data port;
+		externalCellularInterface: in out event data port;
+		-- external bus access
+		externalWirlessAccess: requires bus access  OperationalEnvironment_pkg::externalWirelessbus;
+		externalCellularAccess: requires bus access OperationalEnvironment_pkg::cellular;
+		internalWirelessAccess: requires bus access AircraftAirframe_Pkg::internalWirelessNetwork;
+	-- internal aircraft data interfaces
+		inflightEntertainmentInterface_AIS: in out data port;
+	-- bus access
+		closedNetworkAccess: requires bus access AircraftAirframe_pkg::closedNetwork;
+		aircraftDataNetworkAccess: requires bus access AircraftAirframe_pkg::aircraftDataNetwork;
+		
+	end airlineInformationServices;
+	
+	system implementation airlineInformationServices.generic
+		subcomponents
+			authorizedPersonel:device authorizedPersonnel.leadFlightAttendent; 
+	end airlineInformationServices.generic;
+	
+	device authorizedPersonnel
+		features
+		 -- bus access
+		 internalWirelessAccess: requires bus access AircraftAirframe_Pkg::internalWirelessNetwork;
+		 localDeviceInterface: in out data port;
+	end authorizedPersonnel;
+	
+	device implementation authorizedPersonnel.leadFlightAttendent
+	end authorizedPersonnel.leadFlightAttendent;
+	
+--	device localWirelessCrewDevice
+--		features
+--		 localDeviceInterface: in out data port;	
+--	end localWirelessCrewDevice;
+	
+--	device wirelessAccessPoint_Internal
+--		features
+--		 wirelessInterface: in out event data port;
+--		 aircraftDataNetworkInterface: in out event data port;
+--	end wirelessAccessPoint_Internal;
+
+	
+	device externalWirelessAccessPointUnit
+	end externalWirelessAccessPointUnit;
+	
+	device celluarInterfaceUnit
+	end celluarInterfaceUnit;
+	
+	system maintenanceSystems
+		features
+			aircraftDataNetworkAccess: requires bus access AirCraftAirFrame_Pkg::AircraftDataNetwork;
+	end maintenanceSystems;
+	
+end AirlineInformationServices_pkg;

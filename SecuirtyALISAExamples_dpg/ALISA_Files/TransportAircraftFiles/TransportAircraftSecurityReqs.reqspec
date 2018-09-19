@@ -1,0 +1,49 @@
+//
+// Copyright 2018 Carnegie Mellon University. See Notice.txt
+// Distribution Statement A: Approved for Public Release; Distribution is Unlimited.
+//
+system requirements TransportAircraftSecurityReqs for 
+TransportAircraft_Generic::transportAircraft.generic
+[
+	val ReqSecuirtyLevel = 3
+	
+	requirement  MasterSecurityReq1: "There must be an electronically documented master security policy for the aircraft system that
+										addresses all life cycle phases. "
+	[
+		description this "The master security policy addresses all phases of an aircraft's life cycle. 
+						It spans development, operation and maintenance, and upgrades.
+"
+		decomposes TransportAircraftSystemSecurityPolicies.MasterSecurityPolicy
+	]
+	
+	requirement MasterSecurityReq2: "There must be a comprehensive review and certification of the master security document."
+	[
+		description "This review must be conducted by qualified FAA and Development Organization Personnel."
+		decomposes TransportAircraftSystemSecurityPolicies.MasterSecurityPolicy
+	]
+	
+	requirement MasterSecurityReq3: "The aircraft system achieve FAA security certification. "
+	[
+		description "The requisite procedures must be completed and documented."
+		decomposes TransportAircraftSystemSecurityPolicies.MasterSecurityPolicy
+	]
+	
+		requirement AircraftSystemsInformationSecurity: "Aircraft Systems Information Security/Protection (ASISP) must be provided"
+	[
+		description "All aircraft control and flight information systems must have security protection to ensure confidentiality, integrity, and availability."
+	]  
+	
+	
+	requirement ExternalEncryption: "There must be communication security on all external communication paths."
+	[
+		description  "This is a decomposition of the SecureCommunicationsPolicy"
+		decomposes TransportAircraftSystemSecurityPolicies.SecureCommunicationsPolicy
+	]
+	
+	requirement InternalEncryption: "There must be communication security on all required communications to and from the aircraft control
+									system from other internal aircraft systems."
+	[
+		decomposes TransportAircraftSystemSecurityPolicies.SecureCommunicationsPolicy
+	]
+
+]

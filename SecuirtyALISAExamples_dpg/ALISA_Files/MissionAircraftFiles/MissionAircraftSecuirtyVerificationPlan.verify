@@ -1,0 +1,51 @@
+//
+// Copyright 2018 Carnegie Mellon University. See Notice.txt
+// Distribution Statement A: Approved for Public Release; Distribution is Unlimited.
+//
+
+verification plan MissionAircraftSecurityVerificationPlan for MissionAircraftSecurityReqs
+[
+	claim MasterSecurityReq1 
+	[
+		activities 	
+ 	      formalReview: AircraftSecurityVerificationMethods.ReviewMasterSecurityPolicy ("Master Security Policy")
+	]
+	
+	claim MasterSecurityReq2
+	[
+		activities
+ 		  formalReview: AircraftSecurityVerificationMethods.ReviewMasterSecurityPolicy ("Master Security Policy")
+	]
+	
+	claim MasterSecurityReq3
+	[
+		activities
+ 	     formalReview: AircraftSecurityVerificationMethods.ReviewMasterSecurityPolicy ("Master Security Policy")
+	]
+	
+	claim AircraftInformationSecurity
+	[
+		
+	]
+	
+	claim ExternalEncryption
+	[
+		
+	]
+
+
+	claim InternalEncryption
+	[
+		
+	]
+	
+	claim  SecureMissionDataEncrypt
+	[
+		
+	]
+
+	claim SecureMissionDataClassify
+	[
+		
+	]
+]

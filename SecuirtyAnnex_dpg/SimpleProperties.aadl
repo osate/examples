@@ -1,0 +1,13 @@
+property set SimpleProperties is
+	
+	basicRecordType: type  record 
+	(
+		field1: aadlstring;
+		field2: aadlinteger;
+		
+	);
+	
+	ARecord: SimpleProperties::basicRecordType applies to (all);
+	
+
+end SimpleProperties;

@@ -1,0 +1,49 @@
+
+// Copyright 2018 Carnegie Mellon University. See Notice.txt
+// Distribution Statement A: Approved for Public Release; Distribution is Unlimited.
+
+
+verification plan TransportAircraftSecurityVerificationPlan : "Verification Plan for Master Security Policy"
+
+for TransportAircraftSecurityReqs
+[
+	
+	description "This provides verification for the system security policies."
+	
+ claim MasterSecurityReq1 : "Verifies that a master security policy has been developed and reviewed."
+ 	
+ [
+ 	activities 	
+ 	formalReview: AircraftSecurityVerificationMethods.ReviewMasterSecurityPolicy ("Master Security Policy")
+ ]
+ 
+ claim MasterSecurityReq2: ""
+ [
+ 	activities
+ 	formalReview: AircraftSecurityVerificationMethods.ReviewMasterSecurityPolicy ("Master Security Policy")
+ ]
+ 
+ claim MasterSecurityReq3 :""
+ [
+ 	activities
+ 	formalReview: AircraftSecurityVerificationMethods.ReviewMasterSecurityPolicy ("Master Security Policy")
+
+ ]
+ 
+ claim AircraftSystemsInformationSecurity: ""
+ [
+ 	
+ ]
+	
+ claim ExternalEncryption: ""
+ [
+ 	
+ ]
+ 
+ claim InternalEncryption: ""
+ [
+ 	
+ ]
+
+]
+

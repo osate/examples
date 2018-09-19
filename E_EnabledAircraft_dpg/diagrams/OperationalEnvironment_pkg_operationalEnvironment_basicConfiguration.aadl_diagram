@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="ASCII"?>
+<diagram:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:diagram="http://osate.org/diagram" formatVersion="5">
+  <element id="0" manual="true">
+    <element id="34" dockArea="left">
+      <bo>
+        <seg>feature</seg>
+        <seg>aerodatalink_ac</seg>
+      </bo>
+      <position y="131.0"/>
+      <contentFilters/>
+    </element>
+    <element id="15" dockArea="right">
+      <bo>
+        <seg>feature</seg>
+        <seg>aerodatalinkcommaccess</seg>
+      </bo>
+      <position x="1167.0" y="131.0"/>
+      <contentFilters/>
+    </element>
+    <element id="36" dockArea="right">
+      <bo>
+        <seg>feature</seg>
+        <seg>celluaraccess</seg>
+      </bo>
+      <position x="1256.0" y="181.0"/>
+      <contentFilters/>
+    </element>
+    <element id="1" dockArea="left">
+      <bo>
+        <seg>feature</seg>
+        <seg>cellulardatalink_ais</seg>
+      </bo>
+      <position y="31.0"/>
+      <contentFilters/>
+    </element>
+    <element id="4" dockArea="right">
+      <bo>
+        <seg>feature</seg>
+        <seg>externalwirelessaccess</seg>
+      </bo>
+      <position x="1186.0" y="81.0"/>
+      <contentFilters/>
+    </element>
+    <element id="3" dockArea="right">
+      <bo>
+        <seg>feature</seg>
+        <seg>satellitecommaccess</seg>
+      </bo>
+      <position x="1205.0" y="31.0"/>
+      <contentFilters/>
+    </element>
+    <element id="16" dockArea="left">
+      <bo>
+        <seg>feature</seg>
+        <seg>satellitedatalink_ac</seg>
+      </bo>
+      <position y="81.0"/>
+      <contentFilters/>
+    </element>
+    <element id="35" dockArea="left">
+      <bo>
+        <seg>feature</seg>
+        <seg>satellitedatalink_ais</seg>
+      </bo>
+      <position y="181.0"/>
+      <contentFilters/>
+    </element>
+    <element id="37" dockArea="left">
+      <bo>
+        <seg>feature</seg>
+        <seg>wirelessaccesspoint_ais</seg>
+      </bo>
+      <position y="231.0"/>
+      <contentFilters/>
+    </element>
+    <element id="33">
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>aerodatalinkcomm</seg>
+      </bo>
+      <position x="678.0" y="38.0"/>
+      <size width="188.0" height="52.0"/>
+      <contentFilters>
+        <filter>features</filter>
+        <filter>internalFeatures</filter>
+        <filter>processorFeatures</filter>
+        <filter>connections</filter>
+        <filter>flowSpecifications</filter>
+      </contentFilters>
+    </element>
+    <element id="27">
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>autonomousaircraft1</seg>
+      </bo>
+      <position x="900.0" y="440.0"/>
+      <size width="196.0" height="52.0"/>
+      <contentFilters>
+        <filter>features</filter>
+        <filter>internalFeatures</filter>
+        <filter>processorFeatures</filter>
+        <filter>connections</filter>
+        <filter>flowSpecifications</filter>
+      </contentFilters>
+    </element>
+    <element id="2">
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>cellular</seg>
+      </bo>
+      <position x="195.0" y="38.0"/>
+      <size width="108.0" height="52.0"/>
+      <contentFilters>
+        <filter>features</filter>
+        <filter>internalFeatures</filter>
+        <filter>processorFeatures</filter>
+        <filter>connections</filter>
+        <filter>flowSpecifications</filter>
+      </contentFilters>
+    </element>
+    <element id="21">
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>cellularbasestation</seg>
+      </bo>
+      <position x="576.0" y="420.0"/>
+      <size width="189.0" height="52.0"/>
+      <contentFilters>
+        <filter>features</filter>
+        <filter>internalFeatures</filter>
+        <filter>processorFeatures</filter>
+        <filter>connections</filter>
+        <filter>flowSpecifications</filter>
+      </contentFilters>
+    </element>
+    <element id="22">
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>externalwirelessbus</seg>
+      </bo>
+      <position x="478.0" y="38.0"/>
+      <size width="194.0" height="52.0"/>
+      <contentFilters>
+        <filter>features</filter>
+        <filter>internalFeatures</filter>
+        <filter>processorFeatures</filter>
+        <filter>connections</filter>
+        <filter>flowSpecifications</filter>
+      </contentFilters>
+    </element>
+    <element id="28">
+      <element id="31" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>aerodatalink</seg>
+        </bo>
+        <position x="278.0" y="20.0"/>
+        <contentFilters/>
+      </element>
+      <element id="32" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>aerodatalinkaccess</seg>
+        </bo>
+        <position x="232.0" y="81.0"/>
+        <contentFilters/>
+      </element>
+      <element id="29" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>satellitedatalink</seg>
+        </bo>
+        <position y="31.0"/>
+        <contentFilters/>
+      </element>
+      <element id="30" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>satellitedatalinkaccess</seg>
+        </bo>
+        <position y="76.0"/>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>groundcontrol</seg>
+      </bo>
+      <position x="196.0" y="140.0"/>
+      <size width="381.0" height="151.0"/>
+      <contentFilters>
+        <filter>features</filter>
+        <filter>internalFeatures</filter>
+        <filter>processorFeatures</filter>
+        <filter>connections</filter>
+        <filter>flowSpecifications</filter>
+      </contentFilters>
+    </element>
+    <element id="38">
+      <element id="43" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>aerodatalink_ac</seg>
+        </bo>
+        <position y="140.0"/>
+        <contentFilters/>
+      </element>
+      <element id="45" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>aerodatalinkaccess</seg>
+        </bo>
+        <position x="251.0" y="200.0"/>
+        <contentFilters/>
+      </element>
+      <element id="40" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>cellulardatalink_ais</seg>
+        </bo>
+        <position y="40.0"/>
+        <contentFilters/>
+      </element>
+      <element id="41" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>cellulardatalinkaccess</seg>
+        </bo>
+        <position x="226.0" y="60.0"/>
+        <contentFilters/>
+      </element>
+      <element id="42" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>externalwirelessaccess</seg>
+        </bo>
+        <position x="225.0" y="150.0"/>
+        <contentFilters/>
+      </element>
+      <element id="46" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>satellitedatalink_ac</seg>
+        </bo>
+        <position y="90.0"/>
+        <contentFilters/>
+      </element>
+      <element id="44" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>satellitedatalink_ais</seg>
+        </bo>
+        <position y="185.0"/>
+        <contentFilters/>
+      </element>
+      <element id="39" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>satellitedatalinkaccess</seg>
+        </bo>
+        <position x="225.0" y="105.0"/>
+        <contentFilters/>
+      </element>
+      <element id="47" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>wirelessaccesspoint_ais</seg>
+        </bo>
+        <position y="230.0"/>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>otherpilotedaircraft1</seg>
+      </bo>
+      <position x="760.0" y="100.0"/>
+      <size width="400.0" height="282.0"/>
+      <contentFilters>
+        <filter>features</filter>
+        <filter>internalFeatures</filter>
+        <filter>processorFeatures</filter>
+        <filter>connections</filter>
+        <filter>flowSpecifications</filter>
+      </contentFilters>
+    </element>
+    <element id="18">
+      <element id="19" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>satellitedatalink</seg>
+        </bo>
+        <position y="31.0"/>
+        <contentFilters/>
+      </element>
+      <element id="20" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>satellitedatalinkaccess</seg>
+        </bo>
+        <position x="162.0" y="31.0"/>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>satellite</seg>
+      </bo>
+      <position x="195.0" y="320.0"/>
+      <size width="337.0" height="81.0"/>
+      <contentFilters>
+        <filter>features</filter>
+        <filter>internalFeatures</filter>
+        <filter>processorFeatures</filter>
+        <filter>connections</filter>
+        <filter>flowSpecifications</filter>
+      </contentFilters>
+    </element>
+    <element id="23">
+      <element id="24" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>satellitedatalink</seg>
+        </bo>
+        <position y="31.0"/>
+        <contentFilters/>
+      </element>
+      <element id="25" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>satellitedatalinkaccess</seg>
+        </bo>
+        <position x="166.0" y="31.0"/>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>satellitesystems</seg>
+      </bo>
+      <position x="193.0" y="428.0"/>
+      <size width="341.0" height="91.0"/>
+      <contentFilters>
+        <filter>features</filter>
+        <filter>internalFeatures</filter>
+        <filter>processorFeatures</filter>
+        <filter>connections</filter>
+        <filter>flowSpecifications</filter>
+      </contentFilters>
+    </element>
+    <element id="26">
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>stellitecomm</seg>
+      </bo>
+      <position x="315.0" y="38.0"/>
+      <size width="143.0" height="52.0"/>
+      <contentFilters>
+        <filter>features</filter>
+        <filter>internalFeatures</filter>
+        <filter>processorFeatures</filter>
+        <filter>connections</filter>
+        <filter>flowSpecifications</filter>
+      </contentFilters>
+    </element>
+    <bo>
+      <seg>classifier</seg>
+      <seg>operationalenvironment.basicconfiguration</seg>
+    </bo>
+    <position x="-340.0" y="-360.0"/>
+    <size width="1361.0" height="531.0"/>
+    <contentFilters>
+      <filter>features</filter>
+      <filter>internalFeatures</filter>
+      <filter>processorFeatures</filter>
+      <filter>connections</filter>
+      <filter>flowSpecifications</filter>
+      <filter>subcomponents</filter>
+    </contentFilters>
+  </element>
+  <config type="structure" connectionPrimaryLabelsVisible="false">
+    <enabledAadlProperties/>
+    <context>
+      <seg>classifier</seg>
+      <seg>operationalenvironment_pkg::operationalenvironment.basicconfiguration</seg>
+    </context>
+  </config>
+</diagram:Diagram>

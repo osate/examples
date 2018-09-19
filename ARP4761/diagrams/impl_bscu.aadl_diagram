@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="ASCII"?>
+<diagram:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:diagram="http://osate.org/diagram" formatVersion="3">
+  <element id="0" manual="true" autoContentsFilter="allow_fundamental">
+    <bo>
+      <seg>package</seg>
+      <seg>impl::bscu</seg>
+    </bo>
+    <position x="20.0"/>
+    <size width="88.0" height="50.0"/>
+  </element>
+  <config>
+    <enabledAadlProperties/>
+    <context>
+      <seg>package</seg>
+      <seg>impl::bscu</seg>
+    </context>
+  </config>
+</diagram:Diagram>

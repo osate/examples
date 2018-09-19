@@ -1,0 +1,43 @@
+//
+// Copyright 2018 Carnegie Mellon University. See Notice.txt
+// Distribution Statement A: Approved for Public Release; Distribution is Unlimited.
+//
+
+
+system requirements AircraftConrolSecurityReqs for AircraftControl_pkg::aircraftControl.basic
+[
+
+	requirement securityAccessReq:  "Access to all aircraft data must be only by authorized and authenticated entities" 
+	[
+		description "All aircraft operational and performance data systems must have security protection to ensure access only by authorized and authenticated entities."
+		decomposes TransportAircraftSecurityReqs.AircraftSystemsInformationSecurity
+	]
+	
+	requirement communicationProtectionReq0: "All external and internal communications relating to aircraft control and operation must be secured."
+	[
+		description "All aircraft control communication systems must have security protection to ensure access only by authorized and authenticated entities."
+		decomposes TransportAircraftSecurityReqs.ExternalEncryption  TransportAircraftSecurityReqs.InternalEncryption 
+	]
+	
+	requirement  communicationProtectionReq1: "All aircraft internal communication to and from aircraft control systems must employ
+											  encryption algorithms"
+	[
+	   description "All aircraft internal communication for aircraft control and flight operations must employ
+				    encryption algorithms that meet or exceed the standards defined in NIST publication FIPS 140-2 or 
+					any superseding document that have been released for use."
+		
+		decomposes TransportAircraftSystemSecurityPolicies.Security  TransportAircraftSystemSecurityPolicies.SecureCommunicationsPolicy		
+		]						  											  	
+
+		requirement  communicationProtectionReq2: "All aircraft external communication for aircraft control and flight operations must employ
+											  encryption algorithms"
+		[
+		description "All aircraft external communication for aircraft control and flight operations must employ
+				    encryption algorithms that meet or exceed the standards defined in NIST publication FIPS 140-2 or 
+					any superseding document that have been released for use."
+		
+		decomposes TransportAircraftSystemSecurityPolicies.Security  TransportAircraftSystemSecurityPolicies.SecureCommunicationsPolicy	
+		]
+			
+
+]

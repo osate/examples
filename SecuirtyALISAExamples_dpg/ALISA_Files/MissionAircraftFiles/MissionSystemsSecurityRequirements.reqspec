@@ -1,0 +1,33 @@
+//
+// Copyright 2018 Carnegie Mellon University. See Notice.txt
+// Distribution Statement A: Approved for Public Release; Distribution is Unlimited.
+//
+
+system requirements MissionSystemsSecurityRequirements
+for AircraftMissionSystems_pkg::AircraftMissionSystems.AquireSecureData
+[
+	
+	requirement missionDataEncrypt: "All mission data must be encrypted using AES-256 encryption."
+	[
+		decomposes MissionAircraftSecurityReqs.SecureMissionDataEncrypt
+	]
+	
+	requirement missionDataHighLevel: "Raw mission data must be encrypted to the most secure level."
+	
+	[
+		
+		decomposes MissionAircraftSecurityReqs.SecureMissionDataClassify MissionAircraftSecurityReqs.SecureMissionDataEncrypt
+	]
+	
+	requirement SecretLevel : "Component must have secret information security level."
+	[
+		
+	]
+	
+	requirement ExposedEncryption:"All exposed connections must have encryption"
+	for connection1
+	
+	[
+		
+	]
+]

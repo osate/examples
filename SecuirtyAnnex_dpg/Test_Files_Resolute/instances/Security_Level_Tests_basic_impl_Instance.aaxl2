@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="ASCII"?>
+<instance:SystemInstance xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aadl2="http://aadl.info/AADL/2.0" xmlns:instance="http://aadl.info/AADL/2.0/instance" name="basic_impl_Instance" category="system">
+  <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+    <property href="../../Security_Properties.aadl#Security_Properties.Security_Clearance"/>
+    <ownedValue>
+      <ownedValue xsi:type="aadl2:StringLiteral" value="Secret"/>
+    </ownedValue>
+    <propertyAssociation href="../Security_Level_Tests.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.2"/>
+  </ownedPropertyAssociation>
+  <componentInstance name="sysone" category="system">
+    <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+      <property href="../../Security_Properties.aadl#Security_Properties.Security_Clearance"/>
+      <ownedValue>
+        <ownedValue xsi:type="aadl2:StringLiteral" value="Secret"/>
+      </ownedValue>
+      <propertyAssociation href="../Security_Level_Tests.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.0"/>
+    </ownedPropertyAssociation>
+    <featureInstance name="outP1" direction="out">
+      <feature xsi:type="aadl2:DataPort" href="../Security_Level_Tests.aadl#/0/@ownedPublicSection/@ownedClassifier.2/@ownedDataPort.0"/>
+    </featureInstance>
+    <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../Security_Level_Tests.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.0"/>
+    <index>0</index>
+    <classifier xsi:type="aadl2:SystemType" href="../Security_Level_Tests.aadl#Security_Level_Tests.s_one"/>
+  </componentInstance>
+  <componentInstance name="systwo" category="system">
+    <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+      <property href="../../Security_Properties.aadl#Security_Properties.Security_Clearance"/>
+      <ownedValue>
+        <ownedValue xsi:type="aadl2:StringLiteral" value="Top Secret"/>
+      </ownedValue>
+      <propertyAssociation href="../Security_Level_Tests.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.1"/>
+    </ownedPropertyAssociation>
+    <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+      <property href="../../Security_Properties.aadl#Security_Properties.encryption"/>
+      <ownedValue>
+        <ownedValue xsi:type="aadl2:BooleanLiteral"/>
+      </ownedValue>
+      <propertyAssociation href="../Security_Level_Tests.aadl#/0/@ownedPublicSection/@ownedClassifier.3/@ownedPropertyAssociation.0"/>
+    </ownedPropertyAssociation>
+    <featureInstance name="inP1">
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../../Security_Properties.aadl#Security_Properties.encryption"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:BooleanLiteral"/>
+        </ownedValue>
+        <propertyAssociation href="../Security_Level_Tests.aadl#/0/@ownedPublicSection/@ownedClassifier.3/@ownedDataPort.0/@ownedPropertyAssociation.0"/>
+      </ownedPropertyAssociation>
+      <feature xsi:type="aadl2:DataPort" href="../Security_Level_Tests.aadl#/0/@ownedPublicSection/@ownedClassifier.3/@ownedDataPort.0"/>
+    </featureInstance>
+    <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../Security_Level_Tests.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.1"/>
+    <index>0</index>
+    <classifier xsi:type="aadl2:SystemType" href="../Security_Level_Tests.aadl#Security_Level_Tests.s_two"/>
+  </componentInstance>
+  <componentInstance name="systhree" category="system">
+    <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+      <property href="../../Security_Properties.aadl#Security_Properties.encryption"/>
+      <ownedValue>
+        <ownedValue xsi:type="aadl2:BooleanLiteral"/>
+      </ownedValue>
+      <propertyAssociation href="../Security_Level_Tests.aadl#/0/@ownedPublicSection/@ownedClassifier.4/@ownedPropertyAssociation.0"/>
+    </ownedPropertyAssociation>
+    <featureInstance name="inP1">
+      <feature xsi:type="aadl2:DataPort" href="../Security_Level_Tests.aadl#/0/@ownedPublicSection/@ownedClassifier.4/@ownedDataPort.0"/>
+    </featureInstance>
+    <featureInstance name="outP1" direction="out">
+      <feature xsi:type="aadl2:DataPort" href="../Security_Level_Tests.aadl#/0/@ownedPublicSection/@ownedClassifier.4/@ownedDataPort.1"/>
+    </featureInstance>
+    <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../Security_Level_Tests.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.2"/>
+    <index>0</index>
+    <classifier xsi:type="aadl2:SystemType" href="../Security_Level_Tests.aadl#Security_Level_Tests.s_three"/>
+  </componentInstance>
+  <connectionInstance name="sysone.outP1 -> systwo.inP1" complete="true" kind="portConnection" destination="//@componentInstance.1/@featureInstance.0" source="//@componentInstance.0/@featureInstance.0">
+    <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+      <property href="../../../../plugin/org.osate.workspace/resources/properties/Predeclared_Property_Sets/Communication_Properties.aadl#Communication_Properties.Timing"/>
+      <ownedValue>
+        <ownedValue xsi:type="aadl2:NamedValue">
+          <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../../plugin/org.osate.workspace/resources/properties/Predeclared_Property_Sets/Communication_Properties.aadl#/0/@ownedProperty.7/@ownedPropertyType/@ownedLiteral.1"/>
+        </ownedValue>
+      </ownedValue>
+      <propertyAssociation href="../Security_Level_Tests.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPortConnection.0/@ownedPropertyAssociation.0"/>
+    </ownedPropertyAssociation>
+    <connectionReference context="/" source="//@componentInstance.0/@featureInstance.0" destination="//@componentInstance.1/@featureInstance.0">
+      <connection xsi:type="aadl2:PortConnection" href="../Security_Level_Tests.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPortConnection.0"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="sysone.outP1 -> systhree.inP1" complete="true" kind="portConnection" destination="//@componentInstance.2/@featureInstance.0" source="//@componentInstance.0/@featureInstance.0">
+    <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+      <property href="../../../../plugin/org.osate.workspace/resources/properties/Predeclared_Property_Sets/Communication_Properties.aadl#Communication_Properties.Timing"/>
+      <ownedValue>
+        <ownedValue xsi:type="aadl2:NamedValue">
+          <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../../plugin/org.osate.workspace/resources/properties/Predeclared_Property_Sets/Communication_Properties.aadl#/0/@ownedProperty.7/@ownedPropertyType/@ownedLiteral.0"/>
+        </ownedValue>
+      </ownedValue>
+      <propertyAssociation href="../Security_Level_Tests.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPortConnection.1/@ownedPropertyAssociation.0"/>
+    </ownedPropertyAssociation>
+    <connectionReference context="/" source="//@componentInstance.0/@featureInstance.0" destination="//@componentInstance.2/@featureInstance.0">
+      <connection xsi:type="aadl2:PortConnection" href="../Security_Level_Tests.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPortConnection.1"/>
+    </connectionReference>
+  </connectionInstance>
+  <systemOperationMode name="No Modes"/>
+  <componentImplementation xsi:type="aadl2:SystemImplementation" href="../Security_Level_Tests.aadl#Security_Level_Tests.basic.impl"/>
+</instance:SystemInstance>

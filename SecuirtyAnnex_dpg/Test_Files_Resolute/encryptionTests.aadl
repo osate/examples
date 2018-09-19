@@ -1,0 +1,59 @@
+package encryptionTests
+public
+	with Security_Properties;
+	system basic
+end basic;
+
+system implementation basic.impl
+	
+	subcomponents
+		sysone: system s_one;
+		systwo: system s_two;
+		systhree: system s_three;
+	connections
+		c1: port sysone.outP1 -> systwo.inP1 {Timing => immediate;};
+		c2: port sysone.outP1 -> systhree.inP1 {Timing => sampled;};
+		
+	properties
+ 
+	Security_Properties::encryption_form => symmetric applies to c1;
+	Security_Properties::encryption_form => symmetric applies to sysone.outP1;
+	Security_Properties::encryption_form => symmetric applies to systwo.inP1;	
+	annex Resolute {**
+
+	prove  all_features_of_connections_of_a_component_have_same_encryption (this)
+	prove  all_features_of_connections_of_a_component_have_same_encryption (this.sysone)
+	prove all_features_of_a_connection_have_same_encryption (this)
+	**};
+	
+end basic.impl;
+
+system s_one
+	features
+		outP1: out data port {Security_Properties::encryption_scheme => [single_key => "0030";];};
+end s_one;
+
+system s_two
+	features
+		inP1: in data port {Security_Properties::encryption=>false; Security_Properties::encryption_scheme => [single_key => "0030";];};
+	properties
+		Security_Properties::encryption=>false;
+end s_two;
+
+system s_three
+	features
+		inP1: in data port {Security_Properties::encryption_scheme => [single_key => "0040";];};
+		outP1: out data port {Security_Properties::encryption_scheme => [single_key => "00430";];};
+	properties
+		Security_Properties::encryption=>false;
+	end s_three;
+
+data basicData
+	
+end basicData;
+
+data EData
+	properties
+			Security_Properties::encryption_form => symmetric;
+end EData;
+end encryptionTests;

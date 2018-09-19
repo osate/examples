@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="ASCII"?>
+<instance:SystemInstance xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aadl2="http://aadl.info/AADL/2.0" xmlns:instance="http://aadl.info/AADL/2.0/instance" name="AircraftMissionSystems_AquireSecureData_Instance" category="system">
+  <featureInstance name="interfaceToAC" direction="in out">
+    <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.0"/>
+  </featureInstance>
+  <featureInstance name="interfaceToFlightDeck" direction="in out">
+    <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.1"/>
+  </featureInstance>
+  <featureInstance name="InterfaceToCommunications" direction="in out">
+    <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.2"/>
+  </featureInstance>
+  <componentInstance name="DataAquisitionUnits" category="device">
+    <featureInstance name="outData" direction="out">
+      <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.2/@ownedDataPort.0"/>
+    </featureInstance>
+    <subcomponent xsi:type="aadl2:DeviceSubcomponent" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedDeviceSubcomponent.0"/>
+    <index>0</index>
+    <classifier xsi:type="aadl2:DeviceType" href="../AircraftMissionSystems_pkg.aadl#AircraftMissionSystems_pkg.DataAcquisitionUnits"/>
+  </componentInstance>
+  <componentInstance name="DataStructuringUnits" category="system">
+    <featureInstance name="inData">
+      <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.3/@ownedDataPort.0"/>
+    </featureInstance>
+    <featureInstance name="outData" direction="out">
+      <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.3/@ownedDataPort.1"/>
+    </featureInstance>
+    <featureInstance name="outVerify" direction="out">
+      <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.3/@ownedDataPort.2"/>
+    </featureInstance>
+    <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.0"/>
+    <index>0</index>
+    <classifier xsi:type="aadl2:SystemType" href="../AircraftMissionSystems_pkg.aadl#AircraftMissionSystems_pkg.DataStructuringUnit"/>
+  </componentInstance>
+  <componentInstance name="SecurityDownGraderL1L2" category="system">
+    <featureInstance name="inData">
+      <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.4/@ownedDataPort.0"/>
+    </featureInstance>
+    <featureInstance name="outDataL2" direction="out">
+      <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.4/@ownedDataPort.1"/>
+    </featureInstance>
+    <featureInstance name="outVerify" direction="out">
+      <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.4/@ownedDataPort.2"/>
+    </featureInstance>
+    <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.1"/>
+    <index>0</index>
+    <classifier xsi:type="aadl2:SystemType" href="../AircraftMissionSystems_pkg.aadl#AircraftMissionSystems_pkg.SecurityDownGraderL1L2"/>
+  </componentInstance>
+  <componentInstance name="SecurityDownGraderL2L3" category="system">
+    <featureInstance name="inDataL2">
+      <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.5/@ownedDataPort.0"/>
+    </featureInstance>
+    <featureInstance name="outDataL3" direction="out">
+      <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.5/@ownedDataPort.1"/>
+    </featureInstance>
+    <featureInstance name="outVerify" direction="out">
+      <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.5/@ownedDataPort.2"/>
+    </featureInstance>
+    <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.2"/>
+    <index>0</index>
+    <classifier xsi:type="aadl2:SystemType" href="../AircraftMissionSystems_pkg.aadl#AircraftMissionSystems_pkg.SecurityDownGraderL2L3"/>
+  </componentInstance>
+  <componentInstance name="L1DataStore" category="system">
+    <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+      <property href="../../../../SecurityVerification/properties/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+      <ownedValue>
+        <ownedValue xsi:type="aadl2:BooleanLiteral" value="true"/>
+      </ownedValue>
+      <propertyAssociation href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.3/@ownedPropertyAssociation.0"/>
+    </ownedPropertyAssociation>
+    <featureInstance name="inData">
+      <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.6/@ownedDataPort.0"/>
+    </featureInstance>
+    <featureInstance name="inVerify">
+      <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.6/@ownedDataPort.1"/>
+    </featureInstance>
+    <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.3"/>
+    <index>0</index>
+    <classifier xsi:type="aadl2:SystemType" href="../AircraftMissionSystems_pkg.aadl#AircraftMissionSystems_pkg.L1Store"/>
+  </componentInstance>
+  <componentInstance name="L2DataStore" category="system">
+    <featureInstance name="inData">
+      <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.7/@ownedDataPort.0"/>
+    </featureInstance>
+    <featureInstance name="inVerify">
+      <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.7/@ownedDataPort.1"/>
+    </featureInstance>
+    <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.4"/>
+    <index>0</index>
+    <classifier xsi:type="aadl2:SystemType" href="../AircraftMissionSystems_pkg.aadl#AircraftMissionSystems_pkg.L2Store"/>
+  </componentInstance>
+  <componentInstance name="L3DataStore" category="system">
+    <featureInstance name="inData">
+      <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.8/@ownedDataPort.0"/>
+    </featureInstance>
+    <featureInstance name="inVerify">
+      <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.8/@ownedDataPort.1"/>
+    </featureInstance>
+    <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.5"/>
+    <index>0</index>
+    <classifier xsi:type="aadl2:SystemType" href="../AircraftMissionSystems_pkg.aadl#AircraftMissionSystems_pkg.L3Store"/>
+  </componentInstance>
+  <connectionInstance name="DataAquisitionUnits.outData -> DataStructuringUnits.inData" complete="true" kind="portConnection" destination="//@componentInstance.1/@featureInstance.0" source="//@componentInstance.0/@featureInstance.0">
+    <connectionReference context="/" source="//@componentInstance.0/@featureInstance.0" destination="//@componentInstance.1/@featureInstance.0">
+      <connection xsi:type="aadl2:PortConnection" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPortConnection.0"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="DataStructuringUnits.outData -> L1DataStore.inData" complete="true" kind="portConnection" destination="//@componentInstance.4/@featureInstance.0" source="//@componentInstance.1/@featureInstance.1">
+    <connectionReference context="/" source="//@componentInstance.1/@featureInstance.1" destination="//@componentInstance.4/@featureInstance.0">
+      <connection xsi:type="aadl2:PortConnection" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPortConnection.1"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="DataStructuringUnits.outData -> SecurityDownGraderL1L2.inData" complete="true" kind="portConnection" destination="//@componentInstance.2/@featureInstance.0" source="//@componentInstance.1/@featureInstance.1">
+    <connectionReference context="/" source="//@componentInstance.1/@featureInstance.1" destination="//@componentInstance.2/@featureInstance.0">
+      <connection xsi:type="aadl2:PortConnection" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPortConnection.3"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="DataStructuringUnits.outVerify -> L1DataStore.inVerify" complete="true" kind="portConnection" destination="//@componentInstance.4/@featureInstance.1" source="//@componentInstance.1/@featureInstance.2">
+    <connectionReference context="/" source="//@componentInstance.1/@featureInstance.2" destination="//@componentInstance.4/@featureInstance.1">
+      <connection xsi:type="aadl2:PortConnection" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPortConnection.2"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="SecurityDownGraderL1L2.outDataL2 -> L2DataStore.inData" complete="true" kind="portConnection" destination="//@componentInstance.5/@featureInstance.0" source="//@componentInstance.2/@featureInstance.1">
+    <connectionReference context="/" source="//@componentInstance.2/@featureInstance.1" destination="//@componentInstance.5/@featureInstance.0">
+      <connection xsi:type="aadl2:PortConnection" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPortConnection.5"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="SecurityDownGraderL1L2.outDataL2 -> SecurityDownGraderL2L3.inDataL2" complete="true" kind="portConnection" destination="//@componentInstance.3/@featureInstance.0" source="//@componentInstance.2/@featureInstance.1">
+    <connectionReference context="/" source="//@componentInstance.2/@featureInstance.1" destination="//@componentInstance.3/@featureInstance.0">
+      <connection xsi:type="aadl2:PortConnection" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPortConnection.6"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="SecurityDownGraderL1L2.outVerify -> L2DataStore.inVerify" complete="true" kind="portConnection" destination="//@componentInstance.5/@featureInstance.1" source="//@componentInstance.2/@featureInstance.2">
+    <connectionReference context="/" source="//@componentInstance.2/@featureInstance.2" destination="//@componentInstance.5/@featureInstance.1">
+      <connection xsi:type="aadl2:PortConnection" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPortConnection.4"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="SecurityDownGraderL2L3.outDataL3 -> L3DataStore.inData" complete="true" kind="portConnection" destination="//@componentInstance.6/@featureInstance.0" source="//@componentInstance.3/@featureInstance.1">
+    <connectionReference context="/" source="//@componentInstance.3/@featureInstance.1" destination="//@componentInstance.6/@featureInstance.0">
+      <connection xsi:type="aadl2:PortConnection" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPortConnection.8"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="SecurityDownGraderL2L3.outVerify -> L3DataStore.inVerify" complete="true" kind="portConnection" destination="//@componentInstance.6/@featureInstance.1" source="//@componentInstance.3/@featureInstance.2">
+    <connectionReference context="/" source="//@componentInstance.3/@featureInstance.2" destination="//@componentInstance.6/@featureInstance.1">
+      <connection xsi:type="aadl2:PortConnection" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPortConnection.7"/>
+    </connectionReference>
+  </connectionInstance>
+  <systemOperationMode name="No Modes"/>
+  <componentImplementation xsi:type="aadl2:SystemImplementation" href="../AircraftMissionSystems_pkg.aadl#AircraftMissionSystems_pkg.AircraftMissionSystems.AquireSecureData"/>
+</instance:SystemInstance>

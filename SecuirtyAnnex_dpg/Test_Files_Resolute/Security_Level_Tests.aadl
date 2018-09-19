@@ -1,0 +1,55 @@
+package Security_Level_Tests
+public
+
+with Security_Properties;
+
+system basic
+end basic;
+
+system implementation basic.impl
+	
+	subcomponents
+		sysone: system s_one;
+		systwo: system s_two;
+		systhree: system s_three;
+	connections
+		c1: port sysone.outP1 -> systwo.inP1 {Timing => immediate;};
+		c2: port sysone.outP1 -> systhree.inP1 {Timing => sampled;};
+		
+	properties
+		Security_Properties::Security_Clearance => "Secret" applies to sysone;
+		Security_Properties::Security_Clearance => "Top Secret" applies to systwo;
+		Security_Properties::Security_Clearance => "Secret";
+	
+	annex Resolute {**
+	prove has_security_clearance (this)
+	prove has_information_security_level (this)
+	prove has_information_security_level (this.sysone)
+	prove has_information_security_level (this.systwo)
+	prove has_information_security_level (this.systhree)
+	
+	**};
+	
+end basic.impl;
+
+system s_one
+	features
+		outP1: out data port ;
+end s_one;
+
+system s_two
+	features
+		inP1: in data port {Security_Properties::encryption=>false;};
+	properties
+		Security_Properties::encryption=>false;
+end s_two;
+
+system s_three
+	features
+		inP1: in data port;
+		outP1: out data port;
+	properties
+		Security_Properties::encryption=>false;
+end s_three;
+
+end Security_Level_Tests;
