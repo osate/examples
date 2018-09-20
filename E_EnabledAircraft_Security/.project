@@ -3,7 +3,7 @@
 	<name>E_EnabledAircraft_Security</name>
 	<comment></comment>
 	<projects>
-		<project>SecuirtyALISAExamples_Security</project>
+		<project>ALISAExamples_Security</project>
 		<project>SecuirtyFiles</project>
 		<project>SecurityVerification</project>
 		<project>SecurityVerificationJava</project>
