@@ -1,0 +1,68 @@
+case TransportAircraftAssuranceCase [
+	tbdcount 7
+	model TransportAircraftAssuranceCase.TransportAircraftAssurancePlanGeneric for
+			TransportAircraft_Generic::transportAircraft.generic [
+		tbdcount 7
+		claim TransportAircraftSecurityPolicyVerificationPlan # Security [
+			tbdcount 1
+			verification TransportAircraftSecurityPolicyVerificationPlan # Security # ConfirmCertifications [
+				executionstate todo resultstate tbd tbdcount 1 time 406
+			]
+		]
+		claim TransportAircraftSecurityPolicyVerificationPlan # MasterSecurityPolicy [
+			tbdcount 1
+			verification TransportAircraftSecurityPolicyVerificationPlan # MasterSecurityPolicy # ReviewMasterSecurityPolicy [
+				executionstate todo resultstate tbd tbdcount 1 time 62
+			]
+		]
+		claim TransportAircraftSecurityPolicyVerificationPlan # AccessControlPolicy [
+			tbdcount 1
+			verification TransportAircraftSecurityPolicyVerificationPlan # AccessControlPolicy # ReviewAccessControlPolicy [
+				executionstate todo resultstate tbd tbdcount 1 time 63
+			]
+		]
+		claim TransportAircraftSecurityPolicyVerificationPlan # SecureCommunicationsPolicy [
+			tbdcount 1
+			verification TransportAircraftSecurityPolicyVerificationPlan # SecureCommunicationsPolicy #
+					ReviewAccessControlPolicy [
+				executionstate todo resultstate tbd tbdcount 1 time 62
+			]
+		]
+		claim TransportAircraftSecurityVerificationPlan # MasterSecurityReq1 [
+			tbdcount 1
+			verification TransportAircraftSecurityVerificationPlan # MasterSecurityReq1 # formalReview [
+				executionstate todo resultstate tbd tbdcount 1 time 78
+			]
+		]
+		claim TransportAircraftSecurityVerificationPlan # MasterSecurityReq2 [
+			tbdcount 1
+			verification TransportAircraftSecurityVerificationPlan # MasterSecurityReq2 # formalReview [
+				executionstate todo resultstate tbd tbdcount 1 time 62
+			]
+		]
+		claim TransportAircraftSecurityVerificationPlan # MasterSecurityReq3 [
+			tbdcount 1
+			verification TransportAircraftSecurityVerificationPlan # MasterSecurityReq3 # formalReview [
+				executionstate todo resultstate tbd tbdcount 1 time 63
+			]
+		]
+		claim TransportAircraftSecurityVerificationPlan # AircraftSystemsInformationSecurity [
+		]
+		claim TransportAircraftSecurityVerificationPlan # ExternalEncryption [
+		]
+		claim TransportAircraftSecurityVerificationPlan # InternalEncryption [
+		]
+		subsystem aircraft_control_systems [
+		]
+		subsystem airline_information_services [
+		]
+		subsystem passenger_info_entertainment_services [
+		]
+		subsystem airframe [
+			subsystem internalWirelessNetwork [
+			]
+			subsystem satelliteAntenna [
+			]
+		]
+	]
+]

@@ -1,0 +1,45 @@
+
+//
+// Copyright 2018 Carnegie Mellon University. See Notice.txt
+// Distribution Statement A: Approved for Public Release; Distribution is Unlimited.
+//
+
+system requirements MissionAircraftSecurityPolicies: "System-Wide Security Policies for Mission-specific aircraft"
+for MissionAircraft_Generic::missionAircraft.generic
+[
+	description "These are security policies for mission-specific aircraft."
+	
+		requirement Security:  "System Security must be provided" 
+	[
+			description "Security protections that meets DoD and FAA aircraft security and 
+						flight worthiness certification standards must be provided ."	
+	]
+	
+	requirement MasterSecurityPolicy: "A Master System Security Policy must be developed and certified." 
+	[
+		description "A master system security policy document must be developed and certified by all of the  
+					agencies and organizations involved in flight certification of the aircraft."
+	]
+
+	requirement  AccessControlPolicy: "Security Controlled Access to all Aircraft Systems and Resources must be provided."
+			[
+				description "Access to all Aircraft operational and maintenance Systems and Resources shall be permitted 
+							only by authorized personnel."
+							
+				development stakeholder DevelopmentTeam.PrincipalEngineer DevelopmentTeam.SecurityEngineer
+			]
+	
+	requirement SecureCommunicationsPolicy: "Secure communications must be provided for all flight- and safety-critical systems."
+			[
+				description "Communication systems must provide security measures to ensure only authorized 
+							access and use."
+				development stakeholder DevelopmentTeam.PrincipalEngineer DevelopmentTeam.EncryptionExpert
+			]
+	
+	requirement SecureMissionData: "All mission data must be secured to levels as defined by DoD security 
+									classifications and other mission-specific classifications of that data."
+			[
+				description "All data must be secured. This may involve traditional DoD classifications and
+							related security procedures as well as mission-specific classifications and related procedures."
+			]
+]

@@ -1,0 +1,23 @@
+//
+// Copyright 2018 Carnegie Mellon University. See Notice.txt
+// Distribution Statement A: Approved for Public Release; Distribution is Unlimited.
+//
+
+
+assurance case MissionSystemsAssuranceCase for AircraftMissionSystems_pkg::AircraftMissionSystems
+
+[
+	assurance plan MissionSystemsSecurityVerificationPlan for AircraftMissionSystems_pkg::AircraftMissionSystems.AquireSecureData
+	[
+		assure MissionSystemsSecurityVerificationPlan 
+		assure subsystem DataAquisitionUnits
+		description "This is the plan for the mission systems including data acquisition, classification, and downgrading."
+		
+		
+		
+	]
+	
+	
+	
+]
+
