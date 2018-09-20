@@ -1,0 +1,31 @@
+
+-- Copyright 2018 Carnegie Mellon University. See Notice.txt
+-- Distribution Statement A: Approved for Public Release; Distribution is Unlimited.
+
+package PassengerInfoEntertainmentServices_pkg
+public
+	with  AirCraftAirFrame_Pkg;
+	
+	system passengerInfoEntertainmentServices
+		features
+			-- information interfaces
+			inflightEntertainmentInterface_PIES: in out data port;
+			-- bus access
+			aircraftDataNetworkInterface: requires bus access AirCraftAirFrame_Pkg::aircraftDataNetwork;
+		    internalWirelessAccess: requires bus access AircraftAirframe_Pkg::internalWirelessNetwork;
+	end passengerInfoEntertainmentServices;
+--	
+-- this is an alternative configuration where the aircraftDataNetwork is part of the airframe
+--	
+		system passengerInfoEntertainmentServices2
+		features
+			-- information interfaces
+			inflightEntertainmentInterface_PIES: in out data port;
+			-- bus access
+			aircraftDataNetworkInterface: requires bus access AirCraftAirFrame_Pkg::aircraftDataNetwork;
+		    internalWirelessAccess: requires bus access AircraftAirframe_Pkg::internalWirelessNetwork;
+	end passengerInfoEntertainmentServices2;
+	
+	
+end PassengerInfoEntertainmentServices_pkg;
+

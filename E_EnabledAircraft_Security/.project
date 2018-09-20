@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>E_EnabledAircraft_dpg</name>
+	<name>E_EnabledAircraft_Security</name>
 	<comment></comment>
 	<projects>
-		<project>SecuirtyALISAExamples_dpg</project>
+		<project>SecuirtyALISAExamples_Security</project>
 		<project>SecuirtyFiles</project>
 		<project>SecurityVerification</project>
 		<project>SecurityVerificationJava</project>

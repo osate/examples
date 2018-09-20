@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="ASCII"?>
+<diagram:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:diagram="http://osate.org/diagram" formatVersion="5">
+  <element id="0" manual="true">
+    <element id="1">
+      <element id="4" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>aerodatalink_ac</seg>
+        </bo>
+        <position y="110.0"/>
+        <contentFilters/>
+      </element>
+      <element id="7" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>aerodatalinkinterface</seg>
+        </bo>
+        <position y="10.0"/>
+        <contentFilters/>
+      </element>
+      <element id="2" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>aircraftdatanetworkinterface</seg>
+        </bo>
+        <position y="210.0"/>
+        <contentFilters/>
+      </element>
+      <element id="3" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>closednetworkaccess</seg>
+        </bo>
+        <position y="260.0"/>
+        <contentFilters/>
+      </element>
+      <element id="5" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>inflightentertainmentinterface_ac</seg>
+        </bo>
+        <position y="60.0"/>
+        <contentFilters/>
+      </element>
+      <element id="6" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>satellitedatalink_ac</seg>
+        </bo>
+        <position y="160.0"/>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>aircraft_control_systems</seg>
+      </bo>
+      <position x="12.0" y="532.0"/>
+      <size width="722.0" height="310.0"/>
+      <contentFilters>
+        <filter>features</filter>
+        <filter>internalFeatures</filter>
+        <filter>processorFeatures</filter>
+        <filter>connections</filter>
+        <filter>flowSpecifications</filter>
+      </contentFilters>
+    </element>
+    <element id="30">
+      <element id="31" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>aircraftdatanetworkaccess</seg>
+        </bo>
+        <position y="210.0"/>
+        <contentFilters/>
+      </element>
+      <element id="34" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>closednetworkaccess</seg>
+        </bo>
+        <position y="110.0"/>
+        <contentFilters/>
+      </element>
+      <element id="33" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>closednetworkinterface</seg>
+        </bo>
+        <position y="60.0"/>
+        <contentFilters/>
+      </element>
+      <element id="35" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>internalwirelessinterface</seg>
+        </bo>
+        <position y="10.0"/>
+        <contentFilters/>
+      </element>
+      <element id="36" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>internalwirelessnetworkaccess</seg>
+        </bo>
+        <position y="260.0"/>
+        <contentFilters/>
+      </element>
+      <element id="32" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>satellitedatalinkaccess</seg>
+        </bo>
+        <position y="160.0"/>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>airframe</seg>
+      </bo>
+      <position x="12.0" y="210.0"/>
+      <size width="574.0" height="310.0"/>
+      <contentFilters>
+        <filter>features</filter>
+        <filter>internalFeatures</filter>
+        <filter>processorFeatures</filter>
+        <filter>connections</filter>
+        <filter>flowSpecifications</filter>
+      </contentFilters>
+    </element>
+    <element id="8">
+      <element id="26" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>interfacetoac</seg>
+        </bo>
+        <position y="60.0"/>
+        <contentFilters/>
+      </element>
+      <element id="27" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>interfacetocommunications</seg>
+        </bo>
+        <position y="10.0"/>
+        <contentFilters/>
+      </element>
+      <element id="15" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>interfacetoflightdeck</seg>
+        </bo>
+        <position y="110.0"/>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>mission_systems</seg>
+      </bo>
+      <position x="12.0" y="38.0"/>
+      <size width="577.0" height="160.0"/>
+      <contentFilters>
+        <filter>features</filter>
+        <filter>internalFeatures</filter>
+        <filter>processorFeatures</filter>
+        <filter>connections</filter>
+        <filter>flowSpecifications</filter>
+      </contentFilters>
+    </element>
+    <bo>
+      <seg>classifier</seg>
+      <seg>missionaircraft.generic</seg>
+    </bo>
+    <position x="12.0" y="12.0"/>
+    <size width="746.0" height="854.0"/>
+    <contentFilters>
+      <filter>features</filter>
+      <filter>internalFeatures</filter>
+      <filter>processorFeatures</filter>
+      <filter>connections</filter>
+      <filter>flowSpecifications</filter>
+      <filter>subcomponents</filter>
+    </contentFilters>
+  </element>
+  <config type="structure" connectionPrimaryLabelsVisible="false">
+    <enabledAadlProperties/>
+    <context>
+      <seg>classifier</seg>
+      <seg>missionaircraft_generic::missionaircraft.generic</seg>
+    </context>
+  </config>
+</diagram:Diagram>

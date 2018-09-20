@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>SecuirtyALISAExamples_dpg</name>
+	<name>SecuirtyALISAExamples_Security</name>
 	<comment></comment>
 	<projects>
 		<project>AlisaPredefined</project>
-		<project>E_EnabledAircraft_dpg</project>
+		<project>E_EnabledAircraft_Security</project>
 		<project>Plugin_Resources</project>
 		<project>SecuirtyFiles</project>
 		<project>SecurityVerification</project>

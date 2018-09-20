@@ -1,0 +1,32 @@
+//
+// Copyright 2018 Carnegie Mellon University. See Notice.txt
+// Distribution Statement A: Approved for Public Release; Distribution is Unlimited.
+//
+
+verification plan MissionSystemsSecurityVerificationPlan for MissionSystemsSecurityRequirements
+[
+	claim missionDataEncrypt : "Checks that the encryption property is true."
+	[
+		activities 
+	
+			VerifyEncryption: AircraftSecurityVerificationMethods.VerifyEncryption ()
+	]
+	
+	claim missionDataHighLevel
+	[
+			activities
+			check_it: SecurityClassification.SharedMemorySameSecurityLevels ()
+	]
+	
+	claim SecretLevel : "Checks that the information security level is secret"
+	[
+		activities
+		check: AircraftSecurityVerificationMethods.VerifySecret ()
+	]
+	
+	claim ExposedEncryption :"check encryption on exposed components"
+	[
+		activities
+		checkencrypt: SecurityVerificationMethods.ExposedConnectionEncrypted()
+	]
+]

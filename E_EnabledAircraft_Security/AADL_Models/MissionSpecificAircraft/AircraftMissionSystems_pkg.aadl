@@ -1,0 +1,118 @@
+
+-- Copyright 2018 Carnegie Mellon University. See Notice.txt
+-- Distribution Statement A: Approved for Public Release; Distribution is Unlimited.
+
+-- These are models of an aircraft's mission systems.
+--
+
+package AircraftMissionSystems_pkg
+public
+
+	with SecurityEnforcementProperties;	
+	system AircraftMissionSystems
+		features
+			interfaceToAC: in out data port;
+			interfaceToFlightDeck: in out data port;
+			InterfaceToCommunications: in out data port;
+		-- other features are TBD
+	end AircraftMissionSystems;
+	
+-- The system implementation AircraftMissionSystems.AquireSecureData represents a generic data acquisition system for 
+-- classified/secured data. For example, a reconnaissance aircraft that acquires classified tactical data that 
+-- must be secured and downgraded to various levels of security. However, this design does not represent any
+-- specific system and is used to illustrate the use of the AADL and AADL security annex.
+--
+-- For this example, all data that is received is considered classified at the top security level L1. This data is then
+-- downgraded to lower levels L2 and L3, assuming a sequential filter/downgrading process.
+--
+-- We consider the process and terminology similar to that described in
+--  "Composing Cross-Domain Solutions" by Ashish Gehani Gabriela F. Ciocarlie
+-- Specifically, data is filtered, the filtering is verified, and the result output (verification and downgraded data)
+--
+
+	system implementation AircraftMissionSystems.AquireSecureData
+		subcomponents
+			DataAquisitionUnits: device DataAcquisitionUnits;
+			DataStructuringUnits: system DataStructuringUnit;
+			SecurityDownGraderL1L2: system SecurityDownGraderL1L2;
+			SecurityDownGraderL2L3: system SecurityDownGraderL2L3;
+			L1DataStore: system L1Store {SecurityEnforcementProperties::Encryption => true;};
+			L2DataStore: system L2Store;
+			L3DataStore: system L3Store;
+		connections
+			connection1: port DataAquisitionUnits.outData -> DataStructuringUnits.inData;
+			connection2: port DataStructuringUnits.outData -> L1DataStore.inData;
+			connection3: port DataStructuringUnits.outVerify -> L1DataStore.inVerify;
+			connection4: port DataStructuringUnits.outData -> SecurityDownGraderL1L2.inData;
+			connection5: port SecurityDownGraderL1L2.outVerify -> L2DataStore.inVerify;
+			connection6: port SecurityDownGraderL1L2.outDataL2 -> L2DataStore.inData;
+			connection7: port SecurityDownGraderL1L2.outDataL2 -> SecurityDownGraderL2L3.inDataL2;
+			connection8: port SecurityDownGraderL2L3.outVerify -> L3DataStore.inVerify;
+			connection9: port SecurityDownGraderL2L3.outDataL3 -> L3DataStore.inData;
+			
+	end AircraftMissionSystems.AquireSecureData;
+
+
+Device DataAcquisitionUnits
+	features
+		outData: out data port;
+end DataAcquisitionUnits;
+	
+
+system DataStructuringUnit
+	features
+		inData: in data port;
+		outData: out data port;
+		outVerify: out data port;
+end DataStructuringUnit;
+
+System SecurityDownGraderL1L2
+	features
+		inData: in data port;
+		outDataL2: out data port;
+		outVerify: out data port;
+end SecurityDownGraderL1L2;
+
+
+system SecurityDownGraderL2L3
+		features
+		inDataL2: in data port;
+		outDataL3: out data port;
+		outVerify: out data port;
+end SecurityDownGraderL2L3;
+
+-- data stores
+System L1Store
+	features
+		inData: in data port;
+		inVerify: in data port;
+end L1Store;
+
+System L2Store
+	features
+		inData: in data port;
+		inVerify: in data port;
+end L2Store;
+
+System L3Store
+	features
+		inData: in data port;
+		inVerify: in data port;
+end L3Store;
+
+-- verify units
+
+system filter
+	features
+		indata: in data port;
+		outdata: out data port;
+end filter;
+
+system verify
+	features
+		indata: in data port;
+		outverify: out data port;
+end verify;
+
+	
+end AircraftMissionSystems_pkg;

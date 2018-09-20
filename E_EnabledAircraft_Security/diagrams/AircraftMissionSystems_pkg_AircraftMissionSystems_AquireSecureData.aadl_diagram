@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="ASCII"?>
+<diagram:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:diagram="http://osate.org/diagram" formatVersion="5">
+  <element id="0" manual="true">
+    <element id="53">
+      <element id="54">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>connection1</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <element id="49">
+      <element id="50">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>connection2</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <element id="51">
+      <element id="52">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>connection3</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <element id="63">
+      <element id="64">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>connection4</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <element id="65">
+      <element id="66">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>connection5</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <element id="59">
+      <element id="60">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>connection6</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <element id="61">
+      <element id="62">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>connection7</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <element id="55">
+      <element id="56">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>connection8</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <element id="57">
+      <element id="58">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>connection9</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <element id="9" dockArea="left">
+      <bo>
+        <seg>feature</seg>
+        <seg>interfacetoac</seg>
+      </bo>
+      <position y="555.0"/>
+      <contentFilters/>
+    </element>
+    <element id="10" dockArea="left">
+      <bo>
+        <seg>feature</seg>
+        <seg>interfacetocommunications</seg>
+      </bo>
+      <position y="510.0"/>
+      <contentFilters/>
+    </element>
+    <element id="1" dockArea="left">
+      <bo>
+        <seg>feature</seg>
+        <seg>interfacetoflightdeck</seg>
+      </bo>
+      <position y="600.0"/>
+      <contentFilters/>
+    </element>
+    <element id="27">
+      <bo>
+        <seg>realization</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <element id="2">
+      <element id="3" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>outdata</seg>
+        </bo>
+        <position x="147.0" y="22.0"/>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>dataaquisitionunits</seg>
+      </bo>
+      <position x="40.0" y="44.0"/>
+      <size width="214.0" height="93.0"/>
+      <contentFilters>
+        <filter>features</filter>
+        <filter>internalFeatures</filter>
+        <filter>processorFeatures</filter>
+        <filter>connections</filter>
+        <filter>flowSpecifications</filter>
+      </contentFilters>
+    </element>
+    <element id="11">
+      <element id="13" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>indata</seg>
+        </bo>
+        <position y="30.0"/>
+        <contentFilters/>
+      </element>
+      <element id="12" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>outdata</seg>
+        </bo>
+        <position x="124.0" y="75.0"/>
+        <contentFilters/>
+      </element>
+      <element id="32" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>outverify</seg>
+        </bo>
+        <position x="116.0" y="30.0"/>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>datastructuringunits</seg>
+      </bo>
+      <position x="330.0" y="81.0"/>
+      <size width="191.0" height="134.0"/>
+      <contentFilters>
+        <filter>features</filter>
+        <filter>internalFeatures</filter>
+        <filter>processorFeatures</filter>
+        <filter>connections</filter>
+        <filter>flowSpecifications</filter>
+      </contentFilters>
+    </element>
+    <element id="24">
+      <element id="26" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>indata</seg>
+        </bo>
+        <position y="61.0"/>
+        <contentFilters/>
+      </element>
+      <element id="25" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>inverify</seg>
+        </bo>
+        <position y="16.0"/>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>l1datastore</seg>
+      </bo>
+      <position x="1110.0" y="95.0"/>
+      <size width="221.0" height="106.0"/>
+      <contentFilters>
+        <filter>features</filter>
+        <filter>internalFeatures</filter>
+        <filter>processorFeatures</filter>
+        <filter>connections</filter>
+        <filter>flowSpecifications</filter>
+      </contentFilters>
+    </element>
+    <element id="18">
+      <element id="20" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>indata</seg>
+        </bo>
+        <position y="55.0"/>
+        <contentFilters/>
+      </element>
+      <element id="19" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>inverify</seg>
+        </bo>
+        <position y="10.0"/>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>l2datastore</seg>
+      </bo>
+      <position x="1130.0" y="250.0"/>
+      <size width="221.0" height="101.0"/>
+      <contentFilters>
+        <filter>features</filter>
+        <filter>internalFeatures</filter>
+        <filter>processorFeatures</filter>
+        <filter>connections</filter>
+        <filter>flowSpecifications</filter>
+      </contentFilters>
+    </element>
+    <element id="21">
+      <element id="23" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>indata</seg>
+        </bo>
+        <position y="66.0"/>
+        <contentFilters/>
+      </element>
+      <element id="22" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>inverify</seg>
+        </bo>
+        <position y="21.0"/>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>l3datastore</seg>
+      </bo>
+      <position x="1150.0" y="440.0"/>
+      <size width="201.0" height="110.0"/>
+      <contentFilters>
+        <filter>features</filter>
+        <filter>internalFeatures</filter>
+        <filter>processorFeatures</filter>
+        <filter>connections</filter>
+        <filter>flowSpecifications</filter>
+      </contentFilters>
+    </element>
+    <element id="4">
+      <element id="7" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>indata</seg>
+        </bo>
+        <position y="56.0"/>
+        <contentFilters/>
+      </element>
+      <element id="8" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>outdatal2</seg>
+        </bo>
+        <position x="111.0" y="80.0"/>
+        <contentFilters/>
+      </element>
+      <element id="6" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>outverify</seg>
+        </bo>
+        <position x="118.0" y="23.0"/>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>securitydowngraderl1l2</seg>
+      </bo>
+      <position x="620.0" y="250.0"/>
+      <size width="193.0" height="131.0"/>
+      <contentFilters>
+        <filter>features</filter>
+        <filter>internalFeatures</filter>
+        <filter>processorFeatures</filter>
+        <filter>connections</filter>
+        <filter>flowSpecifications</filter>
+      </contentFilters>
+    </element>
+    <element id="14">
+      <element id="16" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>indatal2</seg>
+        </bo>
+        <position y="30.0"/>
+        <contentFilters/>
+      </element>
+      <element id="17" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>outdatal3</seg>
+        </bo>
+        <position x="111.0" y="79.0"/>
+        <contentFilters/>
+      </element>
+      <element id="15" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>outverify</seg>
+        </bo>
+        <position x="118.0" y="30.0"/>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>securitydowngraderl2l3</seg>
+      </bo>
+      <position x="880.0" y="416.0"/>
+      <size width="193.0" height="140.0"/>
+      <contentFilters>
+        <filter>features</filter>
+        <filter>internalFeatures</filter>
+        <filter>processorFeatures</filter>
+        <filter>connections</filter>
+        <filter>flowSpecifications</filter>
+      </contentFilters>
+    </element>
+    <bo>
+      <seg>classifier</seg>
+      <seg>aircraftmissionsystems.aquiresecuredata</seg>
+    </bo>
+    <position x="70.0"/>
+    <size width="1385.0" height="679.0"/>
+    <contentFilters>
+      <filter>generalizations</filter>
+      <filter>features</filter>
+      <filter>modes</filter>
+      <filter>subcomponents</filter>
+      <filter>subprogramCallSequences</filter>
+      <filter>internalFeatures</filter>
+      <filter>processorFeatures</filter>
+      <filter>connections</filter>
+      <filter>flowSpecifications</filter>
+      <filter>modeTransitions</filter>
+    </contentFilters>
+  </element>
+  <config type="structure" connectionPrimaryLabelsVisible="false">
+    <enabledAadlProperties/>
+    <context>
+      <seg>classifier</seg>
+      <seg>aircraftmissionsystems_pkg::aircraftmissionsystems.aquiresecuredata</seg>
+    </context>
+  </config>
+</diagram:Diagram>

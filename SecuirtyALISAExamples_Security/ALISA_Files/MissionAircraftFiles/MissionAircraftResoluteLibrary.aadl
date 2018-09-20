@@ -1,0 +1,26 @@
+--
+-- Copyright 2018 Carnegie Mellon University. See Notice.txt
+-- Distribution Statement A: Approved for Public Release; Distribution is Unlimited.
+--
+package MissionAircraftResoluteLibrary
+public
+
+annex Resolute 
+	{**
+
+	has_InformationSecurityLevel_L1 (cp: component) <=
+    ** " component " cp " has information security level L1"  **
+ 	get_information_security_level(cp) = "L1"
+		
+	has_InformationSecurityLevel_L2 (cp: component) <=
+    ** " component " cp " has information security level L2"  **
+ 	get_information_security_level(cp) = "L2"
+ 	
+	has_InformationSecurityLevel_L3 (cp: component) <=
+    ** " component " cp " has information security level L3"  **
+ 	get_information_security_level(cp) = "L3"
+		
+		
+	**};
+	
+end MissionAircraftResoluteLibrary;
