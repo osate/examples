@@ -1,3 +1,6 @@
+-- Copyright 2018 Carnegie Mellon University. See Notice.txt
+-- [Distribution Statement A] Approved for public release and unlimited distribution.
+
 property set SecurityProps is
 
 	-- We exploit the fact that enumerations are ordered in AADL to
@@ -6,5 +9,18 @@ property set SecurityProps is
 	
 	-- For partitions, we ignore the ordering.
 	partition : enumeration (avionics, entertainment) applies to (all);
+
+	PolicyElement : type enumeration (NoReadUp, NoReadDown, NoWriteUp, NoWriteDown, NoInterPartition);
+
+	-- As long as we can either allow overriding or not (ie, using constants or not) Eugene is on board for this
+	PolicyElements : list of SecurityProps::PolicyElement applies to (all); 
+
+	-- Integrity
+	BibaPolicy : constant list of SecurityProps::PolicyElement => (NoReadDown, NoWriteUp);
+	
+	-- Confidentiality
+	BellLaPadulaPolicy : constant list of SecurityProps::PolicyElement => (NoReadUp, NoWriteDown);
+	
+	MultiLateralPolicy : constant list of SecurityProps::PolicyElement => (NoInterpartition);
 
 end SecurityProps;
