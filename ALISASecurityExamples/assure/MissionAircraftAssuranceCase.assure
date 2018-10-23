@@ -16,7 +16,7 @@ case MissionAircraftAssuranceCase [
 		claim MissionAircraftSecurityVerificationPlan # MasterSecurityReq1 [
 			tbdcount 1
 			verification MissionAircraftSecurityVerificationPlan # MasterSecurityReq1 # formalReview [
-				executionstate todo resultstate tbd tbdcount 1 time 405
+				executionstate todo resultstate tbd tbdcount 1 time 561
 			]
 		]
 		claim MissionAircraftSecurityVerificationPlan # MasterSecurityReq2 [

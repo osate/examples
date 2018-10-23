@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="ASCII"?>
 <instance:SystemInstance xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aadl2="http://aadl.info/AADL/2.0" xmlns:instance="http://aadl.info/AADL/2.0/instance" name="missionAircraft_generic_Instance" category="system">
   <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+    <property href="../../../../SecurityVerification/properties/SecurityClassificationProperties.aadl#SecurityClassificationProperties.InformationSecurityLevel"/>
+    <ownedValue>
+      <ownedValue xsi:type="aadl2:StringLiteral" value="secret"/>
+    </ownedValue>
+    <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.19"/>
+  </ownedPropertyAssociation>
+  <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
     <property href="../../../../SecurityVerification/properties/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
     <ownedValue>
       <ownedValue xsi:type="aadl2:BooleanLiteral" value="true"/>
@@ -38,6 +45,13 @@
     <classifier xsi:type="aadl2:SystemType" href="../../AircraftControl_pkg.aadl#AircraftControl_pkg.aircraftControl"/>
   </componentInstance>
   <componentInstance name="mission_systems" category="system">
+    <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+      <property href="../../../../SecurityVerification/properties/SecurityClassificationProperties.aadl#SecurityClassificationProperties.InformationSecurityLevel"/>
+      <ownedValue>
+        <ownedValue xsi:type="aadl2:StringLiteral" value="secret"/>
+      </ownedValue>
+      <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.20"/>
+    </ownedPropertyAssociation>
     <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
       <property href="../../../../SecurityVerification/properties/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
       <ownedValue>
