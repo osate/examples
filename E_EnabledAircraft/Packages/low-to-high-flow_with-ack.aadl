@@ -1,0 +1,88 @@
+package MILS_with_crypto_module
+public
+	system Universe
+	end Universe;
+
+	bus internalNetwork
+	end internalNetwork;
+
+	system componentLow
+		features
+			-- bus access
+			network: requires bus access internalNetwork;
+			-- data access
+			outgoing: out data port;
+			ack_incoming: in event data port;
+			ack_outgoing: out event data port;
+	end componentLow;
+	
+	system componentHigh
+		features
+			-- bus access
+			network: requires bus access internalNetwork;
+			-- data access
+			incoming: in data port;
+			ack_incoming: in event data port;
+			ack_outgoing: out event data port;
+
+	end componentHigh;
+	
+	system networkPump
+		features
+			-- bus access
+			network: requires bus access internalNetwork;
+			-- data access
+			incoming: in data port;
+			outgoing: out data port;
+			ack_incoming: in event data port;
+			ack_outgoing: out event data port;
+	end networkPump;
+
+	system data_diode
+		--note the distinct lack of explicit data flows
+		features
+			-- bus access
+			network: requires bus access internalNetwork;
+			-- data access
+			incoming: in data port;
+			outgoing: out data port;
+	end data_diode;
+	
+	system ack_monitor
+		features
+			-- bus access
+			network: requires bus access internalNetwork;
+			-- data access
+			incoming: in data port;
+			ack_incoming: in event data port;
+			ack_outgoing: out event data port;
+	end ack_monitor;
+
+	system implementation networkPump.separation
+		--note the distinct lack of explicit data flows
+		subcomponents
+			diode: system data_diode;
+			monitor: system ack_monitor;
+		connections
+			a: port incoming -> diode.incoming;
+			b: port incoming -> monitor.incoming;
+			c: port diode.outgoing -> outgoing;
+			d: port ack_incoming -> monitor.ack_incoming;
+			e: port monitor.ack_outgoing -> ack_outgoing;
+	end networkPump.separation;
+
+
+	system implementation Universe.separation
+		subcomponents
+			low: system componentLow;
+			high: system componentHigh;
+			pump: system networkPump;
+			network: bus internalNetwork;
+		connections
+			a: port low.outgoing -> pump.incoming;
+			b: port pump.outgoing -> high.incoming;
+			c: port high.ack_outgoing -> pump.ack_incoming;
+			d: port pump.ack_outgoing -> low.ack_incoming;
+	end Universe.separation;
+
+end MILS_with_crypto_module;
