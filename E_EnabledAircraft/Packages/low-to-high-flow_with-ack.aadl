@@ -1,4 +1,4 @@
-package MILS_with_crypto_module
+package MILS
 public
 	system Universe
 	end Universe;
@@ -85,4 +85,4 @@ public
 			d: port pump.ack_outgoing -> low.ack_incoming;
 	end Universe.separation;
 
-end MILS_with_crypto_module;
+end MILS;
