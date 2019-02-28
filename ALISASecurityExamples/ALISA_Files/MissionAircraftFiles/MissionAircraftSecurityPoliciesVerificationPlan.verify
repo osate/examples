@@ -27,7 +27,7 @@ verification plan MissionAircraftSecurityPoliciesVerificationPlan for MissionAir
 		
 	]
 	
-	claim SecureMissionData
+	claim SecureMissionDataPolicy
 	[
 		
 	]

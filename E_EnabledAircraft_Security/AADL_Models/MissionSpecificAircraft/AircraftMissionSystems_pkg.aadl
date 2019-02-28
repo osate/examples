@@ -36,7 +36,7 @@ public
 			DataStructuringUnits: system DataStructuringUnit;
 			SecurityDownGraderL1L2: system SecurityDownGraderL1L2;
 			SecurityDownGraderL2L3: system SecurityDownGraderL2L3;
-			L1DataStore: system L1Store {SecurityEnforcementProperties::Encryption => true;};
+			L1DataStore: system L1Store {SecurityEnforcementProperties::Encryption => [encryption_form=> to_be_specified;];};
 			L2DataStore: system L2Store;
 			L3DataStore: system L3Store;
 		connections

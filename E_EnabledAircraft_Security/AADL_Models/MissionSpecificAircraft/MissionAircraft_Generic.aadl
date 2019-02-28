@@ -35,23 +35,23 @@ system implementation missionAircraft.generic
 		SecurityClassificationProperties::InformationSecurityLevel => "L2" applies to mission_systems.L2DataStore;
 		SecurityClassificationProperties::InformationSecurityLevel => "L3" applies to mission_systems.L3DataStore;
 		-- Assign Encryption to data within mission systems
-		SecurityEnforcementProperties::Encryption => true applies to mission_systems.L1DataStore;
-		SecurityEnforcementProperties::Encryption => true applies to mission_systems.L2DataStore;
-		SecurityEnforcementProperties::Encryption => true applies to mission_systems.L3DataStore;	
-		SecurityEnforcementProperties::Encryption => true;
-		SecurityEnforcementProperties::Encryption => true applies to mission_systems;
-		SecurityEnforcementProperties::Encryption => true applies to aircraft_control_systems;
-		SecurityEnforcementProperties::Encryption => true applies to airframe;
+		SecurityEnforcementProperties::Encryption => [encryption_form=> to_be_specified;] applies to mission_systems.L1DataStore;
+		SecurityEnforcementProperties::Encryption => [encryption_form=> to_be_specified;]  applies to mission_systems.L2DataStore;
+		SecurityEnforcementProperties::Encryption => [encryption_form=> to_be_specified;]  applies to mission_systems.L3DataStore;	
+		SecurityEnforcementProperties::Encryption => [encryption_form=> to_be_specified;] ;
+		SecurityEnforcementProperties::Encryption => [encryption_form=> to_be_specified;]  applies to mission_systems;
+		SecurityEnforcementProperties::Encryption => [encryption_form=> to_be_specified;]  applies to aircraft_control_systems;
+		SecurityEnforcementProperties::Encryption => [encryption_form=> to_be_specified;]  applies to airframe;
 		-- 	Assign Encryption to connections
-		SecurityEnforcementProperties::Encryption => true applies to mission_systems.connection1;
-		SecurityEnforcementProperties::Encryption => true applies to mission_systems.connection2;
-		SecurityEnforcementProperties::Encryption => true applies to mission_systems.connection3;
-		SecurityEnforcementProperties::Encryption => true applies to mission_systems.connection4;
-		SecurityEnforcementProperties::Encryption => true applies to mission_systems.connection5;
-		SecurityEnforcementProperties::Encryption => true applies to mission_systems.connection6;
-		SecurityEnforcementProperties::Encryption => true applies to mission_systems.connection7;
-		SecurityEnforcementProperties::Encryption => true applies to mission_systems.connection8;
-		SecurityEnforcementProperties::Encryption => true applies to mission_systems.connection9;
+		SecurityEnforcementProperties::Encryption => [encryption_form=> to_be_specified;]  applies to mission_systems.connection1;
+		SecurityEnforcementProperties::Encryption => [encryption_form=> to_be_specified;]  applies to mission_systems.connection2;
+		SecurityEnforcementProperties::Encryption => [encryption_form=> to_be_specified;]  applies to mission_systems.connection3;
+		SecurityEnforcementProperties::Encryption => [encryption_form=> to_be_specified;]  applies to mission_systems.connection4;
+		SecurityEnforcementProperties::Encryption => [encryption_form=> to_be_specified;]  applies to mission_systems.connection5;
+		SecurityEnforcementProperties::Encryption => [encryption_form=> to_be_specified;]  applies to mission_systems.connection6;
+		SecurityEnforcementProperties::Encryption => [encryption_form=> to_be_specified;]  applies to mission_systems.connection7;
+		SecurityEnforcementProperties::Encryption => [encryption_form=> to_be_specified;]  applies to mission_systems.connection8;
+		SecurityEnforcementProperties::Encryption => [encryption_form=> to_be_specified;]  applies to mission_systems.connection9;
 		--
 		-- test assignments of secret to mission system
 		SecurityClassificationProperties::InformationSecurityLevel => "secret";

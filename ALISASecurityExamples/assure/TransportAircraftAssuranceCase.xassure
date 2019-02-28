@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="ASCII"?>
+<assure:AssuranceCaseResult xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:assure="http://www.osate.org/assure/Assure" name="TransportAircraftAssuranceCase">
+  <metrics/>
+</assure:AssuranceCaseResult>

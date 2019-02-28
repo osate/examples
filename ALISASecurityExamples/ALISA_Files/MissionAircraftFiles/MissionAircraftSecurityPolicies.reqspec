@@ -36,10 +36,10 @@ for MissionAircraft_Generic::missionAircraft.generic
 				development stakeholder DevelopmentTeam.PrincipalEngineer DevelopmentTeam.EncryptionExpert
 			]
 	
-	requirement SecureMissionData: "All mission data must be secured to levels as defined by DoD security 
+	requirement SecureMissionDataPolicy: "All mission data must be secured to levels as defined by DoD security 
 									classifications and other mission-specific classifications of that data."
 			[
-				description "All data must be secured. This may involve traditional DoD classifications and
+				description "All data must be secured. This may involve standard DoD classifications and
 							related security procedures as well as mission-specific classifications and related procedures."
 			]
 ]

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ASCII"?>
+<instance:SystemInstance xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aadl2="http://aadl.info/AADL/2.0" xmlns:instance="http://aadl.info/AADL/2.0/instance" name="pilotedAircraft_other1_Instance" category="system">
+  <featureInstance name="aeroDataLinkAccess" category="busAccess" direction="in out">
+    <feature xsi:type="aadl2:BusAccess" href="../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.2/@ownedBusAccess.0"/>
+  </featureInstance>
+  <featureInstance name="satelliteDataLinkAccess" category="busAccess" direction="in out">
+    <feature xsi:type="aadl2:BusAccess" href="../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.2/@ownedBusAccess.1"/>
+  </featureInstance>
+  <featureInstance name="ExternalWirelessAccess" category="busAccess" direction="in out">
+    <feature xsi:type="aadl2:BusAccess" href="../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.2/@ownedBusAccess.2"/>
+  </featureInstance>
+  <featureInstance name="CellularDataLinkAccess" category="busAccess" direction="in out">
+    <feature xsi:type="aadl2:BusAccess" href="../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.2/@ownedBusAccess.3"/>
+  </featureInstance>
+  <featureInstance name="aeroDataLink_AC" category="eventDataPort" direction="in out">
+    <feature xsi:type="aadl2:EventDataPort" href="../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.2/@ownedEventDataPort.0"/>
+  </featureInstance>
+  <featureInstance name="satelliteDataLink_AC" category="eventDataPort" direction="in out">
+    <feature xsi:type="aadl2:EventDataPort" href="../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.2/@ownedEventDataPort.1"/>
+  </featureInstance>
+  <featureInstance name="satelliteDataLink_AIS" category="eventDataPort" direction="in out">
+    <feature xsi:type="aadl2:EventDataPort" href="../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.2/@ownedEventDataPort.2"/>
+  </featureInstance>
+  <featureInstance name="wirelessAccessPoint_AIS" category="eventDataPort" direction="in out">
+    <feature xsi:type="aadl2:EventDataPort" href="../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.2/@ownedEventDataPort.3"/>
+  </featureInstance>
+  <featureInstance name="cellularDataLink_AIS" category="eventDataPort" direction="in out">
+    <feature xsi:type="aadl2:EventDataPort" href="../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.2/@ownedEventDataPort.4"/>
+  </featureInstance>
+  <systemOperationMode name="No Modes"/>
+  <componentImplementation xsi:type="aadl2:SystemImplementation" href="../OperationalEnvironment_pkg.aadl#OperationalEnvironment_pkg.pilotedAircraft.other1"/>
+</instance:SystemInstance>
