@@ -1,0 +1,41 @@
+
+-- Copyright 2018 Carnegie Mellon University. See Notice.txt
+-- Distribution Statement A: Approved for Public Release; Distribution is Unlimited.
+
+package TransportAircraftOperationalSystem_Generic
+
+--	This is a generic airtransport architecture modeled after the systems presented in
+--  “Future E-Enabled Aircraft Communications and Security: The Next 20 Years and Beyond” 
+--  Krishna Sampigethaya, Radha Poovendran,  Sudhakar Shetty, Terry Davis,  and Chuck Royalty
+--  Proceedings of the IEEE | Vol. 99, No. 11, November 2011, pgs. 2040-2055.
+
+public
+
+with   TransportAircraft_Generic, OperationalEnvironment_pkg;
+
+--This is the top level system model for a transport aircraft that includes its operational environment.
+
+	system AirTransportOperationalSystem
+	end AirTransportOperationalSystem;
+	
+	system implementation AirTransportOperationalSystem.multipassenger
+		subcomponents 
+		transport_aircraft: system TransportAircraft_Generic::transportAircraft.generic;
+		operational_environment: system OperationalEnvironment_pkg::operationalEnvironment.basicConfiguration;
+		connections
+			-- bus access connections
+			externalWirelessConn: bus access operational_environment.externalWirelessAccess <-> transport_aircraft.ExternalWirelessAccess;
+			externalSattelineConn: bus access operational_environment.satelliteCommAccess <-> transport_aircraft.satelliteDataLinkAccess;
+			externalAeroDataLinkConn: bus access operational_environment.aeroDataLinkCommAccess <-> transport_aircraft.aeroDataLinkAccess;
+			extenalCellularConn: bus access operational_environment.celluarAccess <-> transport_aircraft.CellularDataLinkAccess;
+			
+			-- Data Connections
+			externalWirelessComm: port transport_aircraft.wirelessAccessPoint_AIS <-> operational_environment.wirelessAccessPoint_AIS;
+			aeroDataLinkComm: port transport_aircraft.aeroDataLink_AC <->  operational_environment.aeroDataLink_AC;
+			cellularDataLinkComm: port transport_aircraft.cellularDataLink_AIS <-> operational_environment.cellularDataLink_AIS;
+			satelliteDataLink_AISComm: port transport_aircraft.satelliteDataLink_AIS  <-> operational_environment.satelliteDataLink_AIS;
+			satelliteDataLink_ACComm: port transport_aircraft.satelliteDataLink_AC  <-> operational_environment.satelliteDataLink_AC;			
+			
+	end AirTransportOperationalSystem.multipassenger;
+	
+end TransportAircraftOperationalSystem_Generic;

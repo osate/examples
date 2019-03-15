@@ -1,0 +1,13 @@
+
+-- Copyright 2018 Carnegie Mellon University. See Notice.txt
+-- Distribution Statement A: Approved for Public Release; Distribution is Unlimited.
+
+-- This package contains computing hardware resources for the aircraft
+
+
+package ComputingHardware_pkg
+public
+	
+	
+	
+end ComputingHardware_pkg;

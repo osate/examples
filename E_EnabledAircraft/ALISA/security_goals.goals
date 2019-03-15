@@ -1,0 +1,24 @@
+stakeholder goals ExampleSecGoals for TransportAircraft_Generic::transportAircraft.generic [
+
+goal SecureCommunications
+	[
+	// What?
+	description "Unprotected messages within the flight control and sensor systems can be misused to threaten the safety or intended mission of the aircraft"
+
+	// Why?
+	rationale "An adversary can block, modify, and/or create faulty readings and/or commands leading to a mismatch between operator and/or autopilot perceived current state, or between operator and/or autopilot attempts to change the current state"
+
+	// stakeholder ...
+]
+
+goal DesignProtection
+[
+	// What?
+	description "Unprotected access to message format, sequences, or physical components/circuits exposes confidential design parameters of aircraft systems"
+
+	// Why?
+	rationale "An adversary who learns detailed design schematics can duplicate the aircraft, reducing its utility for future missions"
+
+	// stakeholder ...
+]
+]

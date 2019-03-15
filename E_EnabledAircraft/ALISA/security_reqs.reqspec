@@ -1,0 +1,99 @@
+global requirements ExampleSecReqs [
+	requirement TamperResistanceEnforcement [
+		see goal ExampleSecGoals.DesignProtection
+		description
+				"All components required for flight- and safety-critical systems must be protected from non-destructive introspection and delay/slow destructive introspection"
+
+		rationale
+				"Systems must enforce security measures to ensure only authorized personnel may access details which can lead to inference of the design of flight- and safety-critical systems"
+
+		development
+		stakeholder DevelopmentTeam.PrincipalEngineer DevelopmentTeam.SecurityEngineer
+	]
+
+	requirement TamperEvidenceEnforcement [
+		see goal ExampleSecGoals.DesignProtection
+		description
+				"Destructive introspection of all components required for flight- and safety-critical systems must be detectable"
+
+		rationale
+				"Introspection detection allows for post-hoc action to be taken to prevent ongoing and future intrusion attempts"
+
+		development
+		stakeholder DevelopmentTeam.PrincipalEngineer DevelopmentTeam.SecurityEngineer
+	]
+
+	requirement SecureCommunicationsEnforcement [
+		see goal ExampleSecGoals.SecureCommunications
+		description "Secure communications must be provided for all flight- and safety-critical systems."
+
+		rationale
+				"The communication systems must enforce security measures to ensure only authorized access and use of all flight- and safety-critical systems"
+
+		development
+		stakeholder DevelopmentTeam.PrincipalEngineer DevelopmentTeam.SecurityEngineer
+	]
+
+	requirement AvailableComponent [
+		decomposes SecureCommunicationsEnforcement
+		description ""
+
+		rationale ""
+	]
+
+	requirement AvailableCommunications [
+		decomposes AvailableComponent
+
+		//likely unachievable
+
+		description ""
+
+		rationale ""
+	]
+
+	requirement TamperResistantBus [
+		decomposes AvailableCommunications
+		description
+				"All communication components required for interconnect of flight- and safety-critical systems must be protected from service degradation via physical means"
+
+		rationale "It should be difficult to physically sever communication lines or damage communication circuitry"
+
+		refines AvailableCommunications
+	]
+
+	requirement AvailableSubsystem [
+		decomposes AvailableComponent
+
+		//availability of function performed by component
+
+		description ""
+
+		rationale ""
+	]
+
+	requirement AuthenticatedCommunications [
+		decomposes SecureCommunicationsEnforcement
+		description "Messages need pairwise/mutual authentication (followed by authenticated communication)"
+
+		rationale "Authorization requires authentication"
+	]
+
+	requirement AuthorizedCommunications [
+		decomposes SecureCommunicationsEnforcement
+		description "Message origins should be checked for authorization before being processed"
+
+		rationale
+				"Prevent unauthorized state change (local state should only be changed in response to messages from components authorized to affect that state)"
+
+		refines SecureCommunicationsEnforcement AuthenticatedCommunications TamperResistanceEnforcement AvailableComponent
+	]
+
+	requirement ConfidentialCommunications [
+		decomposes SecureCommunicationsEnforcement
+		description "Messages need confidentiality protection to prevent unauthorized access"
+
+		rationale "Prevent information leakage, e.g., IFF subsystem would require a confidentiality 'service'"
+
+		refines SecureCommunicationsEnforcement TamperResistanceEnforcement
+	]
+]

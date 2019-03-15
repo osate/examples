@@ -1,0 +1,105 @@
+
+-- Copyright 2018 Carnegie Mellon University. See Notice.txt
+-- [Distribution Statement A] Approved for public release and unlimited distribution.
+
+package OperationalEnvironment_pkg
+public
+	
+system operationalEnvironment
+	features
+			aeroDataLink_AC: in out event data port;
+			satelliteDataLink_AC: in out event data port;
+			satelliteDataLink_AIS: in out event data port;
+			wirelessAccessPoint_AIS: in out event data port;
+			cellularDataLink_AIS: in out event data port;
+			-- access to buses
+			aeroDataLinkCommAccess: provides bus access aeroDataLinkbus;
+			satelliteCommAccess: provides bus access stellitebus;
+			externalWirelessAccess: provides bus access externalWirelessbus ;
+			celluarAccess: provides bus access Cellular;
+			
+end operationalEnvironment;
+
+system implementation operationalEnvironment.basicConfiguration
+	subcomponents
+	-- ATC Ground Station and Other Aircraft subsystems
+	otherPilotedAircraft1: system pilotedAircraft.other1;
+	groundControl: system airTrafficGroundControl;
+	-- Additional interaction systems
+	satelliteSystems: system satellite;
+	autonomousAircraft1: system autonomousAircraft;satellite: system satellite;
+	cellularBaseStation: system cellularBaseStation;
+	-- Communication Links (bus)
+	aeroDataLinkComm: bus aeroDataLinkbus;
+	stelliteComm: bus stellitebus;
+	externalWirelessbus: bus externalWirelessbus;
+	cellular: bus cellular;
+	
+end operationalEnvironment.basicConfiguration;
+
+system pilotedAircraft 
+	-- The features of other aircraft are identical to those of the primary aircraft.
+			features
+			aeroDataLink_AC: in out event data port;
+			satelliteDataLink_AC: in out event data port;
+			satelliteDataLink_AIS: in out event data port;
+			wirelessAccessPoint_AIS: in out event data port;
+			cellularDataLink_AIS: in out event data port;
+			-- access to external communication links
+			aeroDataLinkAccess: requires bus access OperationalEnvironment_pkg::aeroDataLinkbus;
+			satelliteDataLinkAccess: requires bus access OperationalEnvironment_pkg::stellitebus; -- satellites are treated as a single bus
+			ExternalWirelessAccess: requires bus access OperationalEnvironment_pkg::externalWirelessbus;
+			CellularDataLinkAccess: requires bus access OperationalEnvironment_pkg::Cellular;
+end pilotedAircraft;
+	
+system implementation pilotedAircraft.other1
+end pilotedAircraft.other1;
+
+system airTrafficGroundControl
+			features
+			aeroDataLink: in out event data port;
+			satelliteDataLink: in out event data port;
+			-- access to external communication links
+			aeroDataLinkAccess: requires bus access;
+			satelliteDataLinkAccess: requires bus access;
+end airTrafficGroundControl;
+
+system satellite
+	features
+			satelliteDataLink: in out event data port;
+			-- access to external communication links
+			satelliteDataLinkAccess: requires bus access;
+end satellite;
+	
+	system autonomousAircraft
+	end autonomousAircraft;
+	
+--bus externalWirelessbus
+--end externalWirelessbus;
+
+system externalWirelessGroundAccessPoint
+end externalWirelessGroundAccessPoint;
+
+system cellularBaseStation
+end cellularBaseStation;
+
+
+-- Communication Links
+
+	bus aeroDataLinkbus
+	end aeroDataLinkbus;
+	
+	bus stellitebus
+	end stellitebus;
+
+	bus externalWirelessbus 
+		-- 802.11, 802.16	
+	end externalWirelessbus;
+	
+	bus cellular
+	end cellular;
+	
+	bus WWW
+	end WWW;
+	
+end OperationalEnvironment_pkg;

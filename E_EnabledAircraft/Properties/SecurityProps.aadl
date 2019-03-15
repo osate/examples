@@ -1,0 +1,10 @@
+property set SecurityProps is
+
+	-- We exploit the fact that enumerations are ordered in AADL to
+	--   build a hierarchy. 
+	level : enumeration (low, medium, high, critical) applies to (all);
+	
+	-- For partitions, we ignore the ordering.
+	partition : enumeration (avionics, entertainment) applies to (all);
+
+end SecurityProps;

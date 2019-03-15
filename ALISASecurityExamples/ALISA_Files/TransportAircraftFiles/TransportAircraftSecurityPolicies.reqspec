@@ -1,0 +1,41 @@
+//
+// Copyright 2018 Carnegie Mellon University. See Notice.txt
+// Distribution Statement A: Approved for Public Release; Distribution is Unlimited.
+//
+
+system requirements TransportAircraftSystemSecurityPolicies : "System-Wide Security Policies" 
+for TransportAircraft_Generic::transportAircraft.generic
+
+[
+	description "These are the high level (system) security policies for airtransport aircraft."
+	
+	requirement Security:  "System Security must be provided" 
+	[
+			description "Security protections that meets FAA aircraft security and 
+						flight worthiness certification standards must be provided."	
+	]
+	
+	requirement MasterSecurityPolicy: "A Master System Security Policy must be developed and certified." 
+	[
+		description "A master system security policy document must be developed and certified by all of the  
+					agencies and organizations involved in flight certification of the aircraft."
+	]
+
+	requirement  AccessControlPolicy: "Security Controlled Access to all Aircraft Systems and Resources must be provided."
+			[
+				description "Access to all Aircraft operational and maintenance Systems and Resources shall be permitted 
+							only by authorized personnel."
+							
+				development stakeholder DevelopmentTeam.PrincipalEngineer DevelopmentTeam.SecurityEngineer
+			]
+	
+	requirement SecureCommunicationsPolicy: "Secure communications must be provided for all flight- and safety-critical systems."
+			[
+				description "Communication systems must provide security measures to ensure only authorized 
+							access and use."
+				development stakeholder DevelopmentTeam.PrincipalEngineer DevelopmentTeam.EncryptionExpert DevelopmentTeam.SecurityEngineer
+			]
+			
+
+			
+]

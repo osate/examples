@@ -1,0 +1,19 @@
+//
+// Copyright 2018 Carnegie Mellon University. See Notice.txt
+// Distribution Statement A: Approved for Public Release; Distribution is Unlimited.
+//
+organization DevelopmentTeam
+
+stakeholder PrincipalEngineer
+[
+	full name "Principal Engineer"
+]
+
+stakeholder SecurityEngineer
+[
+	full name "Security Engineer"
+]
+stakeholder EncryptionExpert
+[
+	full name "Encryption Expert"
+]

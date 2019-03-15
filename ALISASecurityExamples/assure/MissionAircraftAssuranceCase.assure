@@ -1,0 +1,69 @@
+case MissionAircraftAssuranceCase [
+	tbdcount 3
+	model MissionAircraftAssuranceCase.MissionAircraftAssurancePlan for MissionAircraft_Generic::missionAircraft.generic
+			[
+		tbdcount 3
+		claim MissionAircraftSecurityPoliciesVerificationPlan # Security [
+		]
+		claim MissionAircraftSecurityPoliciesVerificationPlan # MasterSecurityPolicy [
+		]
+		claim MissionAircraftSecurityPoliciesVerificationPlan # AccessControlPolicy [
+		]
+		claim MissionAircraftSecurityPoliciesVerificationPlan # SecureCommunicationsPolicy [
+		]
+		claim MissionAircraftSecurityPoliciesVerificationPlan # SecureMissionData [
+		]
+		claim MissionAircraftSecurityVerificationPlan # MasterSecurityReq1 [
+			tbdcount 1
+			verification MissionAircraftSecurityVerificationPlan # MasterSecurityReq1 # formalReview [
+				executionstate todo resultstate tbd tbdcount 1 time 405
+			]
+		]
+		claim MissionAircraftSecurityVerificationPlan # MasterSecurityReq2 [
+			tbdcount 1
+			verification MissionAircraftSecurityVerificationPlan # MasterSecurityReq2 # formalReview [
+				executionstate todo resultstate tbd tbdcount 1 time 63
+			]
+		]
+		claim MissionAircraftSecurityVerificationPlan # MasterSecurityReq3 [
+			tbdcount 1
+			verification MissionAircraftSecurityVerificationPlan # MasterSecurityReq3 # formalReview [
+				executionstate todo resultstate tbd tbdcount 1 time 78
+			]
+		]
+		claim MissionAircraftSecurityVerificationPlan # AircraftInformationSecurity [
+		]
+		claim MissionAircraftSecurityVerificationPlan # ExternalEncryption [
+		]
+		claim MissionAircraftSecurityVerificationPlan # InternalEncryption [
+		]
+		claim MissionAircraftSecurityVerificationPlan # SecureMissionDataEncrypt [
+		]
+		claim MissionAircraftSecurityVerificationPlan # SecureMissionDataClassify [
+		]
+		subsystem aircraft_control_systems [
+		]
+		subsystem mission_systems [
+			subsystem DataAquisitionUnits [
+			]
+			subsystem DataStructuringUnits [
+			]
+			subsystem SecurityDownGraderL1L2 [
+			]
+			subsystem SecurityDownGraderL2L3 [
+			]
+			subsystem L1DataStore [
+			]
+			subsystem L2DataStore [
+			]
+			subsystem L3DataStore [
+			]
+		]
+		subsystem airframe [
+			subsystem internalWirelessNetwork [
+			]
+			subsystem satelliteAntenna [
+			]
+		]
+	]
+]

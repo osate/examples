@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="ASCII"?>
+<instance:SystemInstance xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aadl2="http://aadl.info/AADL/2.0" xmlns:instance="http://aadl.info/AADL/2.0/instance" name="AirTransportOperationalSystem_multipassenger_Instance" category="system">
+  <componentInstance name="transport_aircraft" category="system">
+    <featureInstance name="aeroDataLinkAccess" category="busAccess" direction="in out">
+      <feature xsi:type="aadl2:BusAccess" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedBusAccess.0"/>
+    </featureInstance>
+    <featureInstance name="satelliteDataLinkAccess" category="busAccess" direction="in out">
+      <feature xsi:type="aadl2:BusAccess" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedBusAccess.1"/>
+    </featureInstance>
+    <featureInstance name="ExternalWirelessAccess" category="busAccess" direction="in out">
+      <feature xsi:type="aadl2:BusAccess" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedBusAccess.2"/>
+    </featureInstance>
+    <featureInstance name="CellularDataLinkAccess" category="busAccess" direction="in out">
+      <feature xsi:type="aadl2:BusAccess" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedBusAccess.3"/>
+    </featureInstance>
+    <featureInstance name="aeroDataLink_AC" category="eventDataPort" direction="in out">
+      <feature xsi:type="aadl2:EventDataPort" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedEventDataPort.0"/>
+    </featureInstance>
+    <featureInstance name="satelliteDataLink_AC" category="eventDataPort" direction="in out">
+      <feature xsi:type="aadl2:EventDataPort" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedEventDataPort.1"/>
+    </featureInstance>
+    <featureInstance name="satelliteDataLink_AIS" category="eventDataPort" direction="in out">
+      <feature xsi:type="aadl2:EventDataPort" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedEventDataPort.2"/>
+    </featureInstance>
+    <featureInstance name="wirelessAccessPoint_AIS" category="eventDataPort" direction="in out">
+      <feature xsi:type="aadl2:EventDataPort" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedEventDataPort.3"/>
+    </featureInstance>
+    <featureInstance name="cellularDataLink_AIS" category="eventDataPort" direction="in out">
+      <feature xsi:type="aadl2:EventDataPort" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedEventDataPort.4"/>
+    </featureInstance>
+    <componentInstance name="aircraft_control_systems" category="system">
+      <featureInstance name="aircraftDataNetworkInterface" category="busAccess" direction="in out">
+        <feature xsi:type="aadl2:BusAccess" href="../../AircraftControl_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedBusAccess.0"/>
+      </featureInstance>
+      <featureInstance name="aeroDataLinkInterface" category="busAccess" direction="in out">
+        <feature xsi:type="aadl2:BusAccess" href="../../AircraftControl_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedBusAccess.1"/>
+      </featureInstance>
+      <featureInstance name="closedNetworkAccess" category="busAccess" direction="in out">
+        <feature xsi:type="aadl2:BusAccess" href="../../AircraftControl_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedBusAccess.2"/>
+      </featureInstance>
+      <featureInstance name="inflightEntertainmentInterface_AC" direction="in out">
+        <feature xsi:type="aadl2:DataPort" href="../../AircraftControl_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.0"/>
+      </featureInstance>
+      <featureInstance name="aeroDataLink_AC" category="eventDataPort" direction="in out">
+        <feature xsi:type="aadl2:EventDataPort" href="../../AircraftControl_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedEventDataPort.0"/>
+      </featureInstance>
+      <featureInstance name="satelliteDataLink_AC" category="eventDataPort" direction="in out">
+        <feature xsi:type="aadl2:EventDataPort" href="../../AircraftControl_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedEventDataPort.1"/>
+      </featureInstance>
+      <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.0"/>
+      <index>0</index>
+      <classifier xsi:type="aadl2:SystemType" href="../../AircraftControl_pkg.aadl#AircraftControl_pkg.aircraftControl"/>
+    </componentInstance>
+    <componentInstance name="airline_information_services" category="system">
+      <featureInstance name="externalWirlessAccess" category="busAccess" direction="in out">
+        <feature xsi:type="aadl2:BusAccess" href="../AirlineInformationServices_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedBusAccess.0"/>
+      </featureInstance>
+      <featureInstance name="externalCellularAccess" category="busAccess" direction="in out">
+        <feature xsi:type="aadl2:BusAccess" href="../AirlineInformationServices_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedBusAccess.1"/>
+      </featureInstance>
+      <featureInstance name="internalWirelessAccess" category="busAccess" direction="in out">
+        <feature xsi:type="aadl2:BusAccess" href="../AirlineInformationServices_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedBusAccess.2"/>
+      </featureInstance>
+      <featureInstance name="closedNetworkAccess" category="busAccess" direction="in out">
+        <feature xsi:type="aadl2:BusAccess" href="../AirlineInformationServices_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedBusAccess.3"/>
+      </featureInstance>
+      <featureInstance name="aircraftDataNetworkAccess" category="busAccess" direction="in out">
+        <feature xsi:type="aadl2:BusAccess" href="../AirlineInformationServices_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedBusAccess.4"/>
+      </featureInstance>
+      <featureInstance name="inflightEntertainmentInterface_AIS" direction="in out">
+        <feature xsi:type="aadl2:DataPort" href="../AirlineInformationServices_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.0"/>
+      </featureInstance>
+      <featureInstance name="satelliteDataLink_AIS" category="eventDataPort" direction="in out">
+        <feature xsi:type="aadl2:EventDataPort" href="../AirlineInformationServices_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedEventDataPort.0"/>
+      </featureInstance>
+      <featureInstance name="externalWirlessAccessPointInterface" category="eventDataPort" direction="in out">
+        <feature xsi:type="aadl2:EventDataPort" href="../AirlineInformationServices_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedEventDataPort.1"/>
+      </featureInstance>
+      <featureInstance name="externalCellularInterface" category="eventDataPort" direction="in out">
+        <feature xsi:type="aadl2:EventDataPort" href="../AirlineInformationServices_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedEventDataPort.2"/>
+      </featureInstance>
+      <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.1"/>
+      <index>0</index>
+      <classifier xsi:type="aadl2:SystemType" href="../AirlineInformationServices_pkg.aadl#AirlineInformationServices_pkg.airlineInformationServices"/>
+    </componentInstance>
+    <componentInstance name="passenger_info_entertainment_services" category="system">
+      <featureInstance name="aircraftDataNetworkInterface" category="busAccess" direction="in out">
+        <feature xsi:type="aadl2:BusAccess" href="../PassengerInfoEntertainmentServices_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedBusAccess.0"/>
+      </featureInstance>
+      <featureInstance name="internalWirelessAccess" category="busAccess" direction="in out">
+        <feature xsi:type="aadl2:BusAccess" href="../PassengerInfoEntertainmentServices_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedBusAccess.1"/>
+      </featureInstance>
+      <featureInstance name="inflightEntertainmentInterface_PIES" direction="in out">
+        <feature xsi:type="aadl2:DataPort" href="../PassengerInfoEntertainmentServices_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.0"/>
+      </featureInstance>
+      <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.2"/>
+      <index>0</index>
+      <classifier xsi:type="aadl2:SystemType" href="../PassengerInfoEntertainmentServices_pkg.aadl#PassengerInfoEntertainmentServices_pkg.passengerInfoEntertainmentServices"/>
+    </componentInstance>
+    <componentInstance name="airframe" category="system">
+      <featureInstance name="internalWirelessNetworkAccess" category="busAccess" direction="in out">
+        <feature xsi:type="aadl2:BusAccess" href="../../AircraftAirframe_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedBusAccess.0"/>
+      </featureInstance>
+      <featureInstance name="satelliteDataLinkAccess" category="busAccess" direction="in out">
+        <feature xsi:type="aadl2:BusAccess" href="../../AircraftAirframe_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedBusAccess.1"/>
+      </featureInstance>
+      <featureInstance name="closedNetworkAccess" category="busAccess" direction="in out">
+        <feature xsi:type="aadl2:BusAccess" href="../../AircraftAirframe_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedBusAccess.2"/>
+      </featureInstance>
+      <featureInstance name="aircraftDataNetworkAccess" category="busAccess" direction="in out">
+        <feature xsi:type="aadl2:BusAccess" href="../../AircraftAirframe_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedBusAccess.3"/>
+      </featureInstance>
+      <featureInstance name="closedNetworkInterface" direction="in out">
+        <feature xsi:type="aadl2:DataPort" href="../../AircraftAirframe_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.0"/>
+      </featureInstance>
+      <featureInstance name="internalwirelessInterface" category="eventDataPort" direction="in out">
+        <feature xsi:type="aadl2:EventDataPort" href="../../AircraftAirframe_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedEventDataPort.0"/>
+      </featureInstance>
+      <componentInstance name="internalWirelessNetwork" category="bus">
+        <subcomponent xsi:type="aadl2:BusSubcomponent" href="../../AircraftAirframe_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedBusSubcomponent.0"/>
+        <index>0</index>
+        <classifier xsi:type="aadl2:BusType" href="../../AircraftAirframe_pkg.aadl#AircraftAirframe_pkg.internalWirelessNetwork"/>
+      </componentInstance>
+      <componentInstance name="satelliteAntenna" category="device">
+        <featureInstance name="closedNetworkInterface" direction="in out">
+          <feature xsi:type="aadl2:DataPort" href="../../AircraftAirframe_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.2/@ownedDataPort.0"/>
+        </featureInstance>
+        <featureInstance name="satelliteDataLinkAccess" category="busAccess" direction="in out">
+          <feature xsi:type="aadl2:BusAccess" href="../../AircraftAirframe_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.2/@ownedBusAccess.0"/>
+        </featureInstance>
+        <featureInstance name="closedNetworkAccess" category="busAccess" direction="in out">
+          <feature xsi:type="aadl2:BusAccess" href="../../AircraftAirframe_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.2/@ownedBusAccess.1"/>
+        </featureInstance>
+        <subcomponent xsi:type="aadl2:DeviceSubcomponent" href="../../AircraftAirframe_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedDeviceSubcomponent.0"/>
+        <index>0</index>
+        <classifier xsi:type="aadl2:DeviceType" href="../../AircraftAirframe_pkg.aadl#AircraftAirframe_pkg.satelliteAntenna"/>
+      </componentInstance>
+      <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.3"/>
+      <index>0</index>
+      <classifier xsi:type="aadl2:SystemImplementation" href="../../AircraftAirframe_pkg.aadl#AircraftAirframe_pkg.airframe.basic"/>
+    </componentInstance>
+    <connectionInstance name="aircraft_control_systems.aircraftDataNetworkInterface &lt;-> airframe.aircraftDataNetworkAccess" complete="true" kind="accessConnection" destination="//@componentInstance.0/@componentInstance.3/@featureInstance.3" bidirectional="true" source="//@componentInstance.0/@componentInstance.0/@featureInstance.0">
+      <connectionReference context="//@componentInstance.0" source="//@componentInstance.0/@componentInstance.0/@featureInstance.0" destination="//@componentInstance.0/@componentInstance.3/@featureInstance.3" reverse="true">
+        <connection xsi:type="aadl2:AccessConnection" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedAccessConnection.4"/>
+      </connectionReference>
+    </connectionInstance>
+    <connectionInstance name="aircraft_control_systems.closedNetworkAccess &lt;-> airframe.closedNetworkAccess" complete="true" kind="accessConnection" destination="//@componentInstance.0/@componentInstance.3/@featureInstance.2" bidirectional="true" source="//@componentInstance.0/@componentInstance.0/@featureInstance.2">
+      <connectionReference context="//@componentInstance.0" source="//@componentInstance.0/@componentInstance.0/@featureInstance.2" destination="//@componentInstance.0/@componentInstance.3/@featureInstance.2">
+        <connection xsi:type="aadl2:AccessConnection" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedAccessConnection.0"/>
+      </connectionReference>
+    </connectionInstance>
+    <connectionInstance name="aircraft_control_systems.closedNetworkAccess &lt;-> airline_information_services.closedNetworkAccess" complete="true" kind="accessConnection" destination="//@componentInstance.0/@componentInstance.1/@featureInstance.3" bidirectional="true" source="//@componentInstance.0/@componentInstance.0/@featureInstance.2">
+      <connectionReference context="//@componentInstance.0" source="//@componentInstance.0/@componentInstance.0/@featureInstance.2" destination="//@componentInstance.0/@componentInstance.1/@featureInstance.3">
+        <connection xsi:type="aadl2:AccessConnection" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedAccessConnection.2"/>
+      </connectionReference>
+    </connectionInstance>
+    <connectionInstance name="aircraft_control_systems.inflightEntertainmentInterface_AC -> passenger_info_entertainment_services.inflightEntertainmentInterface_PIES" complete="true" kind="portConnection" destination="//@componentInstance.0/@componentInstance.2/@featureInstance.2" source="//@componentInstance.0/@componentInstance.0/@featureInstance.3">
+      <connectionReference context="//@componentInstance.0" source="//@componentInstance.0/@componentInstance.0/@featureInstance.3" destination="//@componentInstance.0/@componentInstance.2/@featureInstance.2">
+        <connection xsi:type="aadl2:PortConnection" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPortConnection.2"/>
+      </connectionReference>
+    </connectionInstance>
+    <connectionInstance name="aircraft_control_systems.inflightEntertainmentInterface_AC -> airline_information_services.inflightEntertainmentInterface_AIS" complete="true" kind="portConnection" destination="//@componentInstance.0/@componentInstance.1/@featureInstance.5" source="//@componentInstance.0/@componentInstance.0/@featureInstance.3">
+      <connectionReference context="//@componentInstance.0" source="//@componentInstance.0/@componentInstance.0/@featureInstance.3" destination="//@componentInstance.0/@componentInstance.1/@featureInstance.5" reverse="true">
+        <connection xsi:type="aadl2:PortConnection" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPortConnection.3"/>
+      </connectionReference>
+    </connectionInstance>
+    <connectionInstance name="airline_information_services.internalWirelessAccess &lt;-> airframe.internalWirelessNetworkAccess" complete="true" kind="accessConnection" destination="//@componentInstance.0/@componentInstance.3/@featureInstance.0" bidirectional="true" source="//@componentInstance.0/@componentInstance.1/@featureInstance.2">
+      <connectionReference context="//@componentInstance.0" source="//@componentInstance.0/@componentInstance.1/@featureInstance.2" destination="//@componentInstance.0/@componentInstance.3/@featureInstance.0" reverse="true">
+        <connection xsi:type="aadl2:AccessConnection" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedAccessConnection.8"/>
+      </connectionReference>
+    </connectionInstance>
+    <connectionInstance name="airline_information_services.inflightEntertainmentInterface_AIS -> aircraft_control_systems.inflightEntertainmentInterface_AC" complete="true" kind="portConnection" destination="//@componentInstance.0/@componentInstance.0/@featureInstance.3" source="//@componentInstance.0/@componentInstance.1/@featureInstance.5">
+      <connectionReference context="//@componentInstance.0" source="//@componentInstance.0/@componentInstance.1/@featureInstance.5" destination="//@componentInstance.0/@componentInstance.0/@featureInstance.3">
+        <connection xsi:type="aadl2:PortConnection" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPortConnection.3"/>
+      </connectionReference>
+    </connectionInstance>
+    <connectionInstance name="passenger_info_entertainment_services.aircraftDataNetworkInterface &lt;-> airframe.aircraftDataNetworkAccess" complete="true" kind="accessConnection" destination="//@componentInstance.0/@componentInstance.3/@featureInstance.3" bidirectional="true" source="//@componentInstance.0/@componentInstance.2/@featureInstance.0">
+      <connectionReference context="//@componentInstance.0" source="//@componentInstance.0/@componentInstance.2/@featureInstance.0" destination="//@componentInstance.0/@componentInstance.3/@featureInstance.3" reverse="true">
+        <connection xsi:type="aadl2:AccessConnection" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedAccessConnection.1"/>
+      </connectionReference>
+    </connectionInstance>
+    <connectionInstance name="passenger_info_entertainment_services.internalWirelessAccess &lt;-> airframe.internalWirelessNetworkAccess" complete="true" kind="accessConnection" destination="//@componentInstance.0/@componentInstance.3/@featureInstance.0" bidirectional="true" source="//@componentInstance.0/@componentInstance.2/@featureInstance.1">
+      <connectionReference context="//@componentInstance.0" source="//@componentInstance.0/@componentInstance.2/@featureInstance.1" destination="//@componentInstance.0/@componentInstance.3/@featureInstance.0" reverse="true">
+        <connection xsi:type="aadl2:AccessConnection" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedAccessConnection.9"/>
+      </connectionReference>
+    </connectionInstance>
+    <connectionInstance name="passenger_info_entertainment_services.inflightEntertainmentInterface_PIES -> aircraft_control_systems.inflightEntertainmentInterface_AC" complete="true" kind="portConnection" destination="//@componentInstance.0/@componentInstance.0/@featureInstance.3" source="//@componentInstance.0/@componentInstance.2/@featureInstance.2">
+      <connectionReference context="//@componentInstance.0" source="//@componentInstance.0/@componentInstance.2/@featureInstance.2" destination="//@componentInstance.0/@componentInstance.0/@featureInstance.3" reverse="true">
+        <connection xsi:type="aadl2:PortConnection" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPortConnection.2"/>
+      </connectionReference>
+    </connectionInstance>
+    <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../TransportAircraftSystem_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.0"/>
+    <index>0</index>
+    <classifier xsi:type="aadl2:SystemImplementation" href="../TransportAircraft_Generic.aadl#TransportAircraft_Generic.transportAircraft.generic"/>
+  </componentInstance>
+  <componentInstance name="operational_environment" category="system">
+    <featureInstance name="aeroDataLinkCommAccess" category="busAccess" direction="in out">
+      <feature xsi:type="aadl2:BusAccess" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedBusAccess.0"/>
+    </featureInstance>
+    <featureInstance name="satelliteCommAccess" category="busAccess" direction="in out">
+      <feature xsi:type="aadl2:BusAccess" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedBusAccess.1"/>
+    </featureInstance>
+    <featureInstance name="externalWirelessAccess" category="busAccess" direction="in out">
+      <feature xsi:type="aadl2:BusAccess" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedBusAccess.2"/>
+    </featureInstance>
+    <featureInstance name="celluarAccess" category="busAccess" direction="in out">
+      <feature xsi:type="aadl2:BusAccess" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedBusAccess.3"/>
+    </featureInstance>
+    <featureInstance name="aeroDataLink_AC" category="eventDataPort" direction="in out">
+      <feature xsi:type="aadl2:EventDataPort" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedEventDataPort.0"/>
+    </featureInstance>
+    <featureInstance name="satelliteDataLink_AC" category="eventDataPort" direction="in out">
+      <feature xsi:type="aadl2:EventDataPort" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedEventDataPort.1"/>
+    </featureInstance>
+    <featureInstance name="satelliteDataLink_AIS" category="eventDataPort" direction="in out">
+      <feature xsi:type="aadl2:EventDataPort" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedEventDataPort.2"/>
+    </featureInstance>
+    <featureInstance name="wirelessAccessPoint_AIS" category="eventDataPort" direction="in out">
+      <feature xsi:type="aadl2:EventDataPort" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedEventDataPort.3"/>
+    </featureInstance>
+    <featureInstance name="cellularDataLink_AIS" category="eventDataPort" direction="in out">
+      <feature xsi:type="aadl2:EventDataPort" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedEventDataPort.4"/>
+    </featureInstance>
+    <componentInstance name="aeroDataLinkComm" category="bus">
+      <subcomponent xsi:type="aadl2:BusSubcomponent" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedBusSubcomponent.0"/>
+      <index>0</index>
+      <classifier xsi:type="aadl2:BusType" href="../../OperationalEnvironment_pkg.aadl#OperationalEnvironment_pkg.aeroDataLinkbus"/>
+    </componentInstance>
+    <componentInstance name="stelliteComm" category="bus">
+      <subcomponent xsi:type="aadl2:BusSubcomponent" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedBusSubcomponent.1"/>
+      <index>0</index>
+      <classifier xsi:type="aadl2:BusType" href="../../OperationalEnvironment_pkg.aadl#OperationalEnvironment_pkg.stellitebus"/>
+    </componentInstance>
+    <componentInstance name="externalWirelessbus" category="bus">
+      <subcomponent xsi:type="aadl2:BusSubcomponent" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedBusSubcomponent.2"/>
+      <index>0</index>
+      <classifier xsi:type="aadl2:BusType" href="../../OperationalEnvironment_pkg.aadl#OperationalEnvironment_pkg.externalWirelessbus"/>
+    </componentInstance>
+    <componentInstance name="cellular" category="bus">
+      <subcomponent xsi:type="aadl2:BusSubcomponent" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedBusSubcomponent.3"/>
+      <index>0</index>
+      <classifier xsi:type="aadl2:BusType" href="../../OperationalEnvironment_pkg.aadl#OperationalEnvironment_pkg.cellular"/>
+    </componentInstance>
+    <componentInstance name="otherPilotedAircraft1" category="system">
+      <featureInstance name="aeroDataLinkAccess" category="busAccess" direction="in out">
+        <feature xsi:type="aadl2:BusAccess" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.2/@ownedBusAccess.0"/>
+      </featureInstance>
+      <featureInstance name="satelliteDataLinkAccess" category="busAccess" direction="in out">
+        <feature xsi:type="aadl2:BusAccess" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.2/@ownedBusAccess.1"/>
+      </featureInstance>
+      <featureInstance name="ExternalWirelessAccess" category="busAccess" direction="in out">
+        <feature xsi:type="aadl2:BusAccess" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.2/@ownedBusAccess.2"/>
+      </featureInstance>
+      <featureInstance name="CellularDataLinkAccess" category="busAccess" direction="in out">
+        <feature xsi:type="aadl2:BusAccess" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.2/@ownedBusAccess.3"/>
+      </featureInstance>
+      <featureInstance name="aeroDataLink_AC" category="eventDataPort" direction="in out">
+        <feature xsi:type="aadl2:EventDataPort" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.2/@ownedEventDataPort.0"/>
+      </featureInstance>
+      <featureInstance name="satelliteDataLink_AC" category="eventDataPort" direction="in out">
+        <feature xsi:type="aadl2:EventDataPort" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.2/@ownedEventDataPort.1"/>
+      </featureInstance>
+      <featureInstance name="satelliteDataLink_AIS" category="eventDataPort" direction="in out">
+        <feature xsi:type="aadl2:EventDataPort" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.2/@ownedEventDataPort.2"/>
+      </featureInstance>
+      <featureInstance name="wirelessAccessPoint_AIS" category="eventDataPort" direction="in out">
+        <feature xsi:type="aadl2:EventDataPort" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.2/@ownedEventDataPort.3"/>
+      </featureInstance>
+      <featureInstance name="cellularDataLink_AIS" category="eventDataPort" direction="in out">
+        <feature xsi:type="aadl2:EventDataPort" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.2/@ownedEventDataPort.4"/>
+      </featureInstance>
+      <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.0"/>
+      <index>0</index>
+      <classifier xsi:type="aadl2:SystemImplementation" href="../../OperationalEnvironment_pkg.aadl#OperationalEnvironment_pkg.pilotedAircraft.other1"/>
+    </componentInstance>
+    <componentInstance name="groundControl" category="system">
+      <featureInstance name="aeroDataLinkAccess" category="busAccess" direction="in out">
+        <feature xsi:type="aadl2:BusAccess" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.4/@ownedBusAccess.0"/>
+      </featureInstance>
+      <featureInstance name="satelliteDataLinkAccess" category="busAccess" direction="in out">
+        <feature xsi:type="aadl2:BusAccess" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.4/@ownedBusAccess.1"/>
+      </featureInstance>
+      <featureInstance name="aeroDataLink" category="eventDataPort" direction="in out">
+        <feature xsi:type="aadl2:EventDataPort" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.4/@ownedEventDataPort.0"/>
+      </featureInstance>
+      <featureInstance name="satelliteDataLink" category="eventDataPort" direction="in out">
+        <feature xsi:type="aadl2:EventDataPort" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.4/@ownedEventDataPort.1"/>
+      </featureInstance>
+      <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.1"/>
+      <index>0</index>
+      <classifier xsi:type="aadl2:SystemType" href="../../OperationalEnvironment_pkg.aadl#OperationalEnvironment_pkg.airTrafficGroundControl"/>
+    </componentInstance>
+    <componentInstance name="satelliteSystems" category="system">
+      <featureInstance name="satelliteDataLinkAccess" category="busAccess" direction="in out">
+        <feature xsi:type="aadl2:BusAccess" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.5/@ownedBusAccess.0"/>
+      </featureInstance>
+      <featureInstance name="satelliteDataLink" category="eventDataPort" direction="in out">
+        <feature xsi:type="aadl2:EventDataPort" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.5/@ownedEventDataPort.0"/>
+      </featureInstance>
+      <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.2"/>
+      <index>0</index>
+      <classifier xsi:type="aadl2:SystemType" href="../../OperationalEnvironment_pkg.aadl#OperationalEnvironment_pkg.satellite"/>
+    </componentInstance>
+    <componentInstance name="autonomousAircraft1" category="system">
+      <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.3"/>
+      <index>0</index>
+      <classifier xsi:type="aadl2:SystemType" href="../../OperationalEnvironment_pkg.aadl#OperationalEnvironment_pkg.autonomousAircraft"/>
+    </componentInstance>
+    <componentInstance name="satellite" category="system">
+      <featureInstance name="satelliteDataLinkAccess" category="busAccess" direction="in out">
+        <feature xsi:type="aadl2:BusAccess" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.5/@ownedBusAccess.0"/>
+      </featureInstance>
+      <featureInstance name="satelliteDataLink" category="eventDataPort" direction="in out">
+        <feature xsi:type="aadl2:EventDataPort" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.5/@ownedEventDataPort.0"/>
+      </featureInstance>
+      <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.4"/>
+      <index>0</index>
+      <classifier xsi:type="aadl2:SystemType" href="../../OperationalEnvironment_pkg.aadl#OperationalEnvironment_pkg.satellite"/>
+    </componentInstance>
+    <componentInstance name="cellularBaseStation" category="system">
+      <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../../OperationalEnvironment_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.5"/>
+      <index>0</index>
+      <classifier xsi:type="aadl2:SystemType" href="../../OperationalEnvironment_pkg.aadl#OperationalEnvironment_pkg.cellularBaseStation"/>
+    </componentInstance>
+    <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../TransportAircraftSystem_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.1"/>
+    <index>0</index>
+    <classifier xsi:type="aadl2:SystemImplementation" href="../../OperationalEnvironment_pkg.aadl#OperationalEnvironment_pkg.operationalEnvironment.basicConfiguration"/>
+  </componentInstance>
+  <connectionInstance name="transport_aircraft.satelliteDataLink_AIS -> operational_environment.satelliteDataLink_AIS" complete="true" kind="portConnection" destination="//@componentInstance.1/@featureInstance.6" source="//@componentInstance.0/@featureInstance.6">
+    <connectionReference context="/" source="//@componentInstance.0/@featureInstance.6" destination="//@componentInstance.1/@featureInstance.6">
+      <connection xsi:type="aadl2:PortConnection" href="../TransportAircraftSystem_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPortConnection.3"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="transport_aircraft.wirelessAccessPoint_AIS -> operational_environment.wirelessAccessPoint_AIS" complete="true" kind="portConnection" destination="//@componentInstance.1/@featureInstance.7" source="//@componentInstance.0/@featureInstance.7">
+    <connectionReference context="/" source="//@componentInstance.0/@featureInstance.7" destination="//@componentInstance.1/@featureInstance.7">
+      <connection xsi:type="aadl2:PortConnection" href="../TransportAircraftSystem_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPortConnection.0"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="transport_aircraft.cellularDataLink_AIS -> operational_environment.cellularDataLink_AIS" complete="true" kind="portConnection" destination="//@componentInstance.1/@featureInstance.8" source="//@componentInstance.0/@featureInstance.8">
+    <connectionReference context="/" source="//@componentInstance.0/@featureInstance.8" destination="//@componentInstance.1/@featureInstance.8">
+      <connection xsi:type="aadl2:PortConnection" href="../TransportAircraftSystem_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPortConnection.2"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="transport_aircraft.aircraft_control_systems.aeroDataLinkInterface &lt;-> operational_environment.aeroDataLinkCommAccess" complete="true" kind="accessConnection" destination="//@componentInstance.1/@featureInstance.0" bidirectional="true" source="//@componentInstance.0/@componentInstance.0/@featureInstance.1">
+    <connectionReference context="//@componentInstance.0" source="//@componentInstance.0/@componentInstance.0/@featureInstance.1" destination="//@componentInstance.0/@featureInstance.0">
+      <connection xsi:type="aadl2:AccessConnection" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedAccessConnection.5"/>
+    </connectionReference>
+    <connectionReference context="/" source="//@componentInstance.0/@featureInstance.0" destination="//@componentInstance.1/@featureInstance.0" reverse="true">
+      <connection xsi:type="aadl2:AccessConnection" href="../TransportAircraftSystem_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedAccessConnection.2"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="transport_aircraft.aircraft_control_systems.aeroDataLink_AC -> operational_environment.aeroDataLink_AC" complete="true" kind="portConnection" destination="//@componentInstance.1/@featureInstance.4" source="//@componentInstance.0/@componentInstance.0/@featureInstance.4">
+    <connectionReference context="//@componentInstance.0" source="//@componentInstance.0/@componentInstance.0/@featureInstance.4" destination="//@componentInstance.0/@featureInstance.4">
+      <connection xsi:type="aadl2:PortConnection" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPortConnection.1"/>
+    </connectionReference>
+    <connectionReference context="/" source="//@componentInstance.0/@featureInstance.4" destination="//@componentInstance.1/@featureInstance.4">
+      <connection xsi:type="aadl2:PortConnection" href="../TransportAircraftSystem_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPortConnection.1"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="transport_aircraft.aircraft_control_systems.satelliteDataLink_AC -> operational_environment.satelliteDataLink_AC" complete="true" kind="portConnection" destination="//@componentInstance.1/@featureInstance.5" source="//@componentInstance.0/@componentInstance.0/@featureInstance.5">
+    <connectionReference context="//@componentInstance.0" source="//@componentInstance.0/@componentInstance.0/@featureInstance.5" destination="//@componentInstance.0/@featureInstance.5">
+      <connection xsi:type="aadl2:PortConnection" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPortConnection.0"/>
+    </connectionReference>
+    <connectionReference context="/" source="//@componentInstance.0/@featureInstance.5" destination="//@componentInstance.1/@featureInstance.5">
+      <connection xsi:type="aadl2:PortConnection" href="../TransportAircraftSystem_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPortConnection.4"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="transport_aircraft.airline_information_services.externalWirlessAccess &lt;-> operational_environment.externalWirelessAccess" complete="true" kind="accessConnection" destination="//@componentInstance.1/@featureInstance.2" bidirectional="true" source="//@componentInstance.0/@componentInstance.1/@featureInstance.0">
+    <connectionReference context="//@componentInstance.0" source="//@componentInstance.0/@componentInstance.1/@featureInstance.0" destination="//@componentInstance.0/@featureInstance.2" reverse="true">
+      <connection xsi:type="aadl2:AccessConnection" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedAccessConnection.7"/>
+    </connectionReference>
+    <connectionReference context="/" source="//@componentInstance.0/@featureInstance.2" destination="//@componentInstance.1/@featureInstance.2" reverse="true">
+      <connection xsi:type="aadl2:AccessConnection" href="../TransportAircraftSystem_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedAccessConnection.0"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="transport_aircraft.airline_information_services.externalCellularAccess &lt;-> operational_environment.celluarAccess" complete="true" kind="accessConnection" destination="//@componentInstance.1/@featureInstance.3" bidirectional="true" source="//@componentInstance.0/@componentInstance.1/@featureInstance.1">
+    <connectionReference context="//@componentInstance.0" source="//@componentInstance.0/@componentInstance.1/@featureInstance.1" destination="//@componentInstance.0/@featureInstance.3" reverse="true">
+      <connection xsi:type="aadl2:AccessConnection" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedAccessConnection.6"/>
+    </connectionReference>
+    <connectionReference context="/" source="//@componentInstance.0/@featureInstance.3" destination="//@componentInstance.1/@featureInstance.3" reverse="true">
+      <connection xsi:type="aadl2:AccessConnection" href="../TransportAircraftSystem_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedAccessConnection.3"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="transport_aircraft.airframe.satelliteDataLinkAccess &lt;-> operational_environment.satelliteCommAccess" complete="true" kind="accessConnection" destination="//@componentInstance.1/@featureInstance.1" bidirectional="true" source="//@componentInstance.0/@componentInstance.3/@featureInstance.1">
+    <connectionReference context="//@componentInstance.0" source="//@componentInstance.0/@componentInstance.3/@featureInstance.1" destination="//@componentInstance.0/@featureInstance.1" reverse="true">
+      <connection xsi:type="aadl2:AccessConnection" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedAccessConnection.3"/>
+    </connectionReference>
+    <connectionReference context="/" source="//@componentInstance.0/@featureInstance.1" destination="//@componentInstance.1/@featureInstance.1" reverse="true">
+      <connection xsi:type="aadl2:AccessConnection" href="../TransportAircraftSystem_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedAccessConnection.1"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="operational_environment.aeroDataLink_AC -> transport_aircraft.aircraft_control_systems.aeroDataLink_AC" complete="true" kind="portConnection" destination="//@componentInstance.0/@componentInstance.0/@featureInstance.4" source="//@componentInstance.1/@featureInstance.4">
+    <connectionReference context="/" source="//@componentInstance.1/@featureInstance.4" destination="//@componentInstance.0/@featureInstance.4" reverse="true">
+      <connection xsi:type="aadl2:PortConnection" href="../TransportAircraftSystem_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPortConnection.1"/>
+    </connectionReference>
+    <connectionReference context="//@componentInstance.0" source="//@componentInstance.0/@featureInstance.4" destination="//@componentInstance.0/@componentInstance.0/@featureInstance.4" reverse="true">
+      <connection xsi:type="aadl2:PortConnection" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPortConnection.1"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="operational_environment.satelliteDataLink_AC -> transport_aircraft.aircraft_control_systems.satelliteDataLink_AC" complete="true" kind="portConnection" destination="//@componentInstance.0/@componentInstance.0/@featureInstance.5" source="//@componentInstance.1/@featureInstance.5">
+    <connectionReference context="/" source="//@componentInstance.1/@featureInstance.5" destination="//@componentInstance.0/@featureInstance.5" reverse="true">
+      <connection xsi:type="aadl2:PortConnection" href="../TransportAircraftSystem_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPortConnection.4"/>
+    </connectionReference>
+    <connectionReference context="//@componentInstance.0" source="//@componentInstance.0/@featureInstance.5" destination="//@componentInstance.0/@componentInstance.0/@featureInstance.5" reverse="true">
+      <connection xsi:type="aadl2:PortConnection" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPortConnection.0"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="operational_environment.satelliteDataLink_AIS -> transport_aircraft.satelliteDataLink_AIS" complete="true" kind="portConnection" destination="//@componentInstance.0/@featureInstance.6" source="//@componentInstance.1/@featureInstance.6">
+    <connectionReference context="/" source="//@componentInstance.1/@featureInstance.6" destination="//@componentInstance.0/@featureInstance.6" reverse="true">
+      <connection xsi:type="aadl2:PortConnection" href="../TransportAircraftSystem_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPortConnection.3"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="operational_environment.wirelessAccessPoint_AIS -> transport_aircraft.wirelessAccessPoint_AIS" complete="true" kind="portConnection" destination="//@componentInstance.0/@featureInstance.7" source="//@componentInstance.1/@featureInstance.7">
+    <connectionReference context="/" source="//@componentInstance.1/@featureInstance.7" destination="//@componentInstance.0/@featureInstance.7" reverse="true">
+      <connection xsi:type="aadl2:PortConnection" href="../TransportAircraftSystem_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPortConnection.0"/>
+    </connectionReference>
+  </connectionInstance>
+  <connectionInstance name="operational_environment.cellularDataLink_AIS -> transport_aircraft.cellularDataLink_AIS" complete="true" kind="portConnection" destination="//@componentInstance.0/@featureInstance.8" source="//@componentInstance.1/@featureInstance.8">
+    <connectionReference context="/" source="//@componentInstance.1/@featureInstance.8" destination="//@componentInstance.0/@featureInstance.8" reverse="true">
+      <connection xsi:type="aadl2:PortConnection" href="../TransportAircraftSystem_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPortConnection.2"/>
+    </connectionReference>
+  </connectionInstance>
+  <systemOperationMode name="No Modes"/>
+  <componentImplementation xsi:type="aadl2:SystemImplementation" href="../TransportAircraftSystem_Generic.aadl#TransportAircraftSystem_Generic.AirTransportOperationalSystem.multipassenger"/>
+</instance:SystemInstance>

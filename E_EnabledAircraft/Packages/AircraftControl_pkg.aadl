@@ -1,0 +1,69 @@
+-- Copyright 2018 Carnegie Mellon University. See Notice.txt
+-- [Distribution Statement A] Approved for public release and unlimited distribution.
+package AircraftControl_pkg
+-- This package contains classifiers for the aircraft control ( AC)system.
+public
+	with OperationalEnvironment_pkg, AircraftAirframe_pkg, SecurityProps;
+
+-- This is a model of the aircraft control system (AC)
+	system aircraftControl
+		features
+--	external information interfaces
+			inflightEntertainmentInterface_AC: in out data port;
+-- bus access features
+			aircraftDataNetworkInterface: requires bus access AircraftAirframe_pkg::AircraftDataNetwork;
+			aeroDataLinkInterface: requires bus access OperationalEnvironment_pkg::aeroDataLinkbus;
+			closedNetworkAccess: provides bus access AircraftAirframe_pkg::closedNetwork;
+			aeroDataLink_AC: in out event data port;
+			satelliteDataLink_AC: in out event data port;
+		properties
+			SecurityProps::partition => avionics;
+			SecurityProps::level => critical;
+	end aircraftControl;
+
+	system implementation aircraftControl.basic
+		subcomponents
+			flightAndEmbeddedControlSystems: system flightAndEmbeddedControlSystems;
+			cabinServicesSystems: system cabinServicesSystem;
+			closedNetwork: bus AircraftAirframe_pkg::closedNetwork;
+			aeronauticalDataLinkUnit: device AircraftAirframe_pkg::aeronauticalDataLinkUnit;
+			pilot: device pilot;
+		connections
+				-- bus access connections
+			cssTOclosedNetworkAccess: bus access closedNetwork <-> cabinServicesSystems.ClosednetworkAccess;
+			aeroDataLinkTOclosedNetwork: bus access closedNetwork <-> aeronauticalDataLinkUnit.networkAccessClosed;
+			FaEControlSystemToclosedNetwork: bus access flightAndEmbeddedControlSystems.closedNetworkAccess <-> closedNetwork;
+			closedNetworkToSatellite: bus access closedNetworkAccess <-> closedNetwork;
+--			aircraftDataNetworkAccess: bus access aircraftDataNetworkInterface <-> closedNetwork.aircraftDataNetworkAccess;
+			aeroDataLinkAccess: bus access aeroDataLinkInterface <-> aeronauticalDataLinkUnit.aeroDataLinkAccess;
+					-- communication connections
+			commBetweenControlandCabinServ: feature cabinServicesSystems.networkInterfaceClosed <-> flightAndEmbeddedControlSystems.closedNetworkInterface;
+			commBetweenCabinandInflight: feature cabinServicesSystems.inflightEntertainmentInterface <-> inflightEntertainmentInterface_AC;
+			commBetweenControlandDataLink: feature flightAndEmbeddedControlSystems.closedNetworkInterface <-> aeronauticalDataLinkUnit.networkInterface_Closed;
+			commBetweenPilotandControl: feature flightAndEmbeddedControlSystems.pilotInterface <-> pilot.pilotInterface;
+			commBetweenControlandSatellite: feature flightAndEmbeddedControlSystems.closedNetworkInterface <-> satelliteDataLink_AC;
+			commBetweenControlandGround: feature flightAndEmbeddedControlSystems.closedNetworkInterface <-> aeroDataLink_AC;
+	end aircraftControl.basic;
+
+-- 
+-- Components for control of the aircraft
+	system flightAndEmbeddedControlSystems
+		features
+			closedNetworkInterface: in out data port;
+			closedNetworkAccess: requires bus access AircraftAirframe_pkg::closedNetwork;
+			pilotInterface: in out data port;
+	end flightAndEmbeddedControlSystems;
+
+	system cabinServicesSystem
+		features
+			networkInterfaceClosed: in out data port;
+			inflightEntertainmentInterface: in out data port;
+			ClosednetworkAccess: requires bus access AircraftAirframe_pkg::closedNetwork;
+	end cabinServicesSystem;
+
+--	devices
+	device pilot
+		features
+			pilotInterface: in out data port;
+	end pilot;
+end AircraftControl_pkg;

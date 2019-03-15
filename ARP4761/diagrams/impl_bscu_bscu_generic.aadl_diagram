@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="ASCII"?>
+<diagram:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:diagram="http://osate.org/diagram" formatVersion="3">
+  <element id="0" manual="true" autoContentsFilter="allow_fundamental">
+    <element id="1" autoContentsFilter="allow_fundamental">
+      <bo>
+        <seg>realization</seg>
+      </bo>
+    </element>
+    <element id="11" manual="true" autoContentsFilter="allow_type">
+      <element id="28" autoContentsFilter="allow_fundamental" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>input1</seg>
+        </bo>
+        <position y="50.0"/>
+      </element>
+      <element id="29" autoContentsFilter="allow_fundamental" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>input2</seg>
+        </bo>
+        <position y="110.0"/>
+      </element>
+      <element id="30" autoContentsFilter="allow_fundamental" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>result</seg>
+        </bo>
+        <position x="70.0" y="50.0"/>
+      </element>
+      <element id="32" autoContentsFilter="allow_fundamental">
+        <bo>
+          <seg>tag</seg>
+          <seg>sc_type</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>select</seg>
+      </bo>
+      <position x="20.0" y="50.0"/>
+      <size width="123.0" height="170.0"/>
+    </element>
+    <element id="9" manual="true" autoContentsFilter="allow_type">
+      <element id="36" autoContentsFilter="allow_fundamental" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>cmd_brk</seg>
+        </bo>
+        <position y="110.0"/>
+      </element>
+      <element id="35" autoContentsFilter="allow_fundamental" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>cmd_skid</seg>
+        </bo>
+        <position x="264.0" y="50.0"/>
+      </element>
+      <element id="34" autoContentsFilter="allow_fundamental" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>pedal</seg>
+        </bo>
+        <position y="50.0"/>
+      </element>
+      <element id="33" autoContentsFilter="allow_fundamental" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>pwr</seg>
+        </bo>
+        <position y="170.0"/>
+      </element>
+      <element id="37" autoContentsFilter="allow_fundamental" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>valid</seg>
+        </bo>
+        <position x="292.0" y="110.0"/>
+      </element>
+      <element id="47" autoContentsFilter="allow_fundamental">
+        <bo>
+          <seg>tag</seg>
+          <seg>sc_type</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>sub1</seg>
+      </bo>
+      <position x="370.0" y="50.0"/>
+      <size width="341.0" height="441.0"/>
+    </element>
+    <element id="10" manual="true" autoContentsFilter="allow_type">
+      <element id="51" autoContentsFilter="allow_fundamental" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>cmd_brk</seg>
+        </bo>
+        <position y="110.0"/>
+      </element>
+      <element id="50" autoContentsFilter="allow_fundamental" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>cmd_skid</seg>
+        </bo>
+        <position x="104.0" y="50.0"/>
+      </element>
+      <element id="49" autoContentsFilter="allow_fundamental" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>pedal</seg>
+        </bo>
+        <position y="50.0"/>
+      </element>
+      <element id="48" autoContentsFilter="allow_fundamental" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>pwr</seg>
+        </bo>
+        <position y="170.0"/>
+      </element>
+      <element id="52" autoContentsFilter="allow_fundamental" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>valid</seg>
+        </bo>
+        <position x="132.0" y="110.0"/>
+      </element>
+      <element id="62" autoContentsFilter="allow_fundamental">
+        <bo>
+          <seg>tag</seg>
+          <seg>sc_type</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>sub2</seg>
+      </bo>
+      <position x="163.0" y="50.0"/>
+      <size width="181.0" height="230.0"/>
+    </element>
+    <bo>
+      <seg>classifier</seg>
+      <seg>bscu.generic</seg>
+    </bo>
+    <position x="20.0"/>
+    <size width="711.0" height="541.0"/>
+  </element>
+  <config>
+    <enabledAadlProperties/>
+    <context>
+      <seg>classifier</seg>
+      <seg>impl::bscu::bscu.generic</seg>
+    </context>
+  </config>
+</diagram:Diagram>

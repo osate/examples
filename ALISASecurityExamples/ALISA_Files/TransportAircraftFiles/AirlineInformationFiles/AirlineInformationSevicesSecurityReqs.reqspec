@@ -1,0 +1,15 @@
+// Copyright 2018 Carnegie Mellon University. See Notice.txt
+// Distribution Statement A: Approved for Public Release; Distribution is Unlimited.
+//
+system requirements AISSecurityReqs for AirlineInformationServices_pkg::airlineInformationServices
+[
+	requirement securityAccessReq1:  "Access to airline information services shall be permitted only by authorized personnel" [
+	]
+	
+	requirement securityAccessReq2: "Both authentication and authorization capabilities shall be employed to ensure authorized access."[
+	]
+	
+	requirement securityAccessReq3: "A two-factor authentication capability shall be provided."[
+	]
+	
+]

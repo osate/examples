@@ -1,0 +1,81 @@
+--
+-- Copyright 2018 Carnegie Mellon University. See Notice.txt
+-- [Distribution Statement A] Approved for public release and unlimited distribution.
+--	This is a generic airtransport architecture modeled after the systems presented in
+--  �Future E-Enabled Aircraft Communications and Security: The Next 20 Years and Beyond� 
+--  Krishna Sampigethaya, Radha Poovendran,  Sudhakar Shetty, Terry Davis,  and Chuck Royalty
+--  Proceedings of the IEEE | Vol. 99, No. 11, November 2011, pgs. 2040-2055.
+-- This is a composite model of a transport aircraft based on a three security domain architecture
+-- consisting of an Aircraft Control Domain (ACD), Airline Information Services (AIS) domain, 
+-- and a Passenger Information and Entertainment Services (PIES) domain.
+--
+package TransportAircraft_Generic
+public
+	with AircraftControl_pkg, AirlineInformationServices_pkg;
+
+	with PassengerInfoEntertainmentServices_pkg, AircraftAirframe_pkg;
+
+	with OperationalEnvironment_pkg;
+
+	system transportAircraft
+		features
+			-- information flow
+			aeroDataLink_AC: in out event data port;
+			satelliteDataLink_AC: in out event data port;
+			satelliteDataLink_AIS: in out event data port;
+			wirelessAccessPoint_AIS: in out event data port;
+			cellularDataLink_AIS: in out event data port;
+
+			-- access to external communication links
+			aeroDataLinkAccess: requires bus access OperationalEnvironment_pkg::aeroDataLinkbus;
+			satelliteDataLinkAccess: requires bus access OperationalEnvironment_pkg::stellitebus;
+			ExternalWirelessAccess: requires bus access OperationalEnvironment_pkg::externalWirelessbus;
+			CellularDataLinkAccess: requires bus access OperationalEnvironment_pkg::Cellular;
+	end transportAircraft;
+
+	system implementation transportAircraft.generic
+		subcomponents
+			aircraft_control_systems: system AircraftControl_pkg::aircraftControl;
+			airline_information_services: system AirlineInformationServices_pkg::AirlineInformationServices;
+			passenger_info_entertainment_services: system PassengerInfoEntertainmentServices_pkg::passengerInfoEntertainmentServices;
+			airframe: system airframe.basic;
+		connections
+			-- bus access
+			closedNetworkConnWithAirframe: bus access aircraft_control_systems.closedNetworkAccess <-> airframe.closedNetworkAccess;
+			aircraftDataNetworkConn: bus access airframe.aircraftDataNetworkAccess <-> passenger_info_entertainment_services.aircraftDataNetworkInterface;
+			closedNetworkConnACWithAIS: bus access aircraft_control_systems.closedNetworkAccess <-> airline_information_services.closedNetworkAccess;
+			satelliteDataLinkConnWithAirframe: bus access satelliteDataLinkAccess <-> airframe.satelliteDataLinkAccess;
+			aircraftDataNetworkConnACwithAIS: bus access airframe.aircraftDataNetworkAccess <-> aircraft_control_systems.aircraftDataNetworkInterface;
+			aeroDataLinkConn: bus access aircraft_control_systems.aeroDataLinkInterface <-> aeroDataLinkAccess;
+			externalCellularConn: bus access CellularDataLinkAccess <-> airline_information_services.externalCellularAccess;
+			externalWirelessConn: bus access ExternalWirelessAccess <-> airline_information_services.externalWirlessAccess;
+
+			-- data communication
+			satelliteDataLinkCommWithAC: port aircraft_control_systems.satelliteDataLink_AC <-> satelliteDataLink_AC;
+			aeroDataLink_ACComm: port aircraft_control_systems.aeroDataLink_AC <-> aeroDataLink_AC;
+			passengerInfoComm: port aircraft_control_systems.inflightEntertainmentInterface_AC <-> passenger_info_entertainment_services.inflightEntertainmentInterface_PIES;
+			transportAircraft_generic_new_connection: port airline_information_services.inflightEntertainmentInterface_AIS <-> aircraft_control_systems.inflightEntertainmentInterface_AC;
+			transportAircraft_generic_new_connection2: bus access airframe.internalWirelessNetworkAccess <-> airline_information_services.internalWirelessAccess;
+			transportAircraft_generic_new_connection3: bus access airframe.internalWirelessNetworkAccess <-> passenger_info_entertainment_services.internalWirelessAccess;
+	end transportAircraft.generic;
+
+	system airframe
+		features
+			-- access features
+			internalWirelessNetworkAccess: provides bus access AircraftAirframe_pkg::internalWirelessNetwork;
+			satelliteDataLinkAccess: requires bus access OperationalEnvironment_pkg::stellitebus;
+			closedNetworkAccess: requires bus access AircraftAirframe_pkg::closedNetwork;
+			aircraftDataNetworkAccess: provides bus access AircraftAirframe_pkg::aircraftDataNetwork;
+
+			-- data 
+			closedNetworkInterface: in out data port;
+			internalwirelessInterface: in out event data port;
+	end airframe;
+
+	system implementation airframe.basic
+		subcomponents
+			satelliteAntenna: device AircraftAirframe_pkg::satelliteAntenna;
+			internalWirelessNetwork: bus AircraftAirframe_pkg::internalWirelessnetwork;
+	end airframe.basic;
+--
+end TransportAircraft_Generic;
