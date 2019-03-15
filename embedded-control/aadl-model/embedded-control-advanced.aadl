@@ -290,11 +290,11 @@ annex EMV2 {**
 		
 		--  The following values are used rather for the RDB
 		--  They are not used by PRISM itself 
-		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.00003 ; Distribution => Fixed;] applies to s1.Failed;
-		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.00003 ; Distribution => Fixed;] applies to s2.Failed;
-		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.00003 ; Distribution => Fixed;] applies to s3.Failed;
-		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.0001 ; Distribution => Fixed;] applies to a1.Failed;
-		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.0001 ; Distribution => Fixed;] applies to a2.Failed;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.00003 ; Distribution => Fixed;] applies to ^s1@Failed;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.00003 ; Distribution => Fixed;] applies to ^s2@Failed;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.00003 ; Distribution => Fixed;] applies to ^s3@Failed;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.0001 ; Distribution => Fixed;] applies to ^a1@Failed;
+		EMV2::OccurrenceDistribution => [ ProbabilityValue => 0.0001 ; Distribution => Fixed;] applies to ^a2@Failed;
 
 **};
 end main.i;
