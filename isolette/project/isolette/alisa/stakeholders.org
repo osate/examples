@@ -1,0 +1,6 @@
+organization hospital
+stakeholder Infant [ description "The infant that is inside the Isolette" ]
+stakeholder DesignTeam [description "The team designing the Isolette."]
+stakeholder SafetyAssessmentTeam [description "The team assessing the safety of the Isolette."]
+stakeholder Nurse [description "The Nurse that operates the Isolette."]
+stakeholder MarketingTeam [description "The organization in charge of marketing the Isolette."]

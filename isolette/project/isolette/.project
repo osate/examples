@@ -3,7 +3,7 @@
 	<name>isolette</name>
 	<comment></comment>
 	<projects>
-		<project>Plugin_Resources</project>
+		<project>AlisaPredefined</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

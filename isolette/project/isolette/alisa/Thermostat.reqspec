@@ -1,0 +1,80 @@
+system requirements ThermostatReqs for Isolette::thermostat_th use constants IC [
+	requirement REQ_TH_1 for heat_control [
+		description "The Thermostat shall set the value of the Heat Control."
+		rationale "A primary function of the Thermostat is to turn the Heat Control on and off to maintain the Current Temperature in the Isolette within the Desired Temperature Range, which is required by SR-1."
+		see requirement ThermostatReqs.SR_1
+		// should also be a requirement on the Isolette pointing to the connection between thermostat and heat source
+		// Validation: heat control out port exists with on/off function
+	]
+
+	requirement REQ_TH_2 for regulator_status [
+		description "The Thermostat Function shall set the value of the Regulator Status."
+		rationale "SR-1 requires the Thermostat to provide an independent regulator function. The status of this function is provided to the Operator Interface by the Thermostat. The Operator Interface will use the Regulator Status and the Monitor Status to report the overall status of the Thermostat, which is required by SR-1."
+		see requirement ThermostatReqs.SR_1
+		// Validation: regulator status out port exists with status type. 
+		// Validation: the monitoring function actually sets the status
+		// status as to internal failure?
+	]
+	requirement REQ_TH_3 for current_temperature [
+		description "The Thermostat shall set the value of the Display Temperature."
+		rationale "The Current Temperature is displayed on the Operator Interface to provide the operators with an additional means to confirm the Isolette is maintaining the temperature correctly. This value is provided by the Thermostat to the Operator Interface as the Display Temperature."
+		// should also be a requirement on the Isolette pointing to the connection between thermostat and operator interface
+		// Validation: current temperature out port exists with temp values.
+		// Issue: additional means - in addition to what?
+	]
+	requirement REQ_TH_4 for alarm [ // referred to as alarm control 
+		description "The Thermostat shall set the value of the Alarm Control."
+		rationale "A primary Thermostat Function is to activate the Alarm if the Isolette is unable to maintain the Current Temperature within the Alarm Temperature Range, which is required by SR-2."
+		see requirement ThermostatReqs.SR_2
+		// should also be a requirement on the Isolette pointing to the connection between thermostat and heat source
+		// Validation: heat control out port exists with on/off function
+		// Alarm as temp out of range or bad ranges or internal failure detected in monitoring function. 
+	]
+	requirement REQ_TH_5 for monitor_status [
+		description "The Thermostat shall set the value of the Monitor Status."
+		rationale "SR-2 requires the Thermostat to provide an independent monitor function. The status of this function must be provided to the Operator Interface, which will use it and the status of the regulator function to report the overall status of the thermostat."
+		see requirement ThermostatReqs.SR_2
+		// Validation: monitor status out port exists with status type. 
+		// Validation: the monitoring function actually sets the status.
+		// status as to internal failure?
+		// Operator Interface is responsible for showing Thermostat status as combination of regulator and monitor status
+	]
+	
+		
+	requirement SR_1  [  // for regulate_temperature requirement on implementation
+		description "The Isolette shall include an independent regulator function that maintains the Current Temperature inside the Isolette within the Desired Temperature Range. Allowed probability of failure: < " ThermostatFailureRate " per hour"
+		rationale "The Desired Temperature Range will be set by the Nurse to the ideal range based on the Infant’s weight and health. The regulator should maintain the Current Temperature within this range under normal operation."
+		decomposes IsoletteReqs.REQ_H1
+		// validation: exists subcomponent of type Isolette::regulate_temperature_rt
+		// failure probability: physical failure vs. failing to maintain within desired range functionally in control logic. Assumptions about how close to boundary to turn off/on. greatervs. greater equal (diff of one degree)
+	]
+	
+	requirement SR_2  [  // for Isolette::monitor_temperature_mt
+		description "The Isolette shall include an independent monitor function that activates an Alarm within a maximum of 5 seconds whenever
+- the Current Temperature falls below or rises above the Alarm Temperature Range. 
+- the Current Temperature or the Alarm Temperature Range is flagged as invalid.
+- an internal failure has been detected in the monitor function."
+"Allowed probability of monitor failure: < " ThermostatMonitorFailureRate " per hour."
+		rationale "The Alarm Temperature Range will be set by the Nurse based on the Infant’s weight and health. The Infant should be removed from the Isolette within 15 seconds after the Current Temperature falls below or rises above this range. With the normal monitoring provided by the Nurse, this can be accomplished within 10 seconds, leaving 5 seconds for the system to activate the Alarm. Activating the Alarm in less time is desirable. If the Current Temperature or the Alarm Temperature Range provided to the monitor function are flagged as invalid or if an internal failure is detected in the monitor function, the monitor function should not be trusted to perform correctly." 
+		decomposes IsoletteReqs.REQ_H1
+		// validation: exists subcomponent of type Isolette::monitor_temperature_mt
+		// validation: check value. Also check logic for 5 seconds if other assumptions change - speed of nurse.
+		// validation: independence assumption of monitor and regulator
+		// not trusted if bad current temp and alarm range & internal failure. Probability of 10e-5. Is that reasonable as users can type in incorrect range values - or we guarantee correct range values.
+		// should have separate probability for bad input.
+	]
+
+]
+
+system requirements RegulateTempReqs for Isolette::regulate_temperature_rt use constants IC [
+	
+	requirement REQ_RT_1 for heat_control [
+		description "The Regulate Temperature Function shall set the value of the Heat Control."
+		rationale "The primary function of the Regulate Temperature Function is to turn the Heat Control on and off to maintain the Current Temperature in the Isolette within the Desired Temperature Range, as required by SR-1."
+		see requirement ThermostatReqs.SR_2
+		// Validation: input desired range and current temperature; output heat control
+		// behavior validation: logic does it within bounds.
+		// Need to turn off/on before range limit is reached.
+	]
+	
+]

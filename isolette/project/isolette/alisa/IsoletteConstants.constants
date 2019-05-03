@@ -1,0 +1,12 @@
+constants IC [
+	val TempIncreaseRate = #Iso_Properties::TempIncreaseRateValue
+	val TempDecreaseRate = #Iso_Properties::TempDecreaseRateValue
+	
+	val ThermoAccuracy = #Iso_Properties::ThermoAccuracyValue
+	
+	val ThermostatFailureRate = #Iso_Properties::ThermostatFailureRateValue
+	val ThermostatRegulatorFailureRate = #Iso_Properties::ThermostatRegulatorFailureRateValue
+	val ThermostatMonitorFailureRate = #Iso_Properties::TempIncreaseRateValue
+	val InfantExposureHazardRate = #Iso_Properties::InfantExposureHazardRateValue
+	
+]

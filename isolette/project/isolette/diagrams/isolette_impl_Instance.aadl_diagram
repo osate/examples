@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="ASCII"?>
+<diagram:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:diagram="http://osate.org/diagram" formatVersion="7">
+  <element uuid="f49337ec-51b8-4083-8854-0fa77ddacd2c" manual="true">
+    <element uuid="4bdbe988-811d-4b4d-b8b9-87385f20cec5">
+      <element uuid="500d37c3-6bbb-41e9-af8d-6441053dedf2" dockArea="left">
+        <bo>
+          <seg>org.osate.ge.diagrams.instance</seg>
+          <seg>feature_instance</seg>
+          <seg>heat_control</seg>
+        </bo>
+        <position y="10.0"/>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>org.osate.ge.diagrams.instance</seg>
+        <seg>component_instance</seg>
+        <seg>heat_source</seg>
+      </bo>
+      <position x="1170.0" y="238.0"/>
+      <size width="326.0" height="60.0"/>
+      <contentFilters>
+        <filter>features</filter>
+        <filter>connections</filter>
+        <filter>flowSpecifications</filter>
+      </contentFilters>
+    </element>
+    <element uuid="88b70d7f-d788-447d-91f5-19fd2b442667">
+      <element uuid="6e01349e-d803-41a8-b54b-9dcd63a7156c" dockArea="right">
+        <bo>
+          <seg>org.osate.ge.diagrams.instance</seg>
+          <seg>feature_instance</seg>
+          <seg>alarm</seg>
+        </bo>
+        <position x="528.0" y="210.0"/>
+        <contentFilters/>
+      </element>
+      <element uuid="2668a5cc-d0f2-45c0-8acf-2494328658d6" dockArea="right">
+        <bo>
+          <seg>org.osate.ge.diagrams.instance</seg>
+          <seg>feature_instance</seg>
+          <seg>display_temperature</seg>
+        </bo>
+        <position x="431.0" y="160.0"/>
+        <contentFilters/>
+      </element>
+      <element uuid="ad296e55-38a7-4d51-9fe0-f0353c5b3f13" dockArea="right">
+        <bo>
+          <seg>org.osate.ge.diagrams.instance</seg>
+          <seg>feature_instance</seg>
+          <seg>lower_alarm_temperature</seg>
+        </bo>
+        <position x="392.0" y="360.0"/>
+        <contentFilters/>
+      </element>
+      <element uuid="92387cc8-93ad-49b5-9a3d-951bf5499c94" dockArea="right">
+        <bo>
+          <seg>org.osate.ge.diagrams.instance</seg>
+          <seg>feature_instance</seg>
+          <seg>lower_desired_temperature</seg>
+        </bo>
+        <position x="380.0" y="10.0"/>
+        <contentFilters/>
+      </element>
+      <element uuid="02378ef4-e58c-4f16-971f-44432b2086bc" dockArea="right">
+        <bo>
+          <seg>org.osate.ge.diagrams.instance</seg>
+          <seg>feature_instance</seg>
+          <seg>monitor_status</seg>
+        </bo>
+        <position x="473.0" y="110.0"/>
+        <contentFilters/>
+      </element>
+      <element uuid="5f6f75fc-cd9e-4d71-9796-9da8930abe43" dockArea="right">
+        <bo>
+          <seg>org.osate.ge.diagrams.instance</seg>
+          <seg>feature_instance</seg>
+          <seg>regulator_status</seg>
+        </bo>
+        <position x="463.0" y="60.0"/>
+        <contentFilters/>
+      </element>
+      <element uuid="29b05a4d-27d7-4144-9871-3b5039c3899d" dockArea="right">
+        <bo>
+          <seg>org.osate.ge.diagrams.instance</seg>
+          <seg>feature_instance</seg>
+          <seg>upper_alarm_temperature</seg>
+        </bo>
+        <position x="391.0" y="310.0"/>
+        <contentFilters/>
+      </element>
+      <element uuid="fea13995-6fac-42de-928b-a09d19748aa7" dockArea="right">
+        <bo>
+          <seg>org.osate.ge.diagrams.instance</seg>
+          <seg>feature_instance</seg>
+          <seg>upper_desired_temperature</seg>
+        </bo>
+        <position x="379.0" y="260.0"/>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>org.osate.ge.diagrams.instance</seg>
+        <seg>component_instance</seg>
+        <seg>operator_interface</seg>
+      </bo>
+      <position x="12.0" y="38.0"/>
+      <size width="583.0" height="410.0"/>
+      <contentFilters>
+        <filter>features</filter>
+        <filter>flowSpecifications</filter>
+        <filter>connections</filter>
+        <filter>subcomponents</filter>
+      </contentFilters>
+    </element>
+    <element uuid="5a680ec9-8f1e-429a-857f-4936ad9d349f">
+      <element uuid="ef8b4a85-9a6d-4c0e-a298-98d1e00a5fcb" dockArea="right">
+        <bo>
+          <seg>org.osate.ge.diagrams.instance</seg>
+          <seg>feature_instance</seg>
+          <seg>current_temperature</seg>
+        </bo>
+        <position x="336.0" y="10.0"/>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>org.osate.ge.diagrams.instance</seg>
+        <seg>component_instance</seg>
+        <seg>temperature_sensor</seg>
+      </bo>
+      <position x="107.0" y="468.0"/>
+      <size width="488.0" height="60.0"/>
+      <contentFilters>
+        <filter>features</filter>
+        <filter>connections</filter>
+        <filter>flowSpecifications</filter>
+      </contentFilters>
+    </element>
+    <element uuid="8ae61d7c-9a76-4092-86cc-519529352a8c">
+      <element uuid="22b2dbc2-613e-4a7e-9ccc-3676f777ee90" dockArea="left">
+        <bo>
+          <seg>org.osate.ge.diagrams.instance</seg>
+          <seg>feature_instance</seg>
+          <seg>alarm</seg>
+        </bo>
+        <position y="210.0"/>
+        <contentFilters/>
+      </element>
+      <element uuid="2aa5e619-2974-454a-8810-63560d18798e" dockArea="left">
+        <bo>
+          <seg>org.osate.ge.diagrams.instance</seg>
+          <seg>feature_instance</seg>
+          <seg>current_temperature</seg>
+        </bo>
+        <position y="410.0"/>
+        <contentFilters/>
+      </element>
+      <element uuid="a2141577-7637-4f55-9c69-84f8b1cb2127" dockArea="left">
+        <bo>
+          <seg>org.osate.ge.diagrams.instance</seg>
+          <seg>feature_instance</seg>
+          <seg>display_temperature</seg>
+        </bo>
+        <position y="160.0"/>
+        <contentFilters/>
+      </element>
+      <element uuid="52d92dc7-a83e-4096-851f-eb57a896ee11" dockArea="right">
+        <bo>
+          <seg>org.osate.ge.diagrams.instance</seg>
+          <seg>feature_instance</seg>
+          <seg>heat_control</seg>
+        </bo>
+        <position x="438.0" y="210.0"/>
+        <contentFilters/>
+      </element>
+      <element uuid="5e3a2aca-072a-4ce8-acac-35504f9ee379" dockArea="left">
+        <bo>
+          <seg>org.osate.ge.diagrams.instance</seg>
+          <seg>feature_instance</seg>
+          <seg>lower_alarm_temperature</seg>
+        </bo>
+        <position y="360.0"/>
+        <contentFilters/>
+      </element>
+      <element uuid="71ce1503-0439-41a7-921d-84d2da32f649" dockArea="left">
+        <bo>
+          <seg>org.osate.ge.diagrams.instance</seg>
+          <seg>feature_instance</seg>
+          <seg>lower_desired_temperature</seg>
+        </bo>
+        <position y="10.0"/>
+        <contentFilters/>
+      </element>
+      <element uuid="eeade2e7-eed9-4e36-bae6-cdfe9f4d4ace" dockArea="left">
+        <bo>
+          <seg>org.osate.ge.diagrams.instance</seg>
+          <seg>feature_instance</seg>
+          <seg>monitor_status</seg>
+        </bo>
+        <position y="110.0"/>
+        <contentFilters/>
+      </element>
+      <element uuid="d318a5af-dd71-4e98-ad6b-d0869dad447e" dockArea="left">
+        <bo>
+          <seg>org.osate.ge.diagrams.instance</seg>
+          <seg>feature_instance</seg>
+          <seg>regulator_status</seg>
+        </bo>
+        <position y="60.0"/>
+        <contentFilters/>
+      </element>
+      <element uuid="f3e32f68-f3c4-44ea-9e10-c9640f8519ad" dockArea="left">
+        <bo>
+          <seg>org.osate.ge.diagrams.instance</seg>
+          <seg>feature_instance</seg>
+          <seg>upper_alarm_temperature</seg>
+        </bo>
+        <position y="310.0"/>
+        <contentFilters/>
+      </element>
+      <element uuid="b3b1c689-6201-42fd-82f6-830261d859c6" dockArea="left">
+        <bo>
+          <seg>org.osate.ge.diagrams.instance</seg>
+          <seg>feature_instance</seg>
+          <seg>upper_desired_temperature</seg>
+        </bo>
+        <position y="260.0"/>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>org.osate.ge.diagrams.instance</seg>
+        <seg>component_instance</seg>
+        <seg>thermostat</seg>
+      </bo>
+      <position x="615.0" y="38.0"/>
+      <size width="535.0" height="460.0"/>
+      <contentFilters>
+        <filter>features</filter>
+        <filter>connections</filter>
+        <filter>flowSpecifications</filter>
+      </contentFilters>
+    </element>
+    <element uuid="52a81367-7fca-4f6d-82cd-3f2773f59171">
+      <bo>
+        <seg>org.osate.ge.diagrams.instance</seg>
+        <seg>connection_reference</seg>
+        <seg>al : isolette_impl_instance.thermostat.alarm -> isolette_impl_instance.operator_interface.alarm</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <element uuid="55403c65-e7ca-40ea-b41e-72cfcc5f4f0a">
+      <bo>
+        <seg>org.osate.ge.diagrams.instance</seg>
+        <seg>connection_reference</seg>
+        <seg>ct : isolette_impl_instance.temperature_sensor.current_temperature -> isolette_impl_instance.thermostat.current_temperature</seg>
+      </bo>
+      <bendpoints>
+        <point x="617.0" y="522.0"/>
+        <point x="617.0" y="492.0"/>
+      </bendpoints>
+      <contentFilters/>
+    </element>
+    <element uuid="9e075c70-19ba-4192-a9b4-c5563fda28d3">
+      <bo>
+        <seg>org.osate.ge.diagrams.instance</seg>
+        <seg>connection_reference</seg>
+        <seg>dt : isolette_impl_instance.thermostat.display_temperature -> isolette_impl_instance.operator_interface.display_temperature</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <element uuid="cd5eacea-d18f-4074-9157-d60490f6f418">
+      <bo>
+        <seg>org.osate.ge.diagrams.instance</seg>
+        <seg>connection_reference</seg>
+        <seg>hc : isolette_impl_instance.thermostat.heat_control -> isolette_impl_instance.heat_source.heat_control</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <element uuid="52b295a0-3eef-4d40-ad6e-8a5fc9d83886">
+      <bo>
+        <seg>org.osate.ge.diagrams.instance</seg>
+        <seg>connection_reference</seg>
+        <seg>lat : isolette_impl_instance.operator_interface.lower_alarm_temperature -> isolette_impl_instance.thermostat.lower_alarm_temperature</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <element uuid="8a030894-29c9-4553-afdd-04bdc2c08c42">
+      <bo>
+        <seg>org.osate.ge.diagrams.instance</seg>
+        <seg>connection_reference</seg>
+        <seg>ldt : isolette_impl_instance.operator_interface.lower_desired_temperature -> isolette_impl_instance.thermostat.lower_desired_temperature</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <element uuid="0a947240-f9f1-40d4-b42e-35518b3c0824">
+      <bo>
+        <seg>org.osate.ge.diagrams.instance</seg>
+        <seg>connection_reference</seg>
+        <seg>ms : isolette_impl_instance.thermostat.monitor_status -> isolette_impl_instance.operator_interface.monitor_status</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <element uuid="98d90e1c-e45c-4c85-a36b-14526171ab05">
+      <bo>
+        <seg>org.osate.ge.diagrams.instance</seg>
+        <seg>connection_reference</seg>
+        <seg>rs : isolette_impl_instance.thermostat.regulator_status -> isolette_impl_instance.operator_interface.regulator_status</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <element uuid="3f7a75bc-9fef-4e9a-9d37-b695e787e827">
+      <bo>
+        <seg>org.osate.ge.diagrams.instance</seg>
+        <seg>connection_reference</seg>
+        <seg>uat : isolette_impl_instance.operator_interface.upper_alarm_temperature -> isolette_impl_instance.thermostat.upper_alarm_temperature</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <element uuid="a4a06fda-aefd-4baf-b47a-2643bf5b11ae">
+      <bo>
+        <seg>org.osate.ge.diagrams.instance</seg>
+        <seg>connection_reference</seg>
+        <seg>udt : isolette_impl_instance.operator_interface.upper_desired_temperature -> isolette_impl_instance.thermostat.upper_desired_temperature</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <bo>
+      <seg>org.osate.ge.diagrams.instance</seg>
+      <seg>system_instance</seg>
+      <seg>/isolette/instances/isolette_isolette_impl_instance.aaxl2</seg>
+    </bo>
+    <position x="12.0" y="12.0"/>
+    <size width="1508.0" height="540.0"/>
+    <contentFilters>
+      <filter>features</filter>
+      <filter>connections</filter>
+      <filter>flowSpecifications</filter>
+      <filter>subcomponents</filter>
+    </contentFilters>
+  </element>
+  <config type="structure" connectionPrimaryLabelsVisible="false">
+    <enabledAadlProperties/>
+    <context>
+      <seg>org.osate.ge.diagrams.instance</seg>
+      <seg>system_instance</seg>
+      <seg>/isolette/instances/isolette_isolette_impl_instance.aaxl2</seg>
+    </context>
+  </config>
+</diagram:Diagram>

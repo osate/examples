@@ -1,0 +1,8 @@
+stakeholder goals IsoletteGoals for Isolette::thermostat_th
+[
+	goal TH_AG1 [ // actor goal
+		description "Table A-2: Maintain current temperature in the Isolette within desired temperature range"
+		stakeholder hospital.DesignTeam hospital.SafetyAssessmentTeam
+	]
+
+]

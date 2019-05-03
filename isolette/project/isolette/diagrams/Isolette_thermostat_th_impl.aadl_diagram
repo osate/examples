@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="ASCII"?>
+<diagram:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:diagram="http://osate.org/diagram" formatVersion="7">
+  <element uuid="2b4a6ff2-3663-4931-8f0e-bbf4fa405fc9" manual="true">
+    <element uuid="0f4614ed-a0f4-4e72-91ef-4f292b0ea0a2">
+      <element uuid="ba6c96ea-930e-40ef-b17e-8ababcf8391c">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>ta</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <element uuid="9153b572-ea6e-4512-b0e1-90192b4a1b3e">
+      <element uuid="be2db9d3-a716-4e71-a85a-31ea03794eff">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>tctm</seg>
+      </bo>
+      <bendpoints>
+        <point x="238.0" y="192.0"/>
+        <point x="238.0" y="272.0"/>
+      </bendpoints>
+      <contentFilters/>
+    </element>
+    <element uuid="e494b1e8-45ad-4987-80d6-d37154f3e720">
+      <element uuid="c83f0d65-b78c-4810-9f03-b30b822aaa65">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>tctr</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <element uuid="0eb357d4-811a-4df7-ad6e-3137f06ef692">
+      <element uuid="152e62cd-52fe-402a-9d80-724c88c63cb9">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>tdt</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <element uuid="e4ffac03-eabf-4db9-8a77-09d182cd43fb">
+      <element uuid="cc8e6d40-19ec-4981-880a-6bbee95ea973">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>thc</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <element uuid="e2724c88-7c7d-46f4-a0a3-d88bc4b3d23b">
+      <element uuid="16ef3eef-b5d6-42de-a52c-bc4ea464a2a6">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>tlat</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <element uuid="16b147da-1aec-47fe-805f-ea3c8d727249">
+      <element uuid="ee66d608-dc7e-442f-acc4-6ecd0ef48dfd">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>tldt</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <element uuid="23ef108a-7b20-47bd-b43d-1728a750336a">
+      <element uuid="4b0acd28-b30e-49e1-afa7-fac813a1dfc5">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>tms</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <element uuid="3118ccdc-4b7c-4824-b2d9-934ae007dd51">
+      <element uuid="54e08b29-a989-40ce-905c-45deb8a7c4bf">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>trs</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <element uuid="373f4923-765f-4181-91bc-40336d8aaca1">
+      <element uuid="97ef82e9-506a-48de-8ab2-337341f381f1">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>tuat</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <element uuid="8eee833a-96e4-4131-a8f5-b53bfa212a77">
+      <element uuid="15081f67-4c09-4d3a-bb0b-f17f5f0ce335">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>tudt</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <element uuid="a6a97b7e-cb5e-4070-9bbd-0549b003e469" dockArea="right">
+      <bo>
+        <seg>feature</seg>
+        <seg>alarm</seg>
+      </bo>
+      <position x="957.0" y="345.0"/>
+      <contentFilters/>
+    </element>
+    <element uuid="8ccdc3fc-1550-455b-8af2-5fb116fb2a84" dockArea="left">
+      <bo>
+        <seg>feature</seg>
+        <seg>current_temperature</seg>
+      </bo>
+      <position y="148.0"/>
+      <contentFilters/>
+    </element>
+    <element uuid="e51f0bf5-5ad6-414a-aad9-bd263714edaa" dockArea="right">
+      <bo>
+        <seg>feature</seg>
+        <seg>display_temperature</seg>
+      </bo>
+      <position x="860.0" y="98.0"/>
+      <contentFilters/>
+    </element>
+    <element uuid="0b73c266-9597-4efd-bd9a-84bdc71890cc" dockArea="right">
+      <bo>
+        <seg>feature</seg>
+        <seg>heat_control</seg>
+      </bo>
+      <position x="915.0" y="148.0"/>
+      <contentFilters/>
+    </element>
+    <element uuid="c0824bb5-54c0-4c8f-89f1-0ab4371980b1" dockArea="left">
+      <bo>
+        <seg>feature</seg>
+        <seg>lower_alarm_temperature</seg>
+      </bo>
+      <position y="328.0"/>
+      <contentFilters/>
+    </element>
+    <element uuid="0cff9d25-3cc9-4e51-8b0b-10595d885c08" dockArea="left">
+      <bo>
+        <seg>feature</seg>
+        <seg>lower_desired_temperature</seg>
+      </bo>
+      <position y="98.0"/>
+      <contentFilters/>
+    </element>
+    <element uuid="08071271-0e6e-47b0-926f-a82cf7ac9582" dockArea="right">
+      <bo>
+        <seg>feature</seg>
+        <seg>monitor_status</seg>
+      </bo>
+      <position x="902.0" y="261.0"/>
+      <contentFilters/>
+    </element>
+    <element uuid="64b2dedb-7756-4e89-8519-8a47d69f433e" dockArea="right">
+      <bo>
+        <seg>feature</seg>
+        <seg>regulator_status</seg>
+      </bo>
+      <position x="892.0" y="48.0"/>
+      <contentFilters/>
+    </element>
+    <element uuid="b99cfb7e-7c65-4594-9afc-aea8405b9a7b" dockArea="left">
+      <bo>
+        <seg>feature</seg>
+        <seg>upper_alarm_temperature</seg>
+      </bo>
+      <position y="278.0"/>
+      <contentFilters/>
+    </element>
+    <element uuid="1c45edc2-42fc-4645-9de5-81da40400d8a" dockArea="left">
+      <bo>
+        <seg>feature</seg>
+        <seg>upper_desired_temperature</seg>
+      </bo>
+      <position y="48.0"/>
+      <contentFilters/>
+    </element>
+    <element uuid="a81a8cef-944e-4812-a526-24732fd898c1">
+      <element uuid="7948a081-3604-453c-9b73-b9c38d8d90ed" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>internal_failure</seg>
+        </bo>
+        <position y="10.0"/>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>detect_regulator_fail</seg>
+      </bo>
+      <position x="216.0" y="448.0"/>
+      <size width="430.0" height="60.0"/>
+      <contentFilters>
+        <filter>features</filter>
+        <filter>internalFeatures</filter>
+        <filter>processorFeatures</filter>
+        <filter>connections</filter>
+        <filter>flowSpecifications</filter>
+      </contentFilters>
+    </element>
+    <element uuid="a3fc7b76-f8ab-4c5b-8ddb-6c6137b2f7c7">
+      <element uuid="aa5fe79e-5bd1-4841-9b21-e9b757319ebc" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>alarm</seg>
+        </bo>
+        <position x="528.0" y="127.0"/>
+        <contentFilters/>
+      </element>
+      <element uuid="00f1dc90-bb2c-4706-a2e4-03f319c96b7b" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>current_temperature</seg>
+        </bo>
+        <position y="10.0"/>
+        <contentFilters/>
+      </element>
+      <element uuid="903074a2-b47f-4e60-b36a-769c95a30a9e" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>lower_alarm_temperature</seg>
+        </bo>
+        <position y="110.0"/>
+        <contentFilters/>
+      </element>
+      <element uuid="bdc0a8fd-eae6-41b7-8f34-59c29b94b731" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>monitor_failure</seg>
+        </bo>
+        <position y="160.0"/>
+        <contentFilters/>
+      </element>
+      <element uuid="686f8463-1636-4195-a17f-bab043b334cc" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>monitor_status</seg>
+        </bo>
+        <position x="473.0" y="43.0"/>
+        <contentFilters/>
+      </element>
+      <element uuid="477ce694-feef-44be-bf03-ac30c94042ef" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>upper_alarm_temperature</seg>
+        </bo>
+        <position y="60.0"/>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>monitor_temperature</seg>
+      </bo>
+      <position x="248.0" y="218.0"/>
+      <size width="583.0" height="210.0"/>
+      <contentFilters>
+        <filter>features</filter>
+        <filter>internalFeatures</filter>
+        <filter>processorFeatures</filter>
+        <filter>connections</filter>
+        <filter>flowSpecifications</filter>
+      </contentFilters>
+    </element>
+    <element uuid="275a9d80-8ac7-4860-b374-144db5267359">
+      <element uuid="d7daa95e-d862-473f-b1a9-d1ed3230a902" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>current_temperature</seg>
+        </bo>
+        <position y="110.0"/>
+        <contentFilters/>
+      </element>
+      <element uuid="e7bfa694-92dc-447f-829a-6bc6940d6193" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>displayed_temp</seg>
+        </bo>
+        <position x="494.0" y="60.0"/>
+        <contentFilters/>
+      </element>
+      <element uuid="e4f18dfa-4cca-46bc-a550-52a87c7c1234" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>heat_control</seg>
+        </bo>
+        <position x="515.0" y="110.0"/>
+        <contentFilters/>
+      </element>
+      <element uuid="1e6af405-db29-43d4-9108-eb210d71bde7" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>lower_desired_temperature</seg>
+        </bo>
+        <position y="60.0"/>
+        <contentFilters/>
+      </element>
+      <element uuid="8b203875-551b-4012-8d9d-0f359b2d6784" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>regulator_status</seg>
+        </bo>
+        <position x="492.0" y="10.0"/>
+        <contentFilters/>
+      </element>
+      <element uuid="ab6aff03-e3fe-40c3-9d20-74cd0100a12d" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>upper_desired_temperature</seg>
+        </bo>
+        <position y="10.0"/>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>regulate_temperature</seg>
+      </bo>
+      <position x="236.0" y="38.0"/>
+      <size width="612.0" height="160.0"/>
+      <contentFilters>
+        <filter>features</filter>
+        <filter>internalFeatures</filter>
+        <filter>processorFeatures</filter>
+        <filter>connections</filter>
+        <filter>flowSpecifications</filter>
+      </contentFilters>
+    </element>
+    <bo>
+      <seg>classifier</seg>
+      <seg>thermostat_th.impl</seg>
+    </bo>
+    <position x="12.0" y="12.0"/>
+    <size width="1012.0" height="520.0"/>
+    <contentFilters>
+      <filter>features</filter>
+      <filter>internalFeatures</filter>
+      <filter>processorFeatures</filter>
+      <filter>connections</filter>
+      <filter>flowSpecifications</filter>
+      <filter>subcomponents</filter>
+    </contentFilters>
+  </element>
+  <config type="structure" connectionPrimaryLabelsVisible="false">
+    <enabledAadlProperties/>
+    <context>
+      <seg>classifier</seg>
+      <seg>isolette::thermostat_th.impl</seg>
+    </context>
+  </config>
+</diagram:Diagram>

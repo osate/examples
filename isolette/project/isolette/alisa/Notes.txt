@@ -1,0 +1,45 @@
+A 1.2 System Goals expressed as stakeholder goals.
+
+A.2 Operational Concepts
+
+Nurse as actor interacts with Isolette via Thermostat interface. We do not explicitly model the interaction as connection from nurse. 
+We also do not explicitly expose the thermostat interface as Isolette interface.
+
+Use Cases as Goals with indication of related system goals (Gx)
+
+How to express precondition, post conditions, and use case steps.
+
+A 2.1 use case:
+turn on thermostat via modes at the Isolette level, or via on/off modes inside the thermostat.
+
+Use of Alisa constants for values that are used in several reqspec groupings. 
+We want to validate that any property has the respective value of val.
+
+There are also Property constants. We cannot use property constants in description strings, only vals.
+
+Environmental Assumptions: Could be done a stakeholder goals
+the sections include tables showing monitored and controlled variables. These become incoming and outgoing features/ports on the respective component.
+
+
+Issue: FAA HB does temperature in integer, while model spec is in real. Issue: internal representation vs. operator interface values.
+
+There is also a valid/invalid bit in the alarm and desired temperature value as well. invalid if inconsistent ranges. Passed on to Thermostat. Thermostat monitor then raises alarm.
+Unclear who is responsible for ensuring correct desired and alarm ranges (OI or TH). I would not allow invalid values to be set in thermostat.
+
+
+A 4 Safety Requirements
+As stakeholder goals
+
+SR-1: no property value for 10e-5
+
+SR-2: not trusted if bad OI desired and alarm range & internal failure. Probability of 10e-5.
+
+Thermostat system function:
+
+regulator status and monitor status: how actually sets them since they reflect that they failed.
+
+Issues: current temperature only via thermostat, no direct reporting from thermo sensor to OI.
+
+Figure A-2: reflected in thermostat implementation.
+AADL model has detect_regulator_fail device that is not connected to anything.
+Monitor_Temp needs to do more than monitor current temp within specified range. Also bad input and internal failure of regulator (and monitor?)

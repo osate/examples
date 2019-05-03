@@ -1,0 +1,34 @@
+system requirements IsoletteReqs for Isolette::isolette use constants IC [
+	
+	requirement REQ_IS_1 [
+		description "Current temperature within desired range with +/- 2 deg F tolerance"
+		see goal IsoletteGoals.G1_IS_Functional
+	]
+	
+	requirement REQ_IS_2 [
+		// parameterized limit value. used in text and in predicate
+		description "Current temperature increases no more than " TempIncreaseRate " deg F per minute when heat source is on." 
+        // predicate ensures that the limit value is corectly reflected in the property value in the model
+		value predicate #Isolette_Properties::Temperature_Increase_Rate <= TempIncreaseRate
+		refines REQ_IS_1 IsoletteEA.EA_IS_1
+	]
+	
+	requirement REQ_IS_3 [
+		// hardwired limit value
+		description "Current temperature increases no more than " TempIncreaseRate " deg F per minute when heat source is on." 
+		value predicate #Isolette_Properties::Temperature_Decrease_Rate <= TempDecreaseRate
+		refines REQ_IS_1 IsoletteEA.EA_IS_2
+	]
+	
+	
+	// A.4 Safety Requirements
+	
+	requirement REQ_H1 [
+		description "Prolonged exposure of Infant to unsafe heat or cold. Classification: catastrophic. Probability: < " InfantExposureHazardRate " per hour of operation"
+ 		category Quality.Safety
+ 		see goal IsoletteGoals.H1
+		// validation: do we achieve 10-9 with the given decomposition?
+	]
+
+	
+]

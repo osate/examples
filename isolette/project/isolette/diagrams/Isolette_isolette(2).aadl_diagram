@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ASCII"?>
+<diagram:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:diagram="http://osate.org/diagram" formatVersion="7">
+  <element uuid="8f9947da-b729-493e-96f6-f0cf34dc9047" manual="true">
+    <bo>
+      <seg>classifier</seg>
+      <seg>isolette</seg>
+    </bo>
+    <contentFilters>
+      <filter>features</filter>
+      <filter>flowSpecifications</filter>
+    </contentFilters>
+  </element>
+  <config type="structure" connectionPrimaryLabelsVisible="false">
+    <enabledAadlProperties/>
+    <context>
+      <seg>classifier</seg>
+      <seg>isolette::isolette</seg>
+    </context>
+  </config>
+</diagram:Diagram>
