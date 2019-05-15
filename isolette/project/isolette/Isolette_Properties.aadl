@@ -1,11 +1,13 @@
 property set Isolette_Properties is
+-- This one came from Dominique
 	Temperature_Type: type aadlreal units Isolette_Properties::Temperature_Units;
 	Temperature_Change_Type: type aadlreal units Isolette_Properties::Temperature_Change_Rate_Units;
 
-	Temperature_Increase_Rate: Isolette_Properties::Temperature_Change_Type applies to (processor, memory, system, bus,
+	Temperature_Change_Rate: Isolette_Properties::Temperature_Change_Type applies to (processor, memory, system, bus,
 				device, abstract);
-	Temperature_Decrease_Rate: Isolette_Properties::Temperature_Change_Type applies to (processor, memory, system, bus,
-				device, abstract);
+					
+	Temperature_Validity : classifier (data) applies to (data);
+
 	Real_Time: type aadlreal units Time_Units;
 --  	--@description The time an operator will tolerate between an operator request or a change in the Thermostat state and the visible response.
 --  	--@rationale A trade study has shown that this lag should be no more than 0.5 second.
@@ -22,13 +24,14 @@ property set Isolette_Properties is
 		--@rationale A trade study has shown that users become impatient if the Thermostat requires more than one second to initialize.
 	Monitor_Initialization_Timeout: constant Isolette_Properties::Real_Time => 1.0 sec;
 		--@description The maximum time by which the Heat Source must be turned on or off to ensure acceptable operation of the Isolette system.
-		--@rationale Since a closed Isolette will warm or cool at a maximum rate of 1°F per minute (EA-IS1 and EA-IS2), turning the Heat Source on or off within 6 seconds ensures that the Current Temperature will not have changed by more than 0.1°F, the required accuracy and resolution of the Temperature Sensor (EA-TS2).
+		--@rationale Since a closed Isolette will warm or cool at a maximum rate of 1ï¿½F per minute (EA-IS1 and EA-IS2), turning the Heat Source on or off within 6 seconds ensures that the Current Temperature will not have changed by more than 0.1ï¿½F, the required accuracy and resolution of the Temperature Sensor (EA-TS2).
 	Allowed_Heat_Source_Latency: constant Isolette_Properties::Real_Time => 6.0 sec;
+	Allowed_Heat_Source_Monitoring_Latency: constant Isolette_Properties::Real_Time => 5.0 sec;
+	
 	Temperature_Change_Rate_Units: type units (Fdeg_Minute);
 	Temperature_Units: type units (Fahrenheit); -- Affine conversion not possible, Celcius => Fahrenheit * 0.5555 );
-	Temperature_Tolerance: Isolette_Properties::Temperature_Type applies to (subprogram, data);
 	Temperature_Increment: Isolette_Properties::Temperature_Type applies to (data);
-	Temperature_Sensor_Accuracy: Isolette_Properties::Temperature_Type applies to (all);
+	Temperature_Accuracy: Isolette_Properties::Temperature_Type applies to (all);
 	Thermal_Resistivity_Units: type units (hr_foot_Fahrenheit_per_BTU);
 	Thermal_Resistivity: aadlreal units Isolette_Properties::Thermal_Resistivity_Units applies to (system);
 	Rate_Type: type aadlreal units Isolette_Properties::Rate_Units;

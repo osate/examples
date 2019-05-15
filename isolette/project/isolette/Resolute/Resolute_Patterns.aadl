@@ -1,0 +1,58 @@
+-- Copyright 2018 Carnegie Mellon University. See Notice.txt
+-- Distribution Statement A: Approved for Public Release; Distribution is Unlimited.
+
+-- This is a set of Resolute patterns that have been learned the hard way, so I put them together as generic patterns.
+package Resolute_Patterns
+public
+	annex Resolute {**
+			
+ 	-- Evaluate a predicate on a subet of the elements
+ 	-- We us the forall and => operator for the two predicates
+  		---- this results in true when the first predicate is true and then the second predicate evaluation is the results of the whole epxression.
+  		---- it also results in true if the (first) filter predicate is false, i.e., we skip the evaluation of the second predicate.
+  		-- Note:  'and' would not work because a false filter condition on one element would result in forall to be false
+  		-- Note: 'andthen' would not work for the same reason as 'and' 
+  	all_contained_components_have_x (cp: component) : bool =
+ 		forall(cn: component).contained(cn, cp) => has_x(cp) 
+
+	-- Here we use a filter operator to create a subset of the components and perform a forall on the subset
+ 	all_filtered_components_have_x (cp: component) : bool =
+ 	let filtered :{component} = {cn for  (cn:component) | contained(cn, cp)};
+ 		forall(fc: filtered). has_x(fc)
+
+	-- a map pattern: for all elements apply a function resulting in a list. 
+	-- This list is then used as parameter to perform a sum.
+	addSubcomponentWeights(self: component) : real = 
+		sum([getWeight(t) for (t: subcomponents(self))])
+
+	-- now a combination of filter and map
+	-- we sum on a subset of the components
+	addLeafComponentWeights(self: component) : real = 
+		sum([getWeight(cp) for  (cn:component) | contained(cn, self) and subcomponents(cn) = {}])
+
+	-- recursively look for subcomponents and collect threads. 
+	-- This is useful in processes that contain both thread groups and threads.
+	-- Another example is collecting all features in nested feature groups.
+	-- threads directly or indirectly contained in the component.
+	--
+	-- We need to flatten the sets being returned. We do this through a double 'for' iterator 
+	-- with the second iterator variable used to construct the flattened set :-)
+	--
+	-- a more interesting use of set flattening is when we collect components directly and indirectly reachable by connection
+	contained_threads(c : component) : {thread} =
+	  if is_thread(c)
+	  then {c} 
+ 	  else  
+  		{c2 for (c1 : subcomponents(c)) (c2 : contained_threads(c1))}
+
+	-- the alterate filters on all threads in the instance model
+	alternate_contained_threads(c : component) : {thread} =
+  		{thr for (thr : thread) | contained(thr, c)}
+
+	
+	-- dummy predicate
+	has_x(cp: component): bool = true
+	-- dummy mapping function
+	getWeight(c :component) : real = 4.5
+**};
+end Resolute_Patterns;

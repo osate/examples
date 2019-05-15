@@ -1,0 +1,11 @@
+assurance case OperationalIsoletteCase for Isolette::IsoletteEnvironment [  
+	assurance plan SCSPlanT1 for Isolette::IsoletteEnvironment.tier1 [
+		assure IsoletteEnvVPlan
+		]
+	assurance plan SCSPlanT2 for Isolette::IsoletteEnvironment.tier2 [
+		assure IsoletteEnvVPlan
+		]
+	assurance plan SCSPlanT3 for Isolette::IsoletteEnvironment.tier3 [
+		assure IsoletteEnvVPlan
+		]
+]

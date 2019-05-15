@@ -1,0 +1,5 @@
+assurance case IsoletteCase for Isolette::isolette [
+	assurance plan SCSPlanT1 for Isolette::isolette.tier1 [
+		assure IsoletteVPlan
+		assure subsystem operator_interface thermostat heat_source
+	] ]

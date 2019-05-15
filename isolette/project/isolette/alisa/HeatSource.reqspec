@@ -1,0 +1,8 @@
+	
+system requirements HeatSourceReqs for Isolette::heat_source_hs  [
+	requirement EA_HS_1 for heat_control [ 
+		description "The heat source has a control variable Heat Control which can be set on/off."
+		rationale "There needs to be a way of turning heat source on and off."
+		// validation: presence of incoming feature and data type supports on/off
+	]
+]

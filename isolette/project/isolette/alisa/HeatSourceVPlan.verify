@@ -1,0 +1,7 @@
+verification plan HeatSourceVPlan for HeatSourceReqs [
+	
+claim EA_HS_1 [
+		activities
+		isOnOffHC: ResoluteIsolette.IsOnOff()
+	]
+]

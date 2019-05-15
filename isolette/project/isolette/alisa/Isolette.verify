@@ -1,0 +1,28 @@
+verification plan IsoletteVPlan for IsoletteReqs [
+	
+claim EA_IS_1 [
+	//#Isolette_Properties::Temperature_Increase_Rate <= TempIncreaseRate
+	activities
+		assertIncrease: ResoluteIsolette.AssertChangeRate()property values(TempIncreaseRate )
+	]
+
+	claim EA_IS_2 [
+	activities
+		assertIncrease: ResoluteIsolette.AssertChangeRate()property values(TempDecreaseRate )
+	]
+
+	claim REQ_H1 [
+		activities 
+			assertPartFailureRate: 	actualprob, specprob = Plugins.FaultTreeProbability("state failed")
+			assertFunctionalFailureRate: 	actualprob, specprob = Plugins.FaultTreeProbability("outgoing propagation on infantExposure{DangerousInfantExposure}")
+			
+	]
+]
+
+verification plan IsoletteEnvVPlan for IsoletteEnvironmentReqs [
+	
+claim OE_IS_SR2 [
+	activities
+	  assertlatency : Mode, SpecLatency , ActualLatency = Plugins.ComputeEndToEndFlowLatency ()
+	]
+]

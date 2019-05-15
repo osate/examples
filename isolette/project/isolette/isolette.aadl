@@ -19,26 +19,118 @@ Iso_Variables, Iso_Properties;
 
 	with Isolette_Properties;
 
-	abstract nurse
-	-- actor that interacts with Isolette via operator interface
-	end nurse;
+	abstract Nurse
+	-- interacts with Isolette via operator interface
+		features
+			operate: out feature ;
+			Removechild: feature;
+			placechild: feature;
+			hearAlarmRemoveChild: in feature;
+		flows
+			opInput: flow source operate;
+			takeChildOut: flow sink removechild;
+			alarmTakeChildOut: flow sink hearAlarmRemoveChild;
+		properties
+			Latency => 10 sec .. 10 sec applies to alarmTakeChildOut;
+	end Nurse;
+
+	abstract Infant
+	-- interacts with Isolette by being placed in it
+		features
+			isoletteAir: in feature;
+	end Infant;
+	
+	abstract Air
+		-- air inside or outside the Isolette
+		features
+		airTemperature: out feature;
+		heating: in feature; 
+		externalEffect: in feature;
+		flows
+		measurableTemp: flow source airTemperature;
+		properties
+			latency => 0 ms .. 0 ms applies to measurableTemp;
+		annex EMV2 {**
+			use types ErrorLibrary, isolette;
+			error propagations
+			heating : in propagation{HeaterError};
+			airTemperature : out propagation{OutOfRange};
+			flows
+			heateffect : error path heating{HeaterError} -> airTemperature{OutOfRange};
+			end propagations;
+		**};
+	end Air;
 
 -- top-level component enclosing the isolette system
-	system isolette
+	system IsoletteEnvironment
+		
+	end IsoletteEnvironment;
+	
+	system implementation IsoletteEnvironment.tier1
+		subcomponents
+			isolette: system isolette;
+			nurse: abstract Nurse;
+			outsideair: abstract Air;
+			baby: abstract Infant;
+		connections
+			nurseop: feature nurse.operate -> isolette.operatorInterface;
+			noticeAlarm: feature isolette.alarm -> nurse.hearAlarmRemoveChild;
+		flows
+			alarmResponse: end to end flow isolette.tempAlarm -> noticeAlarm -> nurse.alarmTakeChildOut;
+-- recorded in reqspec. Added here for analysis without ALISA
 		properties
-			Isolette_Properties::Temperature_Increase_Rate => 0.5 Fdeg_Minute;
-			Isolette_Properties::Temperature_Decrease_Rate => 0.5 Fdeg_Minute;
+			Latency => 15 sec .. 15 sec applies to alarmResponse;
+	end IsoletteEnvironment.tier1;
+	
+	system implementation IsoletteEnvironment.tier2 extends IsoletteEnvironment.tier1
+		subcomponents
+			isolette: refined to system isolette.tier1;
+	end IsoletteEnvironment.tier2;
+
+	system implementation IsoletteEnvironment.tier3 extends IsoletteEnvironment.tier2
+		subcomponents
+			isolette: refined to system isolette.tier1Functional;
+	end IsoletteEnvironment.tier3;
+
+	system isolette
+		features
+			operatorInterface: in feature;
+			alarm: out feature;
+			insideAirTemp: out feature;
+		flows
+			processCmd: flow sink operatorInterface;
+			tempAlarm: flow source alarm;
+		properties
+			Latency => 5 sec .. 5 sec applies to tempAlarm;
+			Latency => 500 ms .. 500 ms applies to processCmd;
+			Isolette_Properties::Temperature_Change_Rate => 1.0 Fdeg_Minute;
+		annex EMV2 {**
+			use types ErrorLibrary, Isolette;
+			use behavior Isolette::FailStop;
+			error propagations
+			alarm : out propagation{ServiceOmission};
+			insideAirTemp: out propagation{OutOfRange};
+			infantExposure : out propagation {DangerousInfantExposure};
+			end propagations;
+			propagation paths
+				infantExposure: propagation point;
+			end paths;
+			properties
+				EMV2::OccurrenceDistribution => [ProbabilityValue => Iso_Properties::IsoletteExpectedFailureRateValue;] 
+      applies to failed;      
+		**};
 	end isolette;
 
 -- first-tier subcomponents and their connections
-	system implementation isolette.impl
+	system implementation isolette.tier1
 		subcomponents
-			thermostat: system thermostat_th.impl;
-			temperature_sensor: device temperature_sensor_ts.impl;
-			heat_source: device heat_source_hs.impl;
+			thermostat: system thermostat_th;
+			temperature_sensor: device temperature_sensor_ts;
+			heat_source: device heat_source_hs;
 			operator_interface: system operator_interface_oi.impl;
+			inside_air: abstract Air;  
 		connections
-			ct: port temperature_sensor.current_temperature -> thermostat.current_temperature;
+			ct: port temperature_sensor.measured_temperature -> thermostat.current_temperature;
 			hc: port thermostat.heat_control -> heat_source.heat_control;
 			ldt: port operator_interface.lower_desired_temperature -> thermostat.lower_desired_temperature;
 			udt: port operator_interface.upper_desired_temperature -> thermostat.upper_desired_temperature;
@@ -46,14 +138,50 @@ Iso_Variables, Iso_Properties;
 			uat: port operator_interface.upper_alarm_temperature -> thermostat.upper_alarm_temperature;
 			rs: port thermostat.regulator_status -> operator_interface.regulator_status;
 			ms: port thermostat.monitor_status -> operator_interface.monitor_status;
-			dt: port thermostat.display_temperature -> operator_interface.display_temperature;
-			al: port thermostat.alarm -> operator_interface.alarm;
-	end isolette.impl;
+			dt: port thermostat.display_temperature -> operator_interface.display_temperature;  -- mismatched type if we change incoming to display_temperature
+			al: port thermostat.alarm_action -> operator_interface.alarm_action;
+			alarmsound: feature  operator_interface.alarm_sound -> alarm;
+			heat: feature heat_source.heat -> inside_air.heating;
+		flows
+			tempAlarm: flow source temperature_sensor.measureTemp -> ct -> thermostat.tempAlarm -> al -> operator_interface.soundalarm -> alarmsound -> alarm;
+		annex EMV2 {**
+			use behavior Isolette::FailStop;
+			component error behavior
+			propagations
+			all -[ inside_air.airTemperature{OutOfRange} and operator_interface.alarm_sound{ServiceOmission}]-> infantExposure{DangerousInfantExposure};
+			end component;
+			composite error behavior
+			states
+			-- Figure 5 HB: parts & monitor alarm (see thermostat)
+				CompositeFailed:[1 ormore (thermostat.Failed, temperature_sensor.Failed, heat_source.Failed, operator_interface.Failed ) ]-> Failed;
+			end composite;
+		**};
+	end isolette.tier1;
+
+
+	system implementation isolette.tier1Functional extends isolette.tier1
+		subcomponents
+			thermostat: refined to system thermostat_th.functional;
+		annex EMV2 {**
+			use behavior Isolette::FailStop;
+			component error behavior
+			propagations
+			all -[thermostat.monitor_temperature.alarm{AlarmError}]-> alarm{ServiceOmission};
+			end component;
+			composite error behavior
+			states
+			-- Figure 5 HB: parts & monitor alarm (see thermostat)
+				CompositeFailed:[1 ormore ( thermostat.monitor_temperature.failed and 1 ormore(thermostat.regulate_temperature.Failed, temperature_sensor.Failed), heat_source.Failed, operator_interface.Failed ) ]-> Failed;
+			end composite;
+		**};
+	end isolette.tier1Functional;
+	
 
 --A.5 THERMOSTAT SYSTEM FUNCTION
 	system thermostat_th
 		features
-			current_temperature: in data port Iso_Variables::current_temperature;
+			current_temperature: in data port Iso_Variables::measured_temperature;
+			current_temperature_status: in data port iso_variables::valid_flag;
 			heat_control: out data port Iso_Variables::on_off {BLESS::Assertion => "<<HEAT_CONTROL(x)>>";};
 			lower_desired_temperature: in data port Iso_Variables::lower_desired_temperature;
 			upper_desired_temperature: in data port Iso_Variables::upper_desired_temperature;
@@ -61,28 +189,46 @@ Iso_Variables, Iso_Properties;
 			upper_alarm_temperature: in data port Iso_Variables::upper_alarm_temperature;
 			regulator_status: out data port Iso_Variables::status {BLESS::Assertion => "<<REGULATOR_STATUS(x)>>";};
 			monitor_status: out data port Iso_Variables::status {BLESS::Assertion => "<<:=MONITOR_STATUS()>>";};
-			display_temperature: out data port Iso_Variables::measured_temperature_range {
+			display_temperature: out data port Iso_Variables::measured_temperature {
 						BLESS::Assertion => "<<DT: :=current_tempreature.t^0>>";};
-			alarm: out data port Iso_Variables::on_off {BLESS::Assertion => "<<:=ALARM()>>";};
+			alarm_action: out data port Iso_Variables::on_off {BLESS::Assertion => "<<:=ALARM()>>";};
+		flows
+			displayCurrentTemp: flow path current_temperature -> display_temperature;
+			tempAlarm: flow path current_temperature -> alarm_action;
+		properties
+			Isolette_Properties::Temperature_Accuracy => 0.1 Fahrenheit;
+			Latency => 1 sec .. 1 sec applies to tempAlarm;
 		annex EMV2 {**
 			use types ErrorLibrary, Isolette;
-			
+			use behavior Isolette::FailStop;
 			error propagations
-				current_temperature: in propagation {OutOfRange, SubtleValueError};
-				display_temperature: out propagation {SubtleValueError};
+				current_temperature: in propagation { InvalidTemperature}; -- InvalidTemperature};
+				lower_desired_temperature: in propagation { InvalidTemperature}; -- InvalidTemperature};
+				upper_desired_temperature: in propagation { InvalidTemperature}; -- InvalidTemperature};
+				lower_alarm_temperature: in propagation { InvalidTemperature}; -- InvalidTemperature};
+				upper_alarm_temperature: in propagation { InvalidTemperature}; -- InvalidTemperature};
+				display_temperature: out propagation {InvalidTemperature};
 				regulator_status: out propagation {RegulatorStatusError};
 				monitor_status: out propagation {MonitorStatusError};
-				alarm: out propagation {AlarmError};
-				heat_control: out propagation {HeatControlError};
+				alarm_action: out propagation {AlarmError};
+				heat_control: out propagation {RegulatorError};
+			flows
+				ThermoFails: error source heat_control{RegulatorError};
+				BadTemp: error sink current_temperature{InvalidTemperature};
+				BadDesiredRange: error path lower_desired_temperature{InvalidTemperature} -> heat_control{RegulatorError};
+				BadAlarmRange: error path lower_alarm_temperature{ InvalidTemperature} -> heat_control{RegulatorError};
 			end propagations;
+			properties
+			    EMV2::OccurrenceDistribution => [ProbabilityValue => Iso_Properties::ThermostatFailureRateValue;] 
+			     applies to failed, ThermoFails.RegulatorError;      
+				
 		**};
 	end thermostat_th;
-
-	system implementation thermostat_th.impl
+	
+	system implementation thermostat_th.functional
 		subcomponents
-			regulate_temperature: process regulate_temperature_rt.impl;
-			monitor_temperature: process monitor_temperature_mt.impl;
-			detect_regulator_fail: device detect_regulator_failure.impl;
+			regulate_temperature: abstract regulate_temperature;
+			monitor_temperature: abstract monitor_temperature;
 		connections
 			tctm: port current_temperature -> monitor_temperature.current_temperature;
 			tctr: port current_temperature -> regulate_temperature.current_temperature;
@@ -94,28 +240,54 @@ Iso_Variables, Iso_Properties;
 			trs: port regulate_temperature.regulator_status -> regulator_status;
 			tdt: port regulate_temperature.displayed_temp -> display_temperature;
 			tms: port monitor_temperature.monitor_status -> monitor_status;
-			ta: port monitor_temperature.alarm -> alarm;
-	end thermostat_th.impl;
+			ta: port monitor_temperature.alarm -> alarm_action;
+		flows
+			tempAlarm: flow path current_temperature -> tctm -> monitor_temperature.triggerAlarm -> ta -> alarm_action;
+		annex EMV2 {**
+			composite error behavior
+			states
+			-- Figure 5 HB: parts & monitor alarm (see thermostat)
+				CompositeFailed: [regulate_temperature.Failed and monitor_temperature.Failed ]-> Failed;
+			end composite;
+				
+		**};
+	end thermostat_th.functional;
+
 
 --A.5.1 REGULATE TEMPERATURE FUNCTION
-	process regulate_temperature_rt
+	abstract regulate_temperature
 		features
 			upper_desired_temperature: in data port Iso_Variables::upper_desired_temperature;
 			lower_desired_temperature: in data port Iso_Variables::lower_desired_temperature;
 			regulator_status: out data port Iso_Variables::status {BLESS::Assertion => "<<REGULATOR_STATUS(x)>>";};
-			displayed_temp: out data port Iso_Variables::measured_temperature_range;
-			current_temperature: in data port Iso_Variables::current_temperature;
+			displayed_temp: out data port Iso_Variables::measured_temperature;
+			current_temperature: in data port Iso_Variables::measured_temperature;
+			current_temperature_status: in data port iso_variables::valid_flag;
 			heat_control: out data port Iso_Variables::on_off {BLESS::Assertion => "<<HEAT_CONTROL(x)>>";};
 		annex EMV2 {**
 			use types ErrorLibrary, isolette;
-			
+			use behavior Isolette::FailStop;
 			error propagations
-				current_temperature: in propagation {OutOfRange, SubtleValueError};
-				displayed_temp: out propagation {SubtleValueError};
+				current_temperature: in propagation {InvalidTemperature};
+				upper_desired_temperature: in propagation {InvalidTemperature};
+				lower_desired_temperature: in propagation {InvalidTemperature};
+				displayed_temp: out propagation {InvalidTemperature};
 				regulator_status: out propagation {RegulatorStatusError};
-				heat_control: out propagation {HeatControlError};
+				heat_control: out propagation {RegulatorError};
+			flows
+				badTempControl : error path current_temperature{InvalidTemperature} -> heat_control{RegulatorError}; -- Thermo does not detect missing TS readings
+				badDesired : error path lower_desired_temperature{InvalidTemperature} -> heat_control{RegulatorError}; -- Thermo does not detect missing TS readings
 			end propagations;
+  		properties
+  	      EMV2::OccurrenceDistribution => [ProbabilityValue => Iso_Properties::ThermostatRegulatorFailureRateValue; ]
+      	applies to failed;      
 		**};
+	end regulate_temperature;
+
+
+--A.5.1 REGULATE TEMPERATURE FUNCTION as software
+	
+	process regulate_temperature_rt extends regulate_temperature
 	end regulate_temperature_rt;
 
 	process implementation regulate_temperature_rt.impl
@@ -144,8 +316,8 @@ Iso_Variables, Iso_Properties;
 			regulator_status: out data port Iso_Variables::status {BLESS::Assertion => "<<REGULATOR_STATUS(x)>>";};
 			upper_desired_temp: in data port Iso_Variables::upper_desired_temperature;
 			lower_desired_temp: in data port Iso_Variables::lower_desired_temperature;
-			current_temperature: in data port Iso_Variables::current_temperature;
-			displayed_temp: out data port Iso_Variables::measured_temperature_range;
+			current_temperature: in data port Iso_Variables::measured_temperature;
+			displayed_temp: out data port Iso_Variables::measured_temperature;
 			desired_range: out data port Iso_Variables::desired_range;
 			regulator_mode: in data port Iso_Variables::regulator_mode {
 						BLESS::Assertion => "<<REGULATOR_MODE(regulator_mode)>>";};
@@ -157,14 +329,14 @@ Iso_Variables, Iso_Properties;
 			
 			error propagations
 				regulator_status: out propagation {RegulatorStatusError};
-				current_temperature: in propagation {OutOfRange, SubtleValueError};
-				displayed_temp: out propagation {SubtleValueError};
+				current_temperature: in propagation {InvalidTemperature};
+				displayed_temp: out propagation {InvalidTemperature};
 				regulator_mode: in propagation {RegulatorModeError};
 				interface_failure: out propagation {ServiceOmission};
 			flows --model error in detection and reporting
 				ifd: error source interface_failure {ServiceOmission};
-				ekoor: error sink current_temperature {OutOfRange}; --detects out-of-range
-				epsve: error path current_temperature {SubtleValueError} -> displayed_temp {SubtleValueError};
+--				ekoor: error sink current_temperature {OutOfRange}; --detects out-of-range
+				epsve: error path current_temperature {InvalidTemperature} -> displayed_temp {InvalidTemperature};
 			end propagations;
 			
 			component error behavior
@@ -187,7 +359,7 @@ Iso_Variables, Iso_Properties;
 		features
 			regulator_mode: out data port Iso_Variables::regulator_mode {
 						BLESS::Assertion => "<<REGULATOR_MODE(regulator_mode)>>";}; --enumeration assertion
-			current_temperature: in data port Iso_Variables::current_temperature;
+			current_temperature: in data port Iso_Variables::measured_temperature;
 			interface_failure: in data port Base_Types::Boolean {
 						BLESS::Assertion => "<<REGULATOR_INTERFACE_FAILURE()>>";};
 			internal_failure: in data port Base_Types::Boolean {
@@ -198,11 +370,11 @@ Iso_Variables, Iso_Properties;
 			
 			error propagations
 				regulator_mode: out propagation {RegulatorModeError};
-				current_temperature: in propagation {SubtleValueError};
+				current_temperature: in propagation {InvalidTemperature};
 				interface_failure: in propagation {ServiceOmission};
 				internal_failure: in propagation {ServiceOmission};
 			flows --model error in detection and reporting
-				mrmsve: error path current_temperature {SubtleValueError} -> regulator_mode {RegulatorModeError}; --bad temp causes bad mode
+				mrmsve: error path current_temperature {InvalidTemperature} -> regulator_mode {RegulatorModeError}; --bad temp causes bad mode
 				mrmif: error path interface_failure {ServiceOmission} -> regulator_mode {RegulatorModeError}; --missing interface failure signal causes bad mode
 				mrmin: error path internal_failure {ServiceOmission} -> regulator_mode {RegulatorModeError}; --missing internal failure signal causes bad mode
 			end propagations;
@@ -300,7 +472,7 @@ thread manage_heat_source_mhs
 features
   heat_control : out data port Iso_Variables::on_off
     {BLESS::Assertion => "<<HEAT_CONTROL(x)>>";};
-  current_temperature : in data port Iso_Variables::current_temperature;
+  current_temperature : in data port Iso_Variables::measured_temperature;
   desired_range : in data port Iso_Variables::desired_range;
   regulator_mode : in data port Iso_Variables::regulator_mode;
 annex EMV2 
@@ -308,15 +480,15 @@ annex EMV2
     use types ErrorLibrary,isolette;
     use behavior isolette::FailStop;
   error propagations
-  heat_control: out propagation {HeatControlError};
-  current_temperature: in propagation {SubtleValueError};
+  heat_control: out propagation {RegulatorError};
+  current_temperature: in propagation {InvalidTemperature};
   regulator_mode: in propagation {RegulatorModeError};
   --no errors from desired_range
   flows  --model error in detection and reporting
-    mrmsve: error path current_temperature{SubtleValueError} 
-      -> heat_control{HeatControlError};  --bad temp causes bad heat control
+    mrmsve: error path current_temperature{InvalidTemperature} 
+      -> heat_control{RegulatorError};  --bad temp causes bad heat control
     mrmif: error path regulator_mode{RegulatorModeError} 
-      -> heat_control{HeatControlError};  --bad mode causes bad heat control
+      -> heat_control{RegulatorError};  --bad mode causes bad heat control
   end propagations;
     properties  --set failure rate for manage_heat_source_mhs
     EMV2::OccurrenceDistribution => Iso_Properties::MHSFailureRate 
@@ -350,39 +522,60 @@ annex EMV2
   **};
 end detect_regulator_failure;
 
-device implementation detect_regulator_failure.impl
-end detect_regulator_failure.impl;
-
 --A.5.2 Monitor Temperature Function
-process monitor_temperature_mt
+abstract monitor_temperature
 features
-  current_temperature : in data port Iso_Variables::current_temperature;
+	current_temperature: in data port Iso_Variables::measured_temperature;
+	current_temperature_status: in data port iso_variables::valid_flag;
   upper_alarm_temperature : in data port Iso_Variables::upper_alarm_temperature;
   lower_alarm_temperature : in data port Iso_Variables::lower_alarm_temperature;
   alarm : out data port Iso_Variables::on_off
     {BLESS::Assertion => "<<:=ALARM()>>";};
   monitor_status : out data port Iso_Variables::status
     {BLESS::Assertion => "<<:=MONITOR_STATUS()>>";};
-  monitor_failure : in data port Base_Types::Boolean
-    {BLESS::Assertion => "<<MONITOR_INTERNAL_FAILURE()>>";};
+	flows
+		triggerAlarm: flow path current_temperature ->  alarm; 
+	properties
+		Latency => 500 ms .. 500 ms applies to triggerAlarm;
 annex EMV2 
   {**
     use types ErrorLibrary, isolette;
+    use behavior Isolette::FailStop;
   error propagations
   current_temperature: in propagation
-    {OutOfRange,SubtleValueError};
+    {InvalidTemperature};
   alarm: out propagation {AlarmError};
   monitor_status: out propagation {MonitorStatusError};
-  monitor_failure: in propagation {ServiceOmission};
+	upper_alarm_temperature: in propagation {InvalidTemperature};
+	lower_alarm_temperature: in propagation {InvalidTemperature};
+  flows
+  	badMonitor: error source alarm {AlarmError};
   end propagations;
+  component error behavior
+  propagations
+  	working -[current_temperature{InvalidTemperature}]-> alarm{noerror};
+--  	working -[lower_alarm_temperature{InvalidTemperature}]-> alarm{AlarmError};
+  	failed -[1 ormore(lower_alarm_temperature{InvalidTemperature},current_temperature{InvalidTemperature})]-> alarm{AlarmError};
+  end component;
+  properties
+      EMV2::OccurrenceDistribution => [ProbabilityValue =>  Iso_Properties::ThermostatMonitorFailureRateValue ;] 
+   	applies to failed, badMonitor.AlarmError, fail;      
   **};
-end monitor_temperature_mt;
+end monitor_temperature;
+
+--A.5.1 REGULATE TEMPERATURE FUNCTION as software
+	
+	process monitor_temperature_mt extends monitor_temperature
+	end monitor_temperature_mt;
+
 
 process implementation monitor_temperature_mt.impl
 subcomponents
-  manage_alarm : thread manage_alarm_ma.impl;
+  manage_alarm : thread manage_alarm_ma;
   manage_monitor_interface : thread manage_monitor_interface_mmi.impl;
   manage_monitor_mode : thread manage_monitor_mode_mmm.impl;
+internal features
+	monitor_failure : event;
 connections
   mcti : port current_temperature -> manage_monitor_interface.current_temperature;
   mcta : port current_temperature -> manage_alarm.current_temperature;
@@ -398,11 +591,12 @@ connections
   mf : port monitor_failure -> manage_monitor_mode.internal_failure;
 end monitor_temperature_mt.impl;
 
+
 --A.5.2.1 Manage Monitor Interface Function
 thread manage_monitor_interface_mmi
 features
   alarm_range : out data port Iso_Variables::alarm_range;
-  current_temperature : in data port Iso_Variables::current_temperature;
+  current_temperature : in data port Iso_Variables::measured_temperature;
   monitor_mode : in data port Iso_Variables::monitor_mode
     {BLESS::Assertion => "<<:=MONITOR_MODE()>>";};
   upper_alarm_temperature : in data port Iso_Variables::upper_alarm_temperature;
@@ -441,9 +635,8 @@ features
     {BLESS::Assertion => "<<:=MONITOR_MODE()>>";};
   interface_failure : in data port Base_Types::Boolean
     {BLESS::Assertion => "<<MONITOR_INTERFACE_FAILURE()>>";};
-  internal_failure : in data port Base_Types::Boolean
-    {BLESS::Assertion => "<<MONITOR_INTERNAL_FAILURE()>>";};
-  current_temperature : in data port Iso_Variables::current_temperature;
+  internal_failure : in event port ;  --Base_Types::Boolean {BLESS::Assertion => "<<MONITOR_INTERNAL_FAILURE()>>";};
+  current_temperature : in data port Iso_Variables::measured_temperature;
 --    {BLESS::Assertion => "<<CT: :=CURRENT_TEMPERATURE()>>";};  
 annex EMV2 
   {**
@@ -454,13 +647,13 @@ annex EMV2
   interface_failure: in propagation {ServiceOmission};
   internal_failure: in propagation {ServiceOmission};
   current_temperature: in propagation
-    {OutOfRange,SubtleValueError};
+    {InvalidTemperature};
   flows  --model error in detection and reporting
     mmmiff: error path interface_failure{ServiceOmission} 
       -> monitor_mode{MonitorModeError};
     mmminf: error path internal_failure{ServiceOmission} 
       -> monitor_mode{MonitorModeError};
-    mmmct: error path current_temperature{SubtleValueError} 
+    mmmct: error path current_temperature{InvalidTemperature} 
       -> monitor_mode{MonitorModeError};
   end propagations;
     properties  --"fail" is the internal event that cause
@@ -553,7 +746,7 @@ features
   alarm_control : out data port Iso_Variables::on_off;
   monitor_mode : in data port Iso_Variables::monitor_mode;
   alarm_range : in data port Iso_Variables::alarm_range;
-  current_temperature : in data port Iso_Variables::current_temperature;
+  current_temperature : in data port Iso_Variables::measured_temperature;
 annex EMV2 
   {**
     use types ErrorLibrary,isolette;
@@ -563,11 +756,11 @@ annex EMV2
   monitor_mode: in propagation {MonitorModeError};
   --alarm_range is error-free
   current_temperature: in propagation
-    {OutOfRange,SubtleValueError};
+    {InvalidTemperature};
   flows  --model error in detection and reporting
     mame: error path monitor_mode{MonitorModeError} 
       -> alarm_control{AlarmError};
-    mact: error path current_temperature{SubtleValueError} 
+    mact: error path current_temperature{InvalidTemperature} 
       -> alarm_control{AlarmError};
   end propagations;
     properties  --"fail" is the internal event that cause
@@ -575,9 +768,6 @@ annex EMV2
       applies to fail;      
   **};
 end manage_alarm_ma;
-
-thread implementation manage_alarm_ma.impl
-end manage_alarm_ma.impl;
 
 --A.5.2.4 Detect Monitor Failure Function
 --this is where error models signal active threads an 
@@ -604,49 +794,53 @@ annex EMV2
   **};
 end detect_monitor_failure;
 
-device implementation detect_monitor_failure.impl
-end detect_monitor_failure.impl;
-
 device temperature_sensor_ts
 features
-  current_temperature : out data port Iso_Variables::current_temperature;
+	measured_temperature: out data port Iso_Variables::measured_temperature;
+	measured_temperature_status: out data port iso_variables::valid_flag;
+  air_temperature : in feature ;
+	flows
+		measureTemp: flow source measured_temperature;
+	properties
+		Latency => 1 sec .. 1 sec applies to measureTemp;
 annex EMV2 
   {**
-    use types ErrorLibrary;
+    use types ErrorLibrary, isolette;
+    use behavior Isolette::FailStop;
   error propagations
-  current_temperature: out propagation
-    {OutOfRange,SubtleValueError};
+  measured_temperature: out propagation  { InvalidTemperature}; -- IncorrectTemperatureValue same as InvalidTemperature. Invalid flag set is TS fails?
   flows
-    f: error source current_temperature{OutOfRange,SubtleValueError};	
+    badTempSensor: error source measured_temperature{InvalidTemperature};	
   end propagations;
   properties
-    EMV2::OccurrenceDistribution => Iso_Properties::TemperatureSensorOutOfRange 
-      applies to current_temperature.OutOfRange;
-    EMV2::OccurrenceDistribution => Iso_Properties::TemperatureSensorSubtleValueError 
-      applies to current_temperature.SubtleValueError;
+    EMV2::OccurrenceDistribution => [ProbabilityValue => Iso_Properties::TemperatureSensorFailureRateValue;] 
+      applies to badTempSensor.InvalidTemperature;
   **};
 end temperature_sensor_ts;
-
-device implementation temperature_sensor_ts.impl
-end temperature_sensor_ts.impl;
 
 device heat_source_hs
 features
   heat_control : in data port Iso_Variables::on_off
     {BLESS::Assertion => "<<HEAT_CONTROL(x)>>";};
+  heat: out feature;
 properties
 	Physical_Properties::Power_Tot => 300.0 W .. 310.0 W;
 annex EMV2 
   {**
-    use types Isolette;
+    use types Isolette, ErrorLibrary;
+    use behavior Isolette::FailStop;
   error propagations
-  heat_control: in propagation {HeatControlError};
+  heat_control: in propagation {RegulatorError};
+  heat: out propagation {HeaterError};
+  flows
+  	controlpassthru: error path heat_control{RegulatorError} -> heat{HeaterError}; -- incorrect on/off maps into commission and omission
+  	HSFail: error source heat{HeaterError};
   end propagations;
+    properties  --set failure rate for temp monitor
+    EMV2::OccurrenceDistribution => [ ProbabilityValue => Iso_Properties::HeatSourceFailureRateValue ;]
+      applies to failed, HSFail.HeaterError;      
   **};
 end heat_source_hs;
-
-device implementation heat_source_hs.impl
-end heat_source_hs.impl;
 
 system operator_interface_oi
 features
@@ -658,23 +852,50 @@ features
     {BLESS::Assertion => "<<REGULATOR_STATUS(x)>>";};
   monitor_status : in data port Iso_Variables::status
     {BLESS::Assertion => "<<:=MONITOR_STATUS()>>";};
-  display_temperature : in data port Iso_Variables::measured_temperature_range;
-  alarm : in data port Iso_Variables::on_off
+  display_temperature : in data port Iso_Variables::measured_temperature;
+  displayed_temperature : out feature Iso_Variables::display_temperature;
+  alarm_action : in data port Iso_Variables::on_off
     {BLESS::Assertion => "<<:=ALARM()>>";};
+    alarm_sound : out feature;
+	flows
+		soundalarm: flow path alarm_action -> alarm_sound;
+	properties
+	Latency => 2 sec .. 2 sec applies to soundalarm;
+		
 annex EMV2 
   {**
     use types ErrorLibrary, Isolette;
+    use behavior Isolette::FailStop;
   error propagations
   regulator_status: in propagation {RegulatorStatusError};
   monitor_status: in propagation {MonitorStatusError};
-  display_temperature: in propagation {SubtleValueError};
-  alarm: in propagation {AlarmError};
+  display_temperature: in propagation {InvalidTemperature};
+  
+  lower_desired_temperature: out propagation {InvalidTemperature};
+  upper_desired_temperature: out propagation {InvalidTemperature};
+  lower_alarm_temperature: out propagation {InvalidTemperature};
+  upper_alarm_temperature: out propagation {InvalidTemperature};
+  alarm_action: in propagation {AlarmError};
+  alarm_sound : out propagation {ServiceOmission};
+  flows
+  	triggerAlarm: error path alarm_action{AlarmError} -> alarm_sound{ServiceOmission};
+  	badDesired: error source lower_desired_temperature{InvalidTemperature};
+  	badAlarm: error source lower_alarm_temperature{InvalidTemperature};
   end propagations;
+  properties
+  	    EMV2::OccurrenceDistribution => [ ProbabilityValue => Iso_Properties::OperatorInterfaceFailureRateValue ;]
+      applies to failed;      
+  	    EMV2::OccurrenceDistribution => [ ProbabilityValue => Iso_Properties::OperatorInterfaceFailureRateValue ;]
+      applies to badDesired;      
+  	    EMV2::OccurrenceDistribution => [ ProbabilityValue => Iso_Properties::OperatorInterfaceFailureRateValue ;]
+      applies to badAlarm;      
+  	
   **};
 end operator_interface_oi;
 
 system implementation operator_interface_oi.impl
 end operator_interface_oi.impl;
+
 
 
 annex Assertion  -- define labels for Assertions used elsewhere 
@@ -743,26 +964,37 @@ annex Assertion  -- define labels for Assertions used elsewhere
 annex EMV2
 {**
 	error types
-	  HeatControlError: type;  --heater on or off inappropriately
+	  HeaterError: type;  --heater 
 	  AlarmError : type;		--the class of alarm errors
 	  FalseAlarm : type extends AlarmError;  --alarm erroneously sounded
 	  MissedAlarm : type extends AlarmError;  --alarm missed  
 	  StatusError : type;  --mode and status errors
+	  RegulatorError : type ;  
+	  MonitorError : type ;  
 	  RegulatorStatusError : type extends StatusError;  --indicated regulator status wrong
 	  RegulatorModeError : type extends StatusError;  --regulator mode wrong
 	  MonitorStatusError : type extends StatusError;  --indicated monitor status wrong
 	  MonitorModeError : type extends StatusError;  --monitor mode wrong
 	  ThreadFault renames type ErrorLibrary::EarlyServiceTermination;  --thread fault halts thread
 	  InternalError : type;  --an internal error was detected
+	  
+	  InvalidTemperature: type; -- from FAA REMHB A.4 SR2 value flagged as invalid. Called IncorrectValue in FAA REMHB page 36.
+	  
+	  DangerousInfantExposure: type;
+	  
 	end types;
 	error behavior FailStop
-	  use types isolette;
 	  events fail: error event;
 	  states 
 	    working: initial state; 
 	    failed : state;
 	  transitions
 	    working -[fail]-> failed;
+	end behavior;
+	error behavior FailStopStates
+	  states 
+	    working: initial state; 
+	    failed : state;
 	end behavior;
 **};
 

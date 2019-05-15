@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="ASCII"?>
+<assure:AssuranceCaseResult xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aadl2="http://aadl.info/AADL/2.0" xmlns:assure="http://www.osate.org/assure/Assure" name="ThermostatCase">
+  <metrics successCount="7"/>
+  <modelResult>
+    <metrics successCount="7"/>
+    <plan href="../alisa/Thermostat..alisa#//@assurancePlans.0"/>
+    <target xsi:type="aadl2:SystemImplementation" href="../isolette.aadl#Isolette.thermostat_th.functional"/>
+    <claimResult>
+      <metrics successCount="2"/>
+      <targetReference>
+        <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+        <requirement>
+          <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.0"/>
+        </requirement>
+      </targetReference>
+      <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.10/@ownedDataPort.0"/>
+      <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
+        <metrics successCount="1" executionTime="1520"/>
+        <results message="Measurement unit of current_temperature must be Fahrenheit" resultType="SUCCESS">
+          <modelElement href="../Resolute/Resolute_Isolette.aadl#Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.is_Fahrenheit"/>
+        </results>
+        <targetReference>
+          <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+          <requirement>
+            <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.0"/>
+          </requirement>
+          <verificationActivity href="../alisa/Thermostat.verify#//@contents.0/@claim.0/@activities.0"/>
+        </targetReference>
+      </verificationActivityResult>
+      <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
+        <metrics successCount="1" executionTime="22"/>
+        <results message="Data type of current_temperature must be iso_variables::measured_temperature" resultType="SUCCESS">
+          <modelElement href="../Resolute/Resolute_Isolette.aadl#Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.is_Measured_Temperature"/>
+        </results>
+        <targetReference>
+          <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+          <requirement>
+            <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.0"/>
+          </requirement>
+          <verificationActivity href="../alisa/Thermostat.verify#//@contents.0/@claim.0/@activities.1"/>
+        </targetReference>
+      </verificationActivityResult>
+    </claimResult>
+    <claimResult>
+      <metrics successCount="1"/>
+      <targetReference>
+        <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+        <requirement>
+          <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.1"/>
+        </requirement>
+      </targetReference>
+      <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.10/@ownedDataPort.0"/>
+      <predicateResult xsi:type="assure:PredicateResult" type="SUCCESS">
+        <metrics successCount="1"/>
+        <targetReference>
+          <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+          <requirement>
+            <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.1"/>
+          </requirement>
+        </targetReference>
+      </predicateResult>
+    </claimResult>
+    <claimResult>
+      <metrics successCount="1"/>
+      <targetReference>
+        <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+        <requirement>
+          <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.2"/>
+        </requirement>
+      </targetReference>
+      <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.10/@ownedDataPort.0"/>
+      <predicateResult xsi:type="assure:PredicateResult" type="SUCCESS">
+        <metrics successCount="1"/>
+        <targetReference>
+          <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+          <requirement>
+            <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.2"/>
+          </requirement>
+        </targetReference>
+      </predicateResult>
+    </claimResult>
+    <claimResult>
+      <metrics successCount="1"/>
+      <targetReference>
+        <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+        <requirement>
+          <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.3"/>
+        </requirement>
+      </targetReference>
+      <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.10/@ownedDataPort.1"/>
+      <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
+        <metrics successCount="1" executionTime="27"/>
+        <results message="Type of current_temperature_status is iso_variables::valid_flag" resultType="SUCCESS">
+          <modelElement href="../Resolute/Resolute_Isolette.aadl#Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.is_Type_Valid_Flag"/>
+        </results>
+        <targetReference>
+          <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+          <requirement>
+            <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.3"/>
+          </requirement>
+          <verificationActivity href="../alisa/Thermostat.verify#//@contents.0/@claim.3/@activities.0"/>
+        </targetReference>
+      </verificationActivityResult>
+    </claimResult>
+    <claimResult>
+      <metrics successCount="1"/>
+      <targetReference>
+        <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+        <requirement>
+          <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.4"/>
+        </requirement>
+      </targetReference>
+      <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.10/@ownedDataPort.2"/>
+      <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
+        <metrics successCount="1" executionTime="23"/>
+        <results message="Type of heat_control is iso_variables::on_off" resultType="SUCCESS">
+          <modelElement href="../Resolute/Resolute_Isolette.aadl#Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.is_Type_On_Off"/>
+        </results>
+        <targetReference>
+          <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+          <requirement>
+            <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.4"/>
+          </requirement>
+          <verificationActivity href="../alisa/Thermostat.verify#//@contents.0/@claim.4/@activities.0"/>
+        </targetReference>
+      </verificationActivityResult>
+    </claimResult>
+    <claimResult>
+      <metrics/>
+      <targetReference>
+        <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+        <requirement>
+          <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.5"/>
+        </requirement>
+      </targetReference>
+      <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#//@ownedPublicSection/@ownedClassifier.10/@ownedDataPort.7"/>
+    </claimResult>
+    <claimResult>
+      <metrics/>
+      <targetReference>
+        <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+        <requirement>
+          <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.6"/>
+        </requirement>
+      </targetReference>
+      <modelElement xsi:type="aadl2:FlowSpecification" href="../isolette.aadl#//@ownedPublicSection/@ownedClassifier.10/@ownedFlowSpecification.0"/>
+    </claimResult>
+    <claimResult>
+      <metrics successCount="1"/>
+      <targetReference>
+        <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+        <requirement>
+          <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.7"/>
+        </requirement>
+      </targetReference>
+      <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.10/@ownedDataPort.10"/>
+      <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
+        <metrics successCount="1" executionTime="22"/>
+        <results message="Type of alarm_action is iso_variables::on_off" resultType="SUCCESS">
+          <modelElement href="../Resolute/Resolute_Isolette.aadl#Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.is_Type_On_Off"/>
+        </results>
+        <targetReference>
+          <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+          <requirement>
+            <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.7"/>
+          </requirement>
+          <verificationActivity href="../alisa/Thermostat.verify#//@contents.0/@claim.7/@activities.0"/>
+        </targetReference>
+      </verificationActivityResult>
+    </claimResult>
+    <claimResult>
+      <metrics/>
+      <targetReference>
+        <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+        <requirement>
+          <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.8"/>
+        </requirement>
+      </targetReference>
+      <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#//@ownedPublicSection/@ownedClassifier.10/@ownedDataPort.8"/>
+    </claimResult>
+    <subsystemResult>
+      <metrics/>
+      <targetSystem xsi:type="aadl2:AbstractSubcomponent" href="../isolette.aadl#//@ownedPublicSection/@ownedClassifier.11/@ownedAbstractSubcomponent.0"/>
+    </subsystemResult>
+    <subsystemResult>
+      <metrics/>
+      <targetSystem xsi:type="aadl2:AbstractSubcomponent" href="../isolette.aadl#//@ownedPublicSection/@ownedClassifier.11/@ownedAbstractSubcomponent.1"/>
+    </subsystemResult>
+  </modelResult>
+</assure:AssuranceCaseResult>

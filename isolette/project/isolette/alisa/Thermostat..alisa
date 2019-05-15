@@ -1,0 +1,4 @@
+assurance case ThermostatCase for Isolette::thermostat_th [
+	assurance plan SCSPlanT1 for Isolette::thermostat_th.functional [
+		assure ThermostatVPlan
+	] ]

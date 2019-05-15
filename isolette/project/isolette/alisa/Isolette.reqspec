@@ -1,34 +1,50 @@
-system requirements IsoletteReqs for Isolette::isolette use constants IC [
-	
-	requirement REQ_IS_1 [
-		description "Current temperature within desired range with +/- 2 deg F tolerance"
-		see goal IsoletteGoals.G1_IS_Functional
-	]
-	
-	requirement REQ_IS_2 [
+system requirements IsoletteReqs for Isolette::isolette  [
+
+// environmental assumptions
+	requirement EA_IS_1 [
+		val TempIncreaseRate = 1.0 Fdeg_Minute
 		// parameterized limit value. used in text and in predicate
-		description "Current temperature increases no more than " TempIncreaseRate " deg F per minute when heat source is on." 
-        // predicate ensures that the limit value is corectly reflected in the property value in the model
-		value predicate #Isolette_Properties::Temperature_Increase_Rate <= TempIncreaseRate
-		refines REQ_IS_1 IsoletteEA.EA_IS_1
+		description "When the heat source is on and the isolette is properly shut, the current temperature increases no more than " TempIncreaseRate " deg F per minute." 
+		rationale "If the current temperature can increase at a rate of more than 1 deg F per minute, the thermostat may not be able to turn the heat source off quickly enough to maintain the desired temperature range unless the allowed latency specified for the heat control is reduced"
+ 		category Kind.Assumption
+        // predicate ensures that the limit value is correctly reflected in the property value in the model
+		value predicate #Isolette_Properties::Temperature_Change_Rate <= TempIncreaseRate
+	]
+	requirement EA_IS_2 [
+		val TempDecreaseRate = 1.0 Fdeg_Minute
+		description "When the heat source is off and the isolette is properly shut, the current temperature decreases no more than "TempDecreaseRate" deg F per minute."
+		rationale "If the current temperature can decrease at a rate of more than 1 deg F per minute, the thermostat may not be able to turn the heat source on quickly enough to maintain the desired temperature range unless the allowed latency specified for the heat control is reduced"
+ 		category Kind.Assumption
+		value predicate #Isolette_Properties::Temperature_Change_Rate <= TempDecreaseRate
 	]
 	
-	requirement REQ_IS_3 [
-		// hardwired limit value
-		description "Current temperature increases no more than " TempIncreaseRate " deg F per minute when heat source is on." 
-		value predicate #Isolette_Properties::Temperature_Decrease_Rate <= TempDecreaseRate
-		refines REQ_IS_1 IsoletteEA.EA_IS_2
-	]
 	
 	
 	// A.4 Safety Requirements
 	
 	requirement REQ_H1 [
+		val InfantExposureHazardRate = 1.0e-9
+		compute actualprob: real
+		compute specprob : real
 		description "Prolonged exposure of Infant to unsafe heat or cold. Classification: catastrophic. Probability: < " InfantExposureHazardRate " per hour of operation"
  		category Quality.Safety
  		see goal IsoletteGoals.H1
-		// validation: do we achieve 10-9 with the given decomposition?
+ 		value predicate actualprob <= InfantExposureHazardRate 
 	]
+	
+]
 
+system requirements IsoletteEnvironmentReqs for Isolette::IsoletteEnvironment.tier1 [
+	
+	requirement OE_IS_SR2 for alarmResponse [
+		val NurseAlarmResponse = 15 sec
+		compute ActualLatency: Time
+		compute SpecLatency : Time
+		compute Mode : string
+		description "The Infant should be removed from the Isolette within 15 seconds after the Current Temperature falls below or rises above the Alarm Temperature Range."
+ 		category Kind.Assumption
+// 		see goal IsoletteGoals.SR_2
+ 		value predicate ActualLatency <= NurseAlarmResponse 
+	]
 	
 ]

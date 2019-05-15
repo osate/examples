@@ -1,0 +1,42 @@
+verification plan ThermostatVPlan for ThermostatReqs [
+	
+
+claim EA_TS_1 [
+	activities
+		correctUnit: ResoluteIsolette.IsFahrenheit()
+		correctType: ResoluteIsolette.IsMeasuredTemperature()
+	]
+
+	claim EA_TS_2 [
+		// handled by value predicate
+	]
+
+	claim EA_TS_3 [
+	]
+
+	claim EA_TS_4 [
+		activities
+		isValidFlagCT: ResoluteIsolette.IsValidFlag()
+	]
+
+	claim REQ_TH_1 [
+		activities
+		isOnOffHC: ResoluteIsolette.IsOnOff()
+	]
+
+	claim REQ_TH_2 [
+	]
+
+	claim REQ_TH_3 [
+	]
+
+	claim REQ_TH_4 [
+	activities
+			isOnOffAA: ResoluteIsolette.IsOnOff()
+		
+	]
+
+	claim REQ_TH_5 [
+	]
+
+]

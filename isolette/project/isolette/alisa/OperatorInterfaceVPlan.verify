@@ -1,0 +1,68 @@
+verification plan OperatorInterfaceVPlan for OperatorInterfaceReqs [
+
+		claim EA_OI_1_1 [
+			activities
+			isFahrenheit : ResoluteIsolette.IsFahrenheit ( )
+		] claim EA_OI_1_2 [
+			activities
+			isFahrenheit : ResoluteIsolette.IsFahrenheit ( )
+		] claim EA_OI_1_3 [
+			activities
+			isFahrenheit : ResoluteIsolette.IsFahrenheit ( )
+		] claim EA_OI_1_4 [
+			activities
+			isFahrenheit : ResoluteIsolette.IsFahrenheit ( )
+		] claim EA_OI_1_5 [
+			activities
+			isFahrenheit : ResoluteIsolette.IsFahrenheit ( )
+		]
+
+		claim EA_OI_2_1 [
+			activities
+			isAccurate : ResoluteIsolette.TemperatureAccuracy ( )
+		] claim EA_OI_2_2 [
+			activities
+			isAccurate : ResoluteIsolette.TemperatureAccuracy ( )
+		] claim EA_OI_2_3 [
+			activities
+			isAccurate : ResoluteIsolette.TemperatureAccuracy ( )
+		] claim EA_OI_2_4 [
+			activities
+			isAccurate : ResoluteIsolette.TemperatureAccuracy ( )
+		] claim EA_OI_2_5 [
+			activities
+			isAccurate : ResoluteIsolette.TemperatureAccuracy ( )
+		]
+
+	claim EA_OI_3 [
+		activities
+		 isalb: ResoluteIsolette.IsValueRangeLowerBound(LowerAlarmBound)
+	]
+
+	claim EA_OI_4 [
+	]
+
+	claim EA_OI_5 [
+		activities
+		 isdlb: ResoluteIsolette.IsValueRangeLowerBound(LowerDesiredBound)
+	]
+
+	claim EA_OI_6 [
+	]
+
+	claim EA_OI_7 [
+		activities
+		 isdlb: ResoluteIsolette.IsValueRangeUpperBound(UpperDesiredBound)
+	]
+
+	claim EA_OI_8 [
+	]
+
+	claim EA_OI_9 [
+		activities
+		 isdlb: ResoluteIsolette.IsValueRangeUpperBound(UpperAlarmBound)
+	]
+
+	claim EA_OI_10 [
+	]
+]

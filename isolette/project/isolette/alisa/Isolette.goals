@@ -1,4 +1,4 @@
-stakeholder goals IsoletteGoals for Isolette::isolette use constants IC
+stakeholder goals IsoletteGoals for Isolette::isolette 
 [
 	
 	goal G1 [ 
@@ -19,60 +19,12 @@ stakeholder goals IsoletteGoals for Isolette::isolette use constants IC
 	// A.4 Safety Requirements
 	
 	goal H1 [
-		description "Prolonged exposure of Infant to unsafe heat or cold. Classification: catastrophic. Probability: < " InfantExposureHazardRate " per hour of operation"
+		description "Prolonged exposure of Infant to unsafe heat or cold. Classification: catastrophic. Probability: < 10-9 per hour of operation"
  		category Quality.Safety
 		stakeholder hospital.SafetyAssessmentTeam
-		// validation: do we achieve 10-9 with the given decomposition?
 	]
 	
-	
-	// Table A-2 actor goals
-	
-	goal IS_AG1 [ // actor goal from table A-2
-		description "Table A-2: Hold infant and maintain the current temperature within the desired temperature range"
-		stakeholder hospital.DesignTeam
-		refines G1
-	]
-	
-	
-	
-	goal G1_IS_Functional [
-		description "Maintain constant temperature in Isolette"
-		stakeholder hospital.Infant
-		refines IS_AG1
-	]
-	
-	
+
 ]
 
-// Turned into requirements as we are dealing with design
-//stakeholder goals ThermostatGoals for Isolette::thermostat_th use constants IC [
-//	
-//	// A.4 Safety Requirements
-//	
-//	goal SR_1  [  // for regulate_temperature requirement on implementation
-//		description "The Isolette shall include an independent regulator function that maintains the Current Temperature inside the Isolette within the Desired Temperature Range. Allowed probability of failure: < " ThermostatFailureRate " per hour"
-//		rationale "The Desired Temperature Range will be set by the Nurse to the ideal range based on the Infant’s weight and health. The regulator should maintain the Current Temperature within this range under normal operation."
-//		refines IsoletteGoals.H1 // actually decomposes into a requirement on the thermostat
-//		// validation: exists subcomponent of type Isolette::regulate_temperature_rt
-//		// failure probability: physical failure vs. failing to maintain within desired range functionally in control logic. Assumptions about how close to boundary to turn off/on. greatervs. greater equal (diff of one degree)
-//	]
-//	
-//	goal SR_2  [  // for Isolette::monitor_temperature_mt
-//		description "The Isolette shall include an independent monitor function that activates an Alarm within a maximum of 5 seconds whenever
-//- the Current Temperature falls below or rises above the Alarm Temperature Range. 
-//- the Current Temperature or the Alarm Temperature Range is flagged as invalid.
-//- an internal failure has been detected in the monitor function."
-//"Allowed probability of monitor failure: < " ThermostatMonitorFailureRate " per hour."
-//		rationale "The Alarm Temperature Range will be set by the Nurse based on the Infant’s weight and health. The Infant should be removed from the Isolette within 15 seconds after the Current Temperature falls below or rises above this range. With the normal monitoring provided by the Nurse, this can be accomplished within 10 seconds, leaving 5 seconds for the system to activate the Alarm. Activating the Alarm in less time is desirable. If the Current Temperature or the Alarm Temperature Range provided to the monitor function are flagged as invalid or if an internal failure is detected in the monitor function, the monitor function should not be trusted to perform correctly." 
-//		refines IsoletteGoals.H1 // actually decomposes into a requirement on the thermostat
-//		// validation: exists subcomponent of type Isolette::monitor_temperature_mt
-//		// validation: check value. Also check logic for 5 seconds if other assumptions change - speed of nurse.
-//		// validation: independence assumption of monitor and regulator
-//		// not trusted if bad OI desired and alarm range & internal failure. Probability of 10e-5. Is that reasonable as users can type in incorrect range values - or we guarantee correct range values.
-//		// should have separate probability for bad input.
-//	]
-//	
-//]
-//
 

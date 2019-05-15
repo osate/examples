@@ -1,80 +1,462 @@
-system requirements ThermostatReqs for Isolette::thermostat_th use constants IC [
+system requirements ThermostatReqs for Isolette::thermostat_th  [
+// Environmental Assumptions A.3.2
+	see document FAAREMHB.pdf#A_3_2
+	requirement EA_TS_1 for current_temperature [
+		category Kind.Assumption
+		description "The Current Temperature will be provided to the Thermostat in degrees Fahrenheit"
+		rationale "Consistency with environmental-assumption Operator Interface EA-OI-1"
+		// validation: data type of current_temperature is Fahrenheit & same as unit in outgoing OI
+	]
+	requirement EA_TS_2 for current_temperature [
+		val TemperatureSenseAccuracy = 0.1 Fahrenheit
+		category Kind.Assumption
+		description "The Current Temperature will be sensed to an accuracy of +/-" TemperatureSenseAccuracy " deg F."
+		rationale "An accuracy of 0.1ï¿½F is necessary to ensure the Thermostat can turn the Heat Source on and off quickly enough to maintain the Desired Temperature Range."
+		// validation: accuracy property on thermostat is same or better than required.
+		value predicate #Isolette_Properties::Temperature_Accuracy <= TemperatureSenseAccuracy
+	]
+	requirement EA_TS_3 for current_temperature [
+		val SensedTemperatureRange = [ 68.0 .. 105.0]
+		category Kind.Assumption
+		description "The Current Temperature will cover the range of at least " SensedTemperatureRange " deg F."
+		rationale "This is the specified range of operation of the Isolette. The lower end of this range is useful for monitoring an Isolette that is warming to the Desired Temperature Range. The upper end is greater than the Upper Alarm Temperature to ensure that the Current Temperature will be sensed across the entire Alarm Temperature Range."
+		// validation data type of current_temperature has appropriate range specification
+		// validation of upper bound as indicated in text. Lower bound assumption about lowest Isolette/room temp or lower actual temp == lower bound.
+		// consistency with OI output (same type)
+		value predicate #Data_Model::Real_Range == SensedTemperatureRange
+		]
+		
+	requirement EA_TS_4 for current_temperature_status [ // added (not in FAA HB
+		category Kind.Assumption
+		description "The Current Temperature will be provided to the Thermostat with a validity indication."
+		rationale "Validity allows thermostat to assess malfunction of temp sensor."
+		// validation status feature exists (otherwise for is not resolved) and has correct type
+	]
+
+// System requirements see FAA REMHB A.5
+	see document FAAREMHB.pdf#A_5
+	
 	requirement REQ_TH_1 for heat_control [
+		category Kind.Guarantee
 		description "The Thermostat shall set the value of the Heat Control."
 		rationale "A primary function of the Thermostat is to turn the Heat Control on and off to maintain the Current Temperature in the Isolette within the Desired Temperature Range, which is required by SR-1."
-		see requirement ThermostatReqs.SR_1
+		see requirement ThermostatImplementationReqs.SR_1
 		// should also be a requirement on the Isolette pointing to the connection between thermostat and heat source
 		// Validation: heat control out port exists with on/off function
 	]
 
 	requirement REQ_TH_2 for regulator_status [
+		category Kind.Guarantee
 		description "The Thermostat Function shall set the value of the Regulator Status."
 		rationale "SR-1 requires the Thermostat to provide an independent regulator function. The status of this function is provided to the Operator Interface by the Thermostat. The Operator Interface will use the Regulator Status and the Monitor Status to report the overall status of the Thermostat, which is required by SR-1."
-		see requirement ThermostatReqs.SR_1
+		see requirement ThermostatImplementationReqs.SR_1
 		// Validation: regulator status out port exists with status type. 
 		// Validation: the monitoring function actually sets the status
 		// status as to internal failure?
 	]
-	requirement REQ_TH_3 for current_temperature [
+	requirement REQ_TH_3 for displayCurrentTemp [
+		category Kind.Guarantee
 		description "The Thermostat shall set the value of the Display Temperature."
 		rationale "The Current Temperature is displayed on the Operator Interface to provide the operators with an additional means to confirm the Isolette is maintaining the temperature correctly. This value is provided by the Thermostat to the Operator Interface as the Display Temperature."
 		// should also be a requirement on the Isolette pointing to the connection between thermostat and operator interface
-		// Validation: current temperature out port exists with temp values.
-		// Issue: additional means - in addition to what?
+		// Validation (for displayCurrentTemp resolved):flow exists from incoming current temp to display temp
 	]
-	requirement REQ_TH_4 for alarm [ // referred to as alarm control 
+	requirement REQ_TH_4 for alarm_action [ // referred to as alarm control 
+		category Kind.Guarantee
 		description "The Thermostat shall set the value of the Alarm Control."
 		rationale "A primary Thermostat Function is to activate the Alarm if the Isolette is unable to maintain the Current Temperature within the Alarm Temperature Range, which is required by SR-2."
-		see requirement ThermostatReqs.SR_2
+		see requirement ThermostatImplementationReqs.SR_2
 		// should also be a requirement on the Isolette pointing to the connection between thermostat and heat source
 		// Validation: heat control out port exists with on/off function
-		// Alarm as temp out of range or bad ranges or internal failure detected in monitoring function. 
 	]
 	requirement REQ_TH_5 for monitor_status [
+		category Kind.Guarantee
 		description "The Thermostat shall set the value of the Monitor Status."
 		rationale "SR-2 requires the Thermostat to provide an independent monitor function. The status of this function must be provided to the Operator Interface, which will use it and the status of the regulator function to report the overall status of the thermostat."
-		see requirement ThermostatReqs.SR_2
+		see requirement ThermostatImplementationReqs.SR_2
 		// Validation: monitor status out port exists with status type. 
 		// Validation: the monitoring function actually sets the status.
 		// status as to internal failure?
 		// Operator Interface is responsible for showing Thermostat status as combination of regulator and monitor status
 	]
+]
+system requirements ThermostatImplementationReqs for Isolette::thermostat_th.functional  [
 	
-		
-	requirement SR_1  [  // for regulate_temperature requirement on implementation
-		description "The Isolette shall include an independent regulator function that maintains the Current Temperature inside the Isolette within the Desired Temperature Range. Allowed probability of failure: < " ThermostatFailureRate " per hour"
-		rationale "The Desired Temperature Range will be set by the Nurse to the ideal range based on the Infant’s weight and health. The regulator should maintain the Current Temperature within this range under normal operation."
+	requirement REQ_H1 [
+		category Kind.Constraint
+		description "Allow higher failure probability for the thermostat (regulator)"
 		decomposes IsoletteReqs.REQ_H1
-		// validation: exists subcomponent of type Isolette::regulate_temperature_rt
-		// failure probability: physical failure vs. failing to maintain within desired range functionally in control logic. Assumptions about how close to boundary to turn off/on. greatervs. greater equal (diff of one degree)
 	]
 	
-	requirement SR_2  [  // for Isolette::monitor_temperature_mt
+	requirement SR_0   [  // independence of monitor and regulator
+		category Kind.Constraint
+		description "The Isolette shall include a monitor function that is independent of the regulator function"
+		rationale "We want to use a lower cost thermostat (regulator) which has a higher failure rate. To compensate we add an independent monitor function."
+		decomposes REQ_H1
+//		see goal IsoletteGoals.SR_2
+		// validation: They do not depend on each other's output
+		// validation: Regulator and monitor function must not be bound to the same physical component (common cause)
+	]
+	
+		
+	requirement SR_1  for regulate_temperature [  // for regulate_temperature requirement on implementation
+		category Kind.Constraint
+	val ThermostatRegulatorFailureRate = 1.0e-5
+		description "The Isolette shall include an independent regulator function that maintains the Current Temperature inside the Isolette within the Desired Temperature Range. Allowed probability of failure: < " ThermostatRegulatorFailureRate " per hour"
+		rationale "The Desired Temperature Range will be set by the Nurse to the ideal range based on the Infant's weight and health. The regulator should maintain the Current Temperature within this range under normal operation."
+		decomposes REQ_H1
+		value predicate #Iso_Properties::ThermostatRegulatorFailureRateValue <= ThermostatRegulatorFailureRate
+	]
+	
+	
+	requirement SR_2  for monitor_temperature [  
+		category Kind.Constraint
+	val ThermostatMonitorFailureRate = 1.0e-5
 		description "The Isolette shall include an independent monitor function that activates an Alarm within a maximum of 5 seconds whenever
 - the Current Temperature falls below or rises above the Alarm Temperature Range. 
 - the Current Temperature or the Alarm Temperature Range is flagged as invalid.
 - an internal failure has been detected in the monitor function."
 "Allowed probability of monitor failure: < " ThermostatMonitorFailureRate " per hour."
-		rationale "The Alarm Temperature Range will be set by the Nurse based on the Infant’s weight and health. The Infant should be removed from the Isolette within 15 seconds after the Current Temperature falls below or rises above this range. With the normal monitoring provided by the Nurse, this can be accomplished within 10 seconds, leaving 5 seconds for the system to activate the Alarm. Activating the Alarm in less time is desirable. If the Current Temperature or the Alarm Temperature Range provided to the monitor function are flagged as invalid or if an internal failure is detected in the monitor function, the monitor function should not be trusted to perform correctly." 
-		decomposes IsoletteReqs.REQ_H1
+		rationale "The Alarm Temperature Range will be set by the Nurse based on the Infant's weight and health. The Infant should be removed from the Isolette within 15 seconds after the Current Temperature falls below or rises above this range. With the normal monitoring provided by the Nurse, this can be accomplished within 10 seconds, leaving 5 seconds for the system to activate the Alarm. Activating the Alarm in less time is desirable. If the Current Temperature or the Alarm Temperature Range provided to the monitor function are flagged as invalid or if an internal failure is detected in the monitor function, the monitor function should not be trusted to perform correctly." 
+		decomposes REQ_H1
+		value predicate #Iso_Properties::ThermostatRegulatorFailureRateValue <= ThermostatMonitorFailureRate
+		see requirement IsoletteEnvironmentReqs.OE_IS_SR2
 		// validation: exists subcomponent of type Isolette::monitor_temperature_mt
 		// validation: check value. Also check logic for 5 seconds if other assumptions change - speed of nurse.
 		// validation: independence assumption of monitor and regulator
 		// not trusted if bad current temp and alarm range & internal failure. Probability of 10e-5. Is that reasonable as users can type in incorrect range values - or we guarantee correct range values.
-		// should have separate probability for bad input.
+		issues "Should have separate probability for bad input."
 	]
-
 ]
 
-system requirements RegulateTempReqs for Isolette::regulate_temperature_rt use constants IC [
+// A 5.1
+
+system requirements RegulateTempReqs for Isolette::regulate_temperature  [
+	
 	
 	requirement REQ_RT_1 for heat_control [
 		description "The Regulate Temperature Function shall set the value of the Heat Control."
 		rationale "The primary function of the Regulate Temperature Function is to turn the Heat Control on and off to maintain the Current Temperature in the Isolette within the Desired Temperature Range, as required by SR-1."
-		see requirement ThermostatReqs.SR_2
-		// Validation: input desired range and current temperature; output heat control
-		// behavior validation: logic does it within bounds.
-		// Need to turn off/on before range limit is reached.
+		see requirement ThermostatImplementationReqs.SR_1
+		// Validation: Is the value a polled variable (on while on) or a command/event
+		// Behavior: setting of internal state variable. Validation: variable exists and is set appropriately. And is used as value on output port.
+		// Question: can we just set the output port and it retains the previously set value? We would not need an internal state variable.
 	]
+	requirement REQ_RT_2  for regulator_status [
+		description "The Regulate Temperature Function shall set the value of the Regulator Status."
+		rationale "The status of the Regulate Temperature Function is provided to the Operator Interface so it can use the status of the Regulate Temperature and Monitor Temperature Functions to report the overall status of the Thermostat, as required by SR-1."
+		see requirement ThermostatImplementationReqs.SR_1
+		// Validation: output has appropriate type. The type currently reflects the modes of the component (init, on, failed)
+		// behavior validation: logic does set the correct status value and make it available through the port.
+		// Observation: the text is written with the observed/control variable model.
+	]
+	
+	requirement REQ_RT_3 for current_temperature [
+		description "The Regulate Temperature Function shall set the value of the Display Temperature."
+		rationale "The Current Temperature of the Isolette is displayed on the Operator Interface to provide the operators with an additional means to confirm that the Isolette is maintaining the temperature correctly. This value is provided by the Regulate Temperature Function to the Operator Interface as the Display Temperature."
+		// Validation: actually set the value to the one received from the sensor.
+		issues " Validation question: do we convert into integer here or is the OI responsible to display only full degrees?"
+		issues " Whoever converts what are the rules for rounding?"
+	]
+	
+]
+
+// A 5.1.1
+
+system requirements ManageRegulatorInterfaceReqs for Isolette::manage_regulator_interface_mri  [
+	
+	requirement LATENCY_MRI_1 [
+		val MaxOperatorResponseTime = #Isolette_Properties::Max_Operator_Response_Time
+		description "Max Operator Response Time less or equal to " MaxOperatorResponseTime ". The time an operator will tolerate between an operator request or a change in the Thermostat state and the visible response."
+		rationale "A trade study has shown that this lag should be no more than 0.5 second."
+		// validation: latency analysis
+		issues "The latency is from the operator input to resulting display change, i.e., a flow beyond the scope of the Thermostat to include latency in OI."
+	]
+	
+	requirement REQ_MRI_1  for regulator_status [
+		description "If the Regulator Mode is INIT, the Regulator Status shall be set to Init."
+		// Behavior: translation from mode to output value must be consistent.
+	]
+	requirement REQ_MRI_2  for regulator_status  [
+		description "f the Regulator Mode is NORMAL, the Regulator Status shall be set to On."
+		// Behavior: translation from mode to output value must be consistent.
+	]
+	requirement REQ_MRI_3  for regulator_status  [
+		description "If the Regulator Mode is FAILED, the Regulator Status shall be set to Failed."
+		// Behavior: translation from mode to output value must be consistent.
+	]
+	requirement REQ_MRI_4  for displayed_temp  [
+	val AllowedDisplayTempTolerance = #Isolette_Properties::Allowed_Display_Temp_Tolerance
+		description "If the Regulator Mode is NORMAL, the Display Temperature shall be set to the value of the Current Temperature rounded to the nearest integer. The accuracy of the rounded value will be +/- " AllowedDisplayTempTolerance " of the actual value."
+		rationale "Displaying the rounded value of the Current Temperature provides the the most accurate display of the Current Temperature possible using an integer display. When combined with the accuracy of the Temperature Sensor (EA-TS-2), the Display Temperature should be within 0.6ï¿½F of the actual value."
+		// Validation: correct rounding. Also validate the accuracy of 0.6. Are there other value error contributors.
+	]
+	requirement REQ_MRI_5  for displayed_temp  [
+		description "If the Regulator Mode is not NORMAL, the value of the Display Temperature is UNSPECIFIED."
+		rationale "In modes other than NORMAL, the value of Display Temperature is not meaningful and should not be used."
+		// Validation question: what does UNSPECIFIED mean? No fresh value? An explicit UNSPECIFIED? Or on the usage side check mode status. Or valid bit with value as we have for temp reading from sensor?
+	]
+
+	requirement REQ_MRI_6  [ //for regulator_interface_failure  [ -- an internal event
+		description "If the Status attribute of the Lower Desired Temperature or the Upper Desired Temperature is Invalid, the Regulator Interface Failure shall be set to True."
+		// Validation: the value of status is assigned. Maintain local instance of the state. Is updated every time? Why not use input?
+	]
+	requirement REQ_MRI_7  [ //for regulator_interface_failure  [ -- an internal event
+		description "If the Status attribute of the Lower Desired Temperature and the Upper Desired Temperature is Valid, the Regulator Interface Failure shall be set to False."
+		rationale "The Regulator Interface Failure internal variable indicates if any errors have occurred in sensing the Operator Interface monitored variables needed by the Regulate Temperature Function. Note that its initial value on power-up will always be True since the Status of the Lower Desired Temperature and the Upper Desired Temperature are initially Invalid."
+		// Validation question: Why would we pass in an invalid range? The regulator_interface_failure variable represents the valid flag - it affects the mode.
+		// Where do we have the trigger logic for the mode?
+	]
+
+	requirement REQ_MRI_8  [ //for desired_range  [ -- an internal variable holding the desired range as state
+		description "If the Regulator Interface Failure is False, the Desired Range shall be set to the Desired Temperature Range."
+		// Validation: Application logic to set value only if failure flag not set.
+	]
+	requirement REQ_MRI_9  [ //for desired_range  [ -- an internal variable holding the desired range as state
+		description "If the Regulator Interface Failure is True, the Desired Range is UNSPECIFIED."
+		rationale "The Desired Range is only meaningful when there is not a Regulator Interface Failure. If there is, its value should not be used, and it can be set to any value."
+		// Validation: Application logic to not set value only if failure flag set.
+		issues "We are specifying a particular implementation. Either we have UNSPECIFIED as a value or the recipient should only read if the failure status is not set."
+	]
+	
+	// regulator mode is passed as variable value from manage_regulator_mode_mrm to manage_regulator_interface_mri and manage_heat_source
+]
+
+// A 5.1.2
+
+system requirements ManageRegulatorModeReqs for Isolette::manage_regulator_mode_mrm  [
+	
+	requirement TIMEOUT_LATENCY_MRM_1 [
+val RegulatorInitTimeout = #Isolette_Properties::Regulator_Init_Timeout
+		description "The time allowed for initialization of the Regulate Temperature Function before declaring failure is " RegulatorInitTimeout ". This effectively specifies a latency bound."
+		rationale "A trade study has shown that users become impatient if the Thermostat requires more than one second to initialize."
+		// validation: latency analysis
+	]
+	
+	// mode state machine figure without semantic explanation
+	requirement REQ_MRM_1   [
+		description "Init is started at startup (powerup)."
+	]
+	requirement REQ_MRM_2   [
+		description "Transition from INIT to NORMAL with Regulator Status = True. Regulator Status is defined as NOT (Regulator Interface Failure OR Regulator Internal Failure)
+AND Current Temperature.Status = Valid"
+issues "Is it possible that transiently the condition is false, e.g., current temp does not have the first value yet?"
+	]
+	// REgualtor Internal Failure would be modeled by an internal event. Currently it is an incoming port that is not connected.
+	requirement REQ_MRM_3   [
+		description "Transition from NORMAL to FAILED with Regulator Status = False."
+		issues "At the end of INIT Regulator Status may evaluate to False but no transition from INIT to FAILED unless time out."
+	]
+	requirement REQ_MRM_4   [
+		description "If regulator init time exceeds the timeout limit set Regulator Mode to FAILED."
+	]
+	// This is an odd way of describing the fault behavior. Everything is NORMAL unless we have a fault trigger (RegInterface failure, Reg internal failure, bad current temp reading, time out)
+	issues "Note that a single bad temp reading puts us into FAILED mode which requires power down/up."
+	description "(Req MRM 3 and Req MRM 4) Once the regulator has failed, the only way for it to re-enter normal operation is for it to be powered off and on. This ensures that the operators are made aware of any transient failures that the regulator may be experiencing."
+]
+
+
+// A 5.1.3
+
+system requirements ManageHeatSourceReqs for Isolette::manage_heat_source_mhs  [
+	
+	requirement LATENCY_MHS_1 [
+		val AllowedHeatSourceLatency = #Isolette_Properties::Allowed_Heat_Source_Latency
+		description "The maximum time by which the Heat Source must be turned on or off to ensure acceptable operation of the Isolette system is" AllowedHeatSourceLatency
+		rationale "Rationale: Since a closed Isolette will warm or cool at a maximum rate of 1ï¿½F per minute (EA-IS1 and EA-IS2), turning the Heat Source on or off within 6 seconds ensures that the Current Temperature will not have changed by more than 0.1ï¿½F, the required accuracy and resolution of the Temperature Sensor (EA-TS2)."
+		// validation: correctly set latency value as property. latency analysis
+		issues "Is the 6 seconds for the manage function or for the actual heat source to mechanically turn off?"
+	]
+	
+	requirement REQ_MHS_1   [
+		description "If the Regulator Mode is INIT, the Heat Control shall be set to Off."
+		rationale "A regulator that is initializing cannot regulate the Current Temperature of the Isolette and the Heat Control should be turned off."
+	]
+	requirement REQ_MHS_2   [
+		description "If the Regulator Mode is NORMAL and the Current Temperature is less than the Lower Desired Temperature, the Heat Control shall be set to On."
+		// validation: ensure that the current temp is valid. This is ensured if we are in the correct mode.
+		issues "There is the question of concurrency: manage regulator mode needs to run first to change mode to FAILED if invalid temp."
+		issues "less than: 1 degree lower which means infant has been below desired for one minute!!"
+		issues "If the alarm range is just one larger than the desired range the alarm will constantly go off."
+		issues "There may be a lag in the heat source from radiating heat which may take the temp slightly higher."
+	]
+	requirement REQ_MHS_3   [
+		description "If the Regulator Mode is NORMAL and the Current Temperature is greater than or equal to the Lower Desired Temperature and less than or equal to the Upper Desired Temperature, the value of the Heat Control shall not be changed."
+	]
+	requirement REQ_MHS_4  [
+		description "If the Regulator Mode is INIT, the Heat Control shall be set to Off."
+		rationale "When the Isolette is warming towards the Upper Desired Temperature, the Heat Source should be left on until the Upper Desired Temperature is reached. In a similar fashion, if the Isolette is cooling towards the Lower Desired Temperature, the Heat Source should be left off until the Lower Desired Temperature is reached."
+	]
+
+	requirement REQ_MHS_5   [
+		description "If the Regulator Mode is FAILED, the Heat Control shall be set to Off."
+		rationale "In failed mode, the regulator cannot regulate the Current Temperature of the Isolette and the Heat Control should be turned off."
+	]
+]
+
+// A 5.2
+
+system requirements MonitorTempReqs for Isolette::monitor_temperature  [
+	
+	
+	requirement REQ_MT_1 for alarm [
+		description "The Monitor Temperature Function shall set the value of the Alarm Control."
+		rationale "The primary function of the Monitor Temperature Function is to raise an alarm if the Isolette is unable to maintain the Current Temperature within the Alarm Temperature Range, as required by safety requirement SR-2."
+		see requirement ThermostatImplementationReqs.SR_2
+		// Validation: Is the value a polled variable (on while on) or a command/event
+		// Behavior: setting of internal state variable. Validation: variable exists and is set appropriately. And is used as value on output port.
+		// Question: can we just set the output port and it retains the previously set value? We would not need an internal state variable.
+	]
+	requirement REQ_MT_2  for monitor_status [
+		description "The Monitor Temperature Function shall set the value of the Monitor Status."
+		rationale "The status of the Regulate Temperature Function is provided to the Operator Interface so it can use the status of the Regulate Temperature and Monitor Temperature Functions to report the overall status of the Thermostat, as required by SR-1."
+		see requirement ThermostatImplementationReqs.SR_1
+		// Validation: output has appropriate type. The type currently reflects the modes of the component (init, on, failed)
+		// behavior validation: logic does set the correct status value and make it available through the port.
+		// Observation: the text is written with the observed/control variable model.
+	]
+
+	
+	requirement _REQ_SR_2_4 [ 
+	val AllowedAlarmLatency = 5.0 sec // see rationale below
+		description "The Isolette shall include an independent monitor function that responds with an alarm within " AllowedAlarmLatency
+		rationale "The Desired Temperature Range will be set by the Nurse to the ideal range based on the Infant's weight and health. The regulator should maintain the Current Temperature within this range under normal operation."
+		see requirement ThermostatImplementationReqs.SR_2
+		mitigates "H1 Thermostat failure or Temperature Sensor failure. (see Fault tree description in Figure 6)"
+		// ensure latency value on flow spec
+		// validation: exists subcomponent of type Isolette::regulate_temperature_rt in Isolette::thermostat_th.impl
+	]
+	
+]
+
+// A 5.2.1
+
+system requirements ManageMonitorInterfaceReqs for Isolette::manage_monitor_interface_mmi  [
+	
+	issues "Table A-5: The lower alarm temp is specified to support the range of [96 .. 101], while in EA it was [93..98]"
+	issues "Table A-5: The upper alarm temp is specified to support the range of [97 .. 102], while in EA it was [99..103]"
+	
+
+	requirement REQ_MMI_1  for monitor_status [
+		description "If the Manage Monitor Interface mode is INIT, the Monitor Status shall be set to Init."
+		// Behavior: translation from mode to output value must be consistent.
+	]
+	requirement REQ_MMI_2  for monitor_status  [
+		description "If the Manage Monitor Interface mode is NORMAL, the Monitor Status shall be set to On."
+		// Behavior: translation from mode to output value must be consistent.
+	]
+	requirement REQ_MMI_3  for monitor_status  [
+		description "If the Manage Monitor Interface mode is FAILED, the Monitor Status shall be set to Failed."
+		// Behavior: translation from mode to output value must be consistent.
+	]
+
+	requirement REQ_MMI_4  [ //for monitor_interface_failure  [ -- an internal event
+		description "If the Status attribute of the Lower Alarm Temperature or the Upper Alarm Temperature is Invalid, the Monitor Interface Failure shall be set to True."
+		// Validation: the value of status is assigned. Maintain local instance of the state. Is updated every time? Why not use input?
+	]
+	requirement REQ_MMI_5  [ //for monitorr_interface_failure  [ -- an internal event
+		description "If the Status attribute of the Lower Alarm Temperature and the Upper Alarm Temperature is Valid, the Monitor Interface Failure shall be set to False."
+		rationale "The Monitor Interface Failure internal variable indicates if any errors have occurred in sensing the Operator Interface monitored variables needed by the Manage Temperature Function. Note that its initial value on power-up will always be True since the Status attribute of the Lower Alarm Temperature and the Upper Alarm Temperature will initially be Invalid."
+		// Validation question: Why would we pass in an invalid range? The regulator_interface_failure variable represents the valid flag - it affects the mode.
+		// Where do we have the trigger logic for the mode?
+	]
+
+	requirement REQ_MRI_6  for alarm_range [ 
+		description "If the Monitor Interface Failure is False, the Alarm Range variable shall be set to the Desired Temperature Range."
+		// Validation: Check the bound values for acceptable alarm range lower/upper bound. Also check against EA values.
+		issues "We do not get Desired Temp Range, but Alarm Range."
+	]
+	requirement REQ_MRI_7  for alarm_range [
+		description "If the Monitor Interface Failure is True, the Alarm Range variable is UNSPECIFIED."
+		rationale "The Alarm Range variable is only meaningful when there is not a Monitor Interface Failure. If there is, its value should not used and it can be set to any value."
+		// Validation: Application logic to not set value only if failure flag set.
+		issues "We are specifying a particular implementation. Either we have UNSPECIFIED as a value or the recipient should only read if the failure status is not set."
+	]
+	
+	// monitor mode is passed as variable value from manage_monitor_mode_mmm to manage_monitor_interface_mmi and manage_alarm
+]
+
+// A 5.2.2
+
+system requirements ManageMonitorModeReqs for Isolette::manage_monitor_mode_mmm  [
+	
+	requirement TIMEOUT_LATENCY_MRM_1 [
+	val MonitorInitTimeout = #Isolette_Properties::Monitor_Initialization_Timeout
+		description "The time allowed for initialization of the Monitor Temperature Function before declaring failure is " MonitorInitTimeout ". This effectively specifies a latency bound."
+		rationale "A trade study has shown that users become impatient if the Thermostat requires more than one second to initialize."
+		// validation: latency analysis
+	]
+	
+	// mode state machine figure without semantic explanation
+	requirement REQ_MRM_1   [
+		description "Init is started at startup (powerup)."
+	]
+	requirement REQ_MRM_2   [
+		description "Transition from INIT to NORMAL with Monitor Status = Valid (sic TRUE). Regulator Status is defined as NOT (Monitor Interface Failure OR Monitor Internal Failure)
+AND Current Temperature.Status = Valid"
+issues "Monitor Status is a boolean."
+issues "Is it possible that transiently the condition is false, e.g., current temp does not have the first value yet?"
+	]
+	// REgualtor Internal Failure would be modeled by an internal event. Currently it is an incoming port that is not connected.
+	requirement REQ_MRM_3   [
+		description "Transition from NORMAL to FAILED with Regulator Status not equal Valid (sic FALSE)."
+		issues "Monitor Status is a boolean."
+		issues "At the end of INIT Regulator Status may evaluate to False but no transition from INIT to FAILED unless time out."
+	]
+	requirement REQ_MRM_4   [
+		description "If init time exceeds monitor timeout limit set Regulator Mode to FAILED."
+	]
+	// This is an odd way of describing the fault behavior. Everything is NORMAL unless we have a fault trigger (RegInterface failure, Reg internal failure, bad current temp reading, time out)
+	issues "Note that a single bad temp reading puts us into FAILED mode which requires power down/up."
+	description "(Req MMM 3 and Req MMM 4) Once the monitor has failed, the only way for it to re-enter normal operation is for it to be powered off and on. This ensures that the operators are made aware of any transient failures that the monitor may be experiencing."
+]
+
+// A 5.2.3
+
+system requirements ManageAlarmReqs for Isolette::manage_alarm_ma  [
+	
+	requirement LATENCY_MA_1 [
+	val AllowedHeatSourceMonitoringLatency = #Isolette_Properties::Allowed_Heat_Source_Monitoring_Latency
+		description "The maximum time by which the Heat Source must be turned on or off (as perceived by monitor see 5.2.3 after REQ-MA-5) to ensure acceptable operation of the Isolette system is" AllowedHeatSourceMonitoringLatency
+		// validation: correctly set latency value as property. Consistency with values in regulator
+		issues "The regulator figure is 6 sec."
+	]
+	
+	requirement REQ_MA_1   [
+		description "If the Monitor Mode is INIT, the Alarm Control shall be set to Off."
+		rationale "A monitor that is initializing should not activate the alarm unless it enters the FAILED mode."
+	]
+	requirement REQ_MA_2   [
+		description "If the Monitor Mode is NORMAL and the Current Temperature is less than the Lower Alarm Temperature or greater than the Upper Alarm Temperature, the Alarm Control shall be set to On."
+		// validation: ensure that the current temp is valid. This is ensured if we are in the correct mode.
+		// validation: make sure the same is specified for the regulator
+		issues "There is the question of concurrency: manage monitor mode needs to run first to change mode to FAILED if invalid temp."
+		issues "concurrency between regulator and monitor"
+		issues "less than: 1 degree lower which means infant has been below desired for one minute!!"
+		issues "If the alarm range is just one larger than the desired range the alarm will constantly go off."
+		issues "There may be a lag in the heat source from radiating heat which may take the temp slightly higher."
+	]
+	requirement REQ_MA_3   [
+		description "If the Monitor Mode is NORMAL and the Current Temperature is less than the Lower Alarm Temperature or greater than the Upper Alarm Temperature, the Alarm Control shall be set to On."
+		rationale "This provides a hysteresis that prevents transient alarms, see figure A-7."
+		issues "Need to think this through. WHy is it different for the regulator?"
+	]
+
+	requirement REQ_MA_4  [
+		description "If the Monitor Mode is NORMAL and the value of the Current Temperature is greater than or equal to the Lower Alarm Temperature +0.5ï¿½ and less than or equal to the Upper Alarm Temperature -0.5ï¿½, the Alarm Control shall be set to Off."
+		issues "This turns the alarm off at the same moment that the Displayed Temperature shows a value greater than the Lower Alarm Temperature and less than the Upper Alarm Temperature." 
+		issues "Need to think this through. WHy is it different (not in?) for the regulator?"
+	]
+
+	requirement REQ_MA_4X  [
+		description "If the Monitor Mode is INIT, the Alarm Control shall be set to Off."
+		issues "A requirement for the regulator, but not here in the FAA HB" 
+	]
+
+	requirement REQ_MHS_5   [
+		description "If the Monitor Mode is FAILED, the Alarm Control shall be set to On."
+		rationale "A failed monitor cannot monitor the Current Temperature of the Isolette and the Alarm should be turned on."
+	]
+	
 	
 ]

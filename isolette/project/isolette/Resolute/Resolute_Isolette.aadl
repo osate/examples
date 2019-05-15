@@ -1,0 +1,78 @@
+-- Copyright 2018 Carnegie Mellon University. See Notice.txt
+-- Distribution Statement A: Approved for Public Release; Distribution is Unlimited.
+package Resolute_Isolette
+public
+	annex Resolute {**
+
+
+	is_Measured_Temperature(cp:port)<=
+	** "Data type of " cp " must be iso_variables::measured_temperature" **
+	type(cp) = iso_variables::measured_temperature
+ 
+ 	is_Fahrenheit(cp: port)<=
+	** "Measurement unit of " cp " must be Fahrenheit" **
+ 		if has_property(cp, Data_Model::Measurement_Unit) then property (cp, Data_Model::Measurement_Unit) = "Fahrenheit"
+ 		else false
+
+ 	TemperatureAccuracyIsOne(cp: port)<=
+	** "Temperature accuracy of " cp " must be 1.0 deg F" **
+ 		if has_Temperature_Accuracy(cp) then 
+ 		property (cp, Isolette_Properties::Temperature_Accuracy)= 1.0 
+ 		else false
+
+
+	has_Temperature_Accuracy (cp:aadl) : bool =
+	has_property(cp, Isolette_Properties::Temperature_Accuracy)
+
+	has_Measurement_Unit (cp:aadl) : bool =
+	has_property(cp, Data_Model::Measurement_Unit)
+
+    get_Measurement_Unit(cp: aadl) : string = 
+ 	property (cp, Data_Model::Measurement_Unit)
+ 	
+
+	has_Real_Range (cp:aadl) : bool =
+	has_property(cp, Data_Model::Real_Range)
+
+    get_Real_Range(cp: aadl) :  range  = 
+ 	property (cp, Data_Model::Real_Range) 
+ 	
+    is_Value_Range(cp: port, lb: real, ub: real) <=
+	** "Value range of " cp " must be " lb " .. " ub **
+ 	if has_Real_Range(cp) then
+ 		let rr : range = get_Real_Range(cp);
+		(real)lower_bound(rr)  = lb and (real)upper_bound(rr) = ub
+	else 
+		false
+ 
+    is_ValueRange_UpperBound(cp: port,  ub: real) <=
+	** "Value range upper bound of " cp " must be " ub **
+ 	if has_Real_Range(cp) then
+ 		let rr : range = get_Real_Range(cp);
+		(real)upper_bound(rr) = ub
+	else 
+		false
+ 
+    is_ValueRange_LowerBound(cp: port,  lb: real) <=
+	** "Value range lower bound of " cp " must be " lb **
+ 	if has_Real_Range(cp) then
+ 		let rr : range = get_Real_Range(cp);
+		(real)lower_bound(rr) = lb
+	else 
+		false
+
+ 	is_Type_Valid_Flag(cp: port)<=
+	** "Type of " cp " is iso_variables::valid_flag" **
+ 		type(cp) = iso_variables::valid_flag
+
+ 	is_Type_On_Off(cp: port)<=
+	** "Type of " cp " is iso_variables::on_off" **
+ 		type(cp) = iso_variables::on_off
+ 		
+ 		assert_True (el: aadl) <=
+ 		** "assert true" **
+ 		true
+
+		
+	**};
+end Resolute_Isolette;

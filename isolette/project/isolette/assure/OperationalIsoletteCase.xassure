@@ -1,0 +1,1152 @@
+<?xml version="1.0" encoding="ASCII"?>
+<assure:AssuranceCaseResult xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aadl2="http://aadl.info/AADL/2.0" xmlns:assure="http://www.osate.org/assure/Assure" xmlns:result="http://www.osate.org/result/Result" name="OperationalIsoletteCase">
+  <metrics successCount="3"/>
+  <modelResult>
+    <metrics successCount="1"/>
+    <plan href="../alisa/OperationalIsoletteCase.alisa#//@assurancePlans.0"/>
+    <target xsi:type="aadl2:SystemImplementation" href="../isolette.aadl#Isolette.IsoletteEnvironment.tier1"/>
+    <claimResult>
+      <metrics successCount="1"/>
+      <targetReference>
+        <verificationPlan href="../alisa/Isolette.verify#//@contents.1"/>
+        <requirement>
+          <requirement href="../alisa/Isolette.reqspec#//@parts.1/@requirements.0"/>
+        </requirement>
+      </targetReference>
+      <modelElement xsi:type="aadl2:EndToEndFlow" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.4/@ownedEndToEndFlow.0"/>
+      <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
+        <metrics successCount="1" executionTime="357"/>
+        <analysisresult analysis="latency" message="AS-MF-DL-EQ">
+          <modelElement href="../instances/isolette_IsoletteEnvironment_tier1_Instance.aaxl2#/"/>
+          <parameters value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787001"/>
+          <parameters value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787001"/>
+          <parameters value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787001"/>
+          <parameters value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787001"/>
+          <results message="Latency results for alarmResponse" resultType="SUCCESS">
+            <values xsi:type="result:StringValue" value=""/>
+            <values xsi:type="result:RealValue" value="15000.0"/>
+            <values xsi:type="result:RealValue" value="15000.0"/>
+            <values xsi:type="result:RealValue" value="15000.0"/>
+            <values xsi:type="result:RealValue" value="15000.0"/>
+            <values xsi:type="result:RealValue" value="15000.0"/>
+            <values xsi:type="result:RealValue" value="15000.0"/>
+            <diagnostics diagnosticType="INFO" message="Minimum actual latency total 15000.0ms is greater or equal to expected minimum end to end latency 15000.0ms">
+              <modelElement href="../instances/isolette_IsoletteEnvironment_tier1_Instance.aaxl2#//@endToEndFlow.0"/>
+            </diagnostics>
+            <diagnostics diagnosticType="INFO" message="Maximum actual latency total 15000.0ms is less or equal to expected maximum end to end latency 15000.0ms">
+              <modelElement href="../instances/isolette_IsoletteEnvironment_tier1_Instance.aaxl2#//@endToEndFlow.0"/>
+            </diagnostics>
+            <subResults>
+              <values xsi:type="result:RealValue" value="5000.0"/>
+              <values xsi:type="result:RealValue" value="5000.0"/>
+              <values xsi:type="result:RealValue" value="5000.0"/>
+              <values xsi:type="result:RealValue" value="5000.0"/>
+              <values xsi:type="result:StringValue" value="specified"/>
+              <values xsi:type="result:StringValue" value="specified"/>
+              <modelElement href="../instances/isolette_IsoletteEnvironment_tier1_Instance.aaxl2#//@componentInstance.3"/>
+            </subResults>
+            <subResults>
+              <values xsi:type="result:RealValue"/>
+              <values xsi:type="result:RealValue"/>
+              <values xsi:type="result:RealValue"/>
+              <values xsi:type="result:RealValue"/>
+              <values xsi:type="result:StringValue" value="no latency"/>
+              <values xsi:type="result:StringValue" value="no latency"/>
+              <modelElement href="../instances/isolette_IsoletteEnvironment_tier1_Instance.aaxl2#//@connectionInstance.1"/>
+            </subResults>
+            <subResults>
+              <values xsi:type="result:RealValue" value="10000.0"/>
+              <values xsi:type="result:RealValue" value="10000.0"/>
+              <values xsi:type="result:RealValue" value="10000.0"/>
+              <values xsi:type="result:RealValue" value="10000.0"/>
+              <values xsi:type="result:StringValue" value="specified"/>
+              <values xsi:type="result:StringValue" value="specified"/>
+              <modelElement href="../instances/isolette_IsoletteEnvironment_tier1_Instance.aaxl2#//@componentInstance.0"/>
+            </subResults>
+            <modelElement href="../instances/isolette_IsoletteEnvironment_tier1_Instance.aaxl2#//@endToEndFlow.0"/>
+          </results>
+        </analysisresult>
+        <targetReference>
+          <verificationPlan href="../alisa/Isolette.verify#//@contents.1"/>
+          <requirement>
+            <requirement href="../alisa/Isolette.reqspec#//@parts.1/@requirements.0"/>
+          </requirement>
+          <verificationActivity href="../alisa/Isolette.verify#//@contents.1/@claim.0/@activities.0"/>
+        </targetReference>
+      </verificationActivityResult>
+    </claimResult>
+    <subsystemResult>
+      <metrics/>
+      <targetSystem xsi:type="aadl2:AbstractSubcomponent" href="../isolette.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedAbstractSubcomponent.0"/>
+    </subsystemResult>
+    <subsystemResult>
+      <metrics/>
+      <targetSystem xsi:type="aadl2:AbstractSubcomponent" href="../isolette.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedAbstractSubcomponent.1"/>
+    </subsystemResult>
+    <subsystemResult>
+      <metrics/>
+      <targetSystem xsi:type="aadl2:AbstractSubcomponent" href="../isolette.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedAbstractSubcomponent.2"/>
+    </subsystemResult>
+    <subAssuranceCase name="IsoletteCase">
+      <metrics/>
+    </subAssuranceCase>
+  </modelResult>
+  <modelResult>
+    <metrics successCount="1"/>
+    <plan href="../alisa/OperationalIsoletteCase.alisa#//@assurancePlans.1"/>
+    <target xsi:type="aadl2:SystemImplementation" href="../isolette.aadl#Isolette.IsoletteEnvironment.tier2"/>
+    <claimResult>
+      <metrics successCount="1"/>
+      <targetReference>
+        <verificationPlan href="../alisa/Isolette.verify#//@contents.1"/>
+        <requirement>
+          <requirement href="../alisa/Isolette.reqspec#//@parts.1/@requirements.0"/>
+        </requirement>
+      </targetReference>
+      <modelElement xsi:type="aadl2:EndToEndFlow" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.4/@ownedEndToEndFlow.0"/>
+      <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
+        <metrics successCount="1" executionTime="380"/>
+        <analysisresult analysis="latency" message="AS-MF-DL-EQ">
+          <modelElement href="../instances/isolette_IsoletteEnvironment_tier2_Instance.aaxl2#/"/>
+          <parameters value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787001"/>
+          <parameters value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787001"/>
+          <parameters value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787001"/>
+          <parameters value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787001"/>
+          <results message="Latency results for alarmResponse" resultType="SUCCESS">
+            <values xsi:type="result:StringValue" value=""/>
+            <values xsi:type="result:RealValue" value="14000.0"/>
+            <values xsi:type="result:RealValue" value="14000.0"/>
+            <values xsi:type="result:RealValue" value="14000.0"/>
+            <values xsi:type="result:RealValue" value="14000.0"/>
+            <values xsi:type="result:RealValue" value="15000.0"/>
+            <values xsi:type="result:RealValue" value="15000.0"/>
+            <diagnostics diagnosticType="WARNING" message="Minimum specified flow latency total 14000.0ms less than expected minimum end to end latency 15000.0ms (better response time)">
+              <modelElement href="../instances/isolette_IsoletteEnvironment_tier2_Instance.aaxl2#//@endToEndFlow.0"/>
+            </diagnostics>
+            <diagnostics diagnosticType="WARNING" message="Minimum actual latency total 14000.0ms less than expected minimum end to end latency 15000.0ms (faster actual minimum response time)">
+              <modelElement href="../instances/isolette_IsoletteEnvironment_tier2_Instance.aaxl2#//@endToEndFlow.0"/>
+            </diagnostics>
+            <diagnostics diagnosticType="INFO" message="Maximum actual latency total 14000.0ms is less or equal to expected maximum end to end latency 15000.0ms">
+              <modelElement href="../instances/isolette_IsoletteEnvironment_tier2_Instance.aaxl2#//@endToEndFlow.0"/>
+            </diagnostics>
+            <subResults>
+              <values xsi:type="result:RealValue" value="1000.0"/>
+              <values xsi:type="result:RealValue" value="1000.0"/>
+              <values xsi:type="result:RealValue" value="1000.0"/>
+              <values xsi:type="result:RealValue" value="1000.0"/>
+              <values xsi:type="result:StringValue" value="specified"/>
+              <values xsi:type="result:StringValue" value="specified"/>
+              <modelElement href="../instances/isolette_IsoletteEnvironment_tier2_Instance.aaxl2#//@componentInstance.3/@componentInstance.1"/>
+            </subResults>
+            <subResults>
+              <values xsi:type="result:RealValue"/>
+              <values xsi:type="result:RealValue"/>
+              <values xsi:type="result:RealValue"/>
+              <values xsi:type="result:RealValue"/>
+              <values xsi:type="result:StringValue" value="no latency"/>
+              <values xsi:type="result:StringValue" value="no latency"/>
+              <modelElement href="../instances/isolette_IsoletteEnvironment_tier2_Instance.aaxl2#//@componentInstance.3/@connectionInstance.0"/>
+            </subResults>
+            <subResults>
+              <values xsi:type="result:RealValue" value="1000.0"/>
+              <values xsi:type="result:RealValue" value="1000.0"/>
+              <values xsi:type="result:RealValue" value="1000.0"/>
+              <values xsi:type="result:RealValue" value="1000.0"/>
+              <values xsi:type="result:StringValue" value="specified"/>
+              <values xsi:type="result:StringValue" value="specified"/>
+              <modelElement href="../instances/isolette_IsoletteEnvironment_tier2_Instance.aaxl2#//@componentInstance.3/@componentInstance.3"/>
+            </subResults>
+            <subResults>
+              <values xsi:type="result:RealValue"/>
+              <values xsi:type="result:RealValue"/>
+              <values xsi:type="result:RealValue"/>
+              <values xsi:type="result:RealValue"/>
+              <values xsi:type="result:StringValue" value="no latency"/>
+              <values xsi:type="result:StringValue" value="no latency"/>
+              <modelElement href="../instances/isolette_IsoletteEnvironment_tier2_Instance.aaxl2#//@componentInstance.3/@connectionInstance.6"/>
+            </subResults>
+            <subResults>
+              <values xsi:type="result:RealValue" value="2000.0"/>
+              <values xsi:type="result:RealValue" value="2000.0"/>
+              <values xsi:type="result:RealValue" value="2000.0"/>
+              <values xsi:type="result:RealValue" value="2000.0"/>
+              <values xsi:type="result:StringValue" value="specified"/>
+              <values xsi:type="result:StringValue" value="specified"/>
+              <modelElement href="../instances/isolette_IsoletteEnvironment_tier2_Instance.aaxl2#//@componentInstance.3/@componentInstance.4"/>
+            </subResults>
+            <subResults>
+              <values xsi:type="result:RealValue"/>
+              <values xsi:type="result:RealValue"/>
+              <values xsi:type="result:RealValue"/>
+              <values xsi:type="result:RealValue"/>
+              <values xsi:type="result:StringValue" value="no latency"/>
+              <values xsi:type="result:StringValue" value="no latency"/>
+              <modelElement href="../instances/isolette_IsoletteEnvironment_tier2_Instance.aaxl2#//@connectionInstance.1"/>
+            </subResults>
+            <subResults>
+              <values xsi:type="result:RealValue" value="10000.0"/>
+              <values xsi:type="result:RealValue" value="10000.0"/>
+              <values xsi:type="result:RealValue" value="10000.0"/>
+              <values xsi:type="result:RealValue" value="10000.0"/>
+              <values xsi:type="result:StringValue" value="specified"/>
+              <values xsi:type="result:StringValue" value="specified"/>
+              <modelElement href="../instances/isolette_IsoletteEnvironment_tier2_Instance.aaxl2#//@componentInstance.0"/>
+            </subResults>
+            <modelElement href="../instances/isolette_IsoletteEnvironment_tier2_Instance.aaxl2#//@endToEndFlow.0"/>
+          </results>
+        </analysisresult>
+        <targetReference>
+          <verificationPlan href="../alisa/Isolette.verify#//@contents.1"/>
+          <requirement>
+            <requirement href="../alisa/Isolette.reqspec#//@parts.1/@requirements.0"/>
+          </requirement>
+          <verificationActivity href="../alisa/Isolette.verify#//@contents.1/@claim.0/@activities.0"/>
+        </targetReference>
+      </verificationActivityResult>
+    </claimResult>
+    <subsystemResult>
+      <metrics/>
+      <targetSystem xsi:type="aadl2:AbstractSubcomponent" href="../isolette.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedAbstractSubcomponent.0"/>
+    </subsystemResult>
+    <subsystemResult>
+      <metrics/>
+      <targetSystem xsi:type="aadl2:AbstractSubcomponent" href="../isolette.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedAbstractSubcomponent.1"/>
+    </subsystemResult>
+    <subsystemResult>
+      <metrics/>
+      <targetSystem xsi:type="aadl2:AbstractSubcomponent" href="../isolette.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedAbstractSubcomponent.2"/>
+    </subsystemResult>
+    <subAssuranceCase name="IsoletteCase">
+      <metrics tbdCount="-13" successCount="9" errorCount="4"/>
+      <modelResult>
+        <metrics tbdCount="-13" successCount="9" errorCount="4"/>
+        <plan href="../alisa/IsoletteCase.alisa#//@assurancePlans.0"/>
+        <target xsi:type="aadl2:SystemImplementation" href="../isolette.aadl#Isolette.isolette.tier1"/>
+        <claimResult>
+          <metrics tbdCount="-2" successCount="1" errorCount="1"/>
+          <targetReference>
+            <verificationPlan href="../alisa/Isolette.verify#//@contents.0"/>
+            <requirement>
+              <requirement href="../alisa/Isolette.reqspec#//@parts.0/@requirements.0"/>
+            </requirement>
+          </targetReference>
+          <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="ERROR">
+            <metrics tbdCount="-1" errorCount="1" executionTime="83"/>
+            <issues diagnosticType="ERROR" message="Verification method execution exception: alisa_consistency.ModelConditions.assertTrue(org.osate.aadl2.instance.InstanceObject)">
+              <modelElement href="../instances/isolette_isolette_tier1_Instance.aaxl2#/"/>
+            </issues>
+            <targetReference>
+              <verificationPlan href="../alisa/Isolette.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Isolette.reqspec#//@parts.0/@requirements.0"/>
+              </requirement>
+              <verificationActivity href="../alisa/Isolette.verify#//@contents.0/@claim.0/@activities.0"/>
+            </targetReference>
+          </verificationActivityResult>
+          <predicateResult xsi:type="assure:PredicateResult" type="SUCCESS">
+            <metrics tbdCount="-1" successCount="1"/>
+            <targetReference>
+              <verificationPlan href="../alisa/Isolette.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Isolette.reqspec#//@parts.0/@requirements.0"/>
+              </requirement>
+            </targetReference>
+          </predicateResult>
+        </claimResult>
+        <claimResult>
+          <metrics tbdCount="-2" successCount="1" errorCount="1"/>
+          <targetReference>
+            <verificationPlan href="../alisa/Isolette.verify#//@contents.0"/>
+            <requirement>
+              <requirement href="../alisa/Isolette.reqspec#//@parts.0/@requirements.1"/>
+            </requirement>
+          </targetReference>
+          <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="ERROR">
+            <metrics tbdCount="-1" errorCount="1" executionTime="17"/>
+            <issues diagnosticType="ERROR" message="Verification method execution exception: alisa_consistency.ModelConditions.assertTrue(org.osate.aadl2.instance.InstanceObject)">
+              <modelElement href="../instances/isolette_isolette_tier1_Instance.aaxl2#/"/>
+            </issues>
+            <targetReference>
+              <verificationPlan href="../alisa/Isolette.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Isolette.reqspec#//@parts.0/@requirements.1"/>
+              </requirement>
+              <verificationActivity href="../alisa/Isolette.verify#//@contents.0/@claim.1/@activities.0"/>
+            </targetReference>
+          </verificationActivityResult>
+          <predicateResult xsi:type="assure:PredicateResult" type="SUCCESS">
+            <metrics tbdCount="-1" successCount="1"/>
+            <targetReference>
+              <verificationPlan href="../alisa/Isolette.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Isolette.reqspec#//@parts.0/@requirements.1"/>
+              </requirement>
+            </targetReference>
+          </predicateResult>
+        </claimResult>
+        <claimResult>
+          <metrics tbdCount="-2" successCount="2"/>
+          <targetReference>
+            <verificationPlan href="../alisa/Isolette.verify#//@contents.0"/>
+            <requirement>
+              <requirement href="../alisa/Isolette.reqspec#//@parts.0/@requirements.2"/>
+            </requirement>
+          </targetReference>
+          <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
+            <metrics tbdCount="-1" successCount="1" executionTime="50"/>
+            <analysisresult analysis="FTA">
+              <modelElement href="../instances/isolette_isolette_tier1_Instance.aaxl2#/"/>
+              <parameters value="ACED000574000C7374617465206661696C6564"/>
+              <results message="FTA occurrence probability results for isolette_tier1_Instance:state failed">
+                <values xsi:type="result:RealValue"/>
+                <values xsi:type="result:RealValue" value="1.0E-9"/>
+                <modelElement href="../instances/isolette_isolette_tier1_Instance.aaxl2#/"/>
+              </results>
+            </analysisresult>
+            <targetReference>
+              <verificationPlan href="../alisa/Isolette.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Isolette.reqspec#//@parts.0/@requirements.2"/>
+              </requirement>
+              <verificationActivity href="../alisa/Isolette.verify#//@contents.0/@claim.2/@activities.0"/>
+            </targetReference>
+          </verificationActivityResult>
+          <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
+            <metrics tbdCount="-1" successCount="1" executionTime="65"/>
+            <analysisresult analysis="FTA">
+              <modelElement href="../instances/isolette_isolette_tier1_Instance.aaxl2#/"/>
+              <parameters value="ACED000574003F6F7574676F696E672070726F7061676174696F6E206F6E20696E66616E744578706F737572657B44616E6765726F7573496E66616E744578706F737572657D"/>
+              <results message="FTA occurrence probability results for isolette_tier1_Instance:outgoing propagation on infantExposure{DangerousInfantExposure}">
+                <values xsi:type="result:RealValue"/>
+                <values xsi:type="result:RealValue"/>
+                <modelElement href="../instances/isolette_isolette_tier1_Instance.aaxl2#/"/>
+              </results>
+            </analysisresult>
+            <targetReference>
+              <verificationPlan href="../alisa/Isolette.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Isolette.reqspec#//@parts.0/@requirements.2"/>
+              </requirement>
+              <verificationActivity href="../alisa/Isolette.verify#//@contents.0/@claim.2/@activities.1"/>
+            </targetReference>
+          </verificationActivityResult>
+        </claimResult>
+        <subsystemResult>
+          <metrics/>
+          <targetSystem xsi:type="aadl2:AbstractSubcomponent" href="../isolette.aadl#//@ownedPublicSection/@ownedClassifier.8/@ownedAbstractSubcomponent.0"/>
+        </subsystemResult>
+        <subsystemResult>
+          <metrics/>
+          <targetSystem xsi:type="aadl2:DeviceSubcomponent" href="../isolette.aadl#//@ownedPublicSection/@ownedClassifier.8/@ownedDeviceSubcomponent.0"/>
+        </subsystemResult>
+        <subsystemResult>
+          <metrics/>
+          <targetSystem xsi:type="aadl2:DeviceSubcomponent" href="../isolette.aadl#//@ownedPublicSection/@ownedClassifier.8/@ownedDeviceSubcomponent.1"/>
+        </subsystemResult>
+        <subsystemResult>
+          <metrics tbdCount="-7" successCount="5" errorCount="2"/>
+          <targetSystem xsi:type="aadl2:SystemSubcomponent" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.8/@ownedSystemSubcomponent.0"/>
+          <claimResult>
+            <metrics tbdCount="-2" successCount="2"/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.0"/>
+              </requirement>
+            </targetReference>
+            <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.10/@ownedDataPort.0"/>
+            <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
+              <metrics tbdCount="-1" successCount="1" executionTime="34"/>
+              <results message="Measurement unit of thermostat.current_temperature must be Fahrenheit" resultType="SUCCESS">
+                <modelElement href="../Resolute/Resolute_Isolette.aadl#Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.is_Fahrenheit"/>
+              </results>
+              <targetReference>
+                <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+                <requirement>
+                  <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.0"/>
+                </requirement>
+                <verificationActivity href="../alisa/Thermostat.verify#//@contents.0/@claim.0/@activities.0"/>
+              </targetReference>
+            </verificationActivityResult>
+            <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
+              <metrics tbdCount="-1" successCount="1" executionTime="14"/>
+              <results message="Data type of thermostat.current_temperature must be iso_variables::measured_temperature" resultType="SUCCESS">
+                <modelElement href="../Resolute/Resolute_Isolette.aadl#Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.is_Measured_Temperature"/>
+              </results>
+              <targetReference>
+                <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+                <requirement>
+                  <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.0"/>
+                </requirement>
+                <verificationActivity href="../alisa/Thermostat.verify#//@contents.0/@claim.0/@activities.1"/>
+              </targetReference>
+            </verificationActivityResult>
+          </claimResult>
+          <claimResult>
+            <metrics tbdCount="-1" errorCount="1"/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.1"/>
+              </requirement>
+            </targetReference>
+            <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.10/@ownedDataPort.0"/>
+            <predicateResult xsi:type="assure:PredicateResult" type="ERROR">
+              <metrics tbdCount="-1" errorCount="1"/>
+              <issues diagnosticType="ERROR" message="Could not evaluate value predicate: cannot retrieve property value  #Isolette_Properties::Temperature_Sensor_Accuracy (/resource/isolette/alisa/Thermostat.reqspec:16)"/>
+              <targetReference>
+                <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+                <requirement>
+                  <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.1"/>
+                </requirement>
+              </targetReference>
+            </predicateResult>
+          </claimResult>
+          <claimResult>
+            <metrics tbdCount="-1" errorCount="1"/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.2"/>
+              </requirement>
+            </targetReference>
+            <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.10/@ownedDataPort.0"/>
+            <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="ERROR">
+              <metrics tbdCount="-1" errorCount="1" executionTime="12"/>
+              <issues diagnosticType="ERROR" message="Could not evaluate expression for lb of method IsValueRange: org.eclipse.xsemantics.runtime.RuleFailedException: failed: NotImplemented: [component &lt;- ComponentInstance 'thermostat', computes &lt;- {}, element &lt;- FeatureInstance 'current_temperature', vals &lt;- {}] |- min(SensedTemperatureRange) ~> PropertyValue"/>
+              <targetReference>
+                <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+                <requirement>
+                  <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.2"/>
+                </requirement>
+                <verificationActivity href="../alisa/Thermostat.verify#//@contents.0/@claim.2/@activities.0"/>
+              </targetReference>
+            </verificationActivityResult>
+          </claimResult>
+          <claimResult>
+            <metrics tbdCount="-1" successCount="1"/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.3"/>
+              </requirement>
+            </targetReference>
+            <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.10/@ownedDataPort.1"/>
+            <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
+              <metrics tbdCount="-1" successCount="1" executionTime="16"/>
+              <results message="Type of thermostat.current_temperature_status is iso_variables::valid_flag" resultType="SUCCESS">
+                <modelElement href="../Resolute/Resolute_Isolette.aadl#Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.is_Type_Valid_Flag"/>
+              </results>
+              <targetReference>
+                <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+                <requirement>
+                  <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.3"/>
+                </requirement>
+                <verificationActivity href="../alisa/Thermostat.verify#//@contents.0/@claim.3/@activities.0"/>
+              </targetReference>
+            </verificationActivityResult>
+          </claimResult>
+          <claimResult>
+            <metrics tbdCount="-1" successCount="1"/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.4"/>
+              </requirement>
+            </targetReference>
+            <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.10/@ownedDataPort.2"/>
+            <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
+              <metrics tbdCount="-1" successCount="1" executionTime="25"/>
+              <results message="Type of thermostat.heat_control is iso_variables::on_off" resultType="SUCCESS">
+                <modelElement href="../Resolute/Resolute_Isolette.aadl#Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.is_Type_On_Off"/>
+              </results>
+              <targetReference>
+                <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+                <requirement>
+                  <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.4"/>
+                </requirement>
+                <verificationActivity href="../alisa/Thermostat.verify#//@contents.0/@claim.4/@activities.0"/>
+              </targetReference>
+            </verificationActivityResult>
+          </claimResult>
+          <claimResult>
+            <metrics/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.5"/>
+              </requirement>
+            </targetReference>
+            <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#//@ownedPublicSection/@ownedClassifier.10/@ownedDataPort.7"/>
+          </claimResult>
+          <claimResult>
+            <metrics/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.6"/>
+              </requirement>
+            </targetReference>
+            <modelElement xsi:type="aadl2:FlowSpecification" href="../isolette.aadl#//@ownedPublicSection/@ownedClassifier.10/@ownedFlowSpecification.0"/>
+          </claimResult>
+          <claimResult>
+            <metrics tbdCount="-1" successCount="1"/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.7"/>
+              </requirement>
+            </targetReference>
+            <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.10/@ownedDataPort.10"/>
+            <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
+              <metrics tbdCount="-1" successCount="1" executionTime="23"/>
+              <results message="Type of thermostat.alarm_action is iso_variables::on_off" resultType="SUCCESS">
+                <modelElement href="../Resolute/Resolute_Isolette.aadl#Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.is_Type_On_Off"/>
+              </results>
+              <targetReference>
+                <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+                <requirement>
+                  <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.7"/>
+                </requirement>
+                <verificationActivity href="../alisa/Thermostat.verify#//@contents.0/@claim.7/@activities.0"/>
+              </targetReference>
+            </verificationActivityResult>
+          </claimResult>
+          <claimResult>
+            <metrics/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.8"/>
+              </requirement>
+            </targetReference>
+            <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#//@ownedPublicSection/@ownedClassifier.10/@ownedDataPort.8"/>
+          </claimResult>
+          <claimResult>
+            <metrics/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.verify#|18"/>
+              </requirement>
+            </targetReference>
+          </claimResult>
+          <claimResult>
+            <metrics/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.verify#|19"/>
+              </requirement>
+            </targetReference>
+          </claimResult>
+          <claimResult>
+            <metrics/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.verify#|20"/>
+              </requirement>
+            </targetReference>
+          </claimResult>
+          <claimResult>
+            <metrics/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.verify#|21"/>
+              </requirement>
+            </targetReference>
+          </claimResult>
+          <claimResult>
+            <metrics/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.verify#|22"/>
+              </requirement>
+            </targetReference>
+          </claimResult>
+          <claimResult>
+            <metrics/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.verify#|23"/>
+              </requirement>
+            </targetReference>
+          </claimResult>
+          <claimResult>
+            <metrics/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.verify#|24"/>
+              </requirement>
+            </targetReference>
+          </claimResult>
+          <claimResult>
+            <metrics/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.verify#|25"/>
+              </requirement>
+            </targetReference>
+          </claimResult>
+          <claimResult>
+            <metrics/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.verify#|26"/>
+              </requirement>
+            </targetReference>
+          </claimResult>
+          <claimResult>
+            <metrics/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.verify#|27"/>
+              </requirement>
+            </targetReference>
+          </claimResult>
+        </subsystemResult>
+        <subsystemResult>
+          <metrics/>
+          <targetSystem xsi:type="aadl2:SystemSubcomponent" href="../isolette.aadl#//@ownedPublicSection/@ownedClassifier.8/@ownedSystemSubcomponent.1"/>
+        </subsystemResult>
+      </modelResult>
+    </subAssuranceCase>
+  </modelResult>
+  <modelResult>
+    <metrics successCount="1"/>
+    <plan href="../alisa/OperationalIsoletteCase.alisa#//@assurancePlans.2"/>
+    <target xsi:type="aadl2:SystemImplementation" href="../isolette.aadl#Isolette.IsoletteEnvironment.tier3"/>
+    <claimResult>
+      <metrics successCount="1"/>
+      <targetReference>
+        <verificationPlan href="../alisa/Isolette.verify#//@contents.1"/>
+        <requirement>
+          <requirement href="../alisa/Isolette.reqspec#//@parts.1/@requirements.0"/>
+        </requirement>
+      </targetReference>
+      <modelElement xsi:type="aadl2:EndToEndFlow" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.4/@ownedEndToEndFlow.0"/>
+      <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
+        <metrics successCount="1" executionTime="269"/>
+        <analysisresult analysis="latency" message="AS-MF-DL-EQ">
+          <modelElement href="../instances/isolette_IsoletteEnvironment_tier3_Instance.aaxl2#/"/>
+          <parameters value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787001"/>
+          <parameters value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787001"/>
+          <parameters value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787001"/>
+          <parameters value="ACED0005737200116A6176612E6C616E672E426F6F6C65616ECD207280D59CFAEE0200015A000576616C7565787001"/>
+          <results message="Latency results for alarmResponse" resultType="SUCCESS">
+            <values xsi:type="result:StringValue" value=""/>
+            <values xsi:type="result:RealValue" value="13500.0"/>
+            <values xsi:type="result:RealValue" value="13500.0"/>
+            <values xsi:type="result:RealValue" value="13500.0"/>
+            <values xsi:type="result:RealValue" value="13500.0"/>
+            <values xsi:type="result:RealValue" value="15000.0"/>
+            <values xsi:type="result:RealValue" value="15000.0"/>
+            <diagnostics diagnosticType="WARNING" message="Minimum specified flow latency total 13500.0ms less than expected minimum end to end latency 15000.0ms (better response time)">
+              <modelElement href="../instances/isolette_IsoletteEnvironment_tier3_Instance.aaxl2#//@endToEndFlow.0"/>
+            </diagnostics>
+            <diagnostics diagnosticType="WARNING" message="Minimum actual latency total 13500.0ms less than expected minimum end to end latency 15000.0ms (faster actual minimum response time)">
+              <modelElement href="../instances/isolette_IsoletteEnvironment_tier3_Instance.aaxl2#//@endToEndFlow.0"/>
+            </diagnostics>
+            <diagnostics diagnosticType="INFO" message="Maximum actual latency total 13500.0ms is less or equal to expected maximum end to end latency 15000.0ms">
+              <modelElement href="../instances/isolette_IsoletteEnvironment_tier3_Instance.aaxl2#//@endToEndFlow.0"/>
+            </diagnostics>
+            <subResults>
+              <values xsi:type="result:RealValue" value="1000.0"/>
+              <values xsi:type="result:RealValue" value="1000.0"/>
+              <values xsi:type="result:RealValue" value="1000.0"/>
+              <values xsi:type="result:RealValue" value="1000.0"/>
+              <values xsi:type="result:StringValue" value="specified"/>
+              <values xsi:type="result:StringValue" value="specified"/>
+              <modelElement href="../instances/isolette_IsoletteEnvironment_tier3_Instance.aaxl2#//@componentInstance.3/@componentInstance.1"/>
+            </subResults>
+            <subResults>
+              <values xsi:type="result:RealValue"/>
+              <values xsi:type="result:RealValue"/>
+              <values xsi:type="result:RealValue"/>
+              <values xsi:type="result:RealValue"/>
+              <values xsi:type="result:StringValue" value="no latency"/>
+              <values xsi:type="result:StringValue" value="no latency"/>
+              <modelElement href="../instances/isolette_IsoletteEnvironment_tier3_Instance.aaxl2#//@componentInstance.3/@connectionInstance.0"/>
+            </subResults>
+            <subResults>
+              <values xsi:type="result:RealValue" value="500.0"/>
+              <values xsi:type="result:RealValue" value="500.0"/>
+              <values xsi:type="result:RealValue" value="500.0"/>
+              <values xsi:type="result:RealValue" value="500.0"/>
+              <values xsi:type="result:StringValue" value="specified"/>
+              <values xsi:type="result:StringValue" value="specified"/>
+              <modelElement href="../instances/isolette_IsoletteEnvironment_tier3_Instance.aaxl2#//@componentInstance.3/@componentInstance.4/@componentInstance.1"/>
+            </subResults>
+            <subResults>
+              <values xsi:type="result:RealValue"/>
+              <values xsi:type="result:RealValue"/>
+              <values xsi:type="result:RealValue"/>
+              <values xsi:type="result:RealValue"/>
+              <values xsi:type="result:StringValue" value="no latency"/>
+              <values xsi:type="result:StringValue" value="no latency"/>
+              <modelElement href="../instances/isolette_IsoletteEnvironment_tier3_Instance.aaxl2#//@componentInstance.3/@connectionInstance.10"/>
+            </subResults>
+            <subResults>
+              <values xsi:type="result:RealValue" value="2000.0"/>
+              <values xsi:type="result:RealValue" value="2000.0"/>
+              <values xsi:type="result:RealValue" value="2000.0"/>
+              <values xsi:type="result:RealValue" value="2000.0"/>
+              <values xsi:type="result:StringValue" value="specified"/>
+              <values xsi:type="result:StringValue" value="specified"/>
+              <modelElement href="../instances/isolette_IsoletteEnvironment_tier3_Instance.aaxl2#//@componentInstance.3/@componentInstance.3"/>
+            </subResults>
+            <subResults>
+              <values xsi:type="result:RealValue"/>
+              <values xsi:type="result:RealValue"/>
+              <values xsi:type="result:RealValue"/>
+              <values xsi:type="result:RealValue"/>
+              <values xsi:type="result:StringValue" value="no latency"/>
+              <values xsi:type="result:StringValue" value="no latency"/>
+              <modelElement href="../instances/isolette_IsoletteEnvironment_tier3_Instance.aaxl2#//@connectionInstance.1"/>
+            </subResults>
+            <subResults>
+              <values xsi:type="result:RealValue" value="10000.0"/>
+              <values xsi:type="result:RealValue" value="10000.0"/>
+              <values xsi:type="result:RealValue" value="10000.0"/>
+              <values xsi:type="result:RealValue" value="10000.0"/>
+              <values xsi:type="result:StringValue" value="specified"/>
+              <values xsi:type="result:StringValue" value="specified"/>
+              <modelElement href="../instances/isolette_IsoletteEnvironment_tier3_Instance.aaxl2#//@componentInstance.0"/>
+            </subResults>
+            <modelElement href="../instances/isolette_IsoletteEnvironment_tier3_Instance.aaxl2#//@endToEndFlow.0"/>
+          </results>
+        </analysisresult>
+        <targetReference>
+          <verificationPlan href="../alisa/Isolette.verify#//@contents.1"/>
+          <requirement>
+            <requirement href="../alisa/Isolette.reqspec#//@parts.1/@requirements.0"/>
+          </requirement>
+          <verificationActivity href="../alisa/Isolette.verify#//@contents.1/@claim.0/@activities.0"/>
+        </targetReference>
+      </verificationActivityResult>
+    </claimResult>
+    <subsystemResult>
+      <metrics/>
+      <targetSystem xsi:type="aadl2:AbstractSubcomponent" href="../isolette.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedAbstractSubcomponent.0"/>
+    </subsystemResult>
+    <subsystemResult>
+      <metrics/>
+      <targetSystem xsi:type="aadl2:AbstractSubcomponent" href="../isolette.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedAbstractSubcomponent.1"/>
+    </subsystemResult>
+    <subsystemResult>
+      <metrics/>
+      <targetSystem xsi:type="aadl2:AbstractSubcomponent" href="../isolette.aadl#//@ownedPublicSection/@ownedClassifier.4/@ownedAbstractSubcomponent.2"/>
+    </subsystemResult>
+    <subAssuranceCase name="IsoletteCase">
+      <metrics tbdCount="-13" successCount="9" errorCount="4"/>
+      <modelResult>
+        <metrics tbdCount="-13" successCount="9" errorCount="4"/>
+        <plan href="../alisa/IsoletteCase.alisa#//@assurancePlans.0"/>
+        <target xsi:type="aadl2:SystemImplementation" href="../isolette.aadl#Isolette.isolette.tier1"/>
+        <claimResult>
+          <metrics tbdCount="-2" successCount="1" errorCount="1"/>
+          <targetReference>
+            <verificationPlan href="../alisa/Isolette.verify#//@contents.0"/>
+            <requirement>
+              <requirement href="../alisa/Isolette.reqspec#//@parts.0/@requirements.0"/>
+            </requirement>
+          </targetReference>
+          <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="ERROR">
+            <metrics tbdCount="-1" errorCount="1" executionTime="20"/>
+            <issues diagnosticType="ERROR" message="Verification method execution exception: alisa_consistency.ModelConditions.assertTrue(org.osate.aadl2.instance.InstanceObject)">
+              <modelElement href="../instances/isolette_isolette_tier1_Instance.aaxl2#/"/>
+            </issues>
+            <targetReference>
+              <verificationPlan href="../alisa/Isolette.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Isolette.reqspec#//@parts.0/@requirements.0"/>
+              </requirement>
+              <verificationActivity href="../alisa/Isolette.verify#//@contents.0/@claim.0/@activities.0"/>
+            </targetReference>
+          </verificationActivityResult>
+          <predicateResult xsi:type="assure:PredicateResult" type="SUCCESS">
+            <metrics tbdCount="-1" successCount="1"/>
+            <targetReference>
+              <verificationPlan href="../alisa/Isolette.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Isolette.reqspec#//@parts.0/@requirements.0"/>
+              </requirement>
+            </targetReference>
+          </predicateResult>
+        </claimResult>
+        <claimResult>
+          <metrics tbdCount="-2" successCount="1" errorCount="1"/>
+          <targetReference>
+            <verificationPlan href="../alisa/Isolette.verify#//@contents.0"/>
+            <requirement>
+              <requirement href="../alisa/Isolette.reqspec#//@parts.0/@requirements.1"/>
+            </requirement>
+          </targetReference>
+          <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="ERROR">
+            <metrics tbdCount="-1" errorCount="1" executionTime="16"/>
+            <issues diagnosticType="ERROR" message="Verification method execution exception: alisa_consistency.ModelConditions.assertTrue(org.osate.aadl2.instance.InstanceObject)">
+              <modelElement href="../instances/isolette_isolette_tier1_Instance.aaxl2#/"/>
+            </issues>
+            <targetReference>
+              <verificationPlan href="../alisa/Isolette.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Isolette.reqspec#//@parts.0/@requirements.1"/>
+              </requirement>
+              <verificationActivity href="../alisa/Isolette.verify#//@contents.0/@claim.1/@activities.0"/>
+            </targetReference>
+          </verificationActivityResult>
+          <predicateResult xsi:type="assure:PredicateResult" type="SUCCESS">
+            <metrics tbdCount="-1" successCount="1"/>
+            <targetReference>
+              <verificationPlan href="../alisa/Isolette.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Isolette.reqspec#//@parts.0/@requirements.1"/>
+              </requirement>
+            </targetReference>
+          </predicateResult>
+        </claimResult>
+        <claimResult>
+          <metrics tbdCount="-2" successCount="2"/>
+          <targetReference>
+            <verificationPlan href="../alisa/Isolette.verify#//@contents.0"/>
+            <requirement>
+              <requirement href="../alisa/Isolette.reqspec#//@parts.0/@requirements.2"/>
+            </requirement>
+          </targetReference>
+          <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
+            <metrics tbdCount="-1" successCount="1" executionTime="20"/>
+            <analysisresult analysis="FTA">
+              <modelElement href="../instances/isolette_isolette_tier1_Instance.aaxl2#/"/>
+              <parameters value="ACED000574000C7374617465206661696C6564"/>
+              <results message="FTA occurrence probability results for isolette_tier1_Instance:state failed">
+                <values xsi:type="result:RealValue"/>
+                <values xsi:type="result:RealValue" value="1.0E-9"/>
+                <modelElement href="../instances/isolette_isolette_tier1_Instance.aaxl2#/"/>
+              </results>
+            </analysisresult>
+            <targetReference>
+              <verificationPlan href="../alisa/Isolette.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Isolette.reqspec#//@parts.0/@requirements.2"/>
+              </requirement>
+              <verificationActivity href="../alisa/Isolette.verify#//@contents.0/@claim.2/@activities.0"/>
+            </targetReference>
+          </verificationActivityResult>
+          <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
+            <metrics tbdCount="-1" successCount="1" executionTime="24"/>
+            <analysisresult analysis="FTA">
+              <modelElement href="../instances/isolette_isolette_tier1_Instance.aaxl2#/"/>
+              <parameters value="ACED000574003F6F7574676F696E672070726F7061676174696F6E206F6E20696E66616E744578706F737572657B44616E6765726F7573496E66616E744578706F737572657D"/>
+              <results message="FTA occurrence probability results for isolette_tier1_Instance:outgoing propagation on infantExposure{DangerousInfantExposure}">
+                <values xsi:type="result:RealValue"/>
+                <values xsi:type="result:RealValue"/>
+                <modelElement href="../instances/isolette_isolette_tier1_Instance.aaxl2#/"/>
+              </results>
+            </analysisresult>
+            <targetReference>
+              <verificationPlan href="../alisa/Isolette.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Isolette.reqspec#//@parts.0/@requirements.2"/>
+              </requirement>
+              <verificationActivity href="../alisa/Isolette.verify#//@contents.0/@claim.2/@activities.1"/>
+            </targetReference>
+          </verificationActivityResult>
+        </claimResult>
+        <subsystemResult>
+          <metrics/>
+          <targetSystem xsi:type="aadl2:AbstractSubcomponent" href="../isolette.aadl#//@ownedPublicSection/@ownedClassifier.8/@ownedAbstractSubcomponent.0"/>
+        </subsystemResult>
+        <subsystemResult>
+          <metrics/>
+          <targetSystem xsi:type="aadl2:DeviceSubcomponent" href="../isolette.aadl#//@ownedPublicSection/@ownedClassifier.8/@ownedDeviceSubcomponent.0"/>
+        </subsystemResult>
+        <subsystemResult>
+          <metrics/>
+          <targetSystem xsi:type="aadl2:DeviceSubcomponent" href="../isolette.aadl#//@ownedPublicSection/@ownedClassifier.8/@ownedDeviceSubcomponent.1"/>
+        </subsystemResult>
+        <subsystemResult>
+          <metrics tbdCount="-7" successCount="5" errorCount="2"/>
+          <targetSystem xsi:type="aadl2:SystemSubcomponent" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.8/@ownedSystemSubcomponent.0"/>
+          <claimResult>
+            <metrics tbdCount="-2" successCount="2"/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.0"/>
+              </requirement>
+            </targetReference>
+            <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.10/@ownedDataPort.0"/>
+            <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
+              <metrics tbdCount="-1" successCount="1" executionTime="13"/>
+              <results message="Measurement unit of thermostat.current_temperature must be Fahrenheit" resultType="SUCCESS">
+                <modelElement href="../Resolute/Resolute_Isolette.aadl#Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.is_Fahrenheit"/>
+              </results>
+              <targetReference>
+                <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+                <requirement>
+                  <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.0"/>
+                </requirement>
+                <verificationActivity href="../alisa/Thermostat.verify#//@contents.0/@claim.0/@activities.0"/>
+              </targetReference>
+            </verificationActivityResult>
+            <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
+              <metrics tbdCount="-1" successCount="1" executionTime="13"/>
+              <results message="Data type of thermostat.current_temperature must be iso_variables::measured_temperature" resultType="SUCCESS">
+                <modelElement href="../Resolute/Resolute_Isolette.aadl#Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.is_Measured_Temperature"/>
+              </results>
+              <targetReference>
+                <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+                <requirement>
+                  <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.0"/>
+                </requirement>
+                <verificationActivity href="../alisa/Thermostat.verify#//@contents.0/@claim.0/@activities.1"/>
+              </targetReference>
+            </verificationActivityResult>
+          </claimResult>
+          <claimResult>
+            <metrics tbdCount="-1" errorCount="1"/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.1"/>
+              </requirement>
+            </targetReference>
+            <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.10/@ownedDataPort.0"/>
+            <predicateResult xsi:type="assure:PredicateResult" type="ERROR">
+              <metrics tbdCount="-1" errorCount="1"/>
+              <issues diagnosticType="ERROR" message="Could not evaluate value predicate: cannot retrieve property value  #Isolette_Properties::Temperature_Sensor_Accuracy (/resource/isolette/alisa/Thermostat.reqspec:16)"/>
+              <targetReference>
+                <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+                <requirement>
+                  <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.1"/>
+                </requirement>
+              </targetReference>
+            </predicateResult>
+          </claimResult>
+          <claimResult>
+            <metrics tbdCount="-1" errorCount="1"/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.2"/>
+              </requirement>
+            </targetReference>
+            <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.10/@ownedDataPort.0"/>
+            <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="ERROR">
+              <metrics tbdCount="-1" errorCount="1" executionTime="13"/>
+              <issues diagnosticType="ERROR" message="Could not evaluate expression for lb of method IsValueRange: org.eclipse.xsemantics.runtime.RuleFailedException: failed: NotImplemented: [component &lt;- ComponentInstance 'thermostat', computes &lt;- {}, element &lt;- FeatureInstance 'current_temperature', vals &lt;- {}] |- min(SensedTemperatureRange) ~> PropertyValue"/>
+              <targetReference>
+                <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+                <requirement>
+                  <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.2"/>
+                </requirement>
+                <verificationActivity href="../alisa/Thermostat.verify#//@contents.0/@claim.2/@activities.0"/>
+              </targetReference>
+            </verificationActivityResult>
+          </claimResult>
+          <claimResult>
+            <metrics tbdCount="-1" successCount="1"/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.3"/>
+              </requirement>
+            </targetReference>
+            <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.10/@ownedDataPort.1"/>
+            <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
+              <metrics tbdCount="-1" successCount="1" executionTime="13"/>
+              <results message="Type of thermostat.current_temperature_status is iso_variables::valid_flag" resultType="SUCCESS">
+                <modelElement href="../Resolute/Resolute_Isolette.aadl#Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.is_Type_Valid_Flag"/>
+              </results>
+              <targetReference>
+                <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+                <requirement>
+                  <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.3"/>
+                </requirement>
+                <verificationActivity href="../alisa/Thermostat.verify#//@contents.0/@claim.3/@activities.0"/>
+              </targetReference>
+            </verificationActivityResult>
+          </claimResult>
+          <claimResult>
+            <metrics tbdCount="-1" successCount="1"/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.4"/>
+              </requirement>
+            </targetReference>
+            <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.10/@ownedDataPort.2"/>
+            <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
+              <metrics tbdCount="-1" successCount="1" executionTime="12"/>
+              <results message="Type of thermostat.heat_control is iso_variables::on_off" resultType="SUCCESS">
+                <modelElement href="../Resolute/Resolute_Isolette.aadl#Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.is_Type_On_Off"/>
+              </results>
+              <targetReference>
+                <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+                <requirement>
+                  <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.4"/>
+                </requirement>
+                <verificationActivity href="../alisa/Thermostat.verify#//@contents.0/@claim.4/@activities.0"/>
+              </targetReference>
+            </verificationActivityResult>
+          </claimResult>
+          <claimResult>
+            <metrics/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.5"/>
+              </requirement>
+            </targetReference>
+            <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#//@ownedPublicSection/@ownedClassifier.10/@ownedDataPort.7"/>
+          </claimResult>
+          <claimResult>
+            <metrics/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.6"/>
+              </requirement>
+            </targetReference>
+            <modelElement xsi:type="aadl2:FlowSpecification" href="../isolette.aadl#//@ownedPublicSection/@ownedClassifier.10/@ownedFlowSpecification.0"/>
+          </claimResult>
+          <claimResult>
+            <metrics tbdCount="-1" successCount="1"/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.7"/>
+              </requirement>
+            </targetReference>
+            <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.10/@ownedDataPort.10"/>
+            <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
+              <metrics tbdCount="-1" successCount="1" executionTime="13"/>
+              <results message="Type of thermostat.alarm_action is iso_variables::on_off" resultType="SUCCESS">
+                <modelElement href="../Resolute/Resolute_Isolette.aadl#Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.is_Type_On_Off"/>
+              </results>
+              <targetReference>
+                <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+                <requirement>
+                  <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.7"/>
+                </requirement>
+                <verificationActivity href="../alisa/Thermostat.verify#//@contents.0/@claim.7/@activities.0"/>
+              </targetReference>
+            </verificationActivityResult>
+          </claimResult>
+          <claimResult>
+            <metrics/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.reqspec#//@parts.0/@requirements.8"/>
+              </requirement>
+            </targetReference>
+            <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#//@ownedPublicSection/@ownedClassifier.10/@ownedDataPort.8"/>
+          </claimResult>
+          <claimResult>
+            <metrics/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.verify#|18"/>
+              </requirement>
+            </targetReference>
+          </claimResult>
+          <claimResult>
+            <metrics/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.verify#|19"/>
+              </requirement>
+            </targetReference>
+          </claimResult>
+          <claimResult>
+            <metrics/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.verify#|20"/>
+              </requirement>
+            </targetReference>
+          </claimResult>
+          <claimResult>
+            <metrics/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.verify#|21"/>
+              </requirement>
+            </targetReference>
+          </claimResult>
+          <claimResult>
+            <metrics/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.verify#|22"/>
+              </requirement>
+            </targetReference>
+          </claimResult>
+          <claimResult>
+            <metrics/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.verify#|23"/>
+              </requirement>
+            </targetReference>
+          </claimResult>
+          <claimResult>
+            <metrics/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.verify#|24"/>
+              </requirement>
+            </targetReference>
+          </claimResult>
+          <claimResult>
+            <metrics/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.verify#|25"/>
+              </requirement>
+            </targetReference>
+          </claimResult>
+          <claimResult>
+            <metrics/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.verify#|26"/>
+              </requirement>
+            </targetReference>
+          </claimResult>
+          <claimResult>
+            <metrics/>
+            <targetReference>
+              <verificationPlan href="../alisa/Thermostat.verify#//@contents.0"/>
+              <requirement>
+                <requirement href="../alisa/Thermostat.verify#|27"/>
+              </requirement>
+            </targetReference>
+          </claimResult>
+        </subsystemResult>
+        <subsystemResult>
+          <metrics/>
+          <targetSystem xsi:type="aadl2:SystemSubcomponent" href="../isolette.aadl#//@ownedPublicSection/@ownedClassifier.8/@ownedSystemSubcomponent.1"/>
+        </subsystemResult>
+      </modelResult>
+    </subAssuranceCase>
+  </modelResult>
+</assure:AssuranceCaseResult>

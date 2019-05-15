@@ -1,0 +1,47 @@
+verification methods ResoluteIsolette [
+
+// methods dealing with security exposure and common weaknesses
+
+	method IsFahrenheit (feature): 
+	"Measurement unit is Fahrenheit" [
+		resolute Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.is_Fahrenheit
+	]
+	method IsMeasuredTemperature (feature): 
+	"Data type is iso_variables::measured_temperature" [
+		resolute Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.is_Measured_Temperature
+	]
+	
+		method TemperatureAccuracy (feature): 
+	"Temperature accuracy is 1.0 F" [
+		resolute Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.TemperatureAccuracyIsOne
+	]
+	
+		method IsValueRange (feature, lb: real, ub: real): 
+	"Value range " [
+		resolute Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.is_Value_Range
+	]
+		method IsValueRangeUpperBound (feature,  ub: real): 
+	"Value range upper bound " [
+		resolute Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.is_ValueRange_UpperBound
+	]
+		method IsValueRangeLowerBound (feature, lb: real): 
+	"Value range lower bound "  [
+		resolute Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.is_ValueRange_LowerBound
+	]
+
+	method IsValidFlag (feature): 
+	"Type is Valid_Flag" [
+		resolute Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.is_Type_Valid_Flag
+	]
+
+	method IsOnOff (feature): 
+	"Type is Valid_Flag" [
+		resolute Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.is_Type_On_Off
+	]
+
+	method AssertChangeRate ( element) properties (Isolette_Properties::Temperature_Change_Rate): "Assure change rate is set" [
+		resolute Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.assert_True
+		description "Check whether it has the value otherwise set it."
+	]
+	
+]

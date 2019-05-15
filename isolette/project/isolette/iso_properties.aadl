@@ -41,14 +41,20 @@ property set Iso_Properties is
 	DetectionMonitorFailureRate: constant EMV2::DistributionSpecification => [ProbabilityValue => 1.7E-10;
 				Distribution => Fixed;];
 
--- additional constants
-	TempIncreaseRateValue: constant Isolette_Properties::Temperature_Change_Type => 1.0 Fdeg_Minute;
-	TempDecreaseRateValue : constant Isolette_Properties::Temperature_Change_Type => 1.0 Fdeg_Minute;
+---- additional constants 
+---- from HB
+--	
+	TemperatureSensorFailureRateValue : constant aadlreal => 2.0E-10; -- see FAA REMHB 2.6.3 Figure 5
+	HeatSourceFailureRateValue : constant aadlreal => 2.0E-10; -- see FAA REMHB 2.6.3 Figure 5
+	HeatSourceFailureRateValue2 : constant aadlreal => 1.0e-5; -- see FAA REMHB 2.6.3 Figure 6
+	OperatorInterfaceFailureRateValue : constant aadlreal => 2.0E-10; -- see FAA REMHB 2.6.3 Figure 5
+	ThermostatFailureRateValue : constant aadlreal => 2.0E-10; -- see FAA REMHB 2.6.3 Figure 5
+--	ThermostatFailureRateValue2 : constant aadlreal => 1.0e-5; -- see FAA REMHB 2.6.3 Figure 6
+	ThermostatRegulatorFailureRateValue : constant aadlreal =>  1.0e-5; -- see FAA REMHB 2.6.3 Figure 6 (Thermostat)
+	ThermostatMonitorFailureRateValue : constant aadlreal =>  1.0e-5;
+
+	IsoletteExpectedFailureRateValue: constant aadlreal =>  1.0e-9; -- see FAA REMHB A.4 H1
 	
-	ThermoAccuracyValue : constant Isolette_Properties::Temperature_Type => 0.1 Fahrenheit;
+	ThermoAccuracyValue: constant Isolette_Properties::Temperature_Type =>  0.1 Fahrenheit; -- see FAA REMHB A.3.2
 	
-	ThermostatFailureRateValue : constant aadlreal => 10.0e-5;
-	ThermostatRegulatorFailureRateValue : constant aadlreal =>  10.0e-5;
-	ThermostatMonitorFailureRateValue : constant aadlreal =>  10.0e-5;
-	InfantExposureHazardRateValue : constant aadlreal => 10.0e-9;
 end Iso_Properties;

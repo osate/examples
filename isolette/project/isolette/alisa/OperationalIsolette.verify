@@ -1,0 +1,7 @@
+verification plan IsoletteEnvVPlan for IsoletteEnvironmentReqs [
+	
+claim OE_IS_SR2 [
+	activities
+	  assertlatency : Mode, SpecLatency , ActualLatency = Plugins.ComputeEndToEndFlowLatency ()
+	]
+]

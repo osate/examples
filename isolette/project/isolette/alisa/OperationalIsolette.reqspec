@@ -1,0 +1,14 @@
+system requirements IsoletteEnvironmentReqs for Isolette::IsoletteEnvironment.tier1 [
+	
+	requirement OE_IS_SR2 for alarmResponse [
+		val NurseAlarmResponse = 15 sec
+		compute ActualLatency: Time
+		compute SpecLatency : Time
+		compute Mode : string
+		description "The Infant should be removed from the Isolette within 15 seconds after the Current Temperature falls below or rises above the Alarm Temperature Range."
+ 		category Kind.Assumption
+// 		see goal IsoletteGoals.SR_2
+ 		value predicate ActualLatency <= NurseAlarmResponse 
+	]
+	
+]

@@ -1,0 +1,161 @@
+// Environmental Assumptions
+system requirements OperatorInterfaceReqs for Isolette::operator_interface_oi [
+//	requirement EA_OI_1 [
+//		description "All temperatures will be entered and displayed in degrees Fahrenheit."
+//		rationale
+//				"Minimize the complexity of this example. An actual system would probably support Celsius or perhaps both Fahrenheit and Celsius."
+//				// validation: temperature data type has correct unit
+//
+//	]
+	requirement EA_OI_1_1 for display_temperature [
+		description "Display temperature will be displayed in degrees Fahrenheit."
+//		refines EA_OI_1
+		// validation: temperature data type has correct unit
+
+	]
+	requirement EA_OI_1_2 for lower_desired_temperature [
+		description "Lower desired temperature will be entered in degrees Fahrenheit."
+//		refines EA_OI_1
+		// validation: temperature data type has correct unit
+
+	]
+	requirement EA_OI_1_3 for upper_desired_temperature [
+		description "Upper desired temperature will be displayed in degrees Fahrenheit."
+//		refines EA_OI_1
+		// validation: temperature data type has correct unit
+
+	]
+	requirement EA_OI_1_4 for lower_alarm_temperature [
+		description "Lower alarm temperature will be displayed in degrees Fahrenheit."
+//		refines EA_OI_1
+		// validation: temperature data type has correct unit
+
+	]
+	requirement EA_OI_1_5 for upper_alarm_temperature [
+		description "Upper alarm temperature will be displayed in degrees Fahrenheit."
+//		refines EA_OI_1
+		// validation: temperature data type has correct unit
+
+	]
+
+//	requirement EA_OI_2 [
+//		description "All temperatures will be set and displayed by the operators in increments of 1 deg F."
+//		rationale
+//				"Marketing studies have shown that customers prefer to set temperatures in 1 degree increments. A resolution 1 deg F is sufficient to be consistent with the functional and performance requirements specified in the rest of the document."
+//				development
+//		stakeholder hospital.MarketingTeam
+//		// validation: all in integer. or if real we need to have an increment specification (there is a Temperature_Increment property)
+//
+//	]
+
+	requirement EA_OI_2_0 for display_temperature [
+		description "Measured temperature will be rounded into 1 degree increments."
+//		refines EA_OI_2
+		// validation: temperature data type has correct increment
+		value predicate #Isolette_Properties::Temperature_Accuracy == 1.0 Fahrenheit
+	]
+	requirement EA_OI_2_1 for displayed_temperature [
+		description "Display temperature will be displayed in 1 degree increments."
+//		refines EA_OI_2
+		// validation: temperature data type has correct increment
+		value predicate #Isolette_Properties::Temperature_Accuracy == 1.0 Fahrenheit
+	]
+
+	requirement EA_OI_2_2 for lower_desired_temperature [
+		description "Lower desired temperature will be entered in 1 degree increments."
+//		refines EA_OI_2
+		// validation: temperature data type has correct increment
+		value predicate #Isolette_Properties::Temperature_Accuracy == 1.0 Fahrenheit
+	]
+	requirement EA_OI_2_3 for upper_desired_temperature [
+		description "Upper desired temperature will be displayed in 1 degree increments."
+//		refines EA_OI_2
+		// validation: temperature data type has correct increment
+		value predicate #Isolette_Properties::Temperature_Accuracy == 1.0 Fahrenheit
+	]
+	requirement EA_OI_2_4 for lower_alarm_temperature [
+		description "Lower alarm temperature will be displayed in 1 degree increments."
+//		refines EA_OI_2
+		// validation: temperature data type has correct increment
+		value predicate #Isolette_Properties::Temperature_Accuracy == 1.0 Fahrenheit
+	]
+	requirement EA_OI_2_5 for upper_alarm_temperature [
+		description "Upper alarm temperature will be displayed in 1 degree increments."
+//		refines EA_OI_2
+		// validation: temperature data type has correct increment
+		value predicate #Isolette_Properties::Temperature_Accuracy == 1.0 Fahrenheit
+	]
+
+	val LowerAlarmBound = 93.0
+	val LowerDesiredBound = 97.0
+	val UpperAlarmBound = 103.0
+	val UpperDesiredBound = 100.0
+	
+	requirement EA_OI_3 for lower_alarm_temperature [
+		description "The Lower Alarm Temperature will always be greater or equals " LowerAlarmBound " deg F."
+		rationale
+				"Exposure to temperatures less than 93 deg F will result in hypothermia, which can lead to death within a few minutes for severely ill preterm infants."
+				// validation: enforced by range constraint in lower_alarm_temperature data model. 
+//	Cannot handle min in value predicate: do it in Resolute.	value predicate min ( # Data_Model::Real_Range ) == LowerAlarmBound
+	]
+	requirement EA_OI_4 [
+		description
+				"The Lower Alarm Temperature will always be less than or equal to the Lower Desired Temperature of -1 deg F." // weird -1. Same as: Lower alarm < lower desired.
+
+		rationale
+				"If the Lower Alarm Temperature is greater than or equal to the Lower Desired Temperature, the Alarm could be activated while the Current Temperature is still in the Desired Temperature Range."
+				// validation: compare lower bounds on range. Also validate when actually set.
+		value predicate LowerAlarmBound < LowerDesiredBound
+	]
+	requirement EA_OI_5 for lower_desired_temperature [
+		description "The Lower Desired Temperature will always be greater or equals " LowerDesiredBound " deg F."
+		rationale
+				"Exposing the Infant to temperatures lower than 97 deg F may result in excessive heat loss and drop in heart rate secondary to metabolic acidosis."
+				// validation: enforced by range constraint in lower_desired_temperature data model. 
+	]
+
+	requirement EA_OI_6 [
+		description
+				"The Lower Alarm Temperature will always be less than or equal to the Upper Desired Temperature of -1 deg F." // weird -1. Same as: Lower alarm < lower desired.
+
+		rationale
+				"If the Lower Alarm Temperature is greater than or equal to the Upper Desired Temperature, it is unclear the heat source should be on or off. Excessive cycling of heat source."
+				// validation: compare lower bounds on range. Also validate when actually set.
+		value predicate LowerDesiredBound < UpperDesiredBound
+	]
+
+	requirement EA_OI_7 for upper_desired_temperature [
+		description "The Upper Desired Temperature will always be less or equals " UpperDesiredBound " deg F."
+		rationale
+				"Exposing the Infant to temperatures higher than 100 deg F may result in incorrect diagnosis of fever resulting in aggressive evaluation and treatment for infection."
+				// validation: enforced by range constraint in lower_desired_temperature data model. 
+	]
+	requirement EA_OI_8 [
+		description
+				"The Upper Alarm Temperature will always be greater than or equal to the Upper Desired Temperature of -1 deg F." // weird -1. Same as: Lower alarm < lower desired.
+
+		rationale
+				"If the Upper Alarm Temperature is less than or equal to the Lower Desired Temperature, the Alarm could be activated while the Current Temperature is still in the Desired Temperature Range."
+				// validation: compare lower bounds on range. Also validate when actually set.
+		value predicate UpperDesiredBound < UpperAlarmBound
+	]
+	requirement EA_OI_9 for upper_alarm_temperature [
+		description "The Upper Alarm Temperature will always be less or equals " UpperAlarmBound " deg F."
+		rationale "Exposing the Infant to temperatures higher than 103 deg F may result in hyperthermia."
+		// validation: enforced by range constraint in lower_desired_temperature data model. 
+	]
+	// duplicate EA_OI_9 label (now EA_OI_10)
+	requirement EA_OI_10 for display_temperature [
+		val DisplayLowerBound = 68.0
+		val DisplayUpperBound = 105.0
+	val DisplayTemperatureRange = [	DisplayLowerBound .. DisplayUpperBound 	] 
+		description "The Display Temperature will cover the range of  " DisplayLowerBound " to " DisplayUpperBound " deg F"
+		rationale
+				"Display the same range as the temperature sensor provides."
+				// validation: enforced by range constraint in lower_desired_temperature data model. 
+		value predicate # Data_Model::Real_Range == DisplayTemperatureRange
+	]
+
+]
+
+	
