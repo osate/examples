@@ -1,6 +1,7 @@
 /.aadlbin-gen/
 .svn/
 instances/
+assure/
 /bin/
 /xtend-gen/
 .metadata/

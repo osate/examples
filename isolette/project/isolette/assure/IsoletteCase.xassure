@@ -14,7 +14,7 @@
         </requirement>
       </targetReference>
       <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
-        <metrics successCount="1" executionTime="321"/>
+        <metrics successCount="1" executionTime="390"/>
         <results message="assert true" resultType="SUCCESS">
           <modelElement href="../Resolute/Resolute_Isolette.aadl#Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.assert_True"/>
         </results>
@@ -45,7 +45,7 @@
         </requirement>
       </targetReference>
       <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
-        <metrics successCount="1" executionTime="14"/>
+        <metrics successCount="1" executionTime="12"/>
         <results message="assert true" resultType="SUCCESS">
           <modelElement href="../Resolute/Resolute_Isolette.aadl#Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.assert_True"/>
         </results>
@@ -76,7 +76,7 @@
         </requirement>
       </targetReference>
       <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
-        <metrics successCount="1" executionTime="52"/>
+        <metrics successCount="1" executionTime="73"/>
         <analysisresult analysis="FTA">
           <modelElement href="../instances/isolette_isolette_tier1_Instance.aaxl2#/"/>
           <parameters value="ACED000574000C7374617465206661696C6564"/>
@@ -95,7 +95,7 @@
         </targetReference>
       </verificationActivityResult>
       <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
-        <metrics successCount="1" executionTime="54"/>
+        <metrics successCount="1" executionTime="63"/>
         <analysisresult analysis="FTA">
           <modelElement href="../instances/isolette_isolette_tier1_Instance.aaxl2#/"/>
           <parameters value="ACED000574003F6F7574676F696E672070726F7061676174696F6E206F6E20696E66616E744578706F737572657B44616E6765726F7573496E66616E744578706F737572657D"/>
@@ -133,9 +133,9 @@
             <requirement href="../alisa/HeatSource.reqspec#//@parts.0/@requirements.0"/>
           </requirement>
         </targetReference>
-        <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.24/@ownedDataPort.0"/>
+        <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.35/@ownedDataPort.0"/>
         <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
-          <metrics successCount="1" executionTime="19"/>
+          <metrics successCount="1" executionTime="20"/>
           <results message="Type of heat_source.heat_control is iso_variables::on_off" resultType="SUCCESS">
             <modelElement href="../Resolute/Resolute_Isolette.aadl#Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.is_Type_On_Off"/>
           </results>
@@ -160,9 +160,9 @@
             <requirement href="../alisa/OperatorInterfaceReqs.reqspec#//@parts.0/@requirements.0"/>
           </requirement>
         </targetReference>
-        <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.25/@ownedDataPort.6"/>
+        <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.37/@ownedDataPort.6"/>
         <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
-          <metrics successCount="1" executionTime="27"/>
+          <metrics successCount="1" executionTime="21"/>
           <results message="Measurement unit of operator_interface.display_temperature must be Fahrenheit" resultType="SUCCESS">
             <modelElement href="../Resolute/Resolute_Isolette.aadl#Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.is_Fahrenheit"/>
           </results>
@@ -183,9 +183,9 @@
             <requirement href="../alisa/OperatorInterfaceReqs.reqspec#//@parts.0/@requirements.1"/>
           </requirement>
         </targetReference>
-        <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.25/@ownedDataPort.0"/>
+        <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.37/@ownedDataPort.0"/>
         <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
-          <metrics successCount="1" executionTime="15"/>
+          <metrics successCount="1" executionTime="17"/>
           <results message="Measurement unit of operator_interface.lower_desired_temperature must be Fahrenheit" resultType="SUCCESS">
             <modelElement href="../Resolute/Resolute_Isolette.aadl#Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.is_Fahrenheit"/>
           </results>
@@ -206,7 +206,7 @@
             <requirement href="../alisa/OperatorInterfaceReqs.reqspec#//@parts.0/@requirements.2"/>
           </requirement>
         </targetReference>
-        <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.25/@ownedDataPort.1"/>
+        <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.37/@ownedDataPort.1"/>
         <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
           <metrics successCount="1" executionTime="15"/>
           <results message="Measurement unit of operator_interface.upper_desired_temperature must be Fahrenheit" resultType="SUCCESS">
@@ -229,9 +229,9 @@
             <requirement href="../alisa/OperatorInterfaceReqs.reqspec#//@parts.0/@requirements.3"/>
           </requirement>
         </targetReference>
-        <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.25/@ownedDataPort.2"/>
+        <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.37/@ownedDataPort.2"/>
         <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
-          <metrics successCount="1" executionTime="16"/>
+          <metrics successCount="1" executionTime="15"/>
           <results message="Measurement unit of operator_interface.lower_alarm_temperature must be Fahrenheit" resultType="SUCCESS">
             <modelElement href="../Resolute/Resolute_Isolette.aadl#Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.is_Fahrenheit"/>
           </results>
@@ -252,9 +252,9 @@
             <requirement href="../alisa/OperatorInterfaceReqs.reqspec#//@parts.0/@requirements.4"/>
           </requirement>
         </targetReference>
-        <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.25/@ownedDataPort.3"/>
+        <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.37/@ownedDataPort.3"/>
         <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
-          <metrics successCount="1" executionTime="14"/>
+          <metrics successCount="1" executionTime="15"/>
           <results message="Measurement unit of operator_interface.upper_alarm_temperature must be Fahrenheit" resultType="SUCCESS">
             <modelElement href="../Resolute/Resolute_Isolette.aadl#Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.is_Fahrenheit"/>
           </results>
@@ -275,7 +275,7 @@
             <requirement href="../alisa/OperatorInterfaceReqs.reqspec#//@parts.0/@requirements.6"/>
           </requirement>
         </targetReference>
-        <modelElement xsi:type="aadl2:AbstractFeature" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.25/@ownedAbstractFeature.0"/>
+        <modelElement xsi:type="aadl2:AbstractFeature" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.37/@ownedAbstractFeature.0"/>
         <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
           <metrics successCount="1" executionTime="16"/>
           <results message="Temperature accuracy of operator_interface.displayed_temperature must be 1.0 deg F" resultType="SUCCESS">
@@ -307,9 +307,9 @@
             <requirement href="../alisa/OperatorInterfaceReqs.reqspec#//@parts.0/@requirements.7"/>
           </requirement>
         </targetReference>
-        <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.25/@ownedDataPort.0"/>
+        <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.37/@ownedDataPort.0"/>
         <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
-          <metrics successCount="1" executionTime="13"/>
+          <metrics successCount="1" executionTime="12"/>
           <results message="Temperature accuracy of operator_interface.lower_desired_temperature must be 1.0 deg F" resultType="SUCCESS">
             <modelElement href="../Resolute/Resolute_Isolette.aadl#Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.TemperatureAccuracyIsOne"/>
           </results>
@@ -339,9 +339,9 @@
             <requirement href="../alisa/OperatorInterfaceReqs.reqspec#//@parts.0/@requirements.8"/>
           </requirement>
         </targetReference>
-        <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.25/@ownedDataPort.1"/>
+        <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.37/@ownedDataPort.1"/>
         <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
-          <metrics successCount="1" executionTime="13"/>
+          <metrics successCount="1" executionTime="12"/>
           <results message="Temperature accuracy of operator_interface.upper_desired_temperature must be 1.0 deg F" resultType="SUCCESS">
             <modelElement href="../Resolute/Resolute_Isolette.aadl#Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.TemperatureAccuracyIsOne"/>
           </results>
@@ -371,9 +371,9 @@
             <requirement href="../alisa/OperatorInterfaceReqs.reqspec#//@parts.0/@requirements.9"/>
           </requirement>
         </targetReference>
-        <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.25/@ownedDataPort.2"/>
+        <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.37/@ownedDataPort.2"/>
         <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
-          <metrics successCount="1" executionTime="17"/>
+          <metrics successCount="1" executionTime="12"/>
           <results message="Temperature accuracy of operator_interface.lower_alarm_temperature must be 1.0 deg F" resultType="SUCCESS">
             <modelElement href="../Resolute/Resolute_Isolette.aadl#Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.TemperatureAccuracyIsOne"/>
           </results>
@@ -403,9 +403,9 @@
             <requirement href="../alisa/OperatorInterfaceReqs.reqspec#//@parts.0/@requirements.10"/>
           </requirement>
         </targetReference>
-        <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.25/@ownedDataPort.3"/>
+        <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.37/@ownedDataPort.3"/>
         <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
-          <metrics successCount="1" executionTime="16"/>
+          <metrics successCount="1" executionTime="12"/>
           <results message="Temperature accuracy of operator_interface.upper_alarm_temperature must be 1.0 deg F" resultType="SUCCESS">
             <modelElement href="../Resolute/Resolute_Isolette.aadl#Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.TemperatureAccuracyIsOne"/>
           </results>
@@ -435,9 +435,9 @@
             <requirement href="../alisa/OperatorInterfaceReqs.reqspec#//@parts.0/@requirements.11"/>
           </requirement>
         </targetReference>
-        <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.25/@ownedDataPort.2"/>
+        <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.37/@ownedDataPort.2"/>
         <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
-          <metrics successCount="1" executionTime="16"/>
+          <metrics successCount="1" executionTime="14"/>
           <results message="Value range lower bound of operator_interface.lower_alarm_temperature must be 93.0" resultType="SUCCESS">
             <modelElement href="../Resolute/Resolute_Isolette.aadl#Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.is_ValueRange_LowerBound"/>
           </results>
@@ -476,9 +476,9 @@
             <requirement href="../alisa/OperatorInterfaceReqs.reqspec#//@parts.0/@requirements.13"/>
           </requirement>
         </targetReference>
-        <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.25/@ownedDataPort.0"/>
+        <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.37/@ownedDataPort.0"/>
         <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
-          <metrics successCount="1" executionTime="13"/>
+          <metrics successCount="1" executionTime="14"/>
           <results message="Value range lower bound of operator_interface.lower_desired_temperature must be 97.0" resultType="SUCCESS">
             <modelElement href="../Resolute/Resolute_Isolette.aadl#Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.is_ValueRange_LowerBound"/>
           </results>
@@ -517,7 +517,7 @@
             <requirement href="../alisa/OperatorInterfaceReqs.reqspec#//@parts.0/@requirements.15"/>
           </requirement>
         </targetReference>
-        <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.25/@ownedDataPort.1"/>
+        <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.37/@ownedDataPort.1"/>
         <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
           <metrics successCount="1" executionTime="13"/>
           <results message="Value range upper bound of operator_interface.upper_desired_temperature must be 100.0" resultType="SUCCESS">
@@ -558,9 +558,9 @@
             <requirement href="../alisa/OperatorInterfaceReqs.reqspec#//@parts.0/@requirements.17"/>
           </requirement>
         </targetReference>
-        <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.25/@ownedDataPort.3"/>
+        <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.37/@ownedDataPort.3"/>
         <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
-          <metrics successCount="1" executionTime="13"/>
+          <metrics successCount="1" executionTime="12"/>
           <results message="Value range upper bound of operator_interface.upper_alarm_temperature must be 103.0" resultType="SUCCESS">
             <modelElement href="../Resolute/Resolute_Isolette.aadl#Resolute_Isolette.Resolute_Isolette_public.Resolute.Resolute.is_ValueRange_UpperBound"/>
           </results>
@@ -581,7 +581,7 @@
             <requirement href="../alisa/OperatorInterfaceReqs.reqspec#//@parts.0/@requirements.18"/>
           </requirement>
         </targetReference>
-        <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.25/@ownedDataPort.6"/>
+        <modelElement xsi:type="aadl2:DataPort" href="../isolette.aadl#/0/@ownedPublicSection/@ownedClassifier.37/@ownedDataPort.6"/>
         <predicateResult xsi:type="assure:PredicateResult" type="SUCCESS">
           <metrics successCount="1"/>
           <targetReference>

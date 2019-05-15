@@ -1,3 +1,9 @@
+We have captured the requirements stated in the FAA REM Handbook as ReqSpec specifications complemented with verification plans. These have been configured as assurance plans that can be executed as assurance cases.
+We have defined them for 
+1) the Isolette in its operational environment to assure the assumption about response time by a nurse informed by an alarm for our of range temperature,
+2) the Isolette as root which will validate a range of assumptions in the AADL model including failure occurrence probabilities based on fault tree analysis.
+3) the Thermostat as root for validating thermostat specific assumptions/requirements.
+
 A 1.2 System Goals expressed as stakeholder goals.
 
 For core model properties we use VAL to record the value from the requirement text. We use the value predicate to ensure the model has an assigned property of the same value.
