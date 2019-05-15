@@ -572,8 +572,7 @@ annex EMV2
   end propagations;
   component error behavior
   propagations
-  	working -[current_temperature{InvalidTemperature}]-> alarm{noerror};
-  	working -[lower_alarm_temperature{InvalidTemperature}]-> alarm{AlarmError};
+  	working -[1 ormore(current_temperature{InvalidTemperature},lower_alarm_temperature{InvalidTemperature})]-> alarm{noerror};
   	failed -[1 ormore(lower_alarm_temperature{InvalidTemperature},current_temperature{InvalidTemperature})]-> alarm{AlarmError};
   end component;
   properties
