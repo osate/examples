@@ -12,32 +12,30 @@ Instead we ensure the same value by referring to the constant in the property an
 Environmental Assumptions are done as system requirements for the respective system component. They primarily represent input assumptions and are marked appropriately withe the category attribute.
 
 Safety requirement SR2 makes assumptions about end to end latency for alarm response, i.e., the time it takes to raise an alarm and for the nurse to respond.
-We define a system modeling the operational environment of the Isolette and defined an end to end flow there. We have a 3 tier model with Tier1 capturing the stated requirement, 
+We define a system modeling the operational environment of the Isolette and defined an end to end flow there. 
+We have a 3 tier model with Tier1 capturing the stated requirement, 
 and Tier2/3 refining the flow as the design is expanded to a regulator and monitor.
-
-************
-
-the sections include tables showing monitored and controlled variables. These become incoming and outgoing features/ports on the respective component.
 
 
 There is also a valid/invalid bit in the alarm and desired temperature value as well. invalid if inconsistent ranges. Passed on to Thermostat. Thermostat monitor then raises alarm.
-Unclear who is responsible for ensuring correct desired and alarm ranges (OI or TH). I would not allow invalid values to be set in thermostat.
+Unclear who is responsible for ensuring correct desired and alarm ranges (OI or TH). I would not allow invalid values to be sent to thermostat.
 
 
 A 4 Safety Requirements
-As stakeholder goals
+H1 is represented as stakeholder goal.
 
-SR-1: no property value for 10e-5
+SR-1 and SR-2 are represented as system requirements and introduce independent regulator and monitor.
 
-SR-2: not trusted if bad OI desired and alarm range & internal failure. Probability of 10e-5.
+We can generate the fault tree of Figure 5 from Isolette.tier1 through composite state starting with state failed.
+We can generate the fault tree of Figure 6 from Isolette.tier2functional (regulator/monitor) through hierarchical composite states starting with state failed.
+We can also generate a fault tree that follows the error propagations for Isolette.tier2functional. This fault tree differs from that of Figure 6 as it takes additional sources into account.
+We have set up Isolette configurations with the regulator and monitor as software bound to a single processor - they need EMV2 annotations to deal with binding propagation paths with the single CPU becoming a common failure event violating the independence of the regulator and monitor.
 
 Thermostat system function:
 
-regulator status and monitor status: how actually sets them since they reflect that they failed.
+Issues: current temperature only via thermostat, no direct reporting from thermo sensor to OI.  Thus, regulator failure causes temp not to be shown on display.
 
-Issues: current temperature only via thermostat, no direct reporting from thermo sensor to OI.
-
-Figure A-2: reflected in thermostat implementation.
+Figure A-2: reflected in thermostat.Tier1Functional implementation.
 AADL model has detect_regulator_fail device that is not connected to anything.
 Monitor_Temp needs to do more than monitor current temp within specified range. Also bad input and internal failure of regulator (and monitor?)
 
@@ -46,7 +44,6 @@ Observation: Some text is written using the Observed/Control variable model. Set
 There is the question of persistence of the variable. Does it need to be set every period or just transmitted every period, or transmitted as state change event?
 This Paradigm "mismatch" can create potential problems.
 
+Figure A-3: Figure has Detect Regulator Failure as function, but AADL does not. The detect function is part of the EMV2 specification and to be passed as an internal event to the Manage Regulator Mode function.
 
-Figure A-3: Figure has Detect Regulator Failure as function, but AADL does not. The detect function is part of the EMV2 specification and to be passed as an internal eveent to the Manage Regulator Mode function.
-
-Finally, in REQ-MRI-4 we get infomred who is to convert temp into integer values adn the rounding to be used.
+Finally, in REQ-MRI-4 we get informed who is to round temperature real values into integer values. Interesting that it is not the operator interface, which has to ensure that all input temperature values are in 1.0 increments.

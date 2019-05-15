@@ -126,6 +126,7 @@ system requirements ThermostatImplementationReqs for Isolette::thermostat_th.fun
 		// validation: independence assumption of monitor and regulator
 		// not trusted if bad current temp and alarm range & internal failure. Probability of 10e-5. Is that reasonable as users can type in incorrect range values - or we guarantee correct range values.
 		issues "Should have separate probability for bad input."
+		issues "If users enters invalid alarm range it seems to be passed to thermostat and causes the monitor to issue an alarm."
 	]
 ]
 
@@ -156,7 +157,7 @@ system requirements RegulateTempReqs for Isolette::regulate_temperature  [
 		rationale "The Current Temperature of the Isolette is displayed on the Operator Interface to provide the operators with an additional means to confirm that the Isolette is maintaining the temperature correctly. This value is provided by the Regulate Temperature Function to the Operator Interface as the Display Temperature."
 		// Validation: actually set the value to the one received from the sensor.
 		issues " Validation question: do we convert into integer here or is the OI responsible to display only full degrees?"
-		issues " Whoever converts what are the rules for rounding?"
+		issues " It is not until we have REQ_MRI_4 that we find out who is rounding."
 	]
 	
 ]

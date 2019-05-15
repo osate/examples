@@ -89,7 +89,7 @@ Iso_Variables, Iso_Properties;
 
 	system implementation IsoletteEnvironment.tier3 extends IsoletteEnvironment.tier2
 		subcomponents
-			isolette: refined to system isolette.tier1Functional;
+			isolette: refined to system isolette.tier2Functional;
 	end IsoletteEnvironment.tier3;
 
 	system isolette
@@ -108,8 +108,6 @@ Iso_Variables, Iso_Properties;
 			use types ErrorLibrary, Isolette;
 			use behavior Isolette::FailStop;
 			error propagations
-			alarm : out propagation{ServiceOmission};
-			insideAirTemp: out propagation{OutOfRange};
 			infantExposure : out propagation {DangerousInfantExposure};
 			end propagations;
 			propagation paths
@@ -159,23 +157,30 @@ Iso_Variables, Iso_Properties;
 	end isolette.tier1;
 
 
-	system implementation isolette.tier1Functional extends isolette.tier1
+	system implementation isolette.tier2Functional extends isolette.tier1
 		subcomponents
 			thermostat: refined to system thermostat_th.functional;
+			heat_source: refined to device heat_source_hs_Rev;
 		annex EMV2 {**
 			use behavior Isolette::FailStop;
-			component error behavior
-			propagations
-			all -[thermostat.monitor_temperature.alarm{AlarmError}]-> alarm{ServiceOmission};
-			end component;
+--			component error behavior
+--			propagations
+--			all -[thermostat.monitor_temperature.alarm{AlarmError}]-> alarm{ServiceOmission};
+--			end component;
 			composite error behavior
 			states
 			-- Figure 5 HB: parts & monitor alarm (see thermostat)
-				CompositeFailed:[1 ormore ( thermostat.monitor_temperature.failed and 1 ormore(thermostat.regulate_temperature.Failed, temperature_sensor.Failed), heat_source.Failed, operator_interface.Failed ) ]-> Failed;
+				CompositeFailed:[1 ormore ( thermostat.monitor_temperature.failed and 1 ormore(thermostat.regulate_temperature.Failed, heat_source.Failed), temperature_sensor.Failed, operator_interface.Failed ) ]-> Failed;
 			end composite;
 		**};
-	end isolette.tier1Functional;
+	end isolette.tier2Functional;
 	
+	system implementation isolette.EmbeddedSoftware extends isolette.tier2Functional
+		subcomponents
+			thermostat : refined to system thermostat_th.softwaresinglecpu;
+		-- TODO: fault model that identifies CPU as single source of failure causing regulator and monitor not to be independent.
+		-- TODO: in a 2 CPU scenario we may still have a single source of failure due to a single power supply.
+	end isolette.EmbeddedSoftware;
 
 --A.5 THERMOSTAT SYSTEM FUNCTION
 	system thermostat_th
@@ -189,7 +194,7 @@ Iso_Variables, Iso_Properties;
 			upper_alarm_temperature: in data port Iso_Variables::upper_alarm_temperature;
 			regulator_status: out data port Iso_Variables::status {BLESS::Assertion => "<<REGULATOR_STATUS(x)>>";};
 			monitor_status: out data port Iso_Variables::status {BLESS::Assertion => "<<:=MONITOR_STATUS()>>";};
-			display_temperature: out data port Iso_Variables::measured_temperature {
+			display_temperature: out data port Iso_Variables::display_temperature {
 						BLESS::Assertion => "<<DT: :=current_tempreature.t^0>>";};
 			alarm_action: out data port Iso_Variables::on_off {BLESS::Assertion => "<<:=ALARM()>>";};
 		flows
@@ -253,6 +258,20 @@ Iso_Variables, Iso_Properties;
 		**};
 	end thermostat_th.functional;
 
+	system implementation thermostat_th.softwaresinglecpu extends thermostat_th.functional
+		subcomponents
+			regulate_temperature : refined to process regulate_temperature_rt.impl;
+			monitor_temperature: refined to process monitor_temperature_mt.impl;
+			cpu1: processor CPU;
+		properties
+			Actual_Processor_Binding => (reference(cpu1)) applies to regulate_temperature;
+			Actual_Processor_Binding => (reference(cpu1)) applies to monitor_temperature;
+	end thermostat_th.softwaresinglecpu;
+	
+	processor CPU
+			
+	end CPU;
+
 
 --A.5.1 REGULATE TEMPERATURE FUNCTION
 	abstract regulate_temperature
@@ -260,7 +279,7 @@ Iso_Variables, Iso_Properties;
 			upper_desired_temperature: in data port Iso_Variables::upper_desired_temperature;
 			lower_desired_temperature: in data port Iso_Variables::lower_desired_temperature;
 			regulator_status: out data port Iso_Variables::status {BLESS::Assertion => "<<REGULATOR_STATUS(x)>>";};
-			displayed_temp: out data port Iso_Variables::measured_temperature;
+			displayed_temp: out data port Iso_Variables::display_temperature;
 			current_temperature: in data port Iso_Variables::measured_temperature;
 			current_temperature_status: in data port iso_variables::valid_flag;
 			heat_control: out data port Iso_Variables::on_off {BLESS::Assertion => "<<HEAT_CONTROL(x)>>";};
@@ -317,7 +336,7 @@ Iso_Variables, Iso_Properties;
 			upper_desired_temp: in data port Iso_Variables::upper_desired_temperature;
 			lower_desired_temp: in data port Iso_Variables::lower_desired_temperature;
 			current_temperature: in data port Iso_Variables::measured_temperature;
-			displayed_temp: out data port Iso_Variables::measured_temperature;
+			displayed_temp: out data port iso_variables::display_temperature;
 			desired_range: out data port Iso_Variables::desired_range;
 			regulator_mode: in data port Iso_Variables::regulator_mode {
 						BLESS::Assertion => "<<REGULATOR_MODE(regulator_mode)>>";};
@@ -814,7 +833,7 @@ annex EMV2
   end propagations;
   properties
     EMV2::OccurrenceDistribution => [ProbabilityValue => Iso_Properties::TemperatureSensorFailureRateValue;] 
-      applies to badTempSensor.InvalidTemperature;
+      applies to failed, badTempSensor.InvalidTemperature;
   **};
 end temperature_sensor_ts;
 
@@ -836,11 +855,23 @@ annex EMV2
   	controlpassthru: error path heat_control{RegulatorError} -> heat{HeaterError}; -- incorrect on/off maps into commission and omission
   	HSFail: error source heat{HeaterError};
   end propagations;
-    properties  --set failure rate for temp monitor
+    properties  
     EMV2::OccurrenceDistribution => [ ProbabilityValue => Iso_Properties::HeatSourceFailureRateValue ;]
       applies to failed, HSFail.HeaterError;      
   **};
 end heat_source_hs;
+
+device heat_source_hs_Rev extends heat_source_hs
+annex EMV2 
+  {**
+    properties  
+    EMV2::OccurrenceDistribution => [ ProbabilityValue => Iso_Properties::HeatSourceFailureRateValue2 ;]
+      applies to failed, HSFail.HeaterError;      
+  **};
+
+end heat_source_hs_Rev;
+
+
 
 system operator_interface_oi
 features
@@ -852,7 +883,7 @@ features
     {BLESS::Assertion => "<<REGULATOR_STATUS(x)>>";};
   monitor_status : in data port Iso_Variables::status
     {BLESS::Assertion => "<<:=MONITOR_STATUS()>>";};
-  display_temperature : in data port Iso_Variables::measured_temperature;
+  display_temperature : in data port Iso_Variables::display_temperature;
   displayed_temperature : out feature Iso_Variables::display_temperature;
   alarm_action : in data port Iso_Variables::on_off
     {BLESS::Assertion => "<<:=ALARM()>>";};

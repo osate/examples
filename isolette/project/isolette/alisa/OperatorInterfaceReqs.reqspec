@@ -38,6 +38,8 @@ system requirements OperatorInterfaceReqs for Isolette::operator_interface_oi [
 
 	]
 
+// PHF: had an issue with claim refinement, i.e., nested claims for the same component.
+// The predicate result object was set up with the wrong context, i.e., the predicate could not be found.
 //	requirement EA_OI_2 [
 //		description "All temperatures will be set and displayed by the operators in increments of 1 deg F."
 //		rationale
@@ -48,11 +50,13 @@ system requirements OperatorInterfaceReqs for Isolette::operator_interface_oi [
 //
 //	]
 
+// PHF: not found in original document.
 	requirement EA_OI_2_0 for display_temperature [
-		description "Measured temperature will be rounded into 1 degree increments."
+		description "The received measured temperature to be displayed is assumed to have been rounded to 1.0 deg F by the sender."
 //		refines EA_OI_2
 		// validation: temperature data type has correct increment
 		value predicate #Isolette_Properties::Temperature_Accuracy == 1.0 Fahrenheit
+		issues "We do not know that rounded values are passed in until REQ_MRI_4"
 	]
 	requirement EA_OI_2_1 for displayed_temperature [
 		description "Display temperature will be displayed in 1 degree increments."
