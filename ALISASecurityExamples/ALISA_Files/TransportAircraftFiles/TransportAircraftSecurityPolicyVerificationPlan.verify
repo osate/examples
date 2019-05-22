@@ -31,4 +31,14 @@ for TransportAircraftSystemSecurityPolicies
 		activities
 		ReviewAccessControlPolicy: AircraftSecurityVerificationMethods.ReviewMasterSecurityPolicy ("Master Security Plan")
 	]
+	
+//	claim SecureAircraftControlCommunication: "Ensure that all communication with the aircraft control system is encrypted."
+//	[
+//		
+//	]
+
+//	claim communicationProtectionReq2: "Ensure that all external communication with the aircraft control system is encrypted."
+//	[
+//		activities: 
+//	]
 ]

@@ -31,9 +31,9 @@ system implementation missionAircraft.generic
 
 	properties
 		-- Assign Security Properties to Data within mission systems
-		SecurityClassificationProperties::InformationSecurityLevel => "L1" applies to mission_systems.L1DataStore;
-		SecurityClassificationProperties::InformationSecurityLevel => "L2" applies to mission_systems.L2DataStore;
-		SecurityClassificationProperties::InformationSecurityLevel => "L3" applies to mission_systems.L3DataStore;
+		SecurityClassificationProperties::Information_Security_Level => TopSecret applies to mission_systems.L1DataStore;
+		SecurityClassificationProperties::Information_Security_Level =>  Secret applies to mission_systems.L2DataStore;
+		SecurityClassificationProperties::Information_Security_Level =>  Confidential applies to mission_systems.L3DataStore;
 		-- Assign Encryption to data within mission systems
 		SecurityEnforcementProperties::Encryption => [encryption_form=> to_be_specified;] applies to mission_systems.L1DataStore;
 		SecurityEnforcementProperties::Encryption => [encryption_form=> to_be_specified;]  applies to mission_systems.L2DataStore;
@@ -54,8 +54,8 @@ system implementation missionAircraft.generic
 		SecurityEnforcementProperties::Encryption => [encryption_form=> to_be_specified;]  applies to mission_systems.connection9;
 		--
 		-- test assignments of secret to mission system
-		SecurityClassificationProperties::InformationSecurityLevel => "secret";
-		SecurityClassificationProperties::InformationSecurityLevel => "secret" applies to mission_systems;
+		SecurityClassificationProperties::Information_Security_Level => Secret;
+		SecurityClassificationProperties::Information_Security_Level => Secret applies to mission_systems;
 		
 end missionAircraft.generic;
 
