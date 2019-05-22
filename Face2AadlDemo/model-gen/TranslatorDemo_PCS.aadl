@@ -1,0 +1,84 @@
+--Generated from "TranslatorDemo.face" at 2019-04-03T15:16:56.415
+package TranslatorDemo_PCS
+public
+	with FACE;
+	with TranslatorDemo_data_model;
+	
+	thread group Altitude_Sensor
+		features
+			Altitude_output: out event data port TranslatorDemo_data_model::Altitude_ft_Platform {
+				Output_Rate => [Value_Range => 8.0 .. 8.0; Rate_Unit => PerSecond;];
+				Queue_Size => 10;
+			};
+		properties
+			FACE::Profile => general;
+			FACE::Segment => PCS;
+	end Altitude_Sensor;
+	
+	thread group implementation Altitude_Sensor.impl
+		subcomponents
+			thread0: thread {
+				Compute_Execution_Time => 0 sec .. 0 sec;
+				Period => 125 ms;
+				Priority => 0;
+			};
+	end Altitude_Sensor.impl;
+	
+	process Altitude_Sensor_process
+		features
+			Altitude_output: out event data port TranslatorDemo_data_model::Altitude_ft_Platform {
+				Output_Rate => [Value_Range => 8.0 .. 8.0; Rate_Unit => PerSecond;];
+				Queue_Size => 10;
+			};
+		flows
+			Altitude_output_source: flow source Altitude_output;
+	end Altitude_Sensor_process;
+	
+	process implementation Altitude_Sensor_process.impl
+		subcomponents
+			Altitude_Sensor: thread group Altitude_Sensor.impl;
+		connections
+			Altitude_output_connection: port Altitude_Sensor.Altitude_output -> Altitude_output;
+		flows
+			Altitude_output_source: flow source Altitude_Sensor -> Altitude_output_connection -> Altitude_output;
+	end Altitude_Sensor_process.impl;
+	
+	thread group Autopilot
+		features
+			Altitude_input: in event data port TranslatorDemo_data_model::Altitude_m_Platform {
+				Input_Rate => [Value_Range => 8.0 .. 8.0; Rate_Unit => PerSecond;];
+				Queue_Size => 10;
+			};
+		properties
+			FACE::Profile => general;
+			FACE::Segment => PCS;
+	end Autopilot;
+	
+	thread group implementation Autopilot.impl
+		subcomponents
+			thread0: thread {
+				Compute_Execution_Time => 0 sec .. 0 sec;
+				Period => 125 ms;
+				Priority => 0;
+			};
+	end Autopilot.impl;
+	
+	process Autopilot_process
+		features
+			Altitude_input: in event data port TranslatorDemo_data_model::Altitude_m_Platform {
+				Input_Rate => [Value_Range => 8.0 .. 8.0; Rate_Unit => PerSecond;];
+				Queue_Size => 10;
+			};
+		flows
+			Altitude_input_sink: flow sink Altitude_input;
+	end Autopilot_process;
+	
+	process implementation Autopilot_process.impl
+		subcomponents
+			Autopilot: thread group Autopilot.impl;
+		connections
+			Altitude_input_connection: port Altitude_input -> Autopilot.Altitude_input;
+		flows
+			Altitude_input_sink: flow sink Altitude_input -> Altitude_input_connection -> Autopilot;
+	end Autopilot_process.impl;
+end TranslatorDemo_PCS;

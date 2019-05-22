@@ -1,0 +1,39 @@
+--Generated from "TranslatorDemo.face" at 2019-04-03T15:16:56.415
+package TranslatorDemo_integration_model
+public
+	with FACE;
+	with TranslatorDemo_data_model;
+	with TranslatorDemo_PCS;
+	
+	system im
+	end im;
+	
+	system implementation im.impl
+		subcomponents
+			Altitude_Sensor: process TranslatorDemo_PCS::Altitude_Sensor_process.impl;
+			Autopilot: process TranslatorDemo_PCS::Autopilot_process.impl;
+			Channel: virtual bus;
+			Converter_ft_to_m: abstract Converter_ft_to_m;
+			Transporter: abstract Transporter;
+		connections
+			connection0: feature Altitude_Sensor.Altitude_output -> Converter_ft_to_m.input0;
+			connection1: feature Converter_ft_to_m.output -> Transporter.input0;
+			connection2: feature Transporter.output -> Autopilot.Altitude_input;
+	end im.impl;
+	
+	abstract Converter_ft_to_m
+		features
+			input0: in feature TranslatorDemo_data_model::Altitude_ft_Platform;
+			output: out feature TranslatorDemo_data_model::Altitude_m_Platform;
+		properties
+			FACE::Segment => TSS;
+	end Converter_ft_to_m;
+	
+	abstract Transporter
+		features
+			input0: in feature TranslatorDemo_data_model::Altitude_m_Platform;
+			output: out feature TranslatorDemo_data_model::Altitude_m_Platform;
+		properties
+			FACE::Segment => TSS;
+	end Transporter;
+end TranslatorDemo_integration_model;

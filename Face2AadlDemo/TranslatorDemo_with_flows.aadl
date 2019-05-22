@@ -1,0 +1,15 @@
+package TranslatorDemo_with_flows
+public
+	--To regenerate TranslatorDemo_integration_model, right-click on TranslatorDemo.face and select "Translate to AADL".
+	with TranslatorDemo_integration_model;
+	
+	renames system TranslatorDemo_integration_model::im;
+	
+	system implementation im.with_flows extends TranslatorDemo_integration_model::im.impl
+		flows
+			Sensor_to_Autopilot: end to end flow Altitude_Sensor.Altitude_output_source -> connection0 ->
+				Converter_ft_to_m -> connection1 ->
+				Transporter -> connection2 ->
+				Autopilot.Altitude_input_sink;
+	end im.with_flows;
+end TranslatorDemo_with_flows;

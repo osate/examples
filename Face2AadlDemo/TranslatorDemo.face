@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<face:ArchitectureModel xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:conceptual="http://www.opengroup.us/face/datamodel/conceptual/3.0" xmlns:face="http://www.opengroup.us/face/3.0" xmlns:integration="http://www.opengroup.us/face/integration/3.0" xmlns:logical="http://www.opengroup.us/face/datamodel/logical/3.0" xmlns:platform="http://www.opengroup.us/face/datamodel/platform/3.0" xmlns:uop="http://www.opengroup.us/face/uop/3.0" name="am">
+  <dm name="dm">
+    <cdm name="cdm">
+      <element xsi:type="conceptual:Query" name="Altitude" description="Basic altitude type" specification="null"/>
+    </cdm>
+    <ldm name="ldm">
+      <element xsi:type="logical:Query" name="Altitude_m" description="Altitude in meters" realizes="//@dm.0/@cdm.0/@element.0" specification="null"/>
+      <element xsi:type="logical:Query" name="Altitude_ft" description="Altitude in feet" realizes="//@dm.0/@cdm.0/@element.0" specification="null"/>
+    </ldm>
+    <pdm name="pdm">
+      <element xsi:type="platform:Query" name="Altitude_m_query" realizes="//@dm.0/@ldm.0/@element.0" specification="null"/>
+      <element xsi:type="platform:Template" name="Altitude_m" description="Double precision floating point in meters" specification="null" boundQuery="//@dm.0/@pdm.0/@element.0"/>
+      <element xsi:type="platform:Query" name="Altitude_ft_query" realizes="//@dm.0/@ldm.0/@element.1" specification="null"/>
+      <element xsi:type="platform:Template" name="Altitude_ft" description="Double precision floating point in feet" specification="null" boundQuery="//@dm.0/@pdm.0/@element.2"/>
+    </pdm>
+  </dm>
+  <um name="um">
+    <element xsi:type="uop:PortableComponent" name="Altitude_Sensor">
+      <thread period="0.125"/>
+      <memoryRequirements/>
+      <connection xsi:type="uop:QueuingConnection" name="Altitude_output" period="0.125" messageType="//@dm.0/@pdm.0/@element.3" messageExchangeType="OutboundMessage" depth="10"/>
+    </element>
+    <element xsi:type="uop:PortableComponent" name="Autopilot">
+      <thread period="0.125"/>
+      <memoryRequirements/>
+      <connection xsi:type="uop:QueuingConnection" name="Altitude_input" period="0.125" messageType="//@dm.0/@pdm.0/@element.1" depth="10"/>
+    </element>
+  </um>
+  <im name="im">
+    <element xsi:type="integration:UoPInstance" name="Altitude_Sensor" realizes="//@um.0/@element.0">
+      <output connection="//@um.0/@element.0/@connection.0"/>
+    </element>
+    <element xsi:type="integration:UoPInstance" name="Autopilot" realizes="//@um.0/@element.1">
+      <input connection="//@um.0/@element.1/@connection.0"/>
+    </element>
+    <element xsi:type="integration:IntegrationContext" name="Demo_Context">
+      <connection source="//@im.0/@element.0/@output.0" destination="//@im.0/@element.2/@node.0/@inPort.0"/>
+      <connection source="//@im.0/@element.2/@node.0/@outPort" destination="//@im.0/@element.2/@node.1/@inPort.0"/>
+      <connection source="//@im.0/@element.2/@node.1/@outPort" destination="//@im.0/@element.1/@input.0"/>
+      <node xsi:type="integration:ViewTransformation" name="Converter_ft_to_m">
+        <outPort view="//@dm.0/@pdm.0/@element.1"/>
+        <inPort view="//@dm.0/@pdm.0/@element.3"/>
+      </node>
+      <node xsi:type="integration:ViewTransporter" name="Transporter" channel="//@im.0/@element.3">
+        <outPort view="//@dm.0/@pdm.0/@element.1"/>
+        <inPort view="//@dm.0/@pdm.0/@element.1"/>
+      </node>
+    </element>
+    <element xsi:type="integration:TransportChannel" name="Channel"/>
+  </im>
+</face:ArchitectureModel>

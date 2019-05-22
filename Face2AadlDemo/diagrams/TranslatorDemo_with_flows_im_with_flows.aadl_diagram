@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="ASCII"?>
+<diagram:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:diagram="http://osate.org/diagram" formatVersion="7">
+  <element uuid="9ed7e523-de2f-43a9-9781-4481b81d3f2f" manual="true">
+    <element uuid="672d7e45-9f78-4300-9a17-bf82b56bd4a5">
+      <element uuid="099b55dd-9839-47aa-bd08-5a47ce2f4beb">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>connection0</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <element uuid="c887d528-e646-46fb-971e-7461ee852915">
+      <element uuid="f654ca06-3f19-40ba-b116-facd2bcba2fe">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>connection1</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <element uuid="2fe2b83b-6323-4d50-bc21-afdff42d8f62">
+      <element uuid="d44f6108-5b5f-407f-a5d1-8571d46e0cb2">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>connection2</seg>
+      </bo>
+      <contentFilters/>
+    </element>
+    <element uuid="d2fc7eb9-19a1-4af8-b4c0-521917cef839">
+      <element uuid="41bff104-d8f2-4830-8fb0-425441fac847" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>altitude_output</seg>
+        </bo>
+        <position x="276.0" y="10.0"/>
+        <contentFilters/>
+      </element>
+      <element uuid="2bd260fa-c0fb-42e3-a91e-a4d106edee70">
+        <bo>
+          <seg>flow_specification</seg>
+          <seg>altitude_output_source</seg>
+        </bo>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>altitude_sensor</seg>
+      </bo>
+      <position x="12.0" y="93.0"/>
+      <size width="391.0" height="60.0"/>
+      <contentFilters>
+        <filter>features</filter>
+        <filter>internalFeatures</filter>
+        <filter>processorFeatures</filter>
+        <filter>connections</filter>
+        <filter>flowSpecifications</filter>
+      </contentFilters>
+    </element>
+    <element uuid="3f38ba5e-d88e-41d6-869e-2f6c364694c9">
+      <element uuid="0ed75c01-83d8-4a2b-9cef-f1a030563b23" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>altitude_input</seg>
+        </bo>
+        <position y="10.0"/>
+        <contentFilters/>
+      </element>
+      <element uuid="cb0d8631-2831-40f1-ba47-255aaeae386b">
+        <bo>
+          <seg>flow_specification</seg>
+          <seg>altitude_input_sink</seg>
+        </bo>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>autopilot</seg>
+      </bo>
+      <position x="1011.0" y="93.0"/>
+      <size width="330.0" height="60.0"/>
+      <contentFilters>
+        <filter>features</filter>
+        <filter>internalFeatures</filter>
+        <filter>processorFeatures</filter>
+        <filter>connections</filter>
+        <filter>flowSpecifications</filter>
+      </contentFilters>
+    </element>
+    <element uuid="481aae79-a94f-4ed4-b634-c68a92df9d85">
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>channel</seg>
+      </bo>
+      <position x="12.0" y="38.0"/>
+      <size width="107.0" height="35.0"/>
+      <contentFilters>
+        <filter>features</filter>
+        <filter>internalFeatures</filter>
+        <filter>processorFeatures</filter>
+        <filter>connections</filter>
+        <filter>flowSpecifications</filter>
+      </contentFilters>
+    </element>
+    <element uuid="be40dc4b-3bb9-4007-8b2e-c212b5850e62">
+      <element uuid="075bfe6c-7b10-4e3e-a030-2676af03d297" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>input0</seg>
+        </bo>
+        <position y="10.0"/>
+        <contentFilters/>
+      </element>
+      <element uuid="d36c2221-7149-4e51-ae26-971fb8b2475e" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>output</seg>
+        </bo>
+        <position x="238.0" y="10.0"/>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>converter_ft_to_m</seg>
+      </bo>
+      <position x="423.0" y="93.0"/>
+      <size width="297.0" height="60.0"/>
+      <contentFilters>
+        <filter>features</filter>
+        <filter>internalFeatures</filter>
+        <filter>processorFeatures</filter>
+        <filter>connections</filter>
+        <filter>flowSpecifications</filter>
+      </contentFilters>
+    </element>
+    <element uuid="6378b07a-7d43-48d4-bc2e-97f004f7024d">
+      <element uuid="ae0c6b93-4811-4eaa-a582-739c6346931a" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>input0</seg>
+        </bo>
+        <position y="10.0"/>
+        <contentFilters/>
+      </element>
+      <element uuid="fa0061ae-19b5-4640-b7cb-7cddaf03a8bc" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>output</seg>
+        </bo>
+        <position x="192.0" y="10.0"/>
+        <contentFilters/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>transporter</seg>
+      </bo>
+      <position x="740.0" y="93.0"/>
+      <size width="251.0" height="60.0"/>
+      <contentFilters>
+        <filter>features</filter>
+        <filter>internalFeatures</filter>
+        <filter>processorFeatures</filter>
+        <filter>connections</filter>
+        <filter>flowSpecifications</filter>
+      </contentFilters>
+    </element>
+    <bo>
+      <seg>classifier</seg>
+      <seg>im.with_flows</seg>
+    </bo>
+    <position x="12.0" y="12.0"/>
+    <size width="1353.0" height="165.0"/>
+    <contentFilters>
+      <filter>features</filter>
+      <filter>internalFeatures</filter>
+      <filter>processorFeatures</filter>
+      <filter>connections</filter>
+      <filter>flowSpecifications</filter>
+      <filter>subcomponents</filter>
+    </contentFilters>
+  </element>
+  <config type="structure" connectionPrimaryLabelsVisible="false">
+    <enabledAadlProperties/>
+    <context>
+      <seg>classifier</seg>
+      <seg>translatordemo_with_flows::im.with_flows</seg>
+    </context>
+  </config>
+</diagram:Diagram>

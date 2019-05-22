@@ -1,0 +1,35 @@
+--Generated from "TranslatorDemo.face" at 2019-04-03T15:16:56.415
+package TranslatorDemo_data_model
+public
+	with FACE;
+	
+	--Basic altitude type
+	data Altitude_Conceptual
+		properties
+			FACE::Realization_Tier => conceptual;
+	end Altitude_Conceptual;
+	
+	--Altitude in meters
+	data Altitude_m_Logical extends Altitude_Conceptual
+		properties
+			FACE::Realization_Tier => logical;
+	end Altitude_m_Logical;
+	
+	--Altitude in feet
+	data Altitude_ft_Logical extends Altitude_Conceptual
+		properties
+			FACE::Realization_Tier => logical;
+	end Altitude_ft_Logical;
+	
+	--Double precision floating point in meters
+	data Altitude_m_Platform extends Altitude_m_Logical
+		properties
+			FACE::Realization_Tier => platform;
+	end Altitude_m_Platform;
+	
+	--Double precision floating point in feet
+	data Altitude_ft_Platform extends Altitude_ft_Logical
+		properties
+			FACE::Realization_Tier => platform;
+	end Altitude_ft_Platform;
+end TranslatorDemo_data_model;
