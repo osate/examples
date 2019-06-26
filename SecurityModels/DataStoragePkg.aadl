@@ -1,0 +1,69 @@
+-- Copyright 2019 Carnegie Mellon University. See Notice.txt
+-- Distribution Statement A: Approved for Public Release; Distribution is Unlimited.package AccessPkg
+
+package DataStoragePkg
+public
+	
+	system topSecret
+		features
+		accessPort: in out data port;
+		transferPortS: out data port;
+		trasferPortSR: out data port;
+		
+	end topSecret;
+	
+	system implementation topSecret.single
+		subcomponents
+			topSecretData: data topsecretdata;
+	end topSecret.single;
+	
+	system secret	
+		
+		features
+		accessPort: in out data port;
+		transferPortUN: out data port;
+		trasferPortSR: out data port;
+		transferPortTS: in data port;
+		
+	end secret;
+	
+	system implementation secret.single
+		subcomponents
+			secretData: data;
+	end secret.single;
+	
+	
+	system unclassified
+
+		features
+		accessPort: in out data port;
+		transferPortS: in  data port;
+		trasferPortUNP: out data port;
+		
+	end unclassified;
+	
+	system implementation unclassified.single
+		subcomponents
+			unclassData: data;
+	end unclassified.single;
+	
+	system unclassifiedPublic
+
+		features
+		transferPortUN: in  data port;
+		trasferPortAccess: out data port;
+			
+	end unclassifiedPublic;
+	
+	system secretReleasable
+		features
+		accessPort: out data port;
+		transferPortS: in out data port;
+		trasferPortTS: in out data port;	
+	end secretReleasable;
+	
+	data topSecretdata
+
+	end topSecretdata;
+	
+end DataStoragePkg;

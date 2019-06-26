@@ -1,0 +1,17 @@
+package ComputeHardwarePkg
+public
+	
+	bus basicBus
+		
+	end basicBus;
+	
+	processor basicProc
+			
+	end basicProc;
+	
+	device basicDevice
+		
+	end basicDevice;
+	
+	
+end ComputeHardwarePkg;
