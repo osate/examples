@@ -1,11 +1,10 @@
 -- Copyright 2019 Carnegie Mellon University. See Notice.txt
 -- Distribution Statement A: Approved for Public Release; Distribution is Unlimited.package AccessPkg
 
-package BasicCrossDomainExample3
 
-
+package CrossDomainExample
 public
-	with AccessPkg, DataStoragePkg, SecurityEnforcementProperties, 
+		with AccessPkg, DataStoragePkg, SecurityEnforcementProperties, 
 	SecurityClassificationProperties, DownGradingFiltersPkg,ComputeHardwarePkg;
 	
 	-- based in part on figure 1 in Shedding Light on Cross Domain Solutions
@@ -34,15 +33,15 @@ public
 	----------------------------------------------------
 	-- This example uses the Security Level and Trusted properties
 	-- and checks that all components have a value for 
-	-- Security Level and components are connected to other
-	-- with the same Security Level or to Trusted component.
+	-- Security Level and components are connected to others
+	-- with the same Security Level or to a Trusted component.
 	--
 		system CrossDomain
 		end CrossDomain;
 	
 		system implementation CrossDomain.basic
-		-- this is CrossDomain.baisc3 copied with subcomponents since Resolute does not work with extensions.
-		-- In this example the Security Level Property is used instead of the Security Classification and Information Security Level properties.
+		-- 
+		-- In this example, the Security Level Property is used instead of the Security Classification and Information Security Level properties.
 		--
 		subcomponents
 			-- data stores
@@ -70,6 +69,7 @@ public
 		
 		connections
 			connection: port TSAccessUnit.accessPortTS <-> TopSecretDataStore.accessPort {SecurityEnforcementProperties::encryption => [Encryption_form => to_be_specified;];};
+			connection3: port TSAccessUnit.trasferPortUN <-> UnclassifiedDataStore.accessPort ;   -- {SecurityEnforcementProperties::encryption => [Encryption_form => to_be_specified;];};
 			connection2: port TSAccessUnit.accessPortS <-> SecretDataStore.accessPort {SecurityEnforcementProperties::encryption => [Encryption_form => to_be_specified;];};
 			connection4: port TopSecretDataStore.transferPortS -> TStoS.indata {SecurityEnforcementProperties::encryption => [Encryption_form => to_be_specified;];};
 			connection5: port TStoS.outdata -> SecretDataStore.transferPortTS {SecurityEnforcementProperties::encryption => [Encryption_form => to_be_specified;];};
@@ -83,10 +83,10 @@ public
 			connection15: port SecretReleasableStore.accessPort -> ThirdPartyAccess.accessPort {SecurityEnforcementProperties::encryption => [Encryption_form => to_be_specified;];};
 			connection13: port UNtoUNP.outdata -> unclassifiedPublicStore.transferPortUN {SecurityEnforcementProperties::encryption => [Encryption_form => to_be_specified;];};
 			connection14: port unclassifiedPublicStore.trasferPortAccess -> PublicAccess.accessPort {SecurityEnforcementProperties::encryption => [Encryption_form => to_be_specified;];};
-			connection3: port TSAccessUnit.trasferPortUN <-> UnclassifiedDataStore.accessPort ; -- {SecurityEnforcementProperties::encryption => [Encryption_form => to_be_specified;];};
+			
 		properties
 			-- Binding of connections
---			Actual_Connection_Binding => (reference (BBus)) applies to connection15;
+			Actual_Connection_Binding => (reference (BBus)) applies to connection15;
 			-- security level properties --------
 			SecurityClassificationProperties::Security_Level => TopSecret  applies to TopSecretDataStore;
 			SecurityClassificationProperties::Security_Level => TopSecret  applies to TopSecretDataStore.topsecretdata;
@@ -118,7 +118,7 @@ public
 			SecurityEnforcementProperties::Encryption => [encryption_form => symmetric;
 				encryption_algorithm => ("AES"); ] applies to BBus; -- apply to the bus
 			--
---			 add no encryption to keys
+			-- add no encryption to keys
 			SecurityEnforcementProperties::Encryption => [encryption_form => no_encryption;] applies to private_key1;
 			SecurityEnforcementProperties::Encryption => [encryption_form => no_encryption;] applies to public_key1;
 			------------------------------------------------
@@ -189,15 +189,22 @@ public
 			annex Resolute {**
 				-- 
 				-- security level checks
---				prove all_subcomponents_have_security_level(this.TopSecretDataStore) -- should be true
---				prove all_subcomponents_have_security_level(this.SecretDataStore) -- should be true
---				prove all_subcomponents_have_security_level (this)  -- not true because of bus component
---
---	            prove all_contained_data_have_encryption (this) -- should be true  keys have been assigned 'no_encryption' for Encryption property
---	            prove all_contained_data_have_encryption(this.TopSecretDataStore) 
---	            prove all_contained_data_have_encryption(this.SecretDataStore) 
+				prove all_subcomponents_have_security_level(this.TopSecretDataStore) -- should be true
+				prove all_subcomponents_have_security_level(this.SecretDataStore) -- should be true
+				prove all_subcomponents_have_security_level (this)  -- not true because of bus component
+				prove all_subcomponents_have_security_level_or_are_trusted (this)  -- not true because of bus component
+				prove all_contained_components_have_security_level (this) -- not true because of bus compoent
+				prove all_contained_data_have_top_secret_security_level(this.TopSecretDataStore) -- should be true 
+	            prove all_contained_data_have_secret_security_level(this.SecretDataStore) -- should be true 
+				
+				-- security connection checks
+	            prove connected_components_have_same_security_level (this) -- should be false
+	            prove connected_systems_have_same_security_levels_or_are_connected_to_trusted(this) -- should be true
+	            -- Encryption Checks
+	            prove all_contained_data_have_encryption (this) -- should be true keys have been assigned 'no_encryption' for Encryption property
+	            prove all_contained_data_have_encryption(this.TopSecretDataStore) -- should be true 
+	            prove all_contained_data_have_encryption(this.SecretDataStore) -- should be true 
 
 			**};
 	end CrossDomain.basic;
-	
-end BasicCrossDomainExample3;
+end CrossDomainExample;
