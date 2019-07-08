@@ -15,7 +15,7 @@ verification plan MissionSystemsSecurityVerificationPlan for MissionSystemsSecur
 	claim missionDataHighLevel
 	[
 			activities
-			check_it: SecurityClassification.SharedMemorySameSecurityLevels ()
+			check_it: SecurityClassification.SharedMemorySameSecurityLevels () 
 	]
 	
 	claim SecretLevel : "Checks that the information security level is secret"
