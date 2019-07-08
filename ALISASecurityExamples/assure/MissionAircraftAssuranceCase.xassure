@@ -22,7 +22,7 @@
           </requirement>
         </targetReference>
         <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="ERROR">
-          <metrics errorCount="1" executionTime="510"/>
+          <metrics errorCount="1" executionTime="1659"/>
           <issues diagnosticType="ERROR" message="Attempt to get head of empty list: []"/>
           <targetReference>
             <verificationPlan href="../../SecurityVerification/GlobalReqs/SecurityVerificationPlan.verify#//@contents.0"/>
@@ -33,7 +33,7 @@
           </targetReference>
         </verificationActivityResult>
         <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="ERROR">
-          <metrics errorCount="1" executionTime="50"/>
+          <metrics errorCount="1" executionTime="204"/>
           <issues diagnosticType="ERROR" message="Attempt to get head of empty list: []"/>
           <targetReference>
             <verificationPlan href="../../SecurityVerification/GlobalReqs/SecurityVerificationPlan.verify#//@contents.0"/>
@@ -44,7 +44,7 @@
           </targetReference>
         </verificationActivityResult>
         <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="ERROR">
-          <metrics errorCount="1" executionTime="40"/>
+          <metrics errorCount="1" executionTime="567"/>
           <issues diagnosticType="ERROR" message="Attempt to get head of empty list: []"/>
           <targetReference>
             <verificationPlan href="../../SecurityVerification/GlobalReqs/SecurityVerificationPlan.verify#//@contents.0"/>
@@ -64,7 +64,7 @@
           </requirement>
         </targetReference>
         <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
-          <metrics successCount="1" executionTime="60"/>
+          <metrics successCount="1" executionTime="155"/>
           <results message="For all components: component is relay channel between buses by relaying messages to components with different security levels/domains" resultType="SUCCESS">
             <subResults message="aircraft_control_systems : AircraftControl_pkg::aircraftControl is relay channel between buses by relaying  messages to components with different security levels/domains" resultType="SUCCESS">
               <modelElement href="../../SecurityVerification/resolute/Security_Classification_Verification.aadl#Security_Classification_Verification.Security_Classification_Verification_public.Resolute.Resolute.relay_channel_between_buses"/>
@@ -126,7 +126,7 @@
         </requirement>
       </targetReference>
       <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
-        <metrics successCount="1" executionTime="380"/>
+        <metrics successCount="1" executionTime="405"/>
         <results message="All bound components have same security level/domain or are trusted" resultType="SUCCESS">
           <modelElement href="../../SecurityVerification/resolute/Security_Classification_Verification.aadl#Security_Classification_Verification.Security_Classification_Verification_public.Resolute.Resolute.memory_bound_components_same_security_level"/>
         </results>
@@ -148,7 +148,7 @@
         </requirement>
       </targetReference>
       <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
-        <metrics successCount="1" executionTime="90"/>
+        <metrics successCount="1" executionTime="158"/>
         <results message="Processor missionAircraft_generic_Instance : MissionAircraft_Generic::missionAircraft.generic: bound components have same need to know domains or are trusted" resultType="SUCCESS">
           <modelElement href="../../SecurityVerification/resolute/Security_Classification_Verification.aadl#Security_Classification_Verification.Security_Classification_Verification_public.Resolute.Resolute.processor_bound_components_same_security_level"/>
         </results>
@@ -170,7 +170,7 @@
         </requirement>
       </targetReference>
       <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
-        <metrics successCount="1" executionTime="80"/>
+        <metrics successCount="1" executionTime="266"/>
         <results message="CWE362: if shared data component uses concurrency controlmissionAircraft_generic_Instance : MissionAircraft_Generic::missionAircraft.generic" resultType="SUCCESS">
           <modelElement href="../../SecurityVerification/resolute/Design_Flaw_Verification.aadl#Design_Flaw_Verification.Design_Flaw_Verification_public.Resolute.Resolute.concurrency_control_on_data_shared_component"/>
         </results>
@@ -192,7 +192,7 @@
         </requirement>
       </targetReference>
       <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
-        <metrics successCount="1" executionTime="100"/>
+        <metrics successCount="1" executionTime="379"/>
         <results message="Use encryption for exposed hardware on connection missionAircraft_generic_Instance : MissionAircraft_Generic::missionAircraft.generic" resultType="SUCCESS">
           <modelElement href="../../SecurityVerification/resolute/Security_Exposure_Verification.aadl#Security_Exposure_Verification.Security_Exposure_Verification_public.Resolute.Resolute.encrypted_over_exposed_hardware"/>
         </results>
@@ -205,7 +205,7 @@
         </targetReference>
       </verificationActivityResult>
       <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="ERROR">
-        <metrics errorCount="1" executionTime="70"/>
+        <metrics errorCount="1" executionTime="221"/>
         <issues diagnosticType="ERROR" message="org.osate.aadl2.instance.impl.SystemInstanceImpl cannot be cast to org.osate.aadl2.instance.ConnectionInstance"/>
         <targetReference>
           <verificationPlan href="../../SecurityVerification/GlobalReqs/SecurityVerificationPlan.verify#//@contents.0"/>
@@ -216,7 +216,7 @@
         </targetReference>
       </verificationActivityResult>
       <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="ERROR">
-        <metrics errorCount="1" executionTime="60"/>
+        <metrics errorCount="1" executionTime="136"/>
         <issues diagnosticType="ERROR" message="org.osate.aadl2.instance.impl.SystemInstanceImpl cannot be cast to org.osate.aadl2.instance.ConnectionInstance"/>
         <targetReference>
           <verificationPlan href="../../SecurityVerification/GlobalReqs/SecurityVerificationPlan.verify#//@contents.0"/>
@@ -227,7 +227,7 @@
         </targetReference>
       </verificationActivityResult>
       <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="ERROR">
-        <metrics errorCount="1" executionTime="60"/>
+        <metrics errorCount="1" executionTime="159"/>
         <issues diagnosticType="ERROR" message="org.osate.aadl2.instance.impl.SystemInstanceImpl cannot be cast to org.osate.aadl2.instance.ConnectionInstance"/>
         <targetReference>
           <verificationPlan href="../../SecurityVerification/GlobalReqs/SecurityVerificationPlan.verify#//@contents.0"/>
@@ -238,7 +238,7 @@
         </targetReference>
       </verificationActivityResult>
       <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="ERROR">
-        <metrics errorCount="1" executionTime="50"/>
+        <metrics errorCount="1" executionTime="201"/>
         <issues diagnosticType="ERROR" message="org.osate.aadl2.instance.impl.SystemInstanceImpl cannot be cast to org.osate.aadl2.instance.ConnectionInstance"/>
         <targetReference>
           <verificationPlan href="../../SecurityVerification/GlobalReqs/SecurityVerificationPlan.verify#//@contents.0"/>
@@ -249,7 +249,7 @@
         </targetReference>
       </verificationActivityResult>
       <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="ERROR">
-        <metrics errorCount="1" executionTime="60"/>
+        <metrics errorCount="1" executionTime="162"/>
         <issues diagnosticType="ERROR" message="org.osate.aadl2.instance.impl.SystemInstanceImpl cannot be cast to org.osate.aadl2.instance.ConnectionInstance"/>
         <targetReference>
           <verificationPlan href="../../SecurityVerification/GlobalReqs/SecurityVerificationPlan.verify#//@contents.0"/>
@@ -269,7 +269,7 @@
         </requirement>
       </targetReference>
       <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
-        <metrics successCount="1" executionTime="70"/>
+        <metrics successCount="1" executionTime="207"/>
         <results message="Virtual processor missionAircraft_generic_Instance : MissionAircraft_Generic::missionAircraft.generic: bound components have same security level or are trusted" resultType="SUCCESS">
           <modelElement href="../../SecurityVerification/resolute/Security_Classification_Verification.aadl#Security_Classification_Verification.Security_Classification_Verification_public.Resolute.Resolute.virtual_processor_bound_components_same_security_level"/>
         </results>
@@ -291,7 +291,7 @@
         </requirement>
       </targetReference>
       <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
-        <metrics successCount="1" executionTime="60"/>
+        <metrics successCount="1" executionTime="201"/>
         <results message="Threads contained in given component (process) missionAircraft_generic_Instance : MissionAircraft_Generic::missionAircraft.generic have same security level/domain" resultType="SUCCESS">
           <modelElement href="../../SecurityVerification/resolute/Security_Classification_Verification.aadl#Security_Classification_Verification.Security_Classification_Verification_public.Resolute.Resolute.threads_in_component_same_security_level_and_need_to_know_domains_or_trusted"/>
         </results>
@@ -313,7 +313,7 @@
         </requirement>
       </targetReference>
       <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
-        <metrics successCount="1" executionTime="80"/>
+        <metrics successCount="1" executionTime="320"/>
         <results message="missionAircraft_generic_Instance : MissionAircraft_Generic::missionAircraft.generic supports security levels/domain of ports or is trusted" resultType="SUCCESS">
           <subResults message="Trusted component missionAircraft_generic_Instance : MissionAircraft_Generic::missionAircraft.generic" resultType="FAILURE">
             <modelElement href="../../SecurityVerification/resolute/Security_Classification_Verification.aadl#Security_Classification_Verification.Security_Classification_Verification_public.Resolute.Resolute.is_trusted_component"/>

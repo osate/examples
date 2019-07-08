@@ -6,7 +6,7 @@
 verification plan TransportAircraftSecurityPolicyVerificationPlan : "Verification Plan for a Transport Aircraft Security Policies"
 for TransportAircraftSystemSecurityPolicies
 [
-	description "This is the top level verification plan for the security policies for the aircraft system."
+	description "This is the top-level verification plan for the security policies for the aircraft system."
 	
 	claim Security
 	[

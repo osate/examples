@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="ASCII"?>
 <instance:SystemInstance xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aadl2="http://aadl.info/AADL/2.0" xmlns:instance="http://aadl.info/AADL/2.0/instance" name="missionAircraft_generic_Instance" category="system">
   <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
-    <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.InformationSecurityLevel"/>
+    <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
     <ownedValue>
       <ownedValue xsi:type="aadl2:NamedValue">
-        <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.5/@ownedPropertyType/@ownedLiteral.1"/>
+        <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
       </ownedValue>
     </ownedValue>
     <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.19"/>
@@ -14,9 +14,9 @@
     <ownedValue>
       <ownedValue xsi:type="aadl2:RecordValue">
         <ownedFieldValue>
-          <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0"/>
+          <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
           <ownedValue xsi:type="aadl2:NamedValue">
-            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0/@ownedPropertyType/@ownedLiteral.6"/>
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
           </ownedValue>
         </ownedFieldValue>
       </ownedValue>
@@ -25,10 +25,10 @@
   </ownedPropertyAssociation>
   <componentInstance name="aircraft_control_systems" category="system">
     <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
-      <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.InformationSecurityLevel"/>
+      <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
       <ownedValue>
         <ownedValue xsi:type="aadl2:NamedValue">
-          <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.5/@ownedPropertyType/@ownedLiteral.1"/>
+          <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
         </ownedValue>
       </ownedValue>
       <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.19"/>
@@ -38,9 +38,9 @@
       <ownedValue>
         <ownedValue xsi:type="aadl2:RecordValue">
           <ownedFieldValue>
-            <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0"/>
+            <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
             <ownedValue xsi:type="aadl2:NamedValue">
-              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0/@ownedPropertyType/@ownedLiteral.6"/>
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
             </ownedValue>
           </ownedFieldValue>
         </ownedValue>
@@ -57,12 +57,81 @@
       <feature xsi:type="aadl2:BusAccess" href="../../AircraftControl_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedBusAccess.2"/>
     </featureInstance>
     <featureInstance name="inflightEntertainmentInterface_AC" direction="in out">
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:NamedValue">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
+          </ownedValue>
+        </ownedValue>
+        <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.19"/>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:RecordValue">
+            <ownedFieldValue>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+              <ownedValue xsi:type="aadl2:NamedValue">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
+              </ownedValue>
+            </ownedFieldValue>
+          </ownedValue>
+        </ownedValue>
+        <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.8"/>
+      </ownedPropertyAssociation>
       <feature xsi:type="aadl2:DataPort" href="../../AircraftControl_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.0"/>
     </featureInstance>
     <featureInstance name="aeroDataLink_AC" category="eventDataPort" direction="in out">
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:NamedValue">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
+          </ownedValue>
+        </ownedValue>
+        <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.19"/>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:RecordValue">
+            <ownedFieldValue>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+              <ownedValue xsi:type="aadl2:NamedValue">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
+              </ownedValue>
+            </ownedFieldValue>
+          </ownedValue>
+        </ownedValue>
+        <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.8"/>
+      </ownedPropertyAssociation>
       <feature xsi:type="aadl2:EventDataPort" href="../../AircraftControl_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedEventDataPort.0"/>
     </featureInstance>
     <featureInstance name="satelliteDataLink_AC" category="eventDataPort" direction="in out">
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:NamedValue">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
+          </ownedValue>
+        </ownedValue>
+        <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.19"/>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:RecordValue">
+            <ownedFieldValue>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+              <ownedValue xsi:type="aadl2:NamedValue">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
+              </ownedValue>
+            </ownedFieldValue>
+          </ownedValue>
+        </ownedValue>
+        <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.8"/>
+      </ownedPropertyAssociation>
       <feature xsi:type="aadl2:EventDataPort" href="../../AircraftControl_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedEventDataPort.1"/>
     </featureInstance>
     <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.0"/>
@@ -71,10 +140,10 @@
   </componentInstance>
   <componentInstance name="mission_systems" category="system">
     <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
-      <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.InformationSecurityLevel"/>
+      <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
       <ownedValue>
         <ownedValue xsi:type="aadl2:NamedValue">
-          <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.5/@ownedPropertyType/@ownedLiteral.1"/>
+          <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
         </ownedValue>
       </ownedValue>
       <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.20"/>
@@ -84,9 +153,9 @@
       <ownedValue>
         <ownedValue xsi:type="aadl2:RecordValue">
           <ownedFieldValue>
-            <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0"/>
+            <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
             <ownedValue xsi:type="aadl2:NamedValue">
-              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0/@ownedPropertyType/@ownedLiteral.6"/>
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
             </ownedValue>
           </ownedFieldValue>
         </ownedValue>
@@ -94,20 +163,11 @@
       <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.7"/>
     </ownedPropertyAssociation>
     <featureInstance name="interfaceToAC" direction="in out">
-      <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.0"/>
-    </featureInstance>
-    <featureInstance name="interfaceToFlightDeck" direction="in out">
-      <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.1"/>
-    </featureInstance>
-    <featureInstance name="InterfaceToCommunications" direction="in out">
-      <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.2"/>
-    </featureInstance>
-    <componentInstance name="DataAquisitionUnits" category="device">
       <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
-        <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.InformationSecurityLevel"/>
+        <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
         <ownedValue>
           <ownedValue xsi:type="aadl2:NamedValue">
-            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.5/@ownedPropertyType/@ownedLiteral.1"/>
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
           </ownedValue>
         </ownedValue>
         <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.20"/>
@@ -117,9 +177,87 @@
         <ownedValue>
           <ownedValue xsi:type="aadl2:RecordValue">
             <ownedFieldValue>
-              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0"/>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
               <ownedValue xsi:type="aadl2:NamedValue">
-                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0/@ownedPropertyType/@ownedLiteral.6"/>
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
+              </ownedValue>
+            </ownedFieldValue>
+          </ownedValue>
+        </ownedValue>
+        <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.7"/>
+      </ownedPropertyAssociation>
+      <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.0"/>
+    </featureInstance>
+    <featureInstance name="interfaceToFlightDeck" direction="in out">
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:NamedValue">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
+          </ownedValue>
+        </ownedValue>
+        <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.20"/>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:RecordValue">
+            <ownedFieldValue>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+              <ownedValue xsi:type="aadl2:NamedValue">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
+              </ownedValue>
+            </ownedFieldValue>
+          </ownedValue>
+        </ownedValue>
+        <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.7"/>
+      </ownedPropertyAssociation>
+      <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.1"/>
+    </featureInstance>
+    <featureInstance name="InterfaceToCommunications" direction="in out">
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:NamedValue">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
+          </ownedValue>
+        </ownedValue>
+        <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.20"/>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:RecordValue">
+            <ownedFieldValue>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+              <ownedValue xsi:type="aadl2:NamedValue">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
+              </ownedValue>
+            </ownedFieldValue>
+          </ownedValue>
+        </ownedValue>
+        <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.7"/>
+      </ownedPropertyAssociation>
+      <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.2"/>
+    </featureInstance>
+    <componentInstance name="DataAquisitionUnits" category="device">
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:NamedValue">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
+          </ownedValue>
+        </ownedValue>
+        <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.20"/>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:RecordValue">
+            <ownedFieldValue>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+              <ownedValue xsi:type="aadl2:NamedValue">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
               </ownedValue>
             </ownedFieldValue>
           </ownedValue>
@@ -127,6 +265,29 @@
         <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.7"/>
       </ownedPropertyAssociation>
       <featureInstance name="outData" direction="out">
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.20"/>
+        </ownedPropertyAssociation>
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:RecordValue">
+              <ownedFieldValue>
+                <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+                <ownedValue xsi:type="aadl2:NamedValue">
+                  <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
+                </ownedValue>
+              </ownedFieldValue>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.7"/>
+        </ownedPropertyAssociation>
         <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.2/@ownedDataPort.0"/>
       </featureInstance>
       <subcomponent xsi:type="aadl2:DeviceSubcomponent" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedDeviceSubcomponent.0"/>
@@ -135,10 +296,10 @@
     </componentInstance>
     <componentInstance name="DataStructuringUnits" category="system">
       <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
-        <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.InformationSecurityLevel"/>
+        <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
         <ownedValue>
           <ownedValue xsi:type="aadl2:NamedValue">
-            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.5/@ownedPropertyType/@ownedLiteral.1"/>
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
           </ownedValue>
         </ownedValue>
         <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.20"/>
@@ -148,9 +309,9 @@
         <ownedValue>
           <ownedValue xsi:type="aadl2:RecordValue">
             <ownedFieldValue>
-              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0"/>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
               <ownedValue xsi:type="aadl2:NamedValue">
-                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0/@ownedPropertyType/@ownedLiteral.6"/>
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
               </ownedValue>
             </ownedFieldValue>
           </ownedValue>
@@ -158,12 +319,81 @@
         <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.7"/>
       </ownedPropertyAssociation>
       <featureInstance name="inData">
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.20"/>
+        </ownedPropertyAssociation>
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:RecordValue">
+              <ownedFieldValue>
+                <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+                <ownedValue xsi:type="aadl2:NamedValue">
+                  <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
+                </ownedValue>
+              </ownedFieldValue>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.7"/>
+        </ownedPropertyAssociation>
         <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.3/@ownedDataPort.0"/>
       </featureInstance>
       <featureInstance name="outData" direction="out">
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.20"/>
+        </ownedPropertyAssociation>
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:RecordValue">
+              <ownedFieldValue>
+                <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+                <ownedValue xsi:type="aadl2:NamedValue">
+                  <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
+                </ownedValue>
+              </ownedFieldValue>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.7"/>
+        </ownedPropertyAssociation>
         <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.3/@ownedDataPort.1"/>
       </featureInstance>
       <featureInstance name="outVerify" direction="out">
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.20"/>
+        </ownedPropertyAssociation>
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:RecordValue">
+              <ownedFieldValue>
+                <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+                <ownedValue xsi:type="aadl2:NamedValue">
+                  <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
+                </ownedValue>
+              </ownedFieldValue>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.7"/>
+        </ownedPropertyAssociation>
         <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.3/@ownedDataPort.2"/>
       </featureInstance>
       <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.0"/>
@@ -172,10 +402,10 @@
     </componentInstance>
     <componentInstance name="SecurityDownGraderL1L2" category="system">
       <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
-        <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.InformationSecurityLevel"/>
+        <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
         <ownedValue>
           <ownedValue xsi:type="aadl2:NamedValue">
-            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.5/@ownedPropertyType/@ownedLiteral.1"/>
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
           </ownedValue>
         </ownedValue>
         <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.20"/>
@@ -185,9 +415,9 @@
         <ownedValue>
           <ownedValue xsi:type="aadl2:RecordValue">
             <ownedFieldValue>
-              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0"/>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
               <ownedValue xsi:type="aadl2:NamedValue">
-                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0/@ownedPropertyType/@ownedLiteral.6"/>
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
               </ownedValue>
             </ownedFieldValue>
           </ownedValue>
@@ -195,12 +425,81 @@
         <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.7"/>
       </ownedPropertyAssociation>
       <featureInstance name="inData">
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.20"/>
+        </ownedPropertyAssociation>
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:RecordValue">
+              <ownedFieldValue>
+                <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+                <ownedValue xsi:type="aadl2:NamedValue">
+                  <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
+                </ownedValue>
+              </ownedFieldValue>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.7"/>
+        </ownedPropertyAssociation>
         <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.4/@ownedDataPort.0"/>
       </featureInstance>
       <featureInstance name="outDataL2" direction="out">
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.20"/>
+        </ownedPropertyAssociation>
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:RecordValue">
+              <ownedFieldValue>
+                <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+                <ownedValue xsi:type="aadl2:NamedValue">
+                  <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
+                </ownedValue>
+              </ownedFieldValue>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.7"/>
+        </ownedPropertyAssociation>
         <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.4/@ownedDataPort.1"/>
       </featureInstance>
       <featureInstance name="outVerify" direction="out">
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.20"/>
+        </ownedPropertyAssociation>
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:RecordValue">
+              <ownedFieldValue>
+                <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+                <ownedValue xsi:type="aadl2:NamedValue">
+                  <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
+                </ownedValue>
+              </ownedFieldValue>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.7"/>
+        </ownedPropertyAssociation>
         <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.4/@ownedDataPort.2"/>
       </featureInstance>
       <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.1"/>
@@ -209,10 +508,10 @@
     </componentInstance>
     <componentInstance name="SecurityDownGraderL2L3" category="system">
       <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
-        <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.InformationSecurityLevel"/>
+        <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
         <ownedValue>
           <ownedValue xsi:type="aadl2:NamedValue">
-            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.5/@ownedPropertyType/@ownedLiteral.1"/>
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
           </ownedValue>
         </ownedValue>
         <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.20"/>
@@ -222,9 +521,9 @@
         <ownedValue>
           <ownedValue xsi:type="aadl2:RecordValue">
             <ownedFieldValue>
-              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0"/>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
               <ownedValue xsi:type="aadl2:NamedValue">
-                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0/@ownedPropertyType/@ownedLiteral.6"/>
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
               </ownedValue>
             </ownedFieldValue>
           </ownedValue>
@@ -232,12 +531,81 @@
         <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.7"/>
       </ownedPropertyAssociation>
       <featureInstance name="inDataL2">
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.20"/>
+        </ownedPropertyAssociation>
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:RecordValue">
+              <ownedFieldValue>
+                <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+                <ownedValue xsi:type="aadl2:NamedValue">
+                  <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
+                </ownedValue>
+              </ownedFieldValue>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.7"/>
+        </ownedPropertyAssociation>
         <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.5/@ownedDataPort.0"/>
       </featureInstance>
       <featureInstance name="outDataL3" direction="out">
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.20"/>
+        </ownedPropertyAssociation>
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:RecordValue">
+              <ownedFieldValue>
+                <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+                <ownedValue xsi:type="aadl2:NamedValue">
+                  <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
+                </ownedValue>
+              </ownedFieldValue>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.7"/>
+        </ownedPropertyAssociation>
         <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.5/@ownedDataPort.1"/>
       </featureInstance>
       <featureInstance name="outVerify" direction="out">
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.20"/>
+        </ownedPropertyAssociation>
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:RecordValue">
+              <ownedFieldValue>
+                <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+                <ownedValue xsi:type="aadl2:NamedValue">
+                  <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
+                </ownedValue>
+              </ownedFieldValue>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.7"/>
+        </ownedPropertyAssociation>
         <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.5/@ownedDataPort.2"/>
       </featureInstance>
       <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.2"/>
@@ -246,10 +614,10 @@
     </componentInstance>
     <componentInstance name="L1DataStore" category="system">
       <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
-        <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.InformationSecurityLevel"/>
+        <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
         <ownedValue>
           <ownedValue xsi:type="aadl2:NamedValue">
-            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.5/@ownedPropertyType/@ownedLiteral.4"/>
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.0"/>
           </ownedValue>
         </ownedValue>
         <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.0"/>
@@ -259,9 +627,9 @@
         <ownedValue>
           <ownedValue xsi:type="aadl2:RecordValue">
             <ownedFieldValue>
-              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0"/>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
               <ownedValue xsi:type="aadl2:NamedValue">
-                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0/@ownedPropertyType/@ownedLiteral.6"/>
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
               </ownedValue>
             </ownedFieldValue>
           </ownedValue>
@@ -269,9 +637,55 @@
         <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.3"/>
       </ownedPropertyAssociation>
       <featureInstance name="inData">
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.0"/>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.0"/>
+        </ownedPropertyAssociation>
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:RecordValue">
+              <ownedFieldValue>
+                <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+                <ownedValue xsi:type="aadl2:NamedValue">
+                  <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
+                </ownedValue>
+              </ownedFieldValue>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.3"/>
+        </ownedPropertyAssociation>
         <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.6/@ownedDataPort.0"/>
       </featureInstance>
       <featureInstance name="inVerify">
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.0"/>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.0"/>
+        </ownedPropertyAssociation>
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:RecordValue">
+              <ownedFieldValue>
+                <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+                <ownedValue xsi:type="aadl2:NamedValue">
+                  <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
+                </ownedValue>
+              </ownedFieldValue>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.3"/>
+        </ownedPropertyAssociation>
         <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.6/@ownedDataPort.1"/>
       </featureInstance>
       <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.3"/>
@@ -280,10 +694,10 @@
     </componentInstance>
     <componentInstance name="L2DataStore" category="system">
       <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
-        <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.InformationSecurityLevel"/>
+        <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
         <ownedValue>
           <ownedValue xsi:type="aadl2:NamedValue">
-            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.5/@ownedPropertyType/@ownedLiteral.4"/>
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
           </ownedValue>
         </ownedValue>
         <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.1"/>
@@ -293,9 +707,9 @@
         <ownedValue>
           <ownedValue xsi:type="aadl2:RecordValue">
             <ownedFieldValue>
-              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0"/>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
               <ownedValue xsi:type="aadl2:NamedValue">
-                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0/@ownedPropertyType/@ownedLiteral.6"/>
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
               </ownedValue>
             </ownedFieldValue>
           </ownedValue>
@@ -303,9 +717,55 @@
         <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.4"/>
       </ownedPropertyAssociation>
       <featureInstance name="inData">
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.1"/>
+        </ownedPropertyAssociation>
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:RecordValue">
+              <ownedFieldValue>
+                <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+                <ownedValue xsi:type="aadl2:NamedValue">
+                  <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
+                </ownedValue>
+              </ownedFieldValue>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.4"/>
+        </ownedPropertyAssociation>
         <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.7/@ownedDataPort.0"/>
       </featureInstance>
       <featureInstance name="inVerify">
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.1"/>
+        </ownedPropertyAssociation>
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:RecordValue">
+              <ownedFieldValue>
+                <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+                <ownedValue xsi:type="aadl2:NamedValue">
+                  <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
+                </ownedValue>
+              </ownedFieldValue>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.4"/>
+        </ownedPropertyAssociation>
         <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.7/@ownedDataPort.1"/>
       </featureInstance>
       <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.4"/>
@@ -314,10 +774,10 @@
     </componentInstance>
     <componentInstance name="L3DataStore" category="system">
       <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
-        <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.InformationSecurityLevel"/>
+        <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
         <ownedValue>
           <ownedValue xsi:type="aadl2:NamedValue">
-            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.5/@ownedPropertyType/@ownedLiteral.4"/>
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.2"/>
           </ownedValue>
         </ownedValue>
         <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.2"/>
@@ -327,9 +787,9 @@
         <ownedValue>
           <ownedValue xsi:type="aadl2:RecordValue">
             <ownedFieldValue>
-              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0"/>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
               <ownedValue xsi:type="aadl2:NamedValue">
-                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0/@ownedPropertyType/@ownedLiteral.6"/>
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
               </ownedValue>
             </ownedFieldValue>
           </ownedValue>
@@ -337,9 +797,55 @@
         <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.5"/>
       </ownedPropertyAssociation>
       <featureInstance name="inData">
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.2"/>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.2"/>
+        </ownedPropertyAssociation>
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:RecordValue">
+              <ownedFieldValue>
+                <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+                <ownedValue xsi:type="aadl2:NamedValue">
+                  <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
+                </ownedValue>
+              </ownedFieldValue>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.5"/>
+        </ownedPropertyAssociation>
         <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.8/@ownedDataPort.0"/>
       </featureInstance>
       <featureInstance name="inVerify">
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.2"/>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.2"/>
+        </ownedPropertyAssociation>
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:RecordValue">
+              <ownedFieldValue>
+                <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+                <ownedValue xsi:type="aadl2:NamedValue">
+                  <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
+                </ownedValue>
+              </ownedFieldValue>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.5"/>
+        </ownedPropertyAssociation>
         <feature xsi:type="aadl2:DataPort" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.8/@ownedDataPort.1"/>
       </featureInstance>
       <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.5"/>
@@ -352,9 +858,9 @@
         <ownedValue>
           <ownedValue xsi:type="aadl2:RecordValue">
             <ownedFieldValue>
-              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0"/>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
               <ownedValue xsi:type="aadl2:NamedValue">
-                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0/@ownedPropertyType/@ownedLiteral.6"/>
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
               </ownedValue>
             </ownedFieldValue>
           </ownedValue>
@@ -371,9 +877,9 @@
         <ownedValue>
           <ownedValue xsi:type="aadl2:RecordValue">
             <ownedFieldValue>
-              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0"/>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
               <ownedValue xsi:type="aadl2:NamedValue">
-                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0/@ownedPropertyType/@ownedLiteral.6"/>
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
               </ownedValue>
             </ownedFieldValue>
           </ownedValue>
@@ -390,9 +896,9 @@
         <ownedValue>
           <ownedValue xsi:type="aadl2:RecordValue">
             <ownedFieldValue>
-              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0"/>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
               <ownedValue xsi:type="aadl2:NamedValue">
-                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0/@ownedPropertyType/@ownedLiteral.6"/>
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
               </ownedValue>
             </ownedFieldValue>
           </ownedValue>
@@ -409,9 +915,9 @@
         <ownedValue>
           <ownedValue xsi:type="aadl2:RecordValue">
             <ownedFieldValue>
-              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0"/>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
               <ownedValue xsi:type="aadl2:NamedValue">
-                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0/@ownedPropertyType/@ownedLiteral.6"/>
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
               </ownedValue>
             </ownedFieldValue>
           </ownedValue>
@@ -428,9 +934,9 @@
         <ownedValue>
           <ownedValue xsi:type="aadl2:RecordValue">
             <ownedFieldValue>
-              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0"/>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
               <ownedValue xsi:type="aadl2:NamedValue">
-                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0/@ownedPropertyType/@ownedLiteral.6"/>
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
               </ownedValue>
             </ownedFieldValue>
           </ownedValue>
@@ -447,9 +953,9 @@
         <ownedValue>
           <ownedValue xsi:type="aadl2:RecordValue">
             <ownedFieldValue>
-              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0"/>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
               <ownedValue xsi:type="aadl2:NamedValue">
-                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0/@ownedPropertyType/@ownedLiteral.6"/>
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
               </ownedValue>
             </ownedFieldValue>
           </ownedValue>
@@ -466,9 +972,9 @@
         <ownedValue>
           <ownedValue xsi:type="aadl2:RecordValue">
             <ownedFieldValue>
-              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0"/>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
               <ownedValue xsi:type="aadl2:NamedValue">
-                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0/@ownedPropertyType/@ownedLiteral.6"/>
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
               </ownedValue>
             </ownedFieldValue>
           </ownedValue>
@@ -485,9 +991,9 @@
         <ownedValue>
           <ownedValue xsi:type="aadl2:RecordValue">
             <ownedFieldValue>
-              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0"/>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
               <ownedValue xsi:type="aadl2:NamedValue">
-                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0/@ownedPropertyType/@ownedLiteral.6"/>
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
               </ownedValue>
             </ownedFieldValue>
           </ownedValue>
@@ -504,9 +1010,9 @@
         <ownedValue>
           <ownedValue xsi:type="aadl2:RecordValue">
             <ownedFieldValue>
-              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0"/>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
               <ownedValue xsi:type="aadl2:NamedValue">
-                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0/@ownedPropertyType/@ownedLiteral.6"/>
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
               </ownedValue>
             </ownedFieldValue>
           </ownedValue>
@@ -523,10 +1029,10 @@
   </componentInstance>
   <componentInstance name="airframe" category="system">
     <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
-      <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.InformationSecurityLevel"/>
+      <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
       <ownedValue>
         <ownedValue xsi:type="aadl2:NamedValue">
-          <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.5/@ownedPropertyType/@ownedLiteral.1"/>
+          <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
         </ownedValue>
       </ownedValue>
       <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.19"/>
@@ -536,9 +1042,9 @@
       <ownedValue>
         <ownedValue xsi:type="aadl2:RecordValue">
           <ownedFieldValue>
-            <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0"/>
+            <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
             <ownedValue xsi:type="aadl2:NamedValue">
-              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0/@ownedPropertyType/@ownedLiteral.6"/>
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
             </ownedValue>
           </ownedFieldValue>
         </ownedValue>
@@ -558,9 +1064,55 @@
       <feature xsi:type="aadl2:BusAccess" href="../../AircraftAirframe_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedBusAccess.3"/>
     </featureInstance>
     <featureInstance name="closedNetworkInterface" direction="in out">
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:NamedValue">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
+          </ownedValue>
+        </ownedValue>
+        <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.19"/>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:RecordValue">
+            <ownedFieldValue>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+              <ownedValue xsi:type="aadl2:NamedValue">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
+              </ownedValue>
+            </ownedFieldValue>
+          </ownedValue>
+        </ownedValue>
+        <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.9"/>
+      </ownedPropertyAssociation>
       <feature xsi:type="aadl2:DataPort" href="../../AircraftAirframe_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.0"/>
     </featureInstance>
     <featureInstance name="internalwirelessInterface" category="eventDataPort" direction="in out">
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:NamedValue">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
+          </ownedValue>
+        </ownedValue>
+        <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.19"/>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:RecordValue">
+            <ownedFieldValue>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+              <ownedValue xsi:type="aadl2:NamedValue">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
+              </ownedValue>
+            </ownedFieldValue>
+          </ownedValue>
+        </ownedValue>
+        <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.9"/>
+      </ownedPropertyAssociation>
       <feature xsi:type="aadl2:EventDataPort" href="../../AircraftAirframe_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedEventDataPort.0"/>
     </featureInstance>
     <componentInstance name="internalWirelessNetwork" category="bus">
@@ -569,9 +1121,9 @@
         <ownedValue>
           <ownedValue xsi:type="aadl2:RecordValue">
             <ownedFieldValue>
-              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0"/>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
               <ownedValue xsi:type="aadl2:NamedValue">
-                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0/@ownedPropertyType/@ownedLiteral.6"/>
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
               </ownedValue>
             </ownedFieldValue>
           </ownedValue>
@@ -584,10 +1136,10 @@
     </componentInstance>
     <componentInstance name="satelliteAntenna" category="device">
       <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
-        <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.InformationSecurityLevel"/>
+        <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
         <ownedValue>
           <ownedValue xsi:type="aadl2:NamedValue">
-            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.5/@ownedPropertyType/@ownedLiteral.1"/>
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
           </ownedValue>
         </ownedValue>
         <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.19"/>
@@ -597,9 +1149,9 @@
         <ownedValue>
           <ownedValue xsi:type="aadl2:RecordValue">
             <ownedFieldValue>
-              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0"/>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
               <ownedValue xsi:type="aadl2:NamedValue">
-                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedPropertyType.0/@ownedField.0/@ownedPropertyType/@ownedLiteral.6"/>
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
               </ownedValue>
             </ownedFieldValue>
           </ownedValue>
@@ -607,6 +1159,29 @@
         <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.9"/>
       </ownedPropertyAssociation>
       <featureInstance name="closedNetworkInterface" direction="in out">
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#SecurityClassificationProperties.Information_Security_Level"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityClassificationProperties.aadl#/0/@ownedProperty.4/@ownedPropertyType/@ownedLiteral.1"/>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.19"/>
+        </ownedPropertyAssociation>
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:RecordValue">
+              <ownedFieldValue>
+                <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+                <ownedValue xsi:type="aadl2:NamedValue">
+                  <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.6"/>
+                </ownedValue>
+              </ownedFieldValue>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../MissionAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.9"/>
+        </ownedPropertyAssociation>
         <feature xsi:type="aadl2:DataPort" href="../../AircraftAirframe_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.2/@ownedDataPort.0"/>
       </featureInstance>
       <featureInstance name="satelliteDataLinkAccess" category="busAccess" direction="in out">

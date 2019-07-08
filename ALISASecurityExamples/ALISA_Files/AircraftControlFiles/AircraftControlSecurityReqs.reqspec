@@ -30,7 +30,7 @@ system requirements AircraftConrolSecurityReqs for AircraftControl_pkg::aircraft
 		]						  											  	
 
 		requirement  communicationProtectionReq2: "All aircraft external communication for aircraft control and flight operations must employ
-											  encryption algorithms"
+											  the latest NIST standard encryption algorithms"
 		[
 		description "All aircraft external communication for aircraft control and flight operations must employ
 				    encryption algorithms that meet or exceed the standards defined in NIST publication FIPS 140-2 or 

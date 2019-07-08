@@ -14,7 +14,7 @@
         </requirement>
       </targetReference>
       <verificationActivityResult xsi:type="assure:VerificationActivityResult">
-        <metrics tbdCount="1" executionTime="460"/>
+        <metrics tbdCount="1" executionTime="720"/>
         <targetReference>
           <verificationPlan href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityPolicyVerificationPlan.verify#//@contents.0"/>
           <requirement>
@@ -33,7 +33,7 @@
         </requirement>
       </targetReference>
       <verificationActivityResult xsi:type="assure:VerificationActivityResult">
-        <metrics tbdCount="1" executionTime="50"/>
+        <metrics tbdCount="1" executionTime="130"/>
         <targetReference>
           <verificationPlan href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityPolicyVerificationPlan.verify#//@contents.0"/>
           <requirement>
@@ -52,7 +52,7 @@
         </requirement>
       </targetReference>
       <verificationActivityResult xsi:type="assure:VerificationActivityResult">
-        <metrics tbdCount="1" executionTime="60"/>
+        <metrics tbdCount="1" executionTime="140"/>
         <targetReference>
           <verificationPlan href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityPolicyVerificationPlan.verify#//@contents.0"/>
           <requirement>
@@ -67,15 +67,15 @@
       <targetReference>
         <verificationPlan href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityPolicyVerificationPlan.verify#//@contents.0"/>
         <requirement>
-          <requirement href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityPolicies.reqspec#//@parts.0/@requirements.3"/>
+          <requirement href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityPolicies.reqspec#//@parts.0/@requirements.4"/>
         </requirement>
       </targetReference>
       <verificationActivityResult xsi:type="assure:VerificationActivityResult">
-        <metrics tbdCount="1" executionTime="90"/>
+        <metrics tbdCount="1" executionTime="210"/>
         <targetReference>
           <verificationPlan href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityPolicyVerificationPlan.verify#//@contents.0"/>
           <requirement>
-            <requirement href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityPolicies.reqspec#//@parts.0/@requirements.3"/>
+            <requirement href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityPolicies.reqspec#//@parts.0/@requirements.4"/>
           </requirement>
           <verificationActivity href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityPolicyVerificationPlan.verify#//@contents.0/@claim.3/@activities.0"/>
         </targetReference>
@@ -90,7 +90,7 @@
         </requirement>
       </targetReference>
       <verificationActivityResult xsi:type="assure:VerificationActivityResult">
-        <metrics tbdCount="1" executionTime="48"/>
+        <metrics tbdCount="1" executionTime="170"/>
         <targetReference>
           <verificationPlan href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityVerificationPlan.verify#//@contents.0"/>
           <requirement>
@@ -109,7 +109,7 @@
         </requirement>
       </targetReference>
       <verificationActivityResult xsi:type="assure:VerificationActivityResult">
-        <metrics tbdCount="1" executionTime="40"/>
+        <metrics tbdCount="1" executionTime="143"/>
         <targetReference>
           <verificationPlan href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityVerificationPlan.verify#//@contents.0"/>
           <requirement>
@@ -128,7 +128,7 @@
         </requirement>
       </targetReference>
       <verificationActivityResult xsi:type="assure:VerificationActivityResult">
-        <metrics tbdCount="1" executionTime="60"/>
+        <metrics tbdCount="1" executionTime="121"/>
         <targetReference>
           <verificationPlan href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityVerificationPlan.verify#//@contents.0"/>
           <requirement>
@@ -156,7 +156,7 @@
         </requirement>
       </targetReference>
       <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="ERROR">
-        <metrics errorCount="1" executionTime="540"/>
+        <metrics errorCount="1" executionTime="715"/>
         <issues diagnosticType="ERROR" message="Found class com.rockwellcollins.atc.resolute.analysis.results.ResoluteResult, but interface was expected"/>
         <targetReference>
           <verificationPlan href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityVerificationPlan.verify#//@contents.0"/>
