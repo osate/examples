@@ -1,0 +1,2 @@
+This project includes E-Enabled aircraft models that are used in the project 'ALISASecurityExamples.' 
+Copies of requisite Resolute and Security Properties are included. These files are current as of 7/9/2019. 
