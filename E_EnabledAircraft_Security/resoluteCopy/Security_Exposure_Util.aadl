@@ -1,0 +1,99 @@
+-- Copyright 2018 Carnegie Mellon University. See Notice.txt
+-- Distribution Statement A: Approved for Public Release; Distribution is Unlimited.
+
+package Security_Exposure_Util
+public
+	annex Resolute {**
+
+----------------------------------
+-- Security related property value retrieval
+----------------------------------
+	
+	-- by default assumed to be exposed if property is not set
+   is_exposed(el : aadl) : bool =
+   property (el, SecurityEnforcementProperties::Exposed,true) 
+
+--   is_authenticator(c : component) : bool =
+--  	property(c, SecurityEnforcementProperties::Authenticator,false)
+
+	
+----------------------------------
+-- Security trust/space boundary related functions
+----------------------------------
+
+	runs_on_os(p : component, os : string) <=
+	  ** p " runs on " os **
+	  property(p, SecurityEnforcementProperties::OS,"none") = os
+
+ 	runs_on_no_virtual_memory_os(p : process) <=
+	  ** p " runs on " os " that does not virtual memory (VM)"**
+	  let os : string = property(p, SecurityEnforcementProperties::OS,"none");
+	  member(os ,Userdefined_Resolute_Constants::Userdefined_Resolute_Constants_public::Resolute::Resolute::NoVirtualMemoryOSes)
+ 
+  
+	runs_on_partition_enforced_memory_os(p : process) <=
+	  ** p " runs on " os " that  enforces partition level memory access"**
+	  let os : string = property(p, SecurityEnforcementProperties::OS,"none");
+	  member(os ,Userdefined_Resolute_Constants::Userdefined_Resolute_Constants_public::Resolute::Resolute::VirtualMemoryOSes)
+
+  
+	memory_safe_language_thread(t : thread) <=
+	  ** "thread " t " is generated from " lang **
+	  let lang : string = property(t, SecurityEnforcementProperties::Language);
+	  member(lang ,MemorySafeLanguages)
+	
+----------------------------------
+-- encryption protection on features, components, and connections
+----------------------------------
+
+-- check that all ports have property encryption or a value for encryption_scheme
+	all_component_ports_have_encryption (cp: component) : bool =
+--	forall( pt: port).contained(pt,cp) and (has_encryption(pt) or has_an_encryption_scheme(pt)) and print_ports(cp)
+	forall( pt: flatten_features(features(cp))). is_encrypted(pt) or has_encryption_scheme(pt)
+
+
+	all_contained_data_have_encryption (cp:component) <=
+	** "all data components contained in component " cp " have encryption" **
+	forall( dt: data).contained(dt,cp) => (is_encrypted(dt) or has_encryption_scheme(dt)) 
+	
+----------------------------------
+-- Physical exposure and encryption protection related functions
+----------------------------------
+	-- true if element has encryption property and its value is true. Otherwise:
+	-- If the element is a virtual see if all virtual buses it is bound to are encrypted
+	-- false if no layer (set of bound) of virtual buses supports encryption
+	is_encrypted (element : aadl) : bool =
+	has_property(element,SecurityEnforcementProperties::Encryption)
+	or ( ( element instanceof virtual_bus or element instanceof connection)
+		 and forall (vb2 : {bvb for (bvb:virtual_bus)| is_bound_to (element, bvb)}). is_encrypted (vb2)
+		)
+
+    
+   has_encryption_scheme (element: aadl) : bool =
+   has_property (element,SecurityEnforcementProperties::Encryption)
+
+	-- connection binding targets (virtual bus or hardwaare) are either not exposed or are encrypted.
+	-- for a virtual bus target if it is not encrypted we examine its conneciton binding targets.
+	-- Both virtual buses and hardware can be marked as encrypted 
+	-- Only hardware components are expected to be marked exposed.
+	connection_binding_targets_encrypted_or_not_exposed(element: aadl): bool =
+		let blist : [component] = connection_binding(element);
+		length(blist) = 0 or
+		forall (be: as_set(blist)). 
+		if is_virtual_bus(be) then is_encrypted(be) or connection_binding_targets_encrypted_or_not_exposed(be)
+		else not is_exposed(be) or is_encrypted(be)
+	
+	-- connection binding targets (virtual bus or hardwaare) are encrypted.
+	-- for a virtual bus target if it is not encrypted we examine its conneciton binding targets.
+	-- Both virtual buses and hardware can be marked as encrypted 
+	connection_binding_targets_encrypted(element: aadl): bool =
+		let blist : [component] = connection_binding(element);
+		length(blist) = 0 or
+		forall (be: as_set(blist)). 
+		if is_virtual_bus(be) then is_encrypted(be) or connection_binding_targets_encrypted_or_not_exposed(be)
+		else is_encrypted(be)
+	
+
+  
+	**};
+end Security_Exposure_Util;

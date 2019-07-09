@@ -1,0 +1,275 @@
+-- Copyright 2018 Carnegie Mellon University. See Notice.txt
+-- Distribution Statement A: Approved for Public Release; Distribution is Unlimited.
+package Resolute_Util
+public
+	annex Resolute {**
+
+
+
+is_a_port_connection(c : connection) : bool =
+  source(c) instanceof port or destination(c) instanceof port
+
+--------------------------
+-- Component type related methods
+--------------------------
+   
+	-- is abstract component
+   is_abstract (c : component) : bool =
+      c instanceof abstract
+   
+   -- a hardware component, i.e., device, memory, bus, processor, system
+   is_hardware (comp : component) : bool =
+      (is_processor(comp) or is_device(comp) or is_memory(comp) or
+       is_system(comp)  or is_bus (comp) or is_abstract(comp)) 
+
+--------------------------
+-- Component instance related methods
+--------------------------
+  -- return set of hardware components in instance model
+  hardware: {component} =
+	{c for  (c:component)| is_hardware(c)}      
+
+	-- return set of threads directly or indirectly contained in the component
+	contained_threads(c : component) : {thread} =
+	  if is_thread(c)
+	  then {c} 
+ 	  else  
+  		{c2 for (c1 : subcomponents(c)) (c2 : contained_threads(c1))}
+	
+--------------------------
+-- Connection related methods
+--------------------------
+
+	-- A connection exists between the components or their features
+	are_connected (comp1 : component, comp2 : component) : bool =
+		exists (conn : connections (comp1)) . destination_component(conn) = comp2 or source_component(conn) = comp2
+
+   -- For a given connection and a given component return the component on the other end of the connection
+   -- This function is useful to deal with access connections or bi-directional port connections
+   -- where the source could be either end.
+   other_connection_end(conn: connection,comp: component): component =
+   		if (destination_component(conn) = comp) 
+		then
+			source_component(conn)
+   		else
+   			destination_component(conn)
+ 
+	-- connection is bus access connection
+	is_bus_access_connection(c : connection) : bool =
+  		(source_component(c) instanceof bus) or (destination_component(c) instanceof bus)
+
+	-- connection is data access connection
+	is_a_data_access_connection(c : connection) : bool =
+  		(source_component(c) instanceof data) or (destination_component(c) instanceof data)
+ 
+	-- connection is bus access connection
+	is_access_connection(c : connection) : bool =
+  		(source(c) instanceof access) or (destination(c) instanceof access)
+
+	-- return incoming connections for a given component or feature
+	-- the feature is an incoming feature or data access with read or r/w rights
+	incoming_connections(t : feature) : {connection} =
+	  { c for (c : connections(t)) | 
+	  	-- access right already determines incoming
+	  	t instanceof access 
+	  	-- "inout" port with an outgoing connection and the other end is an "in" is not an incoming connection
+	  	or (featuredir = "inout" and not(destination(c) = t and direction((feature)source(c)) = "in")  )
+	  	-- we have an "in" feature
+	  	or featuredir = "in" 
+	  }
+
+	-- return outgoing connections for a given feature
+	-- the feature is an "out" or "inout" feature or data access with write or r/w rights
+	outgoing_connections(f : feature) : {connection} =
+	let featuredir : string = direction(f);
+	  { c for (c : connections(f)) | 
+	  	-- access right already determines outgoing
+	  	t instanceof access 
+	  	-- "inout" port with an incoming connection and the other end is an "out" is not an outgoing connection
+	  	or (featuredir = "inout" and not(destination(c) = t and direction((feature)source(c)) = "out")  )
+	  	-- we have an "out" feature
+	  	or featuredir = "out" 
+	  }
+	  
+	-- return all outgoing connections
+	-- in the case of data access conneciton we need to consider acces rights to determine the direction
+	-- in the case of port connecitons we need to filter out in/out ports with incoming connections.
+	outgoing_component_connections(comp: component): {connection} =
+	{ conn for (conn: connections(comp)) | 
+		if (is_access_connection(conn)) then
+		-- access feature has write access
+			source(conn) instanceof access and has_write_access(source(conn)) or 
+			destination(conn) instanceof access and has_write_access(destination(conn)) 
+		else
+		-- we have a directed feature connection
+		-- it is not an incoming connection with the source an out only feature
+			not(destination_component(conn) = comp 
+			and direction((feature)source(conn)) = "out"
+		)}
+	  
+	
+	-- return all coming connections
+	-- in the case of data access conneciton we need to consider acces rights to determine the direction
+	-- in the case of port connecitons we need to filter out in/out ports with incoming connections.
+	incoming_component_connections(comp: component): {connection} =
+	{ conn for (conn: connections(comp)) | 
+		if (is_access_connection(conn)) then
+		-- access feature has read access
+			source(conn) instanceof access and has_read_access(source(conn)) or 
+			destination(conn) instanceof access and has_read_access(destination(conn)) 
+		else
+		-- we have a directed feature connection
+		-- it is not an outgoing connection on an inout feature with the destination an in only feature
+			not(source_component(conn) = comp 
+			and direction((feature)destination(conn)) = "in"
+		)}
+
+--------------------------
+-- Feature related methods
+--------------------------
+
+outgoing_features(comp : component) : {feature} =
+	{ fea for (fea : features(comp)) | 
+		if (fea instanceof access) then 
+			has_write_access(fea)
+		else
+			is_outgoing(fea)
+	}
+
+incoming_features(comp : component) : {feature} =
+	{ fea for (fea : features(comp)) | 
+		if (fea instanceof access) then 
+			has_read_access(fea)
+		else
+			is_incoming(fea)
+	}
+
+
+is_incoming(fea: feature): bool =
+	direction(fea) = "in" or direction(fea) = "inout"
+
+is_outgoing(fea: feature): bool =
+	direction(fea) = "out" or direction(fea) = "inout"
+
+--------------------------
+-- Binding related methods
+--------------------------
+
+	-- return the set of hardware components the given component or connection is directly or indirectly bound to
+	connection_bound_hardware(c : aadl) : {component} =
+	  if is_virtual_bus(c) 
+	  then 
+  		{cc2 for (cc1 : connection_binding(c)) (cc2 : connection_bound_hardware(cc1))}
+ 	  else
+	    {c} 
+
+	-- return the set of processors the given component is directly or indirectly bound to
+	bound_processors(c : aadl) : {component} =
+	  if is_virtual_processor(c)
+ 	  then
+  		{cp2 for (cp1 : processor_binding(c)) (cp2 : bound_processors(cp1))}
+ 	  else
+	    {c} 
+  
+  -- return list of components the connection or virtual bus is bound to via connection binding
+  -- we return a list because some elements may be listed multiple times in a sequence in a conenction binding
+  connection_binding(logical : aadl) : [component] =
+  	  property(logical, Deployment_Properties::Actual_Connection_Binding,[]) 
+
+   -- return list of processors the component is bound to via processor binding
+  processor_binding(logical : aadl) : [component] =
+   	  property(logical, Deployment_Properties::Actual_Processor_Binding,[])
+
+   -- return list of memory components the component is bound to via memory binding
+  memory_binding(logical : aadl) : [component] =
+  	  property(logical, Deployment_Properties::Actual_Memory_Binding,[])
+
+   -- return list of components the logical component is bound to via function binding
+  function_binding(logical : aadl) : [component] =
+   	  property(logical, Deployment_Properties::Actual_Function_Binding,[])
+ 	
+	-- connection between components on two different processors
+   is_distributed(conn : connection) : bool =
+   	let srcHW : [component] = processor_binding(source_component (conn));
+   	let dstHW : [component] = processor_binding(destination_component (conn));
+      srcHW <> dstHW
+ 
+ ----------------------------
+ -- functions to return  property values
+ -----------------------------    
+ 
+  -- return queue size with default value of 1 if not set 
+  queue_size(element: aadl) : int =
+  	property (element, Communication_Properties::Queue_Size,1)
+    
+  -- true if has write only or read/write access. If not set, default is read/write.  
+  has_write_access(a : aadl) : bool =
+	  let right : string = property(a, Memory_Properties::Access_Right, "read_write");
+  		(right = "write_only" or right = "read_write")
+
+  -- true if has read only or read/write access. If not set, default is read/write.  
+  has_read_access(a : aadl) : bool =
+	  let right : string = property(a, Memory_Properties::Access_Right);
+ 		(right = "read_only" or right = "read_write")
+  
+  -- true if control control protocol property is set.  
+  has_concurrency_control (d : aadl) : bool = 
+	has_property (d , Thread_Properties::Concurrency_Control_Protocol)
+
+  
+ ----------------------------
+ -- functions for sets
+ -----------------------------    
+ 
+ remaining_components(set: {component}, subtract: {component}): {component} =
+ 	{ele for (ele : set)| (not(member(ele,subtract)))}
+ 
+ ----------------------------
+ -- functions for ordered lists
+ -----------------------------    
+
+	-- support method to determine ordering
+	is_before(seclevels: [string], first:string, second: string): bool =
+	seclevels <> [] and (
+	let match : string = head(seclevels);
+	if (match = first) then
+		true
+	else if (match = second) then
+		false
+	else 
+		is_before(tail(seclevels),first,second)
+ 	)
+ 	
+ ----------------------------
+ -- functions for result logging and debugging
+ -----------------------------    
+
+  	-- record a set of model elements in the result structure
+  	record_set(msg : string, s : {aadl}) <=
+   		 ** msg ": " s **
+   		 true
+
+  	-- record a set of model elements in the result structure
+  	record_list( msg: string, s : [aadl]) <=
+   		 ** msg ": "s **
+   		 true
+
+  	-- record a model element in the result structure
+  	record_element(msg: string,s : aadl) <=
+   		 ** msg ": " s **
+   		 true
+
+  	-- record a message in the result structure
+  	record_message(msg: string) <=
+   		 ** msg **
+   		 true
+
+  	-- write debug trace of a model element to the console
+  	-- Note: you can just use the debug statement directly
+  	-- it takes an arbitrary number of parameters and 
+  	debug_element(msg: string,s : aadl) : bool = 
+   		 debug( msg , s )
+
+
+	**};
+end Resolute_Util;

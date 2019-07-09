@@ -1,0 +1,274 @@
+-- Copyright 2019 Carnegie Mellon University. See Notice.txt
+-- Distribution Statement A: Approved for Public Release; Distribution is Unlimited.
+
+package Security_Classifications_Resolute
+public
+
+annex Resolute {**
+		
+-- This is a set of Example Resolute Claims 
+-- 
+ ---------------------------------
+ -- Security Clearance Property Claims for components
+ ---------------------------------
+	--
+	has_security_clearance (cp:component) <=
+	** "component " cp " has a security clearance" **
+	has_property(cp, SecurityClassificationProperties::Security_Clearance)
+	--
+    has_top_secret_security_clearance (cp: component) <=
+    ** " component " cp " has Top Secret security clearance" **
+ 	property (cp, SecurityClassificationProperties::Security_Clearance,"No_Value") = "TopSecret"
+	--
+	has_secret_security_clearance (cp: component) <=
+    ** " component " cp " has Secret security clearance" **
+ 	property (cp, SecurityClassificationProperties::Security_Clearance," No_Value") = "Secret"
+ 	--
+ 	has_confidential_Security_Clearrance (cp: component) <=
+    ** " component " cp " has Confidential security clearance" **
+ 	property (cp, SecurityClassificationProperties::Security_Clearance, "No_Value") = "Confidential"
+ 	
+ 	has_secondary_security_clearance (cp: component) <=
+ 	** " component " cp " has secondary security clearance" **
+ 	has_property(cp, SecurityClassificationProperties::Secondary_Security_Clearance)
+ 	--
+
+ ---------------------------------
+ -- Information Security Property Claims for components
+ ---------------------------------
+	--
+	has_information_security_level (cp:component) <=
+	** "component " cp " has an information security level" **
+	has_property(cp, SecurityClassificationProperties::Information_Security_Level) 
+	--
+	has_top_secret_information_security_level (cp: component) <=
+	** " component " cp " has Top Secret security information security Level" **
+ 	property (cp, SecurityClassificationProperties::Information_Security_Level, "No_Value") = "TopSecret" 
+ 	--
+ 	has_secret_information_security_level  (cp: component) <=
+    ** " component " cp " has Secret security information security Level" **
+ 	property (cp, SecurityClassificationProperties::Information_Security_Level,"No_Value") = "Secret"
+ 	--
+ 	has_confidential_information_security_level (cp: component) <=
+    ** " component " cp " has Confidential information security level" **
+ 	property (cp, SecurityClassificationProperties::Information_Security_Level, "No_Value") = "Confidential"
+ 	--
+ 	has_information_security_caveats (cp: component) <=
+ 	** "component " cp " has an information security level caveats" **
+	has_property(cp, SecurityClassificationProperties::Information_Security_Caveats) 
+ 	--
+ -- Example Claims for Security Level Properties
+ --
+ 	has_security_level (cp:component) <=
+	** "component " cp " has an information security level" **
+	has_property(cp, SecurityClassificationProperties::Security_Level) 
+ 	
+ 	has_top_secret_security_level (cp: component) <=
+	** " component " cp " has Top Secret security information security Level" **
+ 	property (cp, SecurityClassificationProperties::Security_Level, "No_Value") = "TopSecret" 
+ 	--
+ 	has_secret_security_level  (cp: component) <=
+    ** " component " cp " has Secret security information security Level" **
+ 	property (cp, SecurityClassificationProperties::Security_Level,"No_Value") = "Secret"
+ 	--
+ 	has_confidential_security_level (cp: component) <=
+    ** " component " cp " has Confidential information security level" **
+ 	property (cp, SecurityClassificationProperties::Security_Level, "No_Value") = "Confidential"
+ 	--
+  ---------------------------------
+ -- Security Classification Claims for contained components
+ ---------------------------------
+ 	--
+ 	all_subcomponents_have_security_level (cp: component) <=
+ 	** "all subcomponents of component " cp " have a value for_security level" **
+	forall(sb: subcomponents(cp)).(has_property (sb, SecurityClassificationProperties::Security_Level))
+    --
+    all_subcomponents_have_security_level_or_are_trusted (cp: component) <=
+ 	** "all subcomponents of component " cp " have a value for_security level or are trusted" **
+	(forall(sb: subcomponents(cp)).(has_property (sb, SecurityClassificationProperties::Security_Level))
+	or
+	has_property(sb,SecurityClassificationProperties::Trusted))
+    --
+    all_subcomponents_have_security (cp: component) <=
+ 	** "all subcomponents of component " cp " have a value for information security level or security clearance or security level" **
+	forall(sb: subcomponents(cp)).(has_property (sb, SecurityClassificationProperties::Information_Security_Level) or
+    has_property (sb,SecurityClassificationProperties::Security_Clearance)
+    or has_property (sb,SecurityClassificationProperties::Security_Level))
+    --
+    all_contained_components_have_security_level (cp: component) <=
+ 	** "all contained components of " cp " have a value for information security level or security clearance" **
+ 	exists(cnx: component).contained(cnx,cp) and -- need this in the event there are no contained components
+	(forall(cn: component).contained(cn, cp) => 
+	(has_property (cn, SecurityClassificationProperties::Security_Level)))
+ 	
+ 	all_contained_components_have_security (cp: component) <=
+ 	** "all contained components of " cp " have a value for information security level or security clearance" **
+	forall(cn: component). 
+	(has_property (cn, SecurityClassificationProperties::Information_Security_Level) 
+		or
+ 	has_property (cn,SecurityClassificationProperties::Security_Clearance))
+ 	
+ 	all_contained_processes_have_security (sys: system) <=
+ 	** "all contained processs of " sys " have a value for information security level or security clearance" **
+ 	exists(cpx: process).contained(cpx, sys) and -- need this in the event there are no contained components
+	forall(cp: process).contained(cp, sys) => (has_property (cp, SecurityClassificationProperties::Information_Security_Level)
+	or
+ 	has_property (cp,SecurityClassificationProperties::Security_Clearance)
+ 	or 
+ 	has_property (cp,SecurityClassificationProperties::Security_Level))
+ 	
+	
+ 	all_contained_systems_have_security (sys: system) <=
+ 	** "all contained systems of " sys " have a value for information security level or security clearance" **
+ 	exists(csx: system).contained(csx, sys) and -- need this in the event there are no contained components
+	(forall(cs: system).contained(cs, sys) => (has_property (cp, SecurityClassificationProperties::Information_Security_Level)
+	or
+ 	has_property (cp,SecurityClassificationProperties::Security_Clearance)
+ 	or
+ 	has_property (cp,SecurityClassificationProperties::Security_Level)
+ 	))
+ 	
+-------------------------------------------
+--	Connection related utilities and claims
+-------------------------------------------
+--
+a_connection_exists (cp: component) <=
+** "A connection exists within the component " cp "."**
+exists (c1: component) (c2:component).are_connected(c1,c2)
+
+-- Security Clearances
+
+connected_components_have_same_clearance (cp:component) <=
+** "All connected components in " cp " have the same security classification"**
+exists (c1x: component) (c2x:component).are_connected(c1x,c2x)
+ and
+(forall (c1 : component) (c2 : component)  .are_connected (c1, c2) 
+	=> 
+property (c1, SecurityClassificationProperties::Security_Clearance) = 
+property (c2, SecurityClassificationProperties::Security_Clearance))
+
+connected_processes_have_same_clearance (s:system) <=
+** "All connected processes in " s " as well as " s " have the same security classification"**
+a_connection_exists (s) 
+and
+(forall (p1 : process) (p2 : process) .are_connected (p1, p2) 
+=> 
+(property (p1, SecurityClassificationProperties::Security_Clearance) = 
+ property (p2, SecurityClassificationProperties::Security_Clearance)))
+
+connected_systems_have_same_clearance (s:system) <=
+** "All connected systems in " s " as well as " s " have the same security classification"**
+a_connection_exists (s) 
+	and
+(forall (s1 : system) (s2 : system) .are_connected (s1, s2)
+=> 
+(property (s1, SecurityClassificationProperties::Security_Clearance) = 
+property (s2, SecurityClassificationProperties::Security_Clearance)))
+
+-- information security levels
+
+connected_components_have_same_information_security_levels (cp:component) <=
+** "All connected components in " cp " as well as " cp " have the same information security level"**
+a_connection_exists(cp) 
+and
+forall (c1 : component) (c2 : component). are_connected (c1, c2) => 
+property (c1, SecurityClassificationProperties::Information_Security_Level) = 
+property (c2, SecurityClassificationProperties::Information_Security_Level)
+
+connected_components_have_same_inforamation_security_levels_or_are_connected_to_trusted (cp:component) <=
+** "All connected components in " cp " have the same security level or are connected to a trusted component."**
+(exists (c1x : component) (c2x : component) .(are_connected (c1x, c2x)) 
+	and
+(forall (c1 : component) (c2 : component).(are_connected (c1,c2)) 
+	=> 
+((property (c1, SecurityClassificationProperties::Information_Security_Level) = 
+property (c2, SecurityClassificationProperties::Information_Security_Level))
+or
+((property (c1, SecurityClassificationProperties::Trusted, false) = true 
+	or property (c2, SecurityClassificationProperties::Trusted, false) = true)
+))))
+
+--
+connected_systems_have_same_inforamation_security_levels_or_are_connected_to_trusted2 (cp:system) <=
+** "All connected systems in " cp " have the same security level or are connected to a trusted component."**
+
+(exists (c1x : component) (c2x : component) .(are_connected (c1x, c2x)) 
+	and
+(forall (c1 : component) (c2 : component).(are_connected (c1,c2)) 
+	=> 
+((property (c1, SecurityClassificationProperties::Information_Security_Level) = 
+property (c2, SecurityClassificationProperties::Information_Security_Level))
+or
+((property (c1, SecurityClassificationProperties::Trusted, false) = true 
+	or property (c2, SecurityClassificationProperties::Trusted, false) = true)
+))))
+
+-- Security Levels
+
+connected_components_have_same_security_level (cp: component) <=
+** " connected components in "cp " have the same security level"**
+a_connection_exists(cp) and
+forall(c1: component) (c2:component).are_connected (c1,c2) 
+=>
+((property(c1,SecurityClassificationProperties::Security_Level, "No_Value") =
+ property(c2,SecurityClassificationProperties::Security_Level,"No_Value")))
+--
+connected_components_have_same_security_levels_or_are_connected_to_trusted (cp:component) <=
+** "All connected components in " cp " have the same security level or are connected to a trusted component."**
+(exists (c1x : component) (c2x : component) .(are_connected (c1x, c2x)) 
+	and
+(forall (c1 : component) (c2 : component).(are_connected (c1,c2)) 
+	=> 
+((property (c1, SecurityClassificationProperties::Security_Level, "No_Value") = 
+property (c2, SecurityClassificationProperties::Security_Level,"No_Value"))
+or
+((property (c1, SecurityClassificationProperties::Trusted, false) = true 
+	or property (c2, SecurityClassificationProperties::Trusted, false) = true)
+))))
+
+connected_systems_have_same_security_levels_or_are_connected_to_trusted (sys:system) <=
+** "All connected components in " sys " have the same security level or are connected to a trusted component."**
+--(exists (c1x : system) (c2x : system) .(are_connected (c1x, c2x)) 
+--	and
+(forall (c1 : system) (c2 : system).(are_connected (c1,c2)) 
+	=> 
+((property (c1, SecurityClassificationProperties::Security_Level, "No_Value") = 
+property (c2, SecurityClassificationProperties::Security_Level,"No_Value"))
+or
+((property (c1, SecurityClassificationProperties::Trusted, false) = true 
+	or property (c2, SecurityClassificationProperties::Trusted, false) = true)
+)))--)
+
+------ more TBD
+--	all_reachable_components_have_secret_classification (cp: component) <=
+--	** "All reachable components from " cp " have the same classification"**
+-- 	all_reachable_components (cp).has_secret_security_clearance (cn)
+
+
+check_mils_partitions_connections (s : system) <= --as well as " s " ??
+		** "Check that connected partitions in " s " share the same security level" **
+		a_connection_exists(s)
+		and
+		(forall (p1 : process) (p2 : process) (vp1 : virtual_processor) (vp2 : virtual_processor) .
+		(are_connected (p1, p2)) and (processor_bound (p1, vp1)) and (processor_bound (p2, vp2))
+		=> property (vp1, SEI::SecurityLevel) = property (vp2, SEI::SecurityLevel))
+		
+	
+	there_exists_a_secret_domain_subcomponent (cp: component)<=
+	** "there is a secret security domain" **
+	-- first check that a Security Domain property exists
+	(exists (cpck: subcomponents(cp)) . has_property (cpck, SecurityClassificationProperties::Security_Domain) 
+	and
+	(exists (cp1: subcomponents(cp)) . has_property (cp1, SecurityClassificationProperties::Security_Domain)
+	=>
+    exists (cp2: subcomponents(cp)).property_member (property (cp2, SecurityClassificationProperties::Security_Domain), "domain_name") = "secret"))
+--
+
+  
+**};
+
+
+
+end Security_Classifications_Resolute;
+
+

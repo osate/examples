@@ -1,0 +1,293 @@
+-- Copyright 2018 Carnegie Mellon University. See Notice.txt
+-- Distribution Statement A: Approved for Public Release; Distribution is Unlimited.
+package Security_Classification_Verification
+public
+	annex Resolute {**
+
+ ---------------------------------
+ -- Security Clearance Property Claims for a components
+ ---------------------------------
+	has_security_clearance (cp:component) <=
+	** "component " cp " has a security clearance" **
+	has_security_clearance_property(cp)
+	--
+    has_top_secret_security_clearance (cp: component) <=
+    ** " component " cp " has Top Secret security clearance" **
+ 	get_security_clearance(cp)= topsecret
+	--
+	has_secret_security_clearance (cp: component) <=
+    ** " component " cp " has Secret security clearance" **
+ 	get_security_clearance(cp)= secret
+ 	--
+ 	has_confidential_security_clearance (cp: component) <=
+    ** " component " cp " has Confidential security clearance" **
+ 	get_security_clearance(cp)= confidential
+
+
+ ---------------------------------
+ -- Information Security Property Claims for a components
+ ---------------------------------
+ 
+ 	has_information_security_level (cp:component) <=
+	** "component " cp " has an information security level" **
+	has_information_security_level_property(cp) 
+	--
+	has_top_secret_information_security_level (cp: component) <=
+	** " component " cp " has Top Secret security information security Level" **
+ 	get_information_security_level(cp) = topsecret 
+ 	--
+ 	has_secret_information_security_level  (cp: component) <=
+    ** " component " cp " has Secret security information security Level" **
+ 	get_information_security_level(cp) = secret
+ 	--
+ 	has_confidential_information_security_level (cp: component) <=
+    ** " component " cp " has Confidential information security level" **
+ 	get_information_security_level(cp) = confidential
+
+ ---------------------------------
+ -- Security Classification Claims for contained components
+ ---------------------------------
+ 
+ 	all_subcomponents_have_security (cp: component) <=
+ 	** "all subcomponents of component " cp " have a value for security level or security clearance" **
+	forall(sb: subcomponents(cp)).(has_information_security_level_property(cp) or
+    has_security_clearance_property(cp))
+
+
+ 	all_contained_components_have_security (cp: component) <=
+ 	** "all contained components of " cp " have security" **
+ 	forall(cn: component).contained(cn, cp) => 
+ 		(has_information_security_level_property(cp) or
+ 		has_security_clearance_property(cp))
+ 
+ 
+	all_subcomponents_have_equal_or_higher_information_security_level ( cp:component)<=
+	**"all subcomponents of " cp " have equal or higher information security level than the information security level of " cp **
+	-- subcomponents without a SecurityClassificationProperties::InformationSecurityLevel value are considered unclassified
+	-- It utilizes the ordering specification through a Resolute constant to determine inclusion
+	-- only checks direct subcomponents of the instance; does not include subcomponents of subcomponents
+	forall(sb: subcomponents(cp)).
+		is_lower_or_same_information_security_level(cp,sb)
+
+
+----------------------------------
+-- SecurityLevel, InformationSecurityLevel, SecurityDomain properties associated with (hardware) components connected to buses must be the same or trusted
+--
+-- Note: buses may be actual buses or systems/abstract components with bus access connections
+-- The rules assume at least one of the three or a combination of clearance/level and domain:
+--  SecurityLevel or InformationSecurityLevel SecurityDomain properties are assigned to components connected to buses and thte buses.  
+----------------------------------
+	
+	
+	all_hardware_connected_by_bus_has_same_security_clearance (thebus : component) <=
+	** "Components connected to bus " thebus" have the same security clearance if not trusted" ** 
+		let untrusted_neighbors: [component] = [ neighbor for (neighbor: directly_reachable_components(thebus)) | not(is_trusted(neighbor))];
+		untrusted_neighbors = [] or 
+		( let matchlevel : string = get_information_security_level(head(untrusted_neighbors));
+		  forall (other : as_set(tail(untrusted_neighbors))). 
+			    	get_security_clearance(other) = matchlevel
+		)
+	
+	all_hardware_connected_by_bus_has_same_information_security_level (thebus : component) <=
+	** "Components connected to bus " thebus" have the same information security level if not trusted" ** 
+		let untrusted_neighbors: [component] = [ neighbor for (neighbor: directly_reachable_components(thebus)) | not(is_trusted(neighbor))];
+		untrusted_neighbors = [] or 
+		( 		let matchlevel : string = get_information_security_level(head(untrusted_neighbors));
+		forall (other : as_set(tail(untrusted_neighbors))). 
+			    	get_information_security_level(other) = matchlevel
+		)
+		
+	all_hardware_connected_by_bus_has_same_security_domain (thebus : component) <=
+	** "Components connected to bus " thebus" have the same security domain if not trusted" ** 
+		let untrusted_neighbors: [component] = [ neighbor for (neighbor: directly_reachable_components(thebus)) | not(is_trusted(neighbor))];
+		untrusted_neighbors = [] or 
+		( 		let matchlevel : string = get_information_security_level(head(untrusted_neighbors));
+		forall (other : as_set(tail(untrusted_neighbors))). 
+			    	get_security_domain(other) = matchlevel
+		)
+		
+	-- all connected hardware security clearance/level/domains are supported by bus (or system/abstract) 
+	all_hardware_connected_to_bus_has_lower_or_same_security_level_than_bus (thebus : bus) <=
+	** "bus " thebus" supports same security level/domain as connected components" ** 
+			forall (conn : connections (thebus)). 
+			(   let target: component = other_connection_end(conn, thebus);
+			    is_lower_or_same_security_level(target, thebus) and is_same_security_domain(target, thebus)
+			)
+
+	forall_hardware_relay_channel_between_buses (self:component) <=
+	** "For all components: component is relay channel between buses by relaying messages to components with different security levels/domains" ** 
+	forall (hw : hardware) . relay_channel_between_buses (hw)
+	
+	relay_channel_between_buses (middle : component) <=
+	**  middle " is relay channel between buses by relaying  messages to components with different security levels/domains" ** 
+	forall (thebus1: bus) (thebus2: bus). 
+	(thebus1 <> thebus2) => are_connected (middle,thebus1) 
+	and are_connected (middle,thebus2) 
+	-- the middle component is either trusted (acceptable to each bus) or its level/domain matches members of both buses
+	and all_hardware_connected_by_bus_has_same_security_domain(thebus1) and all_hardware_connected_by_bus_has_same_security_domain(thebus2)
+	and all_hardware_connected_by_bus_has_same_information_security_level(thebus1) and all_hardware_connected_by_bus_has_same_information_security_level(thebus2)
+	and all_hardware_connected_by_bus_has_same_security_clearance(thebus1) and all_hardware_connected_by_bus_has_same_security_clearance(thebus2)
+		
+----------------------------------
+-- Security clearance/levels/domains associated with components bound to memory, processor, virtual processor must be the same or trusted
+--
+-- The rules assume Security_Level or Information_Security_Level_US and optionally Security_Domain properties
+-- are assigned to the bound components.  
+-- At this time any hardware component security properties are ignored.
+----------------------------------
+ 
+ 	memory_bound_components_same_security_level (mem: memory) <=
+	** "All bound components have same security level/domain or are trusted" **
+	forall (pr1 : component) (pr2 : component)  . pr1 <> pr2 and
+		is_bound_to (pr1, mem) and is_bound_to (pr2, mem) =>
+		is_trusted_component(pr1) or is_trusted_component(pr2) or is_same_security_level (pr1,pr2)
+ 
+ 	memory_bound_components_same_need_to_know_domains (mem: memory) <=
+	** "All bound components have same need to know domains or are trusted" **
+	forall (pr1 : component) (pr2 : component)  . pr1 <> pr2 and
+		is_bound_to (pr1, mem) and is_bound_to (pr2, mem) =>
+		is_trusted_component(pr1) or is_trusted_component(pr2) or is_same_need_to_know_domains (pr1,pr2)
+
+	processor_bound_components_same_security_level (cpu: processor) <=
+	** "Processor " cpu ": bound components have same need to know domains or are trusted" **
+	forall (pr1 : component) (pr2 : component) . pr1 <> pr2 and
+		member(cpu,bound_processors(pr1)) and
+		member(cpu,bound_processors(pr2)) => 
+		is_trusted_component(pr1) or is_trusted_component(pr2) or is_same_security_level (pr1,pr2)
+
+	processor_bound_components_same_need_to_know_domains (cpu: processor) <=
+	** "Processor " cpu ": bound components have same security level/domain or are trusted" **
+	forall (pr1 : component) (pr2 : component) . pr1 <> pr2 and
+		member(cpu,bound_processors(pr1)) and
+		member(cpu,bound_processors(pr2)) => 
+		is_trusted_component(pr1) or is_trusted_component(pr2) or is_same_need_to_know_domains (pr1,pr2)
+
+	virtual_processor_bound_components_same_security_level (vcpu: virtual_processor) <=
+	** "Virtual processor " vcpu ": bound components have same security level or are trusted" **
+	forall (pr1 : component) (pr2 : component) . pr1 <> pr2 and
+		member(vcpu,bound_processors(pr1)) and
+		member(vcpu,bound_processors(pr2)) => 
+		is_trusted_component(pr1) or is_trusted_component(pr2) or is_same_security_level (pr1,pr2)
+
+	virtual_processor_bound_components_same_need_to_know_domains (vcpu: virtual_processor) <=
+	** "Virtual processor " vcpu ": bound components have same need to know domain or are trusted" **
+	forall (pr1 : component) (pr2 : component) . pr1 <> pr2 and
+		member(vcpu,bound_processors(pr1)) and
+		member(vcpu,bound_processors(pr2)) => 
+		is_trusted_component(pr1) or is_trusted_component(pr2) or is_same_security_level (pr1,pr2)
+
+	virtual_processor_bound_components_same_security_domain (vcpu: virtual_processor) <=
+	** "Virtual processor " vcpu ": bound components have same need to know domain or are trusted" **
+	forall (pr1 : component) (pr2 : component) . pr1 <> pr2 and
+		member(vcpu,bound_processors(pr1)) and
+		member(vcpu,bound_processors(pr2)) => 
+		is_trusted_component(pr1) or is_trusted_component(pr2) or is_same_security_domain (pr1,pr2)
+
+-----------------------------------
+-- components have lower or same security clearance/information level, same domain than the memory/processor/virtual processor
+-- These methods assume memory also has security level/domain properties
+-----------------------------------
+
+	-- for all components bound to memory security level/domains are supported 
+	forall_components_bound_to_memory_lower_or_same_security_level_same_domain (thememory : memory) <=
+	** "Memory " thememory" supports same security level/domain of all bound components" ** 
+			forall (comp : component). is_bound_to(comp,thememory) =>
+			    is_lower_or_same_security_level(comp, thememory) and is_same_security_domain(comp, thememory)
+
+	-- for all components directly bound to processor (or system/abstract) security level/domains are supported 
+	forall_components_bound_to_processor_supported_security_level_same_domain (theprocessor : component) <=
+	** "Processor " theprocessor" supports same security level/domain of all bound components" ** 
+			forall (comp : component). is_bound_to(comp,theprocessor) =>
+			    is_lower_or_same_security_level(comp, theprocessor) and is_same_security_domain(comp, theprocessor)
+
+	-- for all components directly bound to virtual processor security level/domains are supported 
+	forall_components_bound_to_virtual_processor_supported_security_level_same_domain (theVP : component) <=
+	** "memory " theVP" supports same security level/domain of all bound components" ** 
+			forall (comp : component). is_bound_to(comp,theVP) =>
+			    is_lower_or_same_security_level(comp, theVP) and is_same_security_domain(comp, theVP)
+
+	
+--------------------------------------------------------------------------------------------
+-- Security Level/Domain Utility Claim Functions that deal with all three security level/soamin properties
+-- or wrap a security utility compute function to cause recording in the result structure
+--------------------------------------------------------------------------------------------
+
+	is_trusted_component(comp: component) <=
+	** "Trusted component " comp **
+	is_trusted(comp)
+
+	-- SecurityClearance or InformationSecurityLevel must be the same
+	-- returns false if either has no security level or domain properties
+  	is_same_security_level(target1 : aadl, target2 : aadl) <= 
+	** target1 " and " target2 " have same security level"  **
+			(is_same_security_clearance(target2, target1) 
+				or is_same_information_security_level(target2,target1)
+			)
+		orelse 
+		fail ** target1 " and "target2 " are not trusted and have different security levels" **
+
+	-- handles both forms of security level (SecurityClearance, InformationSecurityLevel) as well as SecurityDomain
+	-- is lower level or same level and domain matches
+	is_lower_or_same_security_level (lower : aadl, higher : aadl) <= 
+	** lower " has lower security level/same domain of " higher **
+		  is_lower_or_same_security_clearance(lower, higher) or is_lower_or_same_information_security_level(lower,higher)
+		orelse
+			fail ** higher " cannot handle "lower " security level or does not match security domain" **
+ 
+ -----------------------------------------
+ -- Application level uses SecurityClassificationProperties::NeedToKnowDomains property
+	
+----------------------------------
+-- Security clearance/levels and need to know domains associated with application must be the same or trusted.
+-- We deal with port conenction ends, threads in processes, and features (information) supported by threads (agents)
+----------------------------------
+
+	port_connection_same_security_level_and_need_to_know_domains (conn : connection) <=
+	** "connected components have the same security level/domain at least one is trusted" **
+		let src : component = source_component (conn);
+		let dst : component = destination_component (conn);
+		is_trusted_component(src) or is_trusted_component(dst) or 
+		same_security_level_and_need_to_know_domains (src,dst)
+		
+
+	threads_in_component_same_security_level_and_need_to_know_domains_or_trusted (pr : component) <=
+	** "Threads contained in given component (process) " pr " have same security level/domain" **
+		let thrds: {component} = contained_threads(pr);
+		forall (thr1 : thrds) (thr2 : thrds) . thr1 <> thr2 =>
+			is_trusted_component(thr1) and is_trusted_component(thr2) 
+			or same_security_level_and_need_to_know_domains (thr1,thr2)
+
+---------------------------------------
+-- If features have security level/domain identifying level/domain incoming or outgoing da
+
+	feature_security_levels_and_need_to_know_domains_supported_by_component (comp : component) <=
+	** comp " supports security levels/domain of ports or is trusted" **
+	  is_trusted_component (comp) orelse
+	  forall (prt : {f for (f:features (comp)) | is_port (f)})
+		. is_lower_or_same_security_level (prt,comp) and is_subset_need_to_know_domains(prt,comp)
+ 	
+  	-- Need to know domains: must be the same
+	-- SecurityClearance or InformationSecurityLevel must be the same
+	-- returns false if either has no security level or domain properties
+  	same_security_level_and_need_to_know_domains(target1 : aadl, target2 : aadl) <= 
+	** target1 " and " target2 " have same security level and same need to know domains"  **
+		is_same_need_to_know_domains(target2,target1)  and 
+			(is_same_security_clearance(target2, target1) 
+				or is_same_information_security_level(target2,target1)
+			)
+		orelse 
+		fail ** target1 " and "target2 " are not trusted and have different security levels or domains" **
+
+	-- handles both forms of security level (SecurityClearance, InformationSecurityLevel) as well as SecurityDomain
+	-- is lower level or same level and domain matches
+	is_lower_or_same_security_level_same_security_domain (lower : aadl, higher : aadl) <= 
+	** lower " has lower security level and contains need to know domains of " higher **
+		get_security_domain(lower) = get_security_domain(higher) and 
+		 (is_lower_or_same_security_clearance(lower, higher) 
+		 	or is_lower_or_same_information_security_level(lower,higher)
+		 ) 
+		orelse
+		fail ** higher " cannot handle "lower " security level or need to know domains" **
+  
+	**};
+end Security_Classification_Verification;

@@ -9,7 +9,7 @@ verification plan MissionSystemsSecurityVerificationPlan for MissionSystemsSecur
 	[
 		activities 
 	
-			VerifyEncryption: AircraftSecurityVerificationMethods.VerifyEncryption ()
+			VerifyEncryption: AircraftSecurityVerificationMethods.VerifyHasEncryption ()
 	]
 	
 	claim missionDataHighLevel

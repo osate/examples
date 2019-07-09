@@ -20,24 +20,8 @@ verification methods AircraftSecurityVerificationMethods :
 					multiple teams and procedures that address the broad security issues as
 					well as focued (e.g. on communications security, access control, etc.)"
 	]
-	  
-	method VerifyEncryption (component): "verify that a component has encryption 
-    A Resolute claim that the encryption property is true."
-	[
-		resolute Security_Exposure_Util.Security_Exposure_Util_public.Resolute.Resolute.is_encrypted
 
-	    description "This confirms encryption."
 	
-	]
-	
-		method VerifyHasEncryption (component): "verify that a component has encryption 
-    A Resolute claim that the encryption property is true."
-	[
-		resolute Security_Enforcement_Resolute.Security_Enforcement_Resolute_public.Resolute.Resolute.provides_encryption
-
-	    description "This confirms encryption."
-	
-	]
 	method VerifySecret (component): "verify that a component
 	has a secret information security level classification"
 	[
@@ -61,6 +45,24 @@ verification methods AircraftSecurityVerificationMethods :
 	method CheckClearances (component): "Check for security clearance"
 	[
 		resolute Security_Classifications_Resolute.Security_Classifications_Resolute_public.Resolute.Resolute.has_security_clearance
+	]
+	
+		  
+
+//	-	Encryption methods
+
+	method VerifyHasEncryption (component): "verify that a component has encryption -- Resolute"
+	[
+		resolute Security_Enforcement_Resolute.Security_Enforcement_Resolute_public.Resolute.Resolute.component_has_encryption
+
+	    description "This confirms the component has encryption."
+	
+	]
+	
+	method VerifyHasAuthenticatedEncryption (component): "Verify that the element has or provides authenticated encryption -- Resolute"
+	[
+		resolute Security_Enforcement_Resolute.Security_Enforcement_Resolute_public.Resolute.Resolute.component_has_authenticated_encryption
+		description "This confirms the element has authenticated encryption."
 	]
 
 //////////////////	

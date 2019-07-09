@@ -38,7 +38,7 @@ for TransportAircraftSecurityReqs
  claim ExternalEncryption: "All data transmitted or received is encrypted."
  [
  	activities
- 	encryptionCheck: AircraftSecurityVerificationMethods.VerifyEncryption ()
+ 	encryptionCheck: AircraftSecurityVerificationMethods.VerifyHasEncryption ()
  ]
  
  claim InternalEncryption: ""

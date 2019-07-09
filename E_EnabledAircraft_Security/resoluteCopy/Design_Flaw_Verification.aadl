@@ -1,0 +1,137 @@
+-- Copyright 2018 Carnegie Mellon University. See Notice.txt
+-- Distribution Statement A: Approved for Public Release; Distribution is Unlimited.
+
+package Design_Flaw_Verification
+public
+	annex Resolute {**
+--------------------------------------
+-- potential logical design flaws resulting in data corruption
+--------------------------------------	
+
+	-- CWE-131 - check buffer size
+	-- outgoing queue size <= incoming queue size on connection (not necessary for data port)
+	-- AND compare outgoing and incoming rates
+	-- AND compare data type/size on ports
+	-- 	 
+	forall_connections_no_buffer_overflow (self: component) <=
+	** "CWE131: For all connections: No buffer overflow due to queue size, rate, data type/size" ** 
+		forall  (pc : {conn for (conn:connection)| is_a_port_connection(conn)}).
+			no_buffer_overflow(pc)
+
+	no_buffer_overflow (conn: connection) <=
+	** "CWE131: For given connection: No buffer overflow due to queue size, rate, data type/size" ** 
+	source_queue_size_lessorequal_destination_queue_size (conn) and 
+	destination_period_handles_queue_faster_than_source_period_fills_queue (conn) and 
+	same_source_and_destination_type_or_data_size(conn)
+	 
+	 
+	source_queue_size_lessorequal_destination_queue_size (c : connection) <=
+	** "For connection: source queue size <= destination queue size on connection " c ** 
+		queue_size (source(c)) <= queue_size (destination(c))
+ 
+	destination_period_handles_queue_faster_than_source_period_fills_queue (conn : connection) <=
+	** "For connection: destination handles all queue elements in single dispatch faster than source fills it on " conn **
+	let src : component = source_component(conn);
+	let dst : component = destination_component(conn);
+		((is_event_data_port_connection (conn) or is_event_port_connection (conn)) and
+		has_property (dst, Timing_Properties::Period) and 
+		has_property (src, Timing_Properties::Period)) =>
+		property (dst, Timing_Properties::Period) / queue_size (destination (conn))
+	 	<=
+	 	property (src, Timing_Properties::Period) 
+
+	 
+	same_source_and_destination_type_or_data_size (c : connection) <=
+	** "For connection: same type or data size on connection ends " c ** 
+	(has_type(source(c)) and has_type(destination(c))) => (type(source(c)) = type(destination(c)) or
+		(has_property (type(source(c)), Memory_Properties::Data_Size) and has_property (type(destination(c)), Memory_Properties::Data_Size
+	)) => property (type(source(c)), Memory_Properties::Data_Size) = property (destination(c), Memory_Properties::Data_Size))
+
+	--
+	-- CWE-362 - potential race condition
+	-- check whether synchronization protocol is used on shared data component
+	
+	forall_data_shared_components_uses_concurrency_control_protocol (self:component) <=
+	** "CWE362: For all data components: if shared data component uses concurrency control" ** 
+	forall (c : data) . connections(d) <> {} =>
+	concurrency_control_on_data_shared_component (c)
+	
+	-- we check data component or the data access features of the connection for the presence of concurrency control 
+	concurrency_control_on_data_shared_component (d : data) <=
+	** "CWE362: if shared data component uses concurrency control" d **
+	let sharedComp: bool = exists (conn : connections(d)) . is_data_access(conn);
+	not sharedComp or has_concurrency_control (d) or 
+	forall (conn : connections(d)) . is_data_access(conn) =>
+	has_concurrency_control (source(conn)) or 
+ 	has_concurrency_control (destination(conn))
+ 
+	
+	
+	
+	
+	--
+	--  CWE-805: buffer access with incorrect length value
+	--  For this one, we assume that types used between interacting
+	--  components do not match. So, we add a rule to check
+	--  that data are consistent.
+	--
+	--  This is now implemented for integer and float. Support
+	--  for arrays is included but limited.
+	--
+	--  To be checked, pending on bug #645 in osate
+	--  https://github.com/osate/osate2-core/issues/645
+	--
+	forall_connections_same_data_type_or_size_and_consistent_data_model_spec (self: component) <=
+	** "CWE805: For all connections: Same data type/size and consistent data model spec" ** 
+	forall (conn : connection) . is_data_port_connection(conn) =>
+	same_source_and_destination_type_or_data_size(conn) and consistent_data_model (conn)
+	
+	
+	consistent_data_model (conn : connection) <=
+	** "Consistent data model specification for connection " conn ** 
+	(has_type(source(conn)) and has_type(destination(conn))) =>
+	( 	check_data_properties_definition (type(source (conn))) and  
+		check_data_properties_definition (type(destination (conn))) => 
+		check_data_properties_consistencies (type(source (conn)), type(destination (conn)))
+	)
+	
+	check_data_properties_definition (thedata : aadl) : bool =
+	has_property (thedata,Data_Model::Data_Representation)
+	andthen if (property(thedata,Data_Model::Data_Representation) = "Integer")
+	        then 
+				has_property(thedata,Data_Model::Integer_Range) and has_property(thedata,Data_Model::Number_Representation)
+			else
+				if (property(thedata,Data_Model::Data_Representation) = "float")
+		        then 
+					has_property(thedata,Data_Model::Real_Range) and has_property(thedata,Data_Model::Number_Representation)
+				else
+					if (property(thedata,Data_Model::Data_Representation) = "Array")
+			        then 
+						has_property(thedata,Data_Model::MyDimension)
+					else
+						false
+	
+	check_data_properties_consistencies (thedata1 : aadl, thedata2 : aadl) <=
+	** "Data model specifications " thedata1 " and " thedata2 " are consistent" **
+	(property (thedata1,Data_Model::Data_Representation) = property (thedata2,Data_Model::Data_Representation))
+	andthen if (property(thedata1,Data_Model::Data_Representation) = "integer")
+	        then 
+	        	(property (thedata1,Data_Model::Integer_Range) = property (thedata2,Data_Model::Integer_Range))
+	        	and
+	        	(property (thedata1,Data_Model::Number_Representation) = property (thedata2,Data_Model::Number_Representation))
+			else
+				if (property(thedata1,Data_Model::Data_Representation) = "float")
+		        then 
+			        (property (thedata1,Data_Model::Real_Range) = property (thedata2,Data_Model::Real_Range))
+		        	and
+		        	(property (thedata1,Data_Model::Number_Representation) = property (thedata2,Data_Model::Number_Representation))
+				else
+				if (property(thedata1,Data_Model::Data_Representation) = "array")
+		        then 
+					(property (thedata1,Data_Model::MyDimension) = property (thedata2,Data_Model::MyDimension))
+				else
+					false
+	
+
+	**};
+end Design_Flaw_Verification;

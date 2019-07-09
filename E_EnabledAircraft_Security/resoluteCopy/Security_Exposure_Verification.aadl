@@ -1,0 +1,121 @@
+-- Copyright 2018 Carnegie Mellon University. See Notice.txt
+-- Distribution Statement A: Approved for Public Release; Distribution is Unlimited.
+
+package Security_Exposure_Verification
+public
+	annex Resolute {**
+	-- Utility to track encryption predicate as claim
+	-- connection binding targets (virtual bus or hardwaare) are encrypted.
+	-- for a virtual bus target if it is not encrypted we examine its conneciton binding targets.
+	-- Both virtual buses and hardware can be marked as encrypted 
+	uses_virtual_buses_with_encryption (conn: connection) <=
+	** "connection is bound to at least one layer of encrypted virtual bus(es)" **
+	connection_binding_targets_encrypted(conn) 
+	
+
+----------------------------------
+-- Basic Encryption verification.
+----------------------------------
+	-- true if element has encryption property and its value is true. Otherwise:
+	-- If the element is a virtual see if all virtual buses it is bound to are encrypted
+	-- false if no layer (set of bound) of virtual buses supports encryption
+--	check_encrypted(element : aadl) <=
+--	** "Given model element has Encrypted property set to true"	**
+--	is_encrypted(element)
+
+
+   -- true if model element has the encryption scheme property set
+   check_encryption_scheme (element: aadl) <=
+	** "Given model element has Encryption_Scheme property set"	**
+	has_encryption_scheme(element)
+
+----------------------------------
+-- Encryption when hardware used by connections is physically exposed.
+----------------------------------
+
+--- NOTE: we should also deal with physical exposure of memory (disks) and their encryption)
+--- NOTE: physical exposure of processors: how are they protected?
+	
+	--  check encryption of connections over exposed hardware.  
+	--  Encryption is represented by a virtual bus with a property indicating that it uses encryption.
+	forall_connections_encrypted_over_exposed_hardware(self:component) <=
+	** "For all connections: use encryption if connection is bound to exposed hardware" **
+	forall(conn:connection).
+	encrypted_over_exposed_hardware (conn)  
+	
+	encrypted_over_exposed_hardware(conn: connection) <=
+	** "Use encryption for exposed hardware on connection " conn **
+	connection_binding_targets_encrypted_or_not_exposed(conn)
+
+	--
+	--  All connections across different processors must be encrypted
+	--
+	-- Note: this is not related to physical exposure
+	
+	forall_connections_across_processors_connection_is_encrypted (self:component) <=
+	** "For all connections: encrypted when across different processors" ** 
+	forall (logicalconn : {conn for (conn : connection)| not is_bus_access_connection(conn)}) . 
+	connection_across_processors_is_encrypted(logicalconn)
+
+	connection_across_processors_is_encrypted (conn :connection) <=
+	** "Connection across different processors must be encrypted" ** 
+	is_distributed(conn) => uses_virtual_buses_with_encryption (conn)
+
+-----------------------------------------------
+-- Use of encryption for all but unclassified information
+-----------------------------------------------	
+	--
+	-- CWE-311: Check that all but unclassified data are encrypted 
+	--  We check that a bound virtual bus defines the security encryption.
+	-- Also ensure that unclassified information connection have have unclassified or trusted participants
+	forall_connections_consistent_use_of_unclassified_data_and_encrypted_classfied_data_on_port_connections (self:component) <=
+	** "CWE311: Consistent use of unclassified connections and encrypted classified connections" ** 
+			forall  (pc : {conn for (conn:connection)| is_a_port_connection(conn)}).
+			consistent_unclassified_connection (pc) and encryption_of_classified_data_on_connection (pc) 
+
+	forall_connections_encrypted_classified_connections (self:component) <=
+	** "CWE311-B: Encrypted classified connections" ** 
+			forall  (pc : {conn for (conn:connection)| is_a_port_connection(conn)}).
+			encryption_of_classified_data_on_connection (pc) 
+
+	forall_connections_consistent_unclassified_connections (self:component) <=
+	** "CWE311-A: Consistent use of unclassified connections" ** 
+			forall  (pc : {conn for (conn:connection)| is_a_port_connection(conn)}).
+			  consistent_unclassified_connection (pc)
+	
+	--  we check that source is unclassified or source is trusted and destination is unclassified or destination is trusted
+	--  
+	consistent_unclassified_connection (conn : connection) <=
+	** "Consistent communication of unclassified information on " conn ** 
+		let src : component = source_component (conn);
+		let dst : component = destination_component (conn);
+		(is_unclassified (src) andthen is_unclassified (dst) or is_trusted (dst))
+		and (is_unclassified (dst) andthen 
+			is_unclassified (src) or is_trusted (src))
+
+	--  for classified data connection must be encrypted 
+	-- for unclassified on both ends return true as we do this for all connections
+	encryption_of_classified_data_on_connection (conn : connection) <=
+	** "Encryption of classified information on " conn ** 
+	not(is_unclassified (source_component (conn))) or not(is_unclassified (destination_component (conn))) 
+	=>
+	 	connection_binding_targets_encrypted(conn)
+
+
+	--
+	-- CWE-327 - use of risky or weak security protocol
+	--  The list of potential good/weak encryption mechanisms
+	--  are listed here: https://www.owasp.org/index.php/Guide_to_Cryptography#Algorithm_Selection
+	--	 
+	sufficient_encryption_strength (self:component) <=
+	** "CWE327: Use of risky or weak security protocol" ** 
+	forall (c : component) . true =>
+	true
+	--  FIXME: we need to get access to a record in resolute to
+	--  do that. It means, access to the members of the
+	--  encryption property.
+	--  Pending bug #40 in smaccm
+	--  https://github.com/smaccm/smaccm/issues/40
+
+	**};
+end Security_Exposure_Verification;
