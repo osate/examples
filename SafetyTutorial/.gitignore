@@ -1,8 +1,5 @@
 /.aadlbin-gen/
 instances/
-diagrams/
-imv/
 /bin/
-*.emfta
 *.aird
 

@@ -15,8 +15,6 @@ package Isolette
 ErrorLibrary, --predeclared error types in Error Modeling anned
 Iso_Variables, Iso_Properties;
 
-	with Physical_Properties;
-
 	with Isolette_Properties;
 
 	abstract Nurse
@@ -146,7 +144,7 @@ Iso_Variables, Iso_Properties;
 			use behavior Isolette::FailStop;
 			component error behavior
 			propagations
-			all -[ inside_air.airTemperature{OutOfRange} and operator_interface.alarm_sound{ServiceOmission}]-> infantExposure{DangerousInfantExposure};
+			working -[ 1 ormore(inside_air.airTemperature{OutOfRange} , operator_interface.alarm_sound{ServiceOmission})]-> infantExposure{DangerousInfantExposure};
 			end component;
 			composite error behavior
 			states
@@ -841,8 +839,6 @@ features
   heat_control : in data port Iso_Variables::on_off
     {BLESS::Assertion => "<<HEAT_CONTROL(x)>>";};
   heat: out feature;
-properties
-	Physical_Properties::Power_Tot => 300.0 W .. 310.0 W;
 annex EMV2 
   {**
     use types Isolette, ErrorLibrary;

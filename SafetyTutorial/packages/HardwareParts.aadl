@@ -1,7 +1,9 @@
 package HardwareParts
 public
-with EMV2;
-		
+	with EMV2;
+
+	with SEI;
+
 	-- The CPU uses an error behavior state machine without explicit error events and transitions.
 	-- Instead we associate an occurrence probability with the FailStop state.
 	-- In a composite state analysis we pick up the occurrence probability from the state.
@@ -11,87 +13,100 @@ with EMV2;
 	-- Such consistency checks will be added later.
 	processor CPU
 		features
-	powersource: in feature ;
+			powersource: in feature;
 			networkaccess: requires bus access Network;
-	annex EMV2 {**
-		use types ErrorLibrary,GPSErrorLibrary;
-	 	use behavior GPSErrorLibrary::FailStopState;
-		error propagations
-			bindings: out propagation {ServiceOmission, ValueError};
-			powersource: in propagation {ServiceOmission};
-			networkaccess: in propagation {ServiceOmission};
-			networkaccess: out propagation {ServiceOmission};
-		flows
-			cpu_es1: error source bindings {ServiceOmission, ValueError} when {CPUFailure};
-		end propagations;
-	 	component error behavior
-		propagations
-		FailStop -[]-> bindings{ServiceOmission};
-	 	end component;
-		properties
-			-- these properties should be consistent with the ones in CPU_errorbehavior
-			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.8e-5 ; Distribution => Poisson;] applies to cpu_es1.ServiceOmission;
-			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.8e-5 ; Distribution => Poisson;] applies to FailStop;
-	**};
+		annex EMV2 {**
+			use types ErrorLibrary, GPSErrorLibrary;
+			use behavior GPSErrorLibrary::FailStopState;
+			
+			error propagations
+				bindings: out propagation {ServiceOmission, ValueError};
+				powersource: in propagation {ServiceOmission};
+				networkaccess: in propagation {ServiceOmission};
+				networkaccess: out propagation {ServiceOmission};
+			flows
+				cpu_es1: error source bindings {ServiceOmission, ValueError} when {CPUFailure};
+			end propagations;
+			
+			component error behavior
+			propagations
+				FailStop -[]-> bindings {ServiceOmission};
+			end component;
+			
+			properties
+				-- these properties should be consistent with the ones in CPU_errorbehavior
+				EMV2::OccurrenceDistribution => [ProbabilityValue => 2.8e-5;
+					Distribution => Poisson;] applies to cpu_es1.ServiceOmission;
+				EMV2::OccurrenceDistribution => [ProbabilityValue => 2.8e-5; Distribution => Poisson;] applies to FailStop;
+		**};
 	end CPU;
-	
-	-- Here we specify the occurrence probability on the error source for flow based analysis
-	-- and on the state for composite state analysis.
-	-- We should be able to specify when FailStop as the error source condition and 
-	-- the analysis should pick up the probability from this identified state.
+
+		-- Here we specify the occurrence probability on the error source for flow based analysis
+		-- and on the state for composite state analysis.
+		-- We should be able to specify when FailStop as the error source condition and 
+		-- the analysis should pick up the probability from this identified state.
 	bus Network
 		features
-		power: in feature;
+			power: in feature;
 --			networkAccess: provides bus access Network;
-	annex EMV2 {**
-		use types ErrorLibrary,GPSErrorLibrary;
-		use behavior GPSErrorLibrary::FailStopState;
-		error propagations
-		bindings: out propagation {ServiceOmission};
-		power: in propagation {ServiceOmission};
-		access: in propagation {ServiceOmission};
-		access: out propagation {ServiceOmission};
-		flows
-			cpu_es: error path access{ServiceOmission} -> bindings {ServiceOmission} ;
-			power_es: error path power{ServiceOmission} -> bindings {ServiceOmission} ;
-			network_binding_es: error source bindings {ServiceOmission} when {NetworkFailure};
-			network_access_es: error source access {ServiceOmission} when {NetworkFailure};
-		end propagations;
 		properties
-			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.5e-5 ; Distribution => Poisson;] applies to network_binding_es.ServiceOmission;
-			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.5e-5 ; Distribution => Poisson;] applies to network_access_es.ServiceOmission;
-			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.5e-5 ; Distribution => Poisson;] applies to FailStop;
-	**};
+			SEI::BandWidthCapacity => 300.0 KBytesps;
+		annex EMV2 {**
+			use types ErrorLibrary, GPSErrorLibrary;
+			use behavior GPSErrorLibrary::FailStopState;
+			
+			error propagations
+				bindings: out propagation {ServiceOmission};
+				power: in propagation {ServiceOmission};
+				access: in propagation {ServiceOmission};
+				access: out propagation {ServiceOmission};
+			flows
+				cpu_es: error path access {ServiceOmission} -> bindings {ServiceOmission};
+				power_es: error path power {ServiceOmission} -> bindings {ServiceOmission};
+				network_binding_es: error source bindings {ServiceOmission} when {NetworkFailure};
+				network_access_es: error source access {ServiceOmission} when {NetworkFailure};
+			end propagations;
+			
+			properties
+				EMV2::OccurrenceDistribution => [ProbabilityValue => 2.5e-5;
+					Distribution => Poisson;] applies to network_binding_es.ServiceOmission;
+				EMV2::OccurrenceDistribution => [ProbabilityValue => 2.5e-5;
+					Distribution => Poisson;] applies to network_access_es.ServiceOmission;
+				EMV2::OccurrenceDistribution => [ProbabilityValue => 2.5e-5; Distribution => Poisson;] applies to FailStop;
+		**};
 	end Network;
 
-	-- Here we have the occurrence probability on the state and on the error event.
-	-- The flow based analysis picks up the error event, while the composite state analysis the state value.
+		-- Here we have the occurrence probability on the state and on the error event.
+		-- The flow based analysis picks up the error event, while the composite state analysis the state value.
 	device PowerSupply
-	features
-		power: out feature;
-	annex EMV2 {**
-		use types ErrorLibrary,GPSErrorLibrary;
-		use behavior GPSErrorLibrary::FailStopState;
-		error propagations
-			power: out propagation {ServiceOmission};
+		features
+			power: out feature;
+		annex EMV2 {**
+			use types ErrorLibrary, GPSErrorLibrary;
+			use behavior GPSErrorLibrary::FailStopState;
+			
+			error propagations
+				power: out propagation {ServiceOmission};
 			flows
-				power_es: error source power{ServiceOmission};
-		end propagations;
-	 	component error behavior
-	 	events
-	 	  PowerFailure: error event;
-		transitions
-			Operational -[PowerFailure]-> FailStop;
-		propagations
-			FailStop -[]-> power{ServiceOmission};
-	 	end component;
-		properties
-			emv2::OccurrenceDistribution => [ ProbabilityValue => 3.5e-7 ; Distribution => Poisson;] 
-			applies to power_es.ServiceOmission, FailStop, PowerFailure;
-	**};
+				power_es: error source power {ServiceOmission};
+			end propagations;
+			
+			component error behavior
+			events
+				PowerFailure: error event;
+			transitions
+				Operational -[PowerFailure]-> FailStop;
+			propagations
+				FailStop -[]-> power {ServiceOmission};
+			end component;
+			
+			properties
+				EMV2::OccurrenceDistribution => [ProbabilityValue => 3.5e-7;
+					Distribution => Poisson;] applies to power_es.ServiceOmission, FailStop, PowerFailure;
+		**};
 	end PowerSupply;
-	
-	-- represents electrical power
+
+		-- represents electrical power
 	abstract ElectricalPower
 	end ElectricalPower;
 	

@@ -30,7 +30,6 @@ property set Isolette_Properties is
 	
 	Temperature_Change_Rate_Units: type units (Fdeg_Minute);
 	Temperature_Units: type units (Fahrenheit); -- Affine conversion not possible, Celcius => Fahrenheit * 0.5555 );
-	Temperature_Increment: Isolette_Properties::Temperature_Type applies to (data);
 	Temperature_Accuracy: Isolette_Properties::Temperature_Type applies to (all);
 	Thermal_Resistivity_Units: type units (hr_foot_Fahrenheit_per_BTU);
 	Thermal_Resistivity: aadlreal units Isolette_Properties::Thermal_Resistivity_Units applies to (system);
