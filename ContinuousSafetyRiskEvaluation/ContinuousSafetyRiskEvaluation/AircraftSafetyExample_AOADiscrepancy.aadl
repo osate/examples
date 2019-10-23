@@ -1,0 +1,284 @@
+--Copyright 2019 Carnegie Mellon University.
+--This material is based upon work funded and supported by the Department of Defense under Contract No. FA8702-15-D-0002 with Carnegie Mellon University for the operation of the Software Engineering Institute, a federally funded research and development center.
+--The view, opinions, and/or findings contained in this material are those of the author(s) and should not be construed as an official Government position, policy, or decision, unless designated by other documentation.
+--NO WARRANTY. THIS CARNEGIE MELLON UNIVERSITY AND SOFTWARE ENGINEERING INSTITUTE MATERIAL IS FURNISHED ON AN "AS-IS" BASIS. CARNEGIE MELLON UNIVERSITY MAKES NO WARRANTIES OF ANY KIND, EITHER EXPRESSED OR IMPLIED, AS TO ANY MATTER INCLUDING, BUT NOT LIMITED TO, WARRANTY OF FITNESS FOR PURPOSE OR MERCHANTABILITY, EXCLUSIVITY, OR RESULTS OBTAINED FROM USE OF THE MATERIAL. CARNEGIE MELLON UNIVERSITY DOES NOT MAKE ANY WARRANTY OF ANY KIND WITH RESPECT TO FREEDOM FROM PATENT, TRADEMARK, OR COPYRIGHT INFRINGEMENT.
+--[DISTRIBUTION STATEMENT A] This material has been approved for public release and unlimited distribution.  Please see Copyright notice for non-US Government use and distribution.
+--Internal use:* Permission to reproduce this material and to prepare derivative works from this material for internal use is granted, provided the copyright and “No Warranty” statements are included with all reproductions and derivative works.
+--External use:* This material may be reproduced in its entirety, without modification, and freely distributed in written or electronic form without requesting formal permission. Permission is required for any other external and/or commercial use. Requests for permission should be directed to the Software Engineering Institute at permission@sei.cmu.edu.
+--* These restrictions do not apply to U.S. government entities.
+--Carnegie Mellon® is registered in the U.S. Patent and Trademark Office by Carnegie Mellon University.
+--DM19-1050
+
+package AircraftSafetyExample::AOADiscrepancy
+public
+	-- added component failures for sensor, ACC, flight surface.
+	-- standby model with standby logic for ACC service omission in flight surface.
+	-- Pilot observation of continuous ACC bad control action leads to ACC turn off action. 
+	-- ACC continuous bad control due to bad sensor and not turned off.
+	-- discrepancy indicator added in
+	device aoasensor
+		features
+			aoareading: out data port;
+			annex emv2 {**
+				use types ErrorLibrary, acemlib;
+				error propagations
+				aoareading: out propagation {BadValue,ServiceOmission};
+				flows
+					reading: error source aoareading {BadValue,ServiceOmission} ;
+				end propagations;
+			properties
+				EMV2::OccurrenceDistribution => [
+							ProbabilityValue => 1.0E-5;]
+							applies to reading.BadValue;
+				EMV2::OccurrenceDistribution => [
+							ProbabilityValue => 1.1E-5;]
+							applies to reading.ServiceOmission;
+			**};
+	end aoasensor;
+	
+	abstract AuxClimbControl
+		features
+			aoa1: in data port;
+			aoa2: in data port;
+			ACCOnOff: in feature;
+			controlsurfacecmd: out feature;
+			ACCStandbyIndicator : out feature;
+			-- emv2 for single sensor input
+			annex emv2 {**
+				use types ErrorLibrary,acemlib;
+				error propagations
+				aoa1: in propagation {BadValue,ServiceOmission};
+				ACCOnOff: in propagation {NoACCTurnOff};
+				end propagations;
+				component error behavior
+				events
+				fail: error event {ACCFail};
+				end component;
+			properties
+				EMV2::OccurrenceDistribution => [
+							ProbabilityValue => 1.3E-6;]
+							applies to fail.ACCFail;
+				**};
+	end AuxClimbControl;
+	
+	abstract implementation AuxClimbControl.sensor1
+			annex emv2 {**
+				use types ErrorLibrary,acemlib;
+				use behavior acemlib::ACCStates;
+				error propagations
+				controlsurfacecmd: out propagation { ContinuousBadACCControl,ServiceOmission};
+				end propagations;
+				component error behavior
+				transitions
+				operational -[aoa1{BadValue, ServiceOmission} ]-> continuousbadcontrol;
+				propagations
+				Continuousbadcontrol -[ACCOnOff{NoACCTurnOff}]-> controlsurfacecmd{ContinuousBadACCControl};
+				all -[ fail{ACCFail}]-> controlsurfacecmd{ServiceOmission}; 
+				end component;
+			**};
+	end AuxClimbControl.sensor1;
+	
+	
+	abstract pilot
+		features
+			discrepancylight : in feature;
+			ACCStandbyIndicator : in feature;
+			controlsurfacecmd: out feature;
+			ACCOnOff: out feature;
+	end pilot;
+	
+	abstract implementation pilot.nominal
+		-- pilot operating without discrepancy light being available
+			annex emv2 {**
+				use types ErrorLibrary,acemlib;
+				error propagations
+	 			discrepancylight: in propagation {ServiceOmission};
+				controlsurfacecmd: out propagation { NoPilotControl};
+				ACCOnOff: out propagation { NoACCTurnOff};
+				end propagations;
+				component error behavior
+				events
+				mistakes: error event {NoACCKnowledgeNoTurnoff,AOADiscrepancyUnawareNoTurnoff,AOADiscrepancyAwareNoTurnoff,PilotFlightControlMistake};
+				propagations
+		-- Turn off mistake given discrepancy lights not working. The pilot has to deduce from the flight behavior that ACC provides bad control commands
+		-- The pilot may also make the mistake of not turning off the ACC at a lower failure rate given the discrepancy indicator works.
+		-- assume no turn off mistake when light is working
+				PilotTurnOff: all-[ mistakes{AOADiscrepancyAwareNoTurnoff} or discrepancylight{ServiceOmission} and mistakes{AOADiscrepancyUnawareNoTurnoff}]-> ACCOnOff{NoACCTurnOff};
+				PilotControl: all-[ mistakes{PilotFlightControlMistake}]-> controlsurfacecmd{NoPilotControl};
+				end component;
+			properties
+				-- general flight control mistake
+				EMV2::OccurrenceDistribution => [
+							ProbabilityValue => 1.0E-6;]
+							applies to mistakes.PilotFlightControlMistake;
+				-- probability of failing to turn off ACC when discrepancy light is not working
+				EMV2::OccurrenceDistribution => [
+							ProbabilityValue => 1.0E-3;]
+							applies to mistakes.AOADiscrepancyUnawareNoTurnoff;
+				-- probability of failing to turn off ACC when discrepancy light is working
+				EMV2::OccurrenceDistribution => [
+							ProbabilityValue => 1.0E-6;]
+							applies to mistakes.AOADiscrepancyAwareNoTurnoff;
+			**};
+	end pilot.nominal;
+	
+	abstract implementation pilot.NoACCKnowledge extends pilot.nominal
+		-- operating without discrepancy light
+			annex emv2 {**
+				component error behavior
+				propagations
+				PilotTurnOff: all-[ 1 ormore(mistakes{NoACCKnowledgeNoTurnoff},discrepancylight{ServiceOmission} and mistakes{AOADiscrepancyUnawareNoTurnoff})]-> ACCOnOff{NoACCTurnoff};
+			end component;
+			properties
+				EMV2::OccurrenceDistribution => [
+							ProbabilityValue => 1.0;]   -- rare expert knowledge change to .99 instead of 1.0
+							applies to mistakes.NoACCKnowledgeNoTurnoff;
+			**};
+	end pilot.NoACCKnowledge;
+	
+	
+	device flightsurface
+		features
+			autocmd: in feature;
+			pilotcmd: in feature;
+			flightsurfaceeffect: out feature;
+			annex emv2 {**
+				use types ErrorLibrary, acemlib;
+				use behavior acemlib::ClimbControlStates;
+				error propagations
+				autocmd : in propagation{ServiceOmission,ContinuousBadACCControl};
+				pilotcmd : in propagation{NoPilotControl};
+				flightsurfaceeffect: out propagation {Incident};
+				end propagations;
+				component error behavior
+				events
+					FlightSurfaceFailure: error event;
+				transitions
+				 ACCFails: ACCInCharge -[autocmd{ServiceOmission}]-> PilotInCharge;
+				propagations
+				-- this condition indicates that we have an incident if AutoCmd misbehavior AND pilot misbehaviors when in charge, i.e., while AutoCmd fails
+				PilotInChargeMistake: PilotInCharge -[pilotcmd{NoPilotControl}]-> flightsurfaceeffect{Incident};
+				ACCContControl: ACCInCharge -[autocmd{ContinuousBadACCControl}]-> flightsurfaceeffect{Incident};
+				FSFail: all-[FlightSurfaceFailure]-> flightsurfaceeffect{Incident};
+				end component;
+			properties
+				EMV2::OccurrenceDistribution => [
+							ProbabilityValue => 2.0e-9;]   
+							applies to FlightSurfaceFailure;
+			**};
+	end flightsurface;
+
+	
+	device aoadiscrepancydetector
+		features
+			aoa1: in data port;
+			aoa2: in data port;
+			discrepancylight: out feature;
+			annex emv2 {**
+				use types ErrorLibrary, acemlib;
+				error propagations
+				aoa1: in propagation {BadValue,ServiceOmission};
+				aoa2: in propagation {BadValue,ServiceOmission};
+				discrepancylight: out propagation {ServiceOmission};
+				end propagations;
+				component error behavior
+				events
+				DiscrepancyDetectorFailure: error event ;
+				propagations
+				all -[ DiscrepancyDetectorFailure]-> discrepancylight{ServiceOmission};
+				end component;
+			properties
+				EMV2::OccurrenceDistribution => [
+							ProbabilityValue => 1.0e-6;]
+							applies to DiscrepancyDetectorFailure;  
+			**};
+	end aoadiscrepancydetector;
+	
+	device implementation aoadiscrepancydetector.permanentFail 
+			annex emv2 {**
+			properties
+				EMV2::OccurrenceDistribution => [
+							ProbabilityValue => 1.0;]
+							applies to DiscrepancyDetectorFailure;  
+			**};
+	end aoadiscrepancydetector.permanentFail;
+	
+	device Engine
+		features
+			thrust: out feature;
+			annex emv2 {**
+				use types ErrorLibrary, acemlib;
+				error propagations
+				thrust: out propagation {Incident};
+				flows
+					engineFailure: error source thrust{Incident};
+				end propagations;
+			properties
+				EMV2::OccurrenceDistribution => [
+							ProbabilityValue => 1.5E-6;]
+							applies to engineFailure;
+			**};
+	end Engine;
+
+	system ac
+		features
+			aceffect: out feature;
+		annex emv2 {**
+			use types acemlib;
+			
+			error propagations
+				aceffect: out propagation {Incident};
+			end propagations;
+		**};
+	end ac;
+	
+	system implementation ac.common
+		subcomponents
+			aoa1: device aoasensor;
+			flightsurface: device flightsurface;
+			ACC: abstract AuxClimbControl.sensor1;
+			pilot: abstract pilot.nominal;
+			engine1: device engine;
+			engine2: device engine;
+		connections
+			a1: port aoa1.aoareading -> ACC.aoa1;
+			autoctrl: feature ACC.controlsurfacecmd -> flightsurface.autocmd;
+			pilotctrl: feature pilot.controlsurfacecmd -> flightsurface.pilotcmd;
+			pilotTurnOff: feature pilot.ACCOnOff -> ACC.ACCOnOff;
+			controleffect: feature flightsurface.flightsurfaceeffect -> aceffect;
+			engine1conn: feature engine1.thrust -> aceffect;
+			engine2conn: feature engine2.thrust -> aceffect;
+		annex emv2 {**
+			use types ErrorLibrary, acemlib;
+			
+			component error behavior
+			propagations
+				acincident: all -[1 ormore (flightsurface.flightsurfaceeffect {Incident}, engine1.thrust {Incident} and
+					engine2.thrust {Incident})]-> aceffect {Incident};
+			end component;
+		**};
+	end ac.common;
+	
+	system implementation ac.OneSensorSpec extends ac.common
+		subcomponents
+			aoa2: device aoasensor;
+			aoaDiscrepancyIndicator: device aoadiscrepancydetector;
+		connections
+			amon1: port aoa1.aoareading -> aoaDiscrepancyIndicator.aoa1;
+			amon2: port aoa2.aoareading -> aoaDiscrepancyIndicator.aoa2;
+			monlight: feature aoaDiscrepancyIndicator.discrepancylight -> pilot.discrepancylight;
+	end ac.OneSensorSpec;
+	
+	system implementation ac.OSSPermanentDiscrepancyFail extends  ac.OneSensorSpec
+		subcomponents
+			aoaDiscrepancyIndicator: refined to device aoadiscrepancydetector.permanentFail;
+	end ac.OSSPermanentDiscrepancyFail;
+
+	system implementation ac.OSSNoACCKnowledge extends ac.OSSPermanentDiscrepancyFail
+		subcomponents
+			pilot: refined to abstract pilot.NoACCKnowledge;
+	end ac.OSSNoACCKNowledge;
+	
+
+
+end AircraftSafetyExample::AOADiscrepancy;

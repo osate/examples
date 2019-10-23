@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="ASCII"?>
+<diagram:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:diagram="http://osate.org/diagram" formatVersion="7">
+  <element uuid="0428aed1-4943-471f-ae84-3dbcf50836e2" manual="true">
+    <element uuid="d561dd99-dc25-45b7-8d17-f67580cb8734" manual="true">
+      <element uuid="a06c298d-9157-4ad7-9bdd-666c492b1806" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>a1</seg>
+      </bo>
+      <bendpoints>
+        <point x="280.0" y="360.0"/>
+        <point x="280.0" y="130.0"/>
+      </bendpoints>
+    </element>
+    <element uuid="3c1afbb9-1693-4423-9bfd-cedebc80d054" manual="true">
+      <element uuid="0103b518-d736-48bb-94d8-760033d80b55" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>controleffect</seg>
+      </bo>
+    </element>
+    <element uuid="389715da-4b15-48ed-beee-674af73ed78e" manual="true">
+      <element uuid="bb58bdf1-2f5d-4912-bab1-586a5d4c9e86" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>engine1conn</seg>
+      </bo>
+    </element>
+    <element uuid="eea93f4d-2873-4ea7-8ad8-f1405d0aba89" manual="true">
+      <element uuid="6f35bfb1-4563-4886-ae74-2b0398880743" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>engine2conn</seg>
+      </bo>
+    </element>
+    <element uuid="39cd1f55-e487-4fea-b9bf-ce0f600596e3" manual="true">
+      <element uuid="11242697-4be6-40fb-bd5b-f0c5c4b5a20b" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>pilotctrl</seg>
+      </bo>
+      <bendpoints>
+        <point x="956.0" y="357.0"/>
+        <point x="956.0" y="295.0"/>
+        <point x="956.0" y="240.0"/>
+      </bendpoints>
+    </element>
+    <element uuid="c0d8a8c3-08bf-4405-8b77-95983b406079" manual="true" dockArea="right">
+      <bo>
+        <seg>feature</seg>
+        <seg>aceffect</seg>
+      </bo>
+      <position x="1303.0" y="160.0"/>
+    </element>
+    <element uuid="799c1910-7bf0-4aa7-8eb1-9317f71a8f68" manual="true">
+      <element uuid="381ff778-e799-495a-991c-7f48e24a7cd3" manual="true" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>acconoff</seg>
+        </bo>
+        <position x="190.0" y="155.0"/>
+      </element>
+      <element uuid="8cd5e7be-6034-41be-bf7d-e0d9201bfb25" manual="true" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>accstandbyindicator</seg>
+        </bo>
+        <position x="114.0" y="200.0"/>
+      </element>
+      <element uuid="045e8288-0da5-43a7-8e14-d200797256fb" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>aoa1</seg>
+        </bo>
+        <position y="60.0"/>
+      </element>
+      <element uuid="c0a9ddf1-65bf-4917-ac4c-6c518c1a43d2" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>aoa2</seg>
+        </bo>
+        <position y="110.0"/>
+      </element>
+      <element uuid="a85e0a1a-7bb9-4521-9797-92c8d237bc93" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>aoa3</seg>
+        </bo>
+        <position y="210.0"/>
+      </element>
+      <element uuid="8958efc1-1568-4a05-ab70-f435d3c1dd45" manual="true" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>controlsurfacecmd</seg>
+        </bo>
+        <position x="134.0" y="110.0"/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>acc</seg>
+      </bo>
+      <position x="280.0" y="28.0"/>
+      <size width="271.0" height="295.0"/>
+    </element>
+    <element uuid="ee513470-ffa3-407b-b833-c09497e195fd" manual="true">
+      <element uuid="ef95f33c-6d8a-4335-8469-e4b544604bf7" manual="true" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>aoareading</seg>
+        </bo>
+        <position x="112.0" y="10.0"/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>aoa1</seg>
+      </bo>
+      <position x="57.0" y="308.0"/>
+      <size width="203.0" height="60.0"/>
+    </element>
+    <element uuid="403a6e44-ea30-4ef2-9012-f8597c50383d" manual="true">
+      <element uuid="a10dc1a3-befc-484d-b54a-8cdac169f8b4" manual="true" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>thrust</seg>
+        </bo>
+        <position x="134.0" y="10.0"/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>engine1</seg>
+      </bo>
+      <position x="1024.0" y="58.0"/>
+      <size width="187.0" height="60.0"/>
+    </element>
+    <element uuid="ecdfed9a-9afb-46a8-bd53-714c3d41118f" manual="true">
+      <element uuid="ec073bca-16fe-45d9-8a5c-2833924a7962" manual="true" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>thrust</seg>
+        </bo>
+        <position x="134.0" y="10.0"/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>engine2</seg>
+      </bo>
+      <position x="1024.0" y="298.0"/>
+      <size width="187.0" height="60.0"/>
+    </element>
+    <element uuid="d8fe1096-21da-405d-8e13-35db1de76f9c" manual="true">
+      <element uuid="e29c76a9-84e0-43d4-9b9f-efd34ecf9dba" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>autocmd</seg>
+        </bo>
+        <position y="10.0"/>
+      </element>
+      <element uuid="a1b846f7-e0ef-4c02-ad6f-010618abc807" manual="true" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>flightsurfaceeffect</seg>
+        </bo>
+        <position x="106.0" y="35.0"/>
+      </element>
+      <element uuid="fb9d3995-1876-4e84-b99a-2f99ae61eae7" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>pilotcmd</seg>
+        </bo>
+        <position y="60.0"/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>flightsurface</seg>
+      </bo>
+      <position x="970.0" y="138.0"/>
+      <size width="241.0" height="110.0"/>
+    </element>
+    <element uuid="b08ccf6a-f354-473c-80e0-30793cf2d9a7" manual="true">
+      <element uuid="4c757c3f-ba8f-4dad-8a33-e289b9af05d7" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>accstandbyindicator</seg>
+        </bo>
+        <position y="119.0"/>
+      </element>
+      <element uuid="26f074af-ae16-4e31-a96f-f2a94d982bd4" manual="true" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>controlsurfacecmd</seg>
+        </bo>
+        <position x="164.0" y="35.0"/>
+      </element>
+      <element uuid="3f7ae581-a243-4d15-8059-b6325c9a4ef0" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>discrepancylight</seg>
+        </bo>
+        <position y="164.0"/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>pilot</seg>
+      </bo>
+      <position x="620.0" y="280.0"/>
+      <size width="301.0" height="211.0"/>
+    </element>
+    <bo>
+      <seg>classifier</seg>
+      <seg>ac.onesensorspec</seg>
+    </bo>
+    <position x="10.0" y="10.0"/>
+    <size width="1371.0" height="501.0"/>
+  </element>
+  <config type="structure" connectionPrimaryLabelsVisible="false">
+    <enabledAadlProperties/>
+    <context>
+      <seg>classifier</seg>
+      <seg>aircraftsafetyexample::aoadiscrepancy::ac.onesensorspec</seg>
+    </context>
+  </config>
+</diagram:Diagram>
