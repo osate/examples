@@ -7,6 +7,7 @@
 assurance case MissionSystemsAssuranceCase for AircraftMissionSystems_pkg::AircraftMissionSystems
 
 [
+
 	assurance plan MissionSystemsSecurityVerificationPlan for AircraftMissionSystems_pkg::AircraftMissionSystems.AquireSecureData
 	[
 		assure MissionSystemsSecurityVerificationPlan 

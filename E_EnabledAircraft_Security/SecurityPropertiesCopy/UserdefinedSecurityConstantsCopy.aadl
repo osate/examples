@@ -1,0 +1,23 @@
+-- Copyright 2018 Carnegie Mellon University. See Notice.txt
+-- Distribution Statement A: Approved for Public Release; Distribution is Unlimited.
+property set UserDefinedSecurityConstants is
+
+-- Security classification labels
+-- Can be used instead of strings to assign values.
+-- If labels change users want to change them in the model, i.e., we can map the constants to old strings.
+
+
+	TopSecret: constant aadlstring  => "Top Secret";
+	Secret: constant aadlstring  => "Secret";
+	Confidential: constant aadlstring  => "Confidential";
+	Unclassified: constant aadlstring  => "Unclassified";
+
+	IncreasingSecurityClearanceOrdering: constant list of aadlstring => 
+	(UserDefinedSecurityConstants::Unclassified, UserDefinedSecurityConstants::Confidential,
+		UserDefinedSecurityConstants::Secret,UserDefinedSecurityConstants::TopSecret);
+
+	IncreasingInformationSecurityLevelOrdering: constant list of aadlstring => 
+	(UserDefinedSecurityConstants::Unclassified, UserDefinedSecurityConstants::Confidential,
+		UserDefinedSecurityConstants::Secret,UserDefinedSecurityConstants::TopSecret);
+
+end UserDefinedSecurityConstants; 

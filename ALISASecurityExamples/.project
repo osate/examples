@@ -5,8 +5,6 @@
 	<projects>
 		<project>AlisaPredefined</project>
 		<project>E_EnabledAircraft_Security</project>
-		<project>Plugin_Resources</project>
-		<project>SecuirtyFiles</project>
 		<project>SecurityVerification</project>
 		<project>SecurityVerificationJava</project>
 	</projects>

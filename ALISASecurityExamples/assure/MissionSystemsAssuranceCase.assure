@@ -6,22 +6,21 @@ case MissionSystemsAssuranceCase [
 		claim MissionSystemsSecurityVerificationPlan # missionDataEncrypt [
 			failcount 1
 			verification MissionSystemsSecurityVerificationPlan # missionDataEncrypt # VerifyEncryption [
-				executionstate completed resultstate fail failcount 1 time 453
-				message
-						"AADL elementAircraftMissionSystems_AquireSecureData_Instance : AircraftMissionSystems_pkg::AircraftMissionSystems.AquireSecureDatahas encryption"
+				executionstate completed resultstate fail failcount 1 time 437
+				message "XXX"
 			]
 		]
 		claim MissionSystemsSecurityVerificationPlan # missionDataHighLevel [
 			successcount 1
 			verification MissionSystemsSecurityVerificationPlan # missionDataHighLevel # check_it [
-				executionstate completed resultstate success successcount 1 time 187
+				executionstate completed resultstate success successcount 1 time 234
 				message "All bound components have same security level/domain or are trusted"
 			]
 		]
 		claim MissionSystemsSecurityVerificationPlan # SecretLevel [
 			failcount 1
 			verification MissionSystemsSecurityVerificationPlan # SecretLevel # check [
-				executionstate completed resultstate fail failcount 1 time 140
+				executionstate completed resultstate fail failcount 1 time 156
 				message
 						" component AircraftMissionSystems_AquireSecureData_Instance : AircraftMissionSystems_pkg::AircraftMissionSystems.AquireSecureData has Secret security information security Level"
 			]
@@ -29,7 +28,7 @@ case MissionSystemsAssuranceCase [
 		claim MissionSystemsSecurityVerificationPlan # ExposedEncryption [
 			successcount 1
 			for connection1 verification MissionSystemsSecurityVerificationPlan # ExposedEncryption # checkencrypt [
-				executionstate completed resultstate success successcount 1 time 125
+				executionstate completed resultstate success successcount 1 time 109
 			]
 		]
 		subsystem DataAquisitionUnits [

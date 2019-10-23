@@ -1,0 +1,20 @@
+-- Copyright 2019 Carnegie Mellon University. See Notice.txt
+-- Distribution Statement A: Approved for Public Release; Distribution is Unlimited.package AccessPkg
+
+package DownGradingFiltersPkg
+public
+	
+	abstract downFilter
+		features
+			indata: in data port;
+			outdata: out data port;
+	end downFilter;
+	
+	system downFilterSystem extends downFilter
+		
+	end downFilterSystem;
+	
+	
+	
+	
+end DownGradingFiltersPkg;

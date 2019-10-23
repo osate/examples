@@ -4,9 +4,6 @@
 	<comment></comment>
 	<projects>
 		<project>ALISAExamples_Security</project>
-		<project>SecuirtyFiles</project>
-		<project>SecurityVerification</project>
-		<project>SecurityVerificationJava</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

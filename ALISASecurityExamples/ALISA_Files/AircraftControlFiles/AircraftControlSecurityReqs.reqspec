@@ -17,25 +17,32 @@ system requirements AircraftConrolSecurityReqs for AircraftControl_pkg::aircraft
 	[
 		description "All aircraft control communication systems must have security protection to ensure access only by authorized and authenticated entities."
 		decomposes TransportAircraftSecurityReqs.ExternalEncryption  TransportAircraftSecurityReqs.InternalEncryption 
+		TransportAircraftSystemSecurityPolicies.Security TransportAircraftSystemSecurityPolicies.SecureCommunicationsPolicy	
 	]
 	
+	requirement communicationProtectionReq0_1: "All external communications must employ authenticated and encrypted communications"
+	[
+		description "All external communications from the cockpit must employ authenticated encryption."
+		refines AircraftConrolSecurityReqs.communicationProtectionReq0
+		
+	]
 	requirement  communicationProtectionReq1: "All aircraft internal communication to and from aircraft control systems must employ
 											  encryption algorithms"
 	[
 	   description "All aircraft internal communication for aircraft control and flight operations must employ
 				    encryption algorithms that meet or exceed the standards defined in NIST publication FIPS 140-2 or 
 					any superseding document that have been released for use."
-		
+		refines AircraftConrolSecurityReqs.communicationProtectionReq0
 		decomposes TransportAircraftSystemSecurityPolicies.Security  TransportAircraftSystemSecurityPolicies.SecureCommunicationsPolicy		
 		]						  											  	
 
-		requirement  communicationProtectionReq2: "All aircraft external communication for aircraft control and flight operations must employ
-											  encryption algorithms"
+	requirement  communicationProtectionReq2: "All aircraft external communication for aircraft control and flight operations must employ
+											  the latest NIST standard encryption algorithms"
 		[
 		description "All aircraft external communication for aircraft control and flight operations must employ
 				    encryption algorithms that meet or exceed the standards defined in NIST publication FIPS 140-2 or 
 					any superseding document that have been released for use."
-		
+		refines AircraftConrolSecurityReqs.communicationProtectionReq0
 		decomposes TransportAircraftSystemSecurityPolicies.Security  TransportAircraftSystemSecurityPolicies.SecureCommunicationsPolicy	
 		]
 			

@@ -1,0 +1,67 @@
+// Copyright 2018 Carnegie Mellon University. See Notice.txt
+// Distribution Statement A: Approved for Public Release; Distribution is Unlimited.
+verification methods SecurityClassification[
+// this set of methods deals with consistency in security level and domain specification
+
+
+	method SharedBusHardwareSameSecurityClearance (component): 
+	"Components connected to given bus have the same security clearance or are trusted" [
+		resolute Security_Classification_Verification.Security_Classification_Verification_public.Resolute.Resolute.all_hardware_connected_by_bus_has_same_security_clearance
+	]
+
+	method SharedBusHardwareSameSecurityDomain (component): 
+	"Components connected to given bus have the same security domain or are trusted" [
+		resolute Security_Classification_Verification.Security_Classification_Verification_public.Resolute.Resolute.all_hardware_connected_by_bus_has_same_security_domain
+	]
+
+	method SharedBusHardwareSameInformationSecurityLevels (component): 
+	"Components connected to given bus have the same information security level or are trusted" [
+		resolute Security_Classification_Verification.Security_Classification_Verification_public.Resolute.Resolute.all_hardware_connected_by_bus_has_same_information_security_level
+	]
+	
+	method PortConnectionSameSecurityLevel (connection): 
+	"Connected components have the same security level and need to know domains or one is trusted" [
+		resolute Security_Classification_Verification.Security_Classification_Verification_public.Resolute.Resolute.port_connection_same_security_level_and_need_to_know_domains
+	]
+
+	
+	method SharedMemorySameSecurityLevels (component): 
+	"All bound components have same security level/domain or are trusted" [
+		resolute Security_Classification_Verification.Security_Classification_Verification_public.Resolute.Resolute.memory_bound_components_same_security_level
+	]
+	
+	method SharedProcessorSameSecurityLevels (component): 
+	"For given processor: all bound components have same security level/domain or are trusted" [
+		resolute Security_Classification_Verification.Security_Classification_Verification_public.Resolute.Resolute.processor_bound_components_same_security_level
+	]
+	
+	
+	method SharedVirtualProcessorSameSecurityLevels (component): 
+	"For given virtual processor: all bound components have same security level/domain or are trusted" [
+		resolute Security_Classification_Verification.Security_Classification_Verification_public.Resolute.Resolute.virtual_processor_bound_components_same_security_level
+	]
+
+	
+	method ThreadsInSameProcessSameSecurityLevels (component): 
+	"For given component (process or other): all bound components have same security level/domain or are trusted" [
+		resolute Security_Classification_Verification.Security_Classification_Verification_public.Resolute.Resolute.threads_in_component_same_security_level_and_need_to_know_domains_or_trusted
+	]
+	
+	method FeatureSecurityLevelsAndNeedToKnowDomainsAreSupportedByComponent (component): 
+	"For given component: component supports security levels/domain of ports or is trusted" [
+		resolute Security_Classification_Verification.Security_Classification_Verification_public.Resolute.Resolute.feature_security_levels_and_need_to_know_domains_supported_by_component
+	]
+	
+	// R6
+	method ForallHardwareRelayChannelBetweenBuses (root): 
+	"For all components: component is relay channel between buses by relaying messages to components with different security levels/domains" [
+		resolute Security_Classification_Verification.Security_Classification_Verification_public.Resolute.Resolute.forall_hardware_relay_channel_between_buses
+	]
+	
+	method RelayChannelBetweenBuses (component): 
+	"For given component: component is relay channel between buses by relaying messages to components with different security levels/domains" [
+		resolute Security_Classification_Verification.Security_Classification_Verification_public.Resolute.Resolute.relay_channel_between_buses
+	]
+
+ 
+]

@@ -1,0 +1,15 @@
+// Copyright 2019 Carnegie Mellon University. See Notice.txt
+// Distribution Statement A: Approved for Public Release; Distribution is Unlimited.
+
+
+assurance case AircraftControlSecurityAssuranceCase for AircraftControl_pkg::aircraftControl
+ [
+ 		
+assurance plan AircraftControlSecurityAssurancePlan for AircraftControl_pkg::aircraftControl.basic
+[
+	description "Security Assurance Plan for Transport Aircraft flight control system"
+	assure AircraftControlSecurityVerificationPlan 
+
+]
+  
+]

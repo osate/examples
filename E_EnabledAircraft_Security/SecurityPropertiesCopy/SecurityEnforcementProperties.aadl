@@ -1,0 +1,141 @@
+-- Copyright 2019 Carnegie Mellon University. See Notice.txt
+-- Distribution Statement A: Approved for Public Release; Distribution is Unlimited.
+
+property set SecurityEnforcementProperties is
+ 
+ 
+----------------------------------------------------
+-- Data Encryption 
+----------------------------------------------------
+	
+	-- The encryption property is used to declare that a data instance is encrypted as specified or that encryption is required by a connection 
+	-- or that encryption is provided by a component (e.g. bus or virtual bus supporting a connection that requires encryption) or when applied
+	-- to a component that can contain data (e.g. system, device, abstract) it declares that all data contained in the component is encrypted as specified
+	-- or that the component encrypts data received as specified and outputs the encrypted data.
+		
+	Encryption: inherit record (
+		Description			: aadlstring;
+		encryption_form		: enumeration (symmetric, asymmetric, hybrid, authenticated_encryption, authentication_only, no_encryption, to_be_specified);
+		-- if the encryption form is hybrid both symmetric and asymmetric are used.
+		encryption_mode		: list of enumeration (ECB, CBC, CFB, CTR, GCM, CBC_MAC, other, to_be_specified);
+		-- list is needed for hybrid encryption
+		encryption_algorithm: list of aadlstring;  -- e.g. AES,  RSA, OTP
+		-- a list is needed for hybrid encryption
+		-- encryption algorithm list values must correspond to the key length list values 
+		padding: enumeration (OAEP, other, no_padding, to_be_specified);
+		authenticated_encryption_type: enumeration (Encrypt_then_MAC, MAC_then_Encrypt, Encrypt_and_MAC, AEAD, signcryption, no_authenticated_encryption);
+		key_length  		: list of Size; -- caution confirm that the value of key_length property for the associated key classifier or instance is consistent
+		-- a list is needed for hybrid encryption
+		-- key length list values must correspond to the encryption algorithm list values 
+		key_type			: SecurityEnforcementProperties::key_Classifier; -- references a classifier
+		private_key 		: SecurityEnforcementProperties::key_Instance;  -- references an instance
+		public_key 		 	: SecurityEnforcementProperties::key_Instance; -- references an instance
+		single_key          : SecurityEnforcementProperties::key_Instance;  -- references an instance 
+		) applies to (data, port, abstract, system, bus, memory, device, processor, 
+						virtual processor, virtual bus, connection, process, thread);
+	--------- encryption modes-----------
+	-- Electronic Code Book (ECB)
+	-- Cipher block chaining (CBC)
+	-- Ciphertext feedback (CFB)
+	-- CTR mode (CM) or integer counter mode (ICM) or segmented integer counter (SIC) mode
+	-- Galois/Counter Mode (GCM) is a mode of operation for symmetric-key cryptographic block ciphers
+	-- Cipher block chaining (CBC) 
+	-- The Advanced Encryption Standard (AES) with five modes Electronic Code Book (ECB), Cipher Block Chaining (CBC), Cipher FeedBack (CFB), Output FeedBack (OFB), and Counter (CTR)
+	--
+	-------  Authenticated Encryption --------------
+	--
+	-- The authenticated encryption field is used to declare that a data instance has the authenticated encryption as specified or that authenticated encryption is required by a connection 
+	-- or that authenticated encryption is provided by a component (e.g. bus or virtual bus supporting a connection that requires authenticated encryption) or when applied
+	-- to a component that can contain data (e.g. system, device, abstract) it declares that all data contained in the component has authenticated encryption as specified.
+	--
+	-- The data authentication property must be specified with the
+	-- authenticated encryption field declaration to define 
+	-- the specifics of the authentication and encryption.	
+	--
+	-----------------------------------------------
+	-- Properties of keys for Encryption and Authentication
+	-----------------------------------------------
+	
+	Key_Length: Size applies to (abstract, data); -- caution the keyLength value for a key instance must be consistent with the value 
+	-- of the keyLength field declared in the key's associated encryption or data authentication property.
+	-- The Crypto Period is the time span that a cryptographic key is authorized for use
+	Crypto_Period: Time applies to (abstract, data);
+	Key_Classifier: type classifier (abstract, data);
+	Key_Instance: type reference (data);
+	Text_Type: enumeration (plainText, cipherText) applies to (abstract, data);
+	
+	-------------------------------
+	-- Authentication Properties
+	-------------------------------
+	
+	--	Data Authentication -------
+	--
+	-- The data authentication property is used to declare that a data instance has authentication as specified or that authentication is required by a connection 
+	-- or that authentication is provided by a component (e.g. bus or virtual bus supporting a connection that requires data authentication) or when applied
+	-- to a component that can contain data (e.g. system, device, abstract) it declares that all data contained in the component has authentication as specified.
+	--
+	Data_Authentication: inherit record 
+	(
+  		description			: aadlstring;
+  		authentication_form : enumeration (MAC, MIC, signature, signcryption, no_autentication, to_be_specified);  
+		authentication_algorithm: aadlstring;
+		key_Length			: Size; -- caution confirm that the value of key length for the associated key classifier or instance is consistent
+		hash_Length			: Size; -- optional, if the message is hashed before authentication. Does not apply to authenticated encryption.
+		hash_algorithm 		: aadlstring;
+		authentication_key	: SecurityEnforcementProperties::key_Instance;  -- references an instance			
+	) 
+	applies to (data, port, abstract, system, bus, memory, device, processor, virtual processor, virtual bus, connection);	
+	
+	--	Subject Authentication -------
+	--
+	--The Subject Authentication property declares that a subject (component instance) can participate or participates in authentication as specified, 
+	-- including authentication negotiations employing the specified authentication protocol, or that the component (e.g. a bus or virtual bus) supports the authentication specified. 
+	--
+
+    Subject_Authentication: record
+    (
+    	Authentication_Access_Type: enumeration (no_authentication, single_password, smart_card,  ip_addr, two_factor, multi_layered, bio_metric, to_be_specified);
+    	Authentication_Protocol: enumeration (no_authentication, cert_services, EAP, PAP, SPAP, CHAP, MS_CHAP, Radius, IAS, Kerberos, SSL, NTLM, to_be_specified) ;
+    	Authentication_Role: enumeration (no_authentication, authenticator, accessor);
+    )   
+    applies to (abstract, system, bus, memory, device, processor, virtual processor, virtual bus); 
+ 	
+	--  two_factor is a subset of multi_layered but is included since it is a prevalent multi-layered type.
+	--
+	--	  Acronyms and values ----
+	--	  The Password Authentication Protocol (PAP)
+	--    The Shiva PAP (SPAP)
+	--    Challenge Handshake Authentication Protocol (CHAP)
+	--    Microsoft CHAP (MS-CHAP)
+	--    The Extensible Authentication Protocol (EAP)
+	--	  Remote Authentication Dial-In User Service (RADIUS) 
+	--	  Internet Authentication Service (IAS)
+	--	  Secure Socket Layer (SSL)
+	--	  Transport Layer Security (TLS)
+	-- 	  NT (New Technology) LAN Manager (NTLM) is a suite of Microsoft security protocols 
+	-- 	  intended to provide authentication, integrity, and confidentiality to users. 
+	--    Kerberos
+	--    Certificate services (cert_services)
+
+-------------------------------------------
+	-- certificate and encryption key management properties
+-------------------------------------------
+	Key_Distribition_Method: enumeration (encrypted_channel, QKD, direct_physical_exchange, courier, public_channel) applies to (all);
+	
+	
+----------------------------------------------
+-- Properties related to the platform and its support for security enforcement
+----------------------------------------------
+	-- name of the operating system used
+	-- associated with the application component, the virtual processor, or processor/(hardware) system
+  	OS: aadlstring applies to (all);
+  	
+  	-- name of the programming language used; associated with an application component
+  	Language: aadlstring applies to (all);
+	
+	-- external exposure of component, physical or some other form
+	Exposed : aadlboolean applies to (bus, virtual bus, processor, device, system, memory);
+	
+
+
+end SecurityEnforcementProperties;

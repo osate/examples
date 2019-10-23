@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="ASCII"?>
+<assure:AssuranceCaseResult xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aadl2="http://aadl.info/AADL/2.0" xmlns:assure="http://www.osate.org/assure/Assure" name="TransportAircraftAssuranceCase">
+  <metrics tbdCount="7" errorCount="1"/>
+  <modelResult>
+    <metrics tbdCount="7" errorCount="1"/>
+    <plan href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityAssuranceCases.alisa#//@assurancePlans.0"/>
+    <target xsi:type="aadl2:SystemImplementation" href="../../E_EnabledAircraft_Security/AADL_Models/TransportAircraft/TransportAircraft_Generic.aadl#TransportAircraft_Generic.transportAircraft.generic"/>
+    <claimResult>
+      <metrics tbdCount="1"/>
+      <targetReference>
+        <verificationPlan href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityPolicyVerificationPlan.verify#//@contents.0"/>
+        <requirement>
+          <requirement href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityPolicies.reqspec#//@parts.0/@requirements.0"/>
+        </requirement>
+      </targetReference>
+      <verificationActivityResult xsi:type="assure:VerificationActivityResult">
+        <metrics tbdCount="1" executionTime="720"/>
+        <targetReference>
+          <verificationPlan href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityPolicyVerificationPlan.verify#//@contents.0"/>
+          <requirement>
+            <requirement href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityPolicies.reqspec#//@parts.0/@requirements.0"/>
+          </requirement>
+          <verificationActivity href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityPolicyVerificationPlan.verify#//@contents.0/@claim.0/@activities.0"/>
+        </targetReference>
+      </verificationActivityResult>
+    </claimResult>
+    <claimResult>
+      <metrics tbdCount="1"/>
+      <targetReference>
+        <verificationPlan href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityPolicyVerificationPlan.verify#//@contents.0"/>
+        <requirement>
+          <requirement href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityPolicies.reqspec#//@parts.0/@requirements.1"/>
+        </requirement>
+      </targetReference>
+      <verificationActivityResult xsi:type="assure:VerificationActivityResult">
+        <metrics tbdCount="1" executionTime="130"/>
+        <targetReference>
+          <verificationPlan href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityPolicyVerificationPlan.verify#//@contents.0"/>
+          <requirement>
+            <requirement href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityPolicies.reqspec#//@parts.0/@requirements.1"/>
+          </requirement>
+          <verificationActivity href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityPolicyVerificationPlan.verify#//@contents.0/@claim.1/@activities.0"/>
+        </targetReference>
+      </verificationActivityResult>
+    </claimResult>
+    <claimResult>
+      <metrics tbdCount="1"/>
+      <targetReference>
+        <verificationPlan href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityPolicyVerificationPlan.verify#//@contents.0"/>
+        <requirement>
+          <requirement href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityPolicies.reqspec#//@parts.0/@requirements.2"/>
+        </requirement>
+      </targetReference>
+      <verificationActivityResult xsi:type="assure:VerificationActivityResult">
+        <metrics tbdCount="1" executionTime="140"/>
+        <targetReference>
+          <verificationPlan href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityPolicyVerificationPlan.verify#//@contents.0"/>
+          <requirement>
+            <requirement href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityPolicies.reqspec#//@parts.0/@requirements.2"/>
+          </requirement>
+          <verificationActivity href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityPolicyVerificationPlan.verify#//@contents.0/@claim.2/@activities.0"/>
+        </targetReference>
+      </verificationActivityResult>
+    </claimResult>
+    <claimResult>
+      <metrics tbdCount="1"/>
+      <targetReference>
+        <verificationPlan href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityPolicyVerificationPlan.verify#//@contents.0"/>
+        <requirement>
+          <requirement href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityPolicies.reqspec#//@parts.0/@requirements.4"/>
+        </requirement>
+      </targetReference>
+      <verificationActivityResult xsi:type="assure:VerificationActivityResult">
+        <metrics tbdCount="1" executionTime="210"/>
+        <targetReference>
+          <verificationPlan href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityPolicyVerificationPlan.verify#//@contents.0"/>
+          <requirement>
+            <requirement href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityPolicies.reqspec#//@parts.0/@requirements.4"/>
+          </requirement>
+          <verificationActivity href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityPolicyVerificationPlan.verify#//@contents.0/@claim.3/@activities.0"/>
+        </targetReference>
+      </verificationActivityResult>
+    </claimResult>
+    <claimResult>
+      <metrics tbdCount="1"/>
+      <targetReference>
+        <verificationPlan href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityVerificationPlan.verify#//@contents.0"/>
+        <requirement>
+          <requirement href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityReqs.reqspec#//@parts.0/@requirements.0"/>
+        </requirement>
+      </targetReference>
+      <verificationActivityResult xsi:type="assure:VerificationActivityResult">
+        <metrics tbdCount="1" executionTime="170"/>
+        <targetReference>
+          <verificationPlan href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityVerificationPlan.verify#//@contents.0"/>
+          <requirement>
+            <requirement href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityReqs.reqspec#//@parts.0/@requirements.0"/>
+          </requirement>
+          <verificationActivity href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityVerificationPlan.verify#//@contents.0/@claim.0/@activities.0"/>
+        </targetReference>
+      </verificationActivityResult>
+    </claimResult>
+    <claimResult>
+      <metrics tbdCount="1"/>
+      <targetReference>
+        <verificationPlan href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityVerificationPlan.verify#//@contents.0"/>
+        <requirement>
+          <requirement href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityReqs.reqspec#//@parts.0/@requirements.1"/>
+        </requirement>
+      </targetReference>
+      <verificationActivityResult xsi:type="assure:VerificationActivityResult">
+        <metrics tbdCount="1" executionTime="143"/>
+        <targetReference>
+          <verificationPlan href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityVerificationPlan.verify#//@contents.0"/>
+          <requirement>
+            <requirement href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityReqs.reqspec#//@parts.0/@requirements.1"/>
+          </requirement>
+          <verificationActivity href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityVerificationPlan.verify#//@contents.0/@claim.1/@activities.0"/>
+        </targetReference>
+      </verificationActivityResult>
+    </claimResult>
+    <claimResult>
+      <metrics tbdCount="1"/>
+      <targetReference>
+        <verificationPlan href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityVerificationPlan.verify#//@contents.0"/>
+        <requirement>
+          <requirement href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityReqs.reqspec#//@parts.0/@requirements.2"/>
+        </requirement>
+      </targetReference>
+      <verificationActivityResult xsi:type="assure:VerificationActivityResult">
+        <metrics tbdCount="1" executionTime="121"/>
+        <targetReference>
+          <verificationPlan href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityVerificationPlan.verify#//@contents.0"/>
+          <requirement>
+            <requirement href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityReqs.reqspec#//@parts.0/@requirements.2"/>
+          </requirement>
+          <verificationActivity href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityVerificationPlan.verify#//@contents.0/@claim.2/@activities.0"/>
+        </targetReference>
+      </verificationActivityResult>
+    </claimResult>
+    <claimResult>
+      <metrics/>
+      <targetReference>
+        <verificationPlan href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityVerificationPlan.verify#//@contents.0"/>
+        <requirement>
+          <requirement href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityReqs.reqspec#//@parts.0/@requirements.3"/>
+        </requirement>
+      </targetReference>
+    </claimResult>
+    <claimResult>
+      <metrics errorCount="1"/>
+      <targetReference>
+        <verificationPlan href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityVerificationPlan.verify#//@contents.0"/>
+        <requirement>
+          <requirement href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityReqs.reqspec#//@parts.0/@requirements.4"/>
+        </requirement>
+      </targetReference>
+      <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="ERROR">
+        <metrics errorCount="1" executionTime="715"/>
+        <issues diagnosticType="ERROR" message="Found class com.rockwellcollins.atc.resolute.analysis.results.ResoluteResult, but interface was expected"/>
+        <targetReference>
+          <verificationPlan href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityVerificationPlan.verify#//@contents.0"/>
+          <requirement>
+            <requirement href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityReqs.reqspec#//@parts.0/@requirements.4"/>
+          </requirement>
+          <verificationActivity href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityVerificationPlan.verify#//@contents.0/@claim.4/@activities.0"/>
+        </targetReference>
+      </verificationActivityResult>
+    </claimResult>
+    <claimResult>
+      <metrics/>
+      <targetReference>
+        <verificationPlan href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityVerificationPlan.verify#//@contents.0"/>
+        <requirement>
+          <requirement href="../ALISA_Files/TransportAircraftFiles/TransportAircraftSecurityReqs.reqspec#//@parts.0/@requirements.5"/>
+        </requirement>
+      </targetReference>
+    </claimResult>
+    <subsystemResult>
+      <metrics/>
+      <targetSystem xsi:type="aadl2:SystemSubcomponent" href="../../E_EnabledAircraft_Security/AADL_Models/TransportAircraft/TransportAircraft_Generic.aadl#//@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.0"/>
+    </subsystemResult>
+    <subsystemResult>
+      <metrics/>
+      <targetSystem xsi:type="aadl2:SystemSubcomponent" href="../../E_EnabledAircraft_Security/AADL_Models/TransportAircraft/TransportAircraft_Generic.aadl#//@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.1"/>
+    </subsystemResult>
+    <subsystemResult>
+      <metrics/>
+      <targetSystem xsi:type="aadl2:SystemSubcomponent" href="../../E_EnabledAircraft_Security/AADL_Models/TransportAircraft/TransportAircraft_Generic.aadl#//@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.2"/>
+    </subsystemResult>
+    <subsystemResult>
+      <metrics/>
+      <targetSystem xsi:type="aadl2:SystemSubcomponent" href="../../E_EnabledAircraft_Security/AADL_Models/TransportAircraft/TransportAircraft_Generic.aadl#//@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.3"/>
+      <subsystemResult>
+        <metrics/>
+        <targetSystem xsi:type="aadl2:BusSubcomponent" href="../../E_EnabledAircraft_Security/AADL_Models/AircraftAirframe_pkg.aadl#//@ownedPublicSection/@ownedClassifier.1/@ownedBusSubcomponent.0"/>
+      </subsystemResult>
+      <subsystemResult>
+        <metrics/>
+        <targetSystem xsi:type="aadl2:DeviceSubcomponent" href="../../E_EnabledAircraft_Security/AADL_Models/AircraftAirframe_pkg.aadl#//@ownedPublicSection/@ownedClassifier.1/@ownedDeviceSubcomponent.0"/>
+      </subsystemResult>
+    </subsystemResult>
+  </modelResult>
+</assure:AssuranceCaseResult>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="ASCII"?>
+<assure:AssuranceCaseResult xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aadl2="http://aadl.info/AADL/2.0" xmlns:assure="http://www.osate.org/assure/Assure" name="MissionSystemsAssuranceCase">
+  <metrics successCount="1" failCount="1" errorCount="2"/>
+  <modelResult>
+    <metrics successCount="1" failCount="1" errorCount="2"/>
+    <plan href="../ALISA_Files/MissionAircraftFiles/MissionSystemsAssuranceCase.alisa#//@assurancePlans.0"/>
+    <target xsi:type="aadl2:SystemImplementation" href="../../E_EnabledAircraft_Security/AADL_Models/MissionSpecificAircraft/AircraftMissionSystems_pkg.aadl#AircraftMissionSystems_pkg.AircraftMissionSystems.AquireSecureData"/>
+    <claimResult>
+      <metrics errorCount="1"/>
+      <targetReference>
+        <verificationPlan href="../ALISA_Files/MissionAircraftFiles/MissionSystemsSecurityVerificationPlan.verify#//@contents.0"/>
+        <requirement>
+          <requirement href="../ALISA_Files/MissionAircraftFiles/MissionSystemsSecurityRequirements.reqspec#//@parts.0/@requirements.0"/>
+        </requirement>
+      </targetReference>
+      <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="ERROR">
+        <metrics errorCount="1" executionTime="775"/>
+        <issues diagnosticType="ERROR" message="Found class com.rockwellcollins.atc.resolute.analysis.results.ResoluteResult, but interface was expected"/>
+        <targetReference>
+          <verificationPlan href="../ALISA_Files/MissionAircraftFiles/MissionSystemsSecurityVerificationPlan.verify#//@contents.0"/>
+          <requirement>
+            <requirement href="../ALISA_Files/MissionAircraftFiles/MissionSystemsSecurityRequirements.reqspec#//@parts.0/@requirements.0"/>
+          </requirement>
+          <verificationActivity href="../ALISA_Files/MissionAircraftFiles/MissionSystemsSecurityVerificationPlan.verify#//@contents.0/@claim.0/@activities.0"/>
+        </targetReference>
+      </verificationActivityResult>
+    </claimResult>
+    <claimResult>
+      <metrics successCount="1"/>
+      <targetReference>
+        <verificationPlan href="../ALISA_Files/MissionAircraftFiles/MissionSystemsSecurityVerificationPlan.verify#//@contents.0"/>
+        <requirement>
+          <requirement href="../ALISA_Files/MissionAircraftFiles/MissionSystemsSecurityRequirements.reqspec#//@parts.0/@requirements.1"/>
+        </requirement>
+      </targetReference>
+      <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="SUCCESS">
+        <metrics successCount="1" executionTime="245"/>
+        <results message="All bound components have same security level/domain or are trusted" resultType="SUCCESS">
+          <modelElement href="../../SecurityVerification/resolute/Security_Classification_Verification.aadl#Security_Classification_Verification.Security_Classification_Verification_public.Resolute.Resolute.memory_bound_components_same_security_level"/>
+        </results>
+        <targetReference>
+          <verificationPlan href="../ALISA_Files/MissionAircraftFiles/MissionSystemsSecurityVerificationPlan.verify#//@contents.0"/>
+          <requirement>
+            <requirement href="../ALISA_Files/MissionAircraftFiles/MissionSystemsSecurityRequirements.reqspec#//@parts.0/@requirements.1"/>
+          </requirement>
+          <verificationActivity href="../ALISA_Files/MissionAircraftFiles/MissionSystemsSecurityVerificationPlan.verify#//@contents.0/@claim.1/@activities.0"/>
+        </targetReference>
+      </verificationActivityResult>
+    </claimResult>
+    <claimResult>
+      <metrics failCount="1"/>
+      <targetReference>
+        <verificationPlan href="../ALISA_Files/MissionAircraftFiles/MissionSystemsSecurityVerificationPlan.verify#//@contents.0"/>
+        <requirement>
+          <requirement href="../ALISA_Files/MissionAircraftFiles/MissionSystemsSecurityRequirements.reqspec#//@parts.0/@requirements.2"/>
+        </requirement>
+      </targetReference>
+      <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="FAILURE">
+        <metrics failCount="1" executionTime="220"/>
+        <results message=" component AircraftMissionSystems_AquireSecureData_Instance : AircraftMissionSystems_pkg::AircraftMissionSystems.AquireSecureData has Secret security information security Level" resultType="FAILURE">
+          <modelElement href="../../SecurityVerification/resolute/Security_Classification_Verification.aadl#Security_Classification_Verification.Security_Classification_Verification_public.Resolute.Resolute.has_secret_information_security_level"/>
+        </results>
+        <targetReference>
+          <verificationPlan href="../ALISA_Files/MissionAircraftFiles/MissionSystemsSecurityVerificationPlan.verify#//@contents.0"/>
+          <requirement>
+            <requirement href="../ALISA_Files/MissionAircraftFiles/MissionSystemsSecurityRequirements.reqspec#//@parts.0/@requirements.2"/>
+          </requirement>
+          <verificationActivity href="../ALISA_Files/MissionAircraftFiles/MissionSystemsSecurityVerificationPlan.verify#//@contents.0/@claim.2/@activities.0"/>
+        </targetReference>
+      </verificationActivityResult>
+    </claimResult>
+    <claimResult>
+      <metrics errorCount="1"/>
+      <targetReference>
+        <verificationPlan href="../ALISA_Files/MissionAircraftFiles/MissionSystemsSecurityVerificationPlan.verify#//@contents.0"/>
+        <requirement>
+          <requirement href="../ALISA_Files/MissionAircraftFiles/MissionSystemsSecurityRequirements.reqspec#//@parts.0/@requirements.3"/>
+        </requirement>
+      </targetReference>
+      <modelElement xsi:type="aadl2:PortConnection" href="../../E_EnabledAircraft_Security/AADL_Models/MissionSpecificAircraft/AircraftMissionSystems_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPortConnection.0"/>
+      <verificationActivityResult xsi:type="assure:VerificationActivityResult" type="ERROR">
+        <metrics errorCount="1" executionTime="210"/>
+        <issues diagnosticType="ERROR" message="Java method does not include class">
+          <modelElement href="../../E_EnabledAircraft_Security/AADL_Models/MissionSpecificAircraft/instances/AircraftMissionSystems_pkg_AircraftMissionSystems_AquireSecureData_Instance.aaxl2#//@connectionInstance.0"/>
+        </issues>
+        <targetReference>
+          <verificationPlan href="../ALISA_Files/MissionAircraftFiles/MissionSystemsSecurityVerificationPlan.verify#//@contents.0"/>
+          <requirement>
+            <requirement href="../ALISA_Files/MissionAircraftFiles/MissionSystemsSecurityRequirements.reqspec#//@parts.0/@requirements.3"/>
+          </requirement>
+          <verificationActivity href="../ALISA_Files/MissionAircraftFiles/MissionSystemsSecurityVerificationPlan.verify#//@contents.0/@claim.3/@activities.0"/>
+        </targetReference>
+      </verificationActivityResult>
+    </claimResult>
+    <subsystemResult>
+      <metrics/>
+      <targetSystem xsi:type="aadl2:DeviceSubcomponent" href="../../E_EnabledAircraft_Security/AADL_Models/MissionSpecificAircraft/AircraftMissionSystems_pkg.aadl#//@ownedPublicSection/@ownedClassifier.1/@ownedDeviceSubcomponent.0"/>
+    </subsystemResult>
+    <subsystemResult>
+      <metrics/>
+      <targetSystem xsi:type="aadl2:SystemSubcomponent" href="../../E_EnabledAircraft_Security/AADL_Models/MissionSpecificAircraft/AircraftMissionSystems_pkg.aadl#//@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.0"/>
+    </subsystemResult>
+    <subsystemResult>
+      <metrics/>
+      <targetSystem xsi:type="aadl2:SystemSubcomponent" href="../../E_EnabledAircraft_Security/AADL_Models/MissionSpecificAircraft/AircraftMissionSystems_pkg.aadl#//@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.1"/>
+    </subsystemResult>
+    <subsystemResult>
+      <metrics/>
+      <targetSystem xsi:type="aadl2:SystemSubcomponent" href="../../E_EnabledAircraft_Security/AADL_Models/MissionSpecificAircraft/AircraftMissionSystems_pkg.aadl#//@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.2"/>
+    </subsystemResult>
+    <subsystemResult>
+      <metrics/>
+      <targetSystem xsi:type="aadl2:SystemSubcomponent" href="../../E_EnabledAircraft_Security/AADL_Models/MissionSpecificAircraft/AircraftMissionSystems_pkg.aadl#//@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.3"/>
+    </subsystemResult>
+    <subsystemResult>
+      <metrics/>
+      <targetSystem xsi:type="aadl2:SystemSubcomponent" href="../../E_EnabledAircraft_Security/AADL_Models/MissionSpecificAircraft/AircraftMissionSystems_pkg.aadl#//@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.4"/>
+    </subsystemResult>
+    <subsystemResult>
+      <metrics/>
+      <targetSystem xsi:type="aadl2:SystemSubcomponent" href="../../E_EnabledAircraft_Security/AADL_Models/MissionSpecificAircraft/AircraftMissionSystems_pkg.aadl#//@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.5"/>
+    </subsystemResult>
+  </modelResult>
+</assure:AssuranceCaseResult>

@@ -30,14 +30,15 @@ for TransportAircraftSecurityReqs
 
  ]
  
- claim AircraftSystemsInformationSecurity: ""
+ claim AircraftSystemsInformationSecurity: "All data is classified as Top Secret, Secret, or Unclassified."
  [
  	
  ]
 	
- claim ExternalEncryption: ""
+ claim ExternalEncryption: "All data transmitted or received is encrypted."
  [
- 	
+ 	activities
+ 	encryptionCheck: AircraftSecurityVerificationMethods.VerifyHasEncryption ()
  ]
  
  claim InternalEncryption: ""

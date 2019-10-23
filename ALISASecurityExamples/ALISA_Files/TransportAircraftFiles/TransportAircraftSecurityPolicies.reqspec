@@ -28,6 +28,13 @@ for TransportAircraft_Generic::transportAircraft.generic
 							
 				development stakeholder DevelopmentTeam.PrincipalEngineer DevelopmentTeam.SecurityEngineer
 			]
+			
+	requirement AccessControlPolicyAuthentication: "This is a refinement of the AccessControlPolicy for the aircraft."
+		[
+			description "Access authorization to all Aircraft operational and maintenance Systems 
+                         and Resources shall employ multi-factor authentication."
+            refines TransportAircraftSystemSecurityPolicies.AccessControlPolicy
+		]
 	
 	requirement SecureCommunicationsPolicy: "Secure communications must be provided for all flight- and safety-critical systems."
 			[

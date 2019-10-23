@@ -18,6 +18,7 @@ public
 		with AircraftControl_pkg, AirlineInformationServices_pkg;
 		with PassengerInfoEntertainmentServices_pkg, AircraftAirframe_pkg;
 		with OperationalEnvironment_pkg;
+		with SecurityEnforcementProperties;
 
 system transportAircraft
 		features
@@ -36,8 +37,10 @@ system transportAircraft
 
 	system implementation transportAircraft.generic
 		subcomponents
-			aircraft_control_systems: system AircraftControl_pkg::aircraftControl;
-			airline_information_services: system AirlineInformationServices_pkg::AirlineInformationServices;
+			aircraft_control_systems: system AircraftControl_pkg::aircraftControl
+			{SecurityEnforcementProperties::Encryption => [description => "Has authenticated Encryption"; encryption_form=>authenticated_encryption;];};
+			airline_information_services: system AirlineInformationServices_pkg::AirlineInformationServices
+			{SecurityEnforcementProperties::Encryption => [description => "Has symmetric Encryption"; encryption_form=>symmetric;];};
 			passenger_info_entertainment_services: system PassengerInfoEntertainmentServices_pkg::passengerInfoEntertainmentServices;
 			airframe: system AircraftAirframe_pkg::airframe.basic;
 		connections
@@ -57,7 +60,24 @@ system transportAircraft
 			transportAircraft_generic_new_connection: port airline_information_services.inflightEntertainmentInterface_AIS <-> aircraft_control_systems.inflightEntertainmentInterface_AC;
 			transportAircraft_generic_new_connection2: bus access airframe.internalWirelessNetworkAccess <-> airline_information_services.internalWirelessAccess;
 			transportAircraft_generic_new_connection3: bus access airframe.internalWirelessNetworkAccess <-> passenger_info_entertainment_services.internalWirelessAccess;
+
+		properties
+			SecurityEnforcementProperties::Encryption => [ encryption_form=> authenticated_encryption;];
+-- some Resolute claims
+	annex Resolute {**
+		prove component_has_symmetric_encryption (this)
+		prove component_has_symmetric_encryption (this.airline_information_services)
+		prove component_has_encryption(this)
+		prove component_has_encryption(this.aircraft_control_systems)
+		prove component_has_authenticated_encryption(this)
+		prove component_has_authenticated_encryption(this.aircraft_control_systems)
+		prove contained_component_has_authenticated_encryption(this)
+		
+	**};
+	
+	
 	end transportAircraft.generic;
+	
 	
 	
 --

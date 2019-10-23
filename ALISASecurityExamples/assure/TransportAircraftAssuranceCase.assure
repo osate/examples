@@ -6,19 +6,19 @@ case TransportAircraftAssuranceCase [
 		claim TransportAircraftSecurityPolicyVerificationPlan # Security [
 			tbdcount 1
 			verification TransportAircraftSecurityPolicyVerificationPlan # Security # ConfirmCertifications [
-				executionstate todo resultstate tbd tbdcount 1 time 406
+				executionstate todo resultstate tbd tbdcount 1 time 500
 			]
 		]
 		claim TransportAircraftSecurityPolicyVerificationPlan # MasterSecurityPolicy [
 			tbdcount 1
 			verification TransportAircraftSecurityPolicyVerificationPlan # MasterSecurityPolicy # ReviewMasterSecurityPolicy [
-				executionstate todo resultstate tbd tbdcount 1 time 62
+				executionstate todo resultstate tbd tbdcount 1 time 78
 			]
 		]
 		claim TransportAircraftSecurityPolicyVerificationPlan # AccessControlPolicy [
 			tbdcount 1
 			verification TransportAircraftSecurityPolicyVerificationPlan # AccessControlPolicy # ReviewAccessControlPolicy [
-				executionstate todo resultstate tbd tbdcount 1 time 63
+				executionstate todo resultstate tbd tbdcount 1 time 62
 			]
 		]
 		claim TransportAircraftSecurityPolicyVerificationPlan # SecureCommunicationsPolicy [
@@ -31,19 +31,19 @@ case TransportAircraftAssuranceCase [
 		claim TransportAircraftSecurityVerificationPlan # MasterSecurityReq1 [
 			tbdcount 1
 			verification TransportAircraftSecurityVerificationPlan # MasterSecurityReq1 # formalReview [
-				executionstate todo resultstate tbd tbdcount 1 time 78
+				executionstate todo resultstate tbd tbdcount 1 time 63
 			]
 		]
 		claim TransportAircraftSecurityVerificationPlan # MasterSecurityReq2 [
 			tbdcount 1
 			verification TransportAircraftSecurityVerificationPlan # MasterSecurityReq2 # formalReview [
-				executionstate todo resultstate tbd tbdcount 1 time 62
+				executionstate todo resultstate tbd tbdcount 1 time 78
 			]
 		]
 		claim TransportAircraftSecurityVerificationPlan # MasterSecurityReq3 [
 			tbdcount 1
 			verification TransportAircraftSecurityVerificationPlan # MasterSecurityReq3 # formalReview [
-				executionstate todo resultstate tbd tbdcount 1 time 63
+				executionstate todo resultstate tbd tbdcount 1 time 62
 			]
 		]
 		claim TransportAircraftSecurityVerificationPlan # AircraftSystemsInformationSecurity [

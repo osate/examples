@@ -9,13 +9,13 @@ verification plan MissionSystemsSecurityVerificationPlan for MissionSystemsSecur
 	[
 		activities 
 	
-			VerifyEncryption: AircraftSecurityVerificationMethods.VerifyEncryption ()
+			VerifyEncryption: AircraftSecurityVerificationMethods.VerifyHasEncryption ()
 	]
 	
 	claim missionDataHighLevel
 	[
 			activities
-			check_it: SecurityClassification.SharedMemorySameSecurityLevels ()
+			check_it: SecurityClassification.SharedMemorySameSecurityLevels () 
 	]
 	
 	claim SecretLevel : "Checks that the information security level is secret"
@@ -29,4 +29,11 @@ verification plan MissionSystemsSecurityVerificationPlan for MissionSystemsSecur
 		activities
 		checkencrypt: SecurityVerificationMethods.ExposedConnectionEncrypted()
 	]
+	
+	
+//	claim ExposedEncryption: " check encryption on exposed connections using java method."
+//	[
+//		activities
+//		checkencrypt: SecurityVerificationJava.ExposedConnectionEncrypted ()
+//	]
 ]

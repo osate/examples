@@ -9,21 +9,22 @@ for AircraftConrolSecurityReqs
 	
 	description "This is the verification plan for the security requirements of the aircraft control system."
 	
-	claim communicationProtectionReq0
+	claim communicationProtectionReq0 : "Checks for Encryption"
 	[
-		
+		activities VerifyEncryption: AircraftSecurityVerificationMethods.VerifyHasEncryption ()
+
 	]
-	claim  communicationProtectionReq1
-	[
-		
-	]
-	
-		claim  communicationProtectionReq2
+	claim  communicationProtectionReq1 : "Check internal communications for encryption"
 	[
 		
 	]
 	
-		claim  securityAccessReq
+		claim  communicationProtectionReq2: "Check external communications for encryption"
+	[
+		activities VerifyAuthenticatedEncryption: AircraftSecurityVerificationMethods.VerifyHasAuthenticatedEncryption() 
+	]
+	
+		claim  securityAccessReq: "Check for authorized access."
 	[
 		
 	]

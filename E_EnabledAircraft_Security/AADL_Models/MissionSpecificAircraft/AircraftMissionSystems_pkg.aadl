@@ -29,14 +29,14 @@ public
 --  "Composing Cross-Domain Solutions" by Ashish Gehani Gabriela F. Ciocarlie
 -- Specifically, data is filtered, the filtering is verified, and the result output (verification and downgraded data)
 --
-
+ 
 	system implementation AircraftMissionSystems.AquireSecureData
 		subcomponents
 			DataAquisitionUnits: device DataAcquisitionUnits;
 			DataStructuringUnits: system DataStructuringUnit;
 			SecurityDownGraderL1L2: system SecurityDownGraderL1L2;
 			SecurityDownGraderL2L3: system SecurityDownGraderL2L3;
-			L1DataStore: system L1Store {SecurityEnforcementProperties::Encryption => true;};
+			L1DataStore: system L1Store ;
 			L2DataStore: system L2Store;
 			L3DataStore: system L3Store;
 		connections
@@ -49,7 +49,9 @@ public
 			connection7: port SecurityDownGraderL1L2.outDataL2 -> SecurityDownGraderL2L3.inDataL2;
 			connection8: port SecurityDownGraderL2L3.outVerify -> L3DataStore.inVerify;
 			connection9: port SecurityDownGraderL2L3.outDataL3 -> L3DataStore.inData;
-			
+
+		properties
+			SecurityEnforcementProperties::Encryption => [encryption_form=> to_be_specified;];
 	end AircraftMissionSystems.AquireSecureData;
 
 

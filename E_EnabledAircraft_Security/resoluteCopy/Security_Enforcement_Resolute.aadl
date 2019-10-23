@@ -1,0 +1,327 @@
+-- Copyright 2019 Carnegie Mellon University. See Notice.txt
+-- Distribution Statement A: Approved for Public Release; Distribution is Unlimited.
+
+package Security_Enforcement_Resolute
+public
+	
+	
+	annex Resolute {**
+		
+
+
+	
+		-- CLAIMS FOR CHECKING Data Protection and ENCRYPTION
+		
+	-- check that all componets have symmetric encryption type
+	--
+	
+	-- data is the only component instance that is encrypted
+	--
+	-- utility functions
+	--
+	-- definitions
+	to_be_specified : string = "to_be_specified"
+	--
+	-- Encryption 
+	has_encryption(el: aadl): bool =
+	has_property (el, SecurityEnforcementProperties::Encryption)
+	
+	provides_encryption (cp:component): bool =
+	has_property (cp, SecurityEnforcementProperties::Encryption)
+	
+	connection_requires_encryption (conn: connection) : bool =
+    has_property (conn, SecurityEnforcementProperties::Encryption)
+    
+    is_encrypted (dt: data) <=
+    ** "The data element " dt " is encrypted" **
+	has_property (dt, SecurityEnforcementProperties::Encryption)
+    --
+    -- Data Authentication
+    has_data_authentication (el: aadl): bool =
+    has_property (el, SecurityEnforcementProperties::Data_Authentication)
+	
+	provides_data_authenticated_encryption (cp:component): bool =
+	has_property (cp, SecurityEnforcementProperties::Data_Authentication)
+	
+	connection_requires_authenticated_encryption (conn: connection) : bool =
+    has_property (cp, SecurityEnforcementProperties::Data_Authentication)
+   --
+   -- Authenticated Encryption
+--    has_data_authentication(el: aadl): bool =
+--    has_property (el, SecurityEnforcementProperties::Data_Authentication)
+	
+	provides_data_authentication (cp:component): bool =
+	has_property (cp, SecurityEnforcementProperties::Data_Authentication)
+	
+	connection_requires_data_authentication (conn: connection) : bool =
+    has_property (cp, SecurityEnforcementProperties::Data_Authentication)
+    
+	--- components and subcomponents
+	
+	
+	-- Encryption
+	
+	-- definitions
+	
+	authenticated_encryption : string =	"authenticated_encryption"
+	authentication_only : string = "authentication_only"
+	no_encryption: string = "no_encryption"
+	no_padding : string = "no_padding"
+	Encrypt_then_MAC : string = "Encrypt_then_MAC"
+	
+	component_has_encryption (cp:component)<=
+	** "Checks that an individual component " cp " has encryption" **
+	has_property(cp, SecurityEnforcementProperties::Encryption)
+	
+	component_has_symmetric_encryption (cp:component)<=
+	**"  Component " cp " has symmetric encryprtion"**
+	has_property(cp, SecurityEnforcementProperties::Encryption)
+	and
+	(property_member (property (cp, SecurityEnforcementProperties::Encryption), "encryption_form") = "symmetric")
+			
+	-- Authenticated Encryption
+
+	
+	component_has_authenticated_encryption (cp: component) <=
+	**"The aadl element " cp " has or provides authenticated encryption"**
+	(property_member (property (cp, SecurityEnforcementProperties::Encryption), "encryption_form") = authenticated_encryption)
+			
+					
+	contained_component_has_authenticated_encryption (cp: component) <=
+	**"The aadl element " cp " has or provides authenticated encryption"**
+	(exists (c: component).contained(c, cp) => has_property (c, SecurityEnforcementProperties::Encryption))
+	and
+	(property_member (property (cp, SecurityEnforcementProperties::Encryption), "encryption_form") = authenticated_encryption)
+--
+--
+	
+	
+	
+	all_components_have_symmetric_encryption() <=
+	** "All components have symmetric encryption"**
+	forall (c : component) . has_property (c, SecurityEnforcementProperties::Encryption)
+		and
+	property_member (property (c, SecurityEnforcementProperties::Encryption), "encryption_form") = "symmetric"
+	
+	has_authenticated_encryption (cp: component) <=
+	**"The aadl element " cp " has or provides authenticated encryption"**
+--	(exists (c: component).contained(c, cp) => has_property (c, SecurityEnforcementProperties::Encryption))
+--	and
+	(property_member (property (cp, SecurityEnforcementProperties::Encryption), "encryption_form") = "authenticated_encrypytion")
+--
+	all_contained_data_have_encryption (cp:component) <=
+	** "all data components contained in component " cp " have encryption" **
+--	-- the exists claim ensures that there is one data instance in cp; 
+--	-- without this the claim is true if there is no data
+	exists(dx: data).contained(dx,cp)  
+	=>
+	(forall( dt: data).contained(dt,cp) => is_encrypted(dt))
+	
+	all_contained_data_have_top_secret_security_level (cp:component) <=
+	** "all data components contained in component " cp " have secret encryption" **
+--	-- the exists claim ensures that there is one data instance in cp; 
+--	-- without this the claim is true if there is no data
+	exists(dx: data).contained(dx,cp)  
+	=>
+	(forall( dt: data).contained(dt,cp) => has_top_secret_security_level(dt))
+	
+	
+		all_contained_data_have_secret_security_level (cp:component) <=
+	** "all data components contained in component " cp " have secret encryption" **
+--	-- the exists claim ensures that there is one data instance in cp; 
+--	-- without this the claim is true if there is no data
+	exists(dx: data).contained(dx,cp)  
+	=>
+	(forall( dt: data).contained(dt,cp) => has_secret_security_level(dt))
+
+	
+	
+	
+	-- connections
+	
+    all_connections_with_component_require_encryption (cp: component) <=
+	**"all connections to and from component "cp" require encryption."**
+-- also checks that at least one connection to/from the component has encryption to make this claim
+-- false, if there are no connections to the componenet cp
+	exists(cx: connections(cp)).connection_requires_encryption(cx) 
+	and
+	forall(cn:connections(cp)).connection_requires_encryption(cn)  -- and print_connection(cn)
+--
+	all_contained_buses_provide_encryption (cp:component) <=
+	** "all buses contained in component " cp " have encryption" **
+--	-- the exists claim ensures that there is one bus in cp; 
+--	-- without this the claim results in an error if there are no buses
+	exists(bx: bus).contained(bx,cp) and 
+	((forall( bt: bus).contained(bt,cp)) and (provides_encryption(bt)))
+----------------------------------------------------------------- 
+-- experimental
+--
+--	exists_subcomponent_with_read_access (cp:component)<=
+--	** "There exist a least one component in " cp " with read access"**
+--	exists(sx:component).contained(sx,cp) 
+--	and
+--	(exists(sb:component).contained(sb,cp) => has_read_access(sb) = true)
+	
+	exists_subcomponent_with_read_access (cp:component)<=
+	** "There exist a least one component in " cp " with read access"**
+	exists(sb: subcomponents(cp)).has_read_access(sb) = true 
+------------------------------------------------------------------	
+-- example record check for a value - integer 2
+--		check_record() <=
+--  	** "Check record members"  **
+--		forall (c : component) . has_property (c, resoluteps::myrec)
+--		=>
+--property_member (property (c, resoluteps::myrec), "foo") = 2
+
+--	check_double_record() <=
+--	** "check double record value"**
+--	forall(cp: component).has_property (cp, SecurityEnforecementProperties::Encryption)
+--	and
+--	property_member (property (cp,SecurityEnforecementProperties::encryption ), "encryption")
+--	= property_member (cp,SecurityEnforecementProperties::Encryption)
+--		
+	 -- 
+	 
+    system_wide_all_data_is_encrypted () <=
+	**"Global check that all data is encrypted."**
+	forall(dt: data).is_encrypted(dt)
+	 
+	all_contained_virtual_buses_provide_encryption (cp: component) <=
+	** "All virtual buses within component " cp " provide data protection "**
+	exists(vb:  virtual_bus).contained(vb, cp) and
+	(forall(vb2: virtual_bus).contained(vb2,cp) => provides_encryption(vb2) or (has_encryption(vb2)))
+	
+	--	all_connections_have_encryption_provided (cp: component) <=
+--	** "All connection in component " cp " have encryption provided by the component it is bound to"  **
+----		all_connections_require_encryption (cp1) and
+--		forall(bs: bus(cp)).provides_encryption(bs)
+--		--and
+--		--forall(cx2:connection(cp1).connection_requires_encryption(cx2) and exist(bs: bus(cp1).provides_encryption(bs))
+--			  -- Need to work this with binding utilities
+	
+	---------------------------------
+-- encryption protection on features, components, and connections
+----------------------------------
+
+-- check that all ports have property encryption or a value for encryption_scheme
+--	all_component_ports_have_encryption (cp: component) : bool =
+----	forall( pt: port).contained(pt,cp) and (has_encryption(pt) or has_an_encryption_scheme(pt)) and print_ports(cp)
+--	forall( pt: flatten_features(features(cp))). has_encryption(pt) or has_encryption(pt)
+
+
+--	all_contained_data_have_encryption (cp:component) <=
+--	** "all data components contained in component " cp " have encryption" **
+--	forall( dt: data).contained(dt,cp) => (is_encrypted(dt) or has_encryption(dt)) 
+	
+----------------------------------
+-- Physical exposure and encryption protection related functions
+----------------------------------
+	-- true if element has encryption property and its value is true. Otherwise:
+	-- If the element is a virtual see if all virtual buses it is bound to are encrypted
+	-- false if no layer (set of bound) of virtual buses supports encryption
+--	
+-- See earlier version
+--is_encrypted (element : aadl) : bool =
+--	property(element,SecurityEnforcementProperties::Encryption_Form,to_be_specified)
+--	or ( ( element instanceof virtual_bus or element instanceof connection)
+--		 and forall (vb2 : {bvb for (bvb:virtual_bus)| is_bound_to (element, bvb)}). is_encrypted (vb2)
+--		)
+
+
+
+	-- connection binding targets (virtual bus or hardwaare) are either not exposed or are encrypted.
+	-- for a virtual bus target if it is not encrypted we examine its conneciton binding targets.
+	-- Both virtual buses and hardware can be marked as encrypted 
+	-- Only hardware components are expected to be marked exposed.
+--	connection_binding_targets_encrypted_or_not_exposed(element: aadl): bool =
+--		let blist : [component] = connection_binding(element);
+--		length(blist) = 0 or
+--		forall (be: as_set(blist)). 
+--		if is_virtual_bus(be) then is_encrypted(be) or connection_binding_targets_encrypted_or_not_exposed(be)
+--		else not is_exposed(be) or is_encrypted(be)
+
+
+	
+	-- connection binding targets (virtual bus or hardwaare) are encrypted.
+	-- for a virtual bus target if it is not encrypted we examine its conneciton binding targets.
+	-- Both virtual buses and hardware can be marked as encrypted 
+--	connection_binding_targets_encrypted(element: aadl): bool =
+--		let blist : [component] = connection_binding(element);
+--		length(blist) = 0 or
+--		forall (be: as_set(blist)). 
+--		if is_virtual_bus(be) then is_encrypted(be) or connection_binding_targets_encrypted_or_not_exposed(be)
+--		else is_encrypted(be)
+	
+	
+	
+--	encryptionForSourceFeature(src: component) <= 
+--	** "encryption for all outgoing connections" ** 
+--	let one : {feature} = {f for (f:features(src))| name(f) = "outP1"}; 
+--	forall (outp: one). 
+--	forall (conn: connections(outp)) . connection_has_encryption(conn) 
+	
+---- need to do this for buses and (rather than?) connections (have encryption on ports and as the protocol for buses)
+
+---
+-- checks that all connectected features have data protection
+	     all_connected_features_have_encryption(cp : component) <=
+  		** " Check that all features on all connections for " cp "source and destination have encryption" **
+  		-- also checks that there is at least one connection that source and destination have encryption
+  		(exists(ft: features(cp)).has_property (source(conn), SecurityEnforcementProperties::Encryption) and
+		has_property (destination(conn), SecurityEnforcementProperties::Encryption) => 
+		(property(source(conn), SecurityEnforcementProperties::Encryption) = property(destination(conn), SecurityEnforcementProperties::Encryption)) ) 
+		and
+		forall (conn : connections (cp)) . has_property (source(conn), SecurityEnforcementProperties::Encryption) and
+		has_property (destination(conn), SecurityEnforcementProperties::Encryption) => 
+		(property(source(conn), SecurityEnforcementProperties::Encryption) = property(destination(conn), SecurityEnforcementProperties::Encryption))
+--	
+--	all_features_of_a_connection_have_same_encryption (cp: component) <=
+--	**"checks that all features on all connections to or from " cp " have the same encryption scheme" **
+--	forall(cn: connections(cp)).property(source(cn),  SecurityEnforcementProperties::Encryption = 
+--	property(destination(cn),SecurityEnforcementProperties::Encryption) 
+-- 	
+-- 	all_features_of_connections_of_a_component_have_same_encryption (cp: component) <=
+-- 	**"checks that all connections to ports on component " cp " have the same encryption scheme"**
+--	forall(cn: connections(cp)).property(source(cn),  Security_Properties::Encryption_scheme) = 
+--	property(destination(cn),Security_Properties::Encryption_scheme) 
+-- 	 	
+-- 	checks_a_field_value_of_encryption_scheme_algorithm (cp: component) <=
+-- 	** " check field value of private key for all features of " cp **
+
+--	forall(feat: features(cp)).property_member(property(Security_Properties::Encryption_scheme), "private_key") = "03029"	
+ 	
+ 
+-- 
+-- 	 	checks_field_value_of_encryption_scheme_algorithm_on_features (cp: component) <=
+-- 	** " check field value of private key for all features of " cp**
+-- 	forall(cn: connections(cp)
+ 	
+ 	
+-- 	
+-- 	 	all_features_of_connections_of_a_component_have_same_encryption_scheme (cp: component) <=
+-- 	**"checks that all connections to ports on component " cp " have the same encryption scheme"**
+--	forall(cn: connections(cp).(source(cn).property_member(property(Security_Properties::Encryption_scheme), "private_key")
+--		
+--		,  Security_Properties::Encryption_scheme
+--	) = 
+--	property(destination(cn),Security_Properties::Encryption_scheme) 
+ 	 	
+ 	
+ 	
+-- 	all_features_of_connections_have_same_symmetric_key (cp: component) <=
+-- 	** "checks that all features on all connections to or from " cp " have the same symmetric (single) key" **
+-- 	forall(cn: connections(cp)).property_member(source(cn),  Security_Properties::Encryption_scheme) = 
+--	property(destination(cn),Security_Properties::Encryption_scheme) 
+ 		
+ 		-- 	
+-- 	-- check encyrption_form properties consistency
+-- 	    encryption_port_conn_port (cp1: component) <=
+--    ** "AADL element" cp1 "has encryption" **
+--    forall( conn:)
+--    has_property(aadl1, Security_Properties::Encryption)
+--	and
+--    property (aadl1,Security_Properties::Encryption, false) = true
+-- 	
+	**};
+	
+end Security_Enforcement_Resolute;

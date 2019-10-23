@@ -4,14 +4,12 @@
 
 assurance case TransportAircraftAssuranceCase for TransportAircraft_Generic::transportAircraft
  [
- 	
- 	
+ 		
 assurance plan TransportAircraftAssurancePlanGeneric for TransportAircraft_Generic::transportAircraft.generic
 [
 	description "Security Assurance Plan for Transport Aircraft"
 	assure TransportAircraftSecurityPolicyVerificationPlan TransportAircraftSecurityVerificationPlan
-	
-	assure subsystem all
+
 ]
   
 ]

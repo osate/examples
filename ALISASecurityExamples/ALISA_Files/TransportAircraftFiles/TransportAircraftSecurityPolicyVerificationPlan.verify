@@ -6,7 +6,7 @@
 verification plan TransportAircraftSecurityPolicyVerificationPlan : "Verification Plan for a Transport Aircraft Security Policies"
 for TransportAircraftSystemSecurityPolicies
 [
-	description "This is the top level verification plan for the security policies for the aircraft system."
+	description "This is the top-level verification plan for the security policies for the aircraft system."
 	
 	claim Security
 	[
@@ -31,4 +31,14 @@ for TransportAircraftSystemSecurityPolicies
 		activities
 		ReviewAccessControlPolicy: AircraftSecurityVerificationMethods.ReviewMasterSecurityPolicy ("Master Security Plan")
 	]
+	
+//	claim SecureAircraftControlCommunication: "Ensure that all communication with the aircraft control system is encrypted."
+//	[
+//		
+//	]
+
+//	claim communicationProtectionReq2: "Ensure that all external communication with the aircraft control system is encrypted."
+//	[
+//		activities: 
+//	]
 ]

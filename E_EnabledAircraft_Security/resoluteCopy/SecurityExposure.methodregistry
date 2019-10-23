@@ -1,0 +1,119 @@
+// Copyright 2018 Carnegie Mellon University. See Notice.txt
+// Distribution Statement A: Approved for Public Release; Distribution is Unlimited.
+verification methods SecurityExposureResolute [
+
+// methods dealing with security exposure and common weaknesses
+
+	// AASPE R7
+	method ForallConnectionsEncryptedOverExposedHardware (root): 
+	"For all connections: use encryption if connection is bound to exposed hardware" [
+		resolute Security_Exposure_Verification.Security_Exposure_Verification_public.Resolute.Resolute.forall_connections_encrypted_over_exposed_hardware
+	]
+	
+	method UseEncryptionOverExposedHardware (connection): 
+	"Use encryption for exposed hardware on connection" [
+		resolute Security_Exposure_Verification.Security_Exposure_Verification_public.Resolute.Resolute.encrypted_over_exposed_hardware
+	]
+	
+	// AASPE R8
+	method ForallConnectionsAcrossProcessorsConnectionIsEncrypted (root): 
+	"For all connections: encrypted when across different processors" [
+		resolute Security_Exposure_Verification.Security_Exposure_Verification_public.Resolute.Resolute.forall_connections_across_processors_connection_is_encrypted
+	]
+	
+	method ConnectionAcrossProcessorsIsEncrypted (connection): 
+	"For given connection: Connection across different processors must be encrypted" [
+		resolute Security_Exposure_Verification.Security_Exposure_Verification_public.Resolute.Resolute.connection_across_processors_is_encrypted
+	]
+
+	// CWE 311 No buffer overflow
+	// outgoing queue size <= incoming queue size on connection (not necessary for data port)
+	// AND compare outgoing and incoming rates
+	// AND compare data type/size on ports
+	method ForallConnectionsNoBufferOverflow (root): 
+	"For all connections: No buffer overflow due to queue size, rate, data type/size" [
+		resolute Design_Flaw_Verification.Design_Flaw_Verification_public.Resolute.Resolute.forall_connections_no_buffer_overflow
+	]
+	
+	method ConnectionNoBufferOverflow (connection): 
+	"For given connection: No buffer overflow due to queue size, rate, data type/size" [
+		resolute Design_Flaw_Verification.Design_Flaw_Verification_public.Resolute.Resolute.no_buffer_overflow
+	]
+	
+	// three methods making up ConnectionNoBufferOverflow
+	method SourceQueueSizeFitsDestinationQueueSize (connection): 
+	"For given connection: Source queue size <= destination queue size on connection" [
+		resolute Design_Flaw_Verification.Design_Flaw_Verification_public.Resolute.Resolute.source_queue_size_lessorequal_destination_queue_size
+	]
+	method DestinationHandlesOutputRateFromSource (connection): 
+	"For given connection: Destination handles all queue elements in single dispatch faster than source fills it" [
+		resolute Design_Flaw_Verification.Design_Flaw_Verification_public.Resolute.Resolute.destination_period_handles_queue_faster_than_source_period_fills_queue
+	]
+	
+	method SameSourceDestinationDataTypeOrSize (connection): 
+	"For given connection: same type or data size on connection ends" [
+		resolute Design_Flaw_Verification.Design_Flaw_Verification_public.Resolute.Resolute.same_source_and_destination_type_or_data_size
+	]
+
+	// CWE-362 - potential race condition
+	// check whether synchronization protocol is used on shared data component
+
+	method ForallSharedDataComponentsUseConcurrencyControl (root): 
+	"For all data components: If shared data component uses concurrency control" [
+		resolute Design_Flaw_Verification.Design_Flaw_Verification_public.Resolute.Resolute.forall_data_shared_components_uses_concurrency_control_protocol
+	]
+	
+	method SharedDataComponentsUseConcurrencyControl (component): 
+	"For given data component: If shared data component uses concurrency control" [
+		resolute Design_Flaw_Verification.Design_Flaw_Verification_public.Resolute.Resolute.concurrency_control_on_data_shared_component
+	]
+
+	//  CWE-805: buffer access with incorrect length value
+	//  For this one, we assume that types used between interacting
+	//  components do not match. So, we add a rule to check
+	//  that data are consistent.
+
+
+	method ForallConnectionsSamrDataTypeSizeAndDataModelSpec (root): 
+	"For all connections: Same data type/size and consistent data model spec" [
+		resolute Design_Flaw_Verification.Design_Flaw_Verification_public.Resolute.Resolute.forall_connections_same_data_type_or_size_and_consistent_data_model_spec
+	]
+	
+
+	method ConsistentDataModelSpecOnConnection (connection): 
+	"Consistent data model specification for connection ends" [
+		resolute Design_Flaw_Verification.Design_Flaw_Verification_public.Resolute.Resolute.consistent_data_model
+	]
+
+	// CWE-311: Check that all but unclassified data are encrypted 
+	//  We check that a bound virtual bus defines the security encryption.
+	// CWE 311-A: Also ensure that unclassified information connection have have unclassified or trusted participants
+	
+	
+	method ForAllConnectionsConsistentUnclassifiedInformationConnection (root): 
+	"For all connections: Consistent communication of unclassified information on connection" [
+		resolute Security_Exposure_Verification.Security_Exposure_Verification_public.Resolute.Resolute.forall_connections_consistent_unclassified_connections
+	]
+	
+	method ForAllConnectionsEncryptedClassifiedInformationConnection (root): 
+	"For all connections: Encryption of classified information on connection" [
+		resolute Security_Exposure_Verification.Security_Exposure_Verification_public.Resolute.Resolute.forall_connections_encrypted_classified_connections
+	]
+	
+	method ConsistentUnclassifiedInformationConnection (connection): 
+	"Consistent communication of unclassified information on connection" [
+		resolute Security_Exposure_Verification.Security_Exposure_Verification_public.Resolute.Resolute.consistent_unclassified_connection
+	]
+	
+	method EncryptedClassifiedInformationConnection (connection): 
+	"Encryption of classified information on connection" [
+		resolute Security_Exposure_Verification.Security_Exposure_Verification_public.Resolute.Resolute.encryption_of_classified_data_on_connection
+	]
+ 
+ 	method AllComponentPortsEncrypted (component): 
+	"All component ports have encryption" [
+		resolute Security_Exposure_Util.Security_Exposure_Util_public.Resolute.Resolute.all_component_ports_have_encryption
+	]
+ 
+ 
+]

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ASCII"?>
-<diagram:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:diagram="http://osate.org/diagram" formatVersion="5">
-  <element id="0" manual="true">
-    <element id="1">
-      <element id="4" dockArea="left">
+<diagram:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:diagram="http://osate.org/diagram" formatVersion="7">
+  <element uuid="05538e39-a35b-4c91-98a0-a86bb2a2159e" manual="true">
+    <element uuid="8d60a7d0-b391-41eb-ba2a-1df50f27e632">
+      <element uuid="c9ee2b7c-64df-4448-9646-164adf5bf51d" dockArea="left">
         <bo>
           <seg>feature</seg>
           <seg>aerodatalink_ac</seg>
@@ -10,7 +10,7 @@
         <position y="110.0"/>
         <contentFilters/>
       </element>
-      <element id="7" dockArea="left">
+      <element uuid="dc32f646-1fd8-410d-9ecf-1a576a909791" dockArea="left">
         <bo>
           <seg>feature</seg>
           <seg>aerodatalinkinterface</seg>
@@ -18,7 +18,7 @@
         <position y="10.0"/>
         <contentFilters/>
       </element>
-      <element id="2" dockArea="left">
+      <element uuid="ea77ba0b-ac4e-4954-a2c6-44ea6c47fa2c" dockArea="left">
         <bo>
           <seg>feature</seg>
           <seg>aircraftdatanetworkinterface</seg>
@@ -26,7 +26,7 @@
         <position y="210.0"/>
         <contentFilters/>
       </element>
-      <element id="3" dockArea="left">
+      <element uuid="41b85a13-3e56-4cf9-a2bd-20353dc89cb0" dockArea="left">
         <bo>
           <seg>feature</seg>
           <seg>closednetworkaccess</seg>
@@ -34,7 +34,7 @@
         <position y="260.0"/>
         <contentFilters/>
       </element>
-      <element id="5" dockArea="left">
+      <element uuid="44a09fff-6481-419d-8d78-5c53f819f1d1" dockArea="left">
         <bo>
           <seg>feature</seg>
           <seg>inflightentertainmentinterface_ac</seg>
@@ -42,7 +42,7 @@
         <position y="60.0"/>
         <contentFilters/>
       </element>
-      <element id="6" dockArea="left">
+      <element uuid="6456befc-bf55-4d4f-9486-77a3ece3baa9" dockArea="left">
         <bo>
           <seg>feature</seg>
           <seg>satellitedatalink_ac</seg>
@@ -64,8 +64,8 @@
         <filter>flowSpecifications</filter>
       </contentFilters>
     </element>
-    <element id="30">
-      <element id="31" dockArea="left">
+    <element uuid="d0888326-686d-43f2-95bb-c5a2a15553b6">
+      <element uuid="3a76baf0-e72f-4604-83d5-85c84df665bd" dockArea="left">
         <bo>
           <seg>feature</seg>
           <seg>aircraftdatanetworkaccess</seg>
@@ -73,7 +73,7 @@
         <position y="210.0"/>
         <contentFilters/>
       </element>
-      <element id="34" dockArea="left">
+      <element uuid="e67eaa0a-ffae-4ca4-a781-f2c62979b531" dockArea="left">
         <bo>
           <seg>feature</seg>
           <seg>closednetworkaccess</seg>
@@ -81,7 +81,7 @@
         <position y="110.0"/>
         <contentFilters/>
       </element>
-      <element id="33" dockArea="left">
+      <element uuid="70b2b124-48c3-456f-8300-8365b1b15030" dockArea="left">
         <bo>
           <seg>feature</seg>
           <seg>closednetworkinterface</seg>
@@ -89,7 +89,7 @@
         <position y="60.0"/>
         <contentFilters/>
       </element>
-      <element id="35" dockArea="left">
+      <element uuid="56a39235-4b7b-434d-b4be-3f76418a3ccd" dockArea="left">
         <bo>
           <seg>feature</seg>
           <seg>internalwirelessinterface</seg>
@@ -97,7 +97,7 @@
         <position y="10.0"/>
         <contentFilters/>
       </element>
-      <element id="36" dockArea="left">
+      <element uuid="22bba869-d5ee-458d-a958-311ead1faf52" dockArea="left">
         <bo>
           <seg>feature</seg>
           <seg>internalwirelessnetworkaccess</seg>
@@ -105,7 +105,7 @@
         <position y="260.0"/>
         <contentFilters/>
       </element>
-      <element id="32" dockArea="left">
+      <element uuid="1e3939ae-a9ed-4193-aaf4-32da084fadf0" dockArea="left">
         <bo>
           <seg>feature</seg>
           <seg>satellitedatalinkaccess</seg>
@@ -127,8 +127,8 @@
         <filter>flowSpecifications</filter>
       </contentFilters>
     </element>
-    <element id="8">
-      <element id="26" dockArea="left">
+    <element uuid="decc77c1-5325-4207-a665-69a2fad9ba37">
+      <element uuid="8c6caa79-6af4-4d47-84e4-75bdbd004fe6" dockArea="left">
         <bo>
           <seg>feature</seg>
           <seg>interfacetoac</seg>
@@ -136,7 +136,7 @@
         <position y="60.0"/>
         <contentFilters/>
       </element>
-      <element id="27" dockArea="left">
+      <element uuid="5ceb7167-0ccd-468b-86df-08e352be4770" dockArea="left">
         <bo>
           <seg>feature</seg>
           <seg>interfacetocommunications</seg>
@@ -144,7 +144,7 @@
         <position y="10.0"/>
         <contentFilters/>
       </element>
-      <element id="15" dockArea="left">
+      <element uuid="030eafcd-102e-4973-93c9-f9180744b41f" dockArea="left">
         <bo>
           <seg>feature</seg>
           <seg>interfacetoflightdeck</seg>

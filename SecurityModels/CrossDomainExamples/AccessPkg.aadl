@@ -1,0 +1,39 @@
+-- Copyright 2019 Carnegie Mellon University. See Notice.txt
+-- Distribution Statement A: Approved for Public Release; Distribution is Unlimited.package AccessPkg
+
+package AccessPkg
+public
+	
+	abstract tsAccess
+	end tsAccess;
+	
+	system tsAccessSystem 
+		features
+		accessPortTS: in out data port;
+		accessPortS: in out data port;
+		trasferPortUN: in out data port;	
+	end tsAccessSystem;
+	
+	system implementation tsAccessSystem.basic
+		
+	end tsAccessSystem.basic;
+	
+	device tsAccessInterface
+	end tsAccessInterface;
+	
+	abstract broadAccess
+		features
+			accessPort: in data port;
+	end broadAccess;
+	
+	
+	device broadAccessInterface extends broadAccess
+		
+	end broadAccessInterface;
+	
+	system broadAccessInterfacesys extends broadAccess
+		
+	end broadAccessInterfacesys;
+
+
+end AccessPkg;

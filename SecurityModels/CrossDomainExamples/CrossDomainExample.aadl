@@ -1,0 +1,210 @@
+-- Copyright 2019 Carnegie Mellon University. See Notice.txt
+-- Distribution Statement A: Approved for Public Release; Distribution is Unlimited.package AccessPkg
+
+
+package CrossDomainExample
+public
+		with AccessPkg, DataStoragePkg, SecurityEnforcementProperties, 
+	SecurityClassificationProperties, DownGradingFiltersPkg,ComputeHardwarePkg;
+	
+	-- based in part on figure 1 in Shedding Light on Cross Domain Solutions
+	--Shedding Light on Cross Domain Solutions
+	-- GIAC (G SEC ) Gold Certification
+	-- Author: Scott D Smith , Smith24197@gmail.com
+	--Advisor: Richard Carbone
+	-- Accepted: November 6, 2015
+	-- https://www.sans.org/reading-room/whitepapers/dlp/paper/36492
+	-- 
+	-- Also influenced by 
+	
+	-- Composing Cross-Domain Solutions
+	-- Ashish Gehani Gabriela F. Ciocarlie
+	-- SRI International
+ 	-- 333 Ravenswood Avenue
+	-- Menlo Park, CA 94025, USA
+	-- https://www.semanticscholar.org/paper/Composing-Cross-Domain-Solutions-Gehani-Ciocarlie/73986c52459bd36095a193c9fa6a0313bcb52ee1 
+	--
+	-- The cross domain solution (CDS) example consists of three primary data stores (top secret, secret, and unclassified)
+	-- and two data stores for data that can be released (secret releasable and unclassified for public release). 
+	-- There is a super controller (subject) who can access and modify all three data stores. 
+	-- There are downgrading filters that downgrade top secret to secret, secret to unclassified, 
+	-- top secret to secret releasable, secret to secret releasable, and unclassified to unclassified public release. 
+	--
+	----------------------------------------------------
+	-- This example uses the Security Level and Trusted properties
+	-- and checks that all components have a value for 
+	-- Security Level and components are connected to others
+	-- with the same Security Level or to a Trusted component.
+	--
+		system CrossDomain
+		end CrossDomain;
+	
+		system implementation CrossDomain.basic
+		-- 
+		-- In this example, the Security Level Property is used instead of the Security Classification and Information Security Level properties.
+		--
+		subcomponents
+			-- data stores
+			TopSecretDataStore: system DataStoragePkg::topSecret.single;  -- added implementation since extends not working with Resolute
+			SecretDataStore: system DataStoragePkg::secret.single; -- added implementation since extends not working with Resolute
+			UnclassifiedDataStore: system DataStoragePkg::unclassified.single;
+			unclassifiedPublicStore: system DataStoragePkg::unclassifiedPublic;
+			SecretReleasableStore: system DataStoragePkg::secretReleasable;
+			--
+			-- access
+			TSAccessUnit: system AccessPkg::tsAccessSystem;
+			PublicAccess: device AccessPkg::broadAccessInterface;
+			ThirdPartyAccess: device AccessPkg::broadAccessInterface;
+					-- filters
+			TStoS: system DownGradingFiltersPkg::downFilterSystem;
+			StoU: system DownGradingFiltersPkg::downFilterSystem;
+			UNtoUNP: system DownGradingFiltersPkg::downFilterSystem;
+			StoSR: system DownGradingFiltersPkg::downFilterSystem;
+			TStoSR: system DownGradingFiltersPkg::downFilterSystem;
+				-- hardware
+			BBus: bus ComputeHardwarePkg::basicBus;
+			-- keys
+			private_key1: data;
+			public_key1: data;
+		
+		connections
+			connection: port TSAccessUnit.accessPortTS <-> TopSecretDataStore.accessPort {SecurityEnforcementProperties::encryption => [Encryption_form => to_be_specified;];};
+			connection3: port TSAccessUnit.trasferPortUN <-> UnclassifiedDataStore.accessPort ;   -- {SecurityEnforcementProperties::encryption => [Encryption_form => to_be_specified;];};
+			connection2: port TSAccessUnit.accessPortS <-> SecretDataStore.accessPort {SecurityEnforcementProperties::encryption => [Encryption_form => to_be_specified;];};
+			connection4: port TopSecretDataStore.transferPortS -> TStoS.indata {SecurityEnforcementProperties::encryption => [Encryption_form => to_be_specified;];};
+			connection5: port TStoS.outdata -> SecretDataStore.transferPortTS {SecurityEnforcementProperties::encryption => [Encryption_form => to_be_specified;];};
+			connection7: port StoU.outdata -> UnclassifiedDataStore.transferPortS {SecurityEnforcementProperties::encryption => [Encryption_form => to_be_specified;];};
+			connection8: port TopSecretDataStore.trasferPortSR -> TStoSR.indata {SecurityEnforcementProperties::encryption => [Encryption_form => to_be_specified;];};
+			connection9: port TStoSR.outdata -> SecretReleasableStore.trasferPortTS {SecurityEnforcementProperties::encryption => [Encryption_form => to_be_specified;];};
+			connection10: port StoSR.outdata -> SecretReleasableStore.transferPortS; --{SecurityEnforcementProperties::encryption => [Encryption_form => to_be_specified;];};
+			connection6: port SecretDataStore.transferPortUN -> StoU.indata {SecurityEnforcementProperties::encryption => [Encryption_form => to_be_specified;];};
+			connection11: port SecretDataStore.trasferPortSR -> StoSR.indata {SecurityEnforcementProperties::encryption => [Encryption_form => to_be_specified;];};
+			connection12: port UnclassifiedDataStore.trasferPortUNP -> UNtoUNP.indata {SecurityEnforcementProperties::encryption => [Encryption_form => to_be_specified;];};
+			connection15: port SecretReleasableStore.accessPort -> ThirdPartyAccess.accessPort {SecurityEnforcementProperties::encryption => [Encryption_form => to_be_specified;];};
+			connection13: port UNtoUNP.outdata -> unclassifiedPublicStore.transferPortUN {SecurityEnforcementProperties::encryption => [Encryption_form => to_be_specified;];};
+			connection14: port unclassifiedPublicStore.trasferPortAccess -> PublicAccess.accessPort {SecurityEnforcementProperties::encryption => [Encryption_form => to_be_specified;];};
+			
+		properties
+			-- Binding of connections
+			Actual_Connection_Binding => (reference (BBus)) applies to connection15;
+			-- security level properties --------
+			SecurityClassificationProperties::Security_Level => TopSecret  applies to TopSecretDataStore;
+			SecurityClassificationProperties::Security_Level => TopSecret  applies to TopSecretDataStore.topsecretdata;
+			SecurityClassificationProperties::Security_Level => Secret  applies to SecretDataStore;
+			SecurityClassificationProperties::Security_Level => Unclassified  applies to UnclassifiedDataStore;
+			SecurityClassificationProperties::Security_Level => Unclassified  applies to unclassifiedPublicStore;
+--			SecurityClassificationProperties::Security_Level => Secret  applies to SecretReleasableStore;		
+--			SecurityClassificationProperties::Security_Level => Unclassified  applies to PublicAccess;
+--			SecurityClassificationProperties::Security_Level => Secret  applies to ThirdPartyAccess;
+--			SecurityClassificationProperties::Security_Level => TopSecret  applies to TSAccessUnit;
+--			SecurityClassificationProperties::Security_Level => TopSecret;
+			-- trusted components (filters)
+			SecurityClassificationProperties::Trusted => true applies to TStoS;
+			SecurityClassificationProperties::Trusted => true applies to StoU;
+			SecurityClassificationProperties::Trusted => true applies to UNtoUNP;
+			SecurityClassificationProperties::Trusted => true applies to StoSR;
+			SecurityClassificationProperties::Trusted => true applies to TStoSR;
+			SecurityClassificationProperties::Trusted => true applies to TSAccessUnit;
+			--
+			-- Encryption
+			SecurityEnforcementProperties::Encryption => [encryption_form => symmetric;
+				encryption_algorithm => ("AES"); ] applies to TopSecretDataStore.topSecretData;
+			SecurityEnforcementProperties::Encryption => [encryption_form => symmetric;
+				encryption_algorithm => ("AES"); ] applies to SecretDataStore.secretData;
+			SecurityEnforcementProperties::Encryption => [encryption_form => no_encryption;] applies to UnclassifiedDataStore.unclassData;
+			SecurityEnforcementProperties::Encryption => [encryption_form => no_encryption;] applies to unclassifiedPublicStore;		
+			SecurityEnforcementProperties::Encryption => [encryption_form => symmetric;] applies to SecretReleasableStore;
+			--
+			SecurityEnforcementProperties::Encryption => [encryption_form => symmetric;
+				encryption_algorithm => ("AES"); ] applies to BBus; -- apply to the bus
+			--
+			-- add no encryption to keys
+			SecurityEnforcementProperties::Encryption => [encryption_form => no_encryption;] applies to private_key1;
+			SecurityEnforcementProperties::Encryption => [encryption_form => no_encryption;] applies to public_key1;
+			------------------------------------------------
+			-- More detailed encryption examples
+			------------------------------------------------
+			-- hybrid encryption example using AES 256 symmetric encryption for the message and RSA 1024 for the 
+			-- symmetric AES key that is sent with the message.
+		SecurityEnforcementProperties::Encryption => [
+				description => "This declares a hybrid encryption using AES 256 bit symmetric encryption of a message and 
+								RSA 1024 for encrypting the AES key to be sent with the AES encrypted message.";
+				encryption_form => hybrid; 
+				encryption_algorithm => ("AES", "RSA"); 
+				key_length => (256 bits, 1024 bits); ] applies to connection15; 
+			---------		
+				-- This is a data authentication only example using a private key.
+				-- Note from my perspective this is encryption but with only authentication
+				-- as its objective?
+				-- Should we add the value 'authentication_only' to the Encryption property?
+				--
+				SecurityEnforcementProperties::Data_Authentication => [
+				description => "This declares data authentication only using RSA 1024 private key encryption of a message.";
+				authentication_algorithm => "RSA 1024 encryption with sender using private key.";
+				key_length => 1024 bits;
+			 ] applies to connection14; 
+			----
+			-- This is an encrypt then MAC using RSA 1024 public and private keys.
+			-- Both the Encryption property and the Data_Authenication property must
+			-- be specified and be consistent. 
+			
+				SecurityEnforcementProperties::Encryption => [
+				description => "This declares a authenticated encryption (encrypt then MAC) using RSA 1024 public key and private key (digital signal)
+								and a one way hash to create a message digest.";
+				encryption_form => authenticated_encryption; 
+				encryption_algorithm => ( "RSA");
+				authenticated_encryption_type => Encrypt_then_MAC;
+				key_length => (1024 bits); 
+				private_key => reference (private_key1); -- referencing private key instance
+				public_key => reference (public_key1); -- referencing public key instance
+			 		] applies to connection9; 
+			 	
+			 	SecurityEnforcementProperties::Data_Authentication => [
+				description => "This declares the data authentication elements for the authenticated encryption above.
+								First a hash of the encrypted message is created as a message digest and 
+								a private key (RSA 1024) [Refer to above] is used for encrypting the
+								message digest plus other info included (e.g. sequencing identifier).";
+				authentication_algorithm => "RSA 1024 encryption with sender using private key.";
+				key_length => 1024 bits;
+				hash_length => 256 bits; --- ?? is the the hash key length (if used) or the size of the hash of the message??
+				hash_algorithm => "MD5";
+			 ] applies to connection9; 
+			 		
+			 --
+			 -- Consider sender first encrypts a message with their (sender's) private key then encrypts with receipient's public key.
+			 --Recipient has public key of sender. This authenticates the sender.
+			 --
+			 SecurityEnforcementProperties::Encryption => [
+				description => "This is a situation where sender first encrypts the message with a their private 
+								key then encrypts with receipient's public key.";
+				encryption_form => hybrid; 
+				encryption_algorithm => ( "RSA");
+				authenticated_encryption_type => Encrypt_then_MAC;
+				key_length => (1024 bits); 
+				private_key => reference (private_key1); -- referencing private key instance
+				public_key => reference (public_key1); -- referencing public key instance
+			 		] ;
+			 		
+			 		
+			annex Resolute {**
+				-- 
+				-- security level checks
+				prove all_subcomponents_have_security_level(this.TopSecretDataStore) -- should be true
+				prove all_subcomponents_have_security_level(this.SecretDataStore) -- should be true
+				prove all_subcomponents_have_security_level (this)  -- not true because of bus component
+				prove all_subcomponents_have_security_level_or_are_trusted (this)  -- not true because of bus component
+				prove all_contained_components_have_security_level (this) -- not true because of bus compoent
+				prove all_contained_data_have_top_secret_security_level(this.TopSecretDataStore) -- should be true 
+	            prove all_contained_data_have_secret_security_level(this.SecretDataStore) -- should be true 
+				
+				-- security connection checks
+	            prove connected_components_have_same_security_level (this) -- should be false
+	            prove connected_systems_have_same_security_levels_or_are_connected_to_trusted(this) -- should be true
+	            -- Encryption Checks
+	            prove all_contained_data_have_encryption (this) -- should be true keys have been assigned 'no_encryption' for Encryption property
+	            prove all_contained_data_have_encryption(this.TopSecretDataStore) -- should be true 
+	            prove all_contained_data_have_encryption(this.SecretDataStore) -- should be true 
+
+			**};
+	end CrossDomain.basic;
+end CrossDomainExample;

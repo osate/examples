@@ -1,0 +1,20 @@
+-- Copyright 2018 Carnegie Mellon University. See Notice.txt
+-- Distribution Statement A: Approved for Public Release; Distribution is Unlimited.
+
+package Userdefined_Resolute_Constants
+public
+	annex Resolute {**
+
+	-- these constants could be defined as property constants
+	
+	-- languages that generate code that is memory safe, i.e., stays within its space, e.g., by limiting pointers
+	MemorySafeLanguages: {string} = {"Ivory","Mesa", "Ada"}
+	VirtualMemoryOSes: {string} = {"SeL4"}
+	NoVirtualMemoryOSes: {string} = {"eChronos"}
+
+	-- execution time enforcement
+	PartitionEnforcedTimingOSes: {string} = {"VXWorks"}
+	ThreadEnforcedTimingOSes: {string} = {"DEOS"}
+
+**};
+end Userdefined_Resolute_Constants;

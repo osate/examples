@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="ASCII"?>
 <instance:SystemInstance xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aadl2="http://aadl.info/AADL/2.0" xmlns:instance="http://aadl.info/AADL/2.0/instance" name="transportAircraft_generic_Instance" category="system">
+  <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+    <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+    <ownedValue>
+      <ownedValue xsi:type="aadl2:RecordValue">
+        <ownedFieldValue>
+          <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+          <ownedValue xsi:type="aadl2:NamedValue">
+            <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.3"/>
+          </ownedValue>
+        </ownedFieldValue>
+      </ownedValue>
+    </ownedValue>
+    <propertyAssociation href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.0"/>
+  </ownedPropertyAssociation>
   <featureInstance name="aeroDataLinkAccess" category="busAccess" direction="in out">
     <feature xsi:type="aadl2:BusAccess" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedBusAccess.0"/>
   </featureInstance>
@@ -13,21 +27,109 @@
     <feature xsi:type="aadl2:BusAccess" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedBusAccess.3"/>
   </featureInstance>
   <featureInstance name="aeroDataLink_AC" category="eventDataPort" direction="in out">
+    <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+      <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+      <ownedValue>
+        <ownedValue xsi:type="aadl2:RecordValue">
+          <ownedFieldValue>
+            <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.3"/>
+            </ownedValue>
+          </ownedFieldValue>
+        </ownedValue>
+      </ownedValue>
+      <propertyAssociation href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.0"/>
+    </ownedPropertyAssociation>
     <feature xsi:type="aadl2:EventDataPort" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedEventDataPort.0"/>
   </featureInstance>
   <featureInstance name="satelliteDataLink_AC" category="eventDataPort" direction="in out">
+    <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+      <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+      <ownedValue>
+        <ownedValue xsi:type="aadl2:RecordValue">
+          <ownedFieldValue>
+            <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.3"/>
+            </ownedValue>
+          </ownedFieldValue>
+        </ownedValue>
+      </ownedValue>
+      <propertyAssociation href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.0"/>
+    </ownedPropertyAssociation>
     <feature xsi:type="aadl2:EventDataPort" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedEventDataPort.1"/>
   </featureInstance>
   <featureInstance name="satelliteDataLink_AIS" category="eventDataPort" direction="in out">
+    <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+      <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+      <ownedValue>
+        <ownedValue xsi:type="aadl2:RecordValue">
+          <ownedFieldValue>
+            <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.3"/>
+            </ownedValue>
+          </ownedFieldValue>
+        </ownedValue>
+      </ownedValue>
+      <propertyAssociation href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.0"/>
+    </ownedPropertyAssociation>
     <feature xsi:type="aadl2:EventDataPort" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedEventDataPort.2"/>
   </featureInstance>
   <featureInstance name="wirelessAccessPoint_AIS" category="eventDataPort" direction="in out">
+    <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+      <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+      <ownedValue>
+        <ownedValue xsi:type="aadl2:RecordValue">
+          <ownedFieldValue>
+            <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.3"/>
+            </ownedValue>
+          </ownedFieldValue>
+        </ownedValue>
+      </ownedValue>
+      <propertyAssociation href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.0"/>
+    </ownedPropertyAssociation>
     <feature xsi:type="aadl2:EventDataPort" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedEventDataPort.3"/>
   </featureInstance>
   <featureInstance name="cellularDataLink_AIS" category="eventDataPort" direction="in out">
+    <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+      <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+      <ownedValue>
+        <ownedValue xsi:type="aadl2:RecordValue">
+          <ownedFieldValue>
+            <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.3"/>
+            </ownedValue>
+          </ownedFieldValue>
+        </ownedValue>
+      </ownedValue>
+      <propertyAssociation href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.0"/>
+    </ownedPropertyAssociation>
     <feature xsi:type="aadl2:EventDataPort" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedEventDataPort.4"/>
   </featureInstance>
   <componentInstance name="aircraft_control_systems" category="system">
+    <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+      <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+      <ownedValue>
+        <ownedValue xsi:type="aadl2:RecordValue">
+          <ownedFieldValue>
+            <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.0"/>
+            <ownedValue xsi:type="aadl2:StringLiteral" value="Has authenticated Encryption"/>
+          </ownedFieldValue>
+          <ownedFieldValue>
+            <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.3"/>
+            </ownedValue>
+          </ownedFieldValue>
+        </ownedValue>
+      </ownedValue>
+      <propertyAssociation href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.0/@ownedPropertyAssociation.0"/>
+    </ownedPropertyAssociation>
     <featureInstance name="aircraftDataNetworkInterface" category="busAccess" direction="in out">
       <feature xsi:type="aadl2:BusAccess" href="../../AircraftControl_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedBusAccess.0"/>
     </featureInstance>
@@ -38,12 +140,66 @@
       <feature xsi:type="aadl2:BusAccess" href="../../AircraftControl_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedBusAccess.2"/>
     </featureInstance>
     <featureInstance name="inflightEntertainmentInterface_AC" direction="in out">
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:RecordValue">
+            <ownedFieldValue>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.0"/>
+              <ownedValue xsi:type="aadl2:StringLiteral" value="Has authenticated Encryption"/>
+            </ownedFieldValue>
+            <ownedFieldValue>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+              <ownedValue xsi:type="aadl2:NamedValue">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.3"/>
+              </ownedValue>
+            </ownedFieldValue>
+          </ownedValue>
+        </ownedValue>
+        <propertyAssociation href="../../AircraftControl_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedPropertyAssociation.0"/>
+      </ownedPropertyAssociation>
       <feature xsi:type="aadl2:DataPort" href="../../AircraftControl_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.0"/>
     </featureInstance>
     <featureInstance name="aeroDataLink_AC" category="eventDataPort" direction="in out">
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:RecordValue">
+            <ownedFieldValue>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.0"/>
+              <ownedValue xsi:type="aadl2:StringLiteral" value="Has authenticated Encryption"/>
+            </ownedFieldValue>
+            <ownedFieldValue>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+              <ownedValue xsi:type="aadl2:NamedValue">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.3"/>
+              </ownedValue>
+            </ownedFieldValue>
+          </ownedValue>
+        </ownedValue>
+        <propertyAssociation href="../../AircraftControl_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedPropertyAssociation.0"/>
+      </ownedPropertyAssociation>
       <feature xsi:type="aadl2:EventDataPort" href="../../AircraftControl_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedEventDataPort.0"/>
     </featureInstance>
     <featureInstance name="satelliteDataLink_AC" category="eventDataPort" direction="in out">
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:RecordValue">
+            <ownedFieldValue>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.0"/>
+              <ownedValue xsi:type="aadl2:StringLiteral" value="Has authenticated Encryption"/>
+            </ownedFieldValue>
+            <ownedFieldValue>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+              <ownedValue xsi:type="aadl2:NamedValue">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.3"/>
+              </ownedValue>
+            </ownedFieldValue>
+          </ownedValue>
+        </ownedValue>
+        <propertyAssociation href="../../AircraftControl_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedPropertyAssociation.0"/>
+      </ownedPropertyAssociation>
       <feature xsi:type="aadl2:EventDataPort" href="../../AircraftControl_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedEventDataPort.1"/>
     </featureInstance>
     <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.0"/>
@@ -51,6 +207,24 @@
     <classifier xsi:type="aadl2:SystemType" href="../../AircraftControl_pkg.aadl#AircraftControl_pkg.aircraftControl"/>
   </componentInstance>
   <componentInstance name="airline_information_services" category="system">
+    <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+      <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+      <ownedValue>
+        <ownedValue xsi:type="aadl2:RecordValue">
+          <ownedFieldValue>
+            <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.0"/>
+            <ownedValue xsi:type="aadl2:StringLiteral" value="Has symmetric Encryption"/>
+          </ownedFieldValue>
+          <ownedFieldValue>
+            <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.0"/>
+            </ownedValue>
+          </ownedFieldValue>
+        </ownedValue>
+      </ownedValue>
+      <propertyAssociation href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.1/@ownedPropertyAssociation.0"/>
+    </ownedPropertyAssociation>
     <featureInstance name="externalWirlessAccess" category="busAccess" direction="in out">
       <feature xsi:type="aadl2:BusAccess" href="../AirlineInformationServices_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedBusAccess.0"/>
     </featureInstance>
@@ -67,15 +241,87 @@
       <feature xsi:type="aadl2:BusAccess" href="../AirlineInformationServices_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedBusAccess.4"/>
     </featureInstance>
     <featureInstance name="inflightEntertainmentInterface_AIS" direction="in out">
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:RecordValue">
+            <ownedFieldValue>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.0"/>
+              <ownedValue xsi:type="aadl2:StringLiteral" value="Has symmetric Encryption"/>
+            </ownedFieldValue>
+            <ownedFieldValue>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+              <ownedValue xsi:type="aadl2:NamedValue">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.0"/>
+              </ownedValue>
+            </ownedFieldValue>
+          </ownedValue>
+        </ownedValue>
+        <propertyAssociation href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.1/@ownedPropertyAssociation.0"/>
+      </ownedPropertyAssociation>
       <feature xsi:type="aadl2:DataPort" href="../AirlineInformationServices_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.0"/>
     </featureInstance>
     <featureInstance name="satelliteDataLink_AIS" category="eventDataPort" direction="in out">
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:RecordValue">
+            <ownedFieldValue>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.0"/>
+              <ownedValue xsi:type="aadl2:StringLiteral" value="Has symmetric Encryption"/>
+            </ownedFieldValue>
+            <ownedFieldValue>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+              <ownedValue xsi:type="aadl2:NamedValue">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.0"/>
+              </ownedValue>
+            </ownedFieldValue>
+          </ownedValue>
+        </ownedValue>
+        <propertyAssociation href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.1/@ownedPropertyAssociation.0"/>
+      </ownedPropertyAssociation>
       <feature xsi:type="aadl2:EventDataPort" href="../AirlineInformationServices_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedEventDataPort.0"/>
     </featureInstance>
     <featureInstance name="externalWirlessAccessPointInterface" category="eventDataPort" direction="in out">
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:RecordValue">
+            <ownedFieldValue>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.0"/>
+              <ownedValue xsi:type="aadl2:StringLiteral" value="Has symmetric Encryption"/>
+            </ownedFieldValue>
+            <ownedFieldValue>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+              <ownedValue xsi:type="aadl2:NamedValue">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.0"/>
+              </ownedValue>
+            </ownedFieldValue>
+          </ownedValue>
+        </ownedValue>
+        <propertyAssociation href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.1/@ownedPropertyAssociation.0"/>
+      </ownedPropertyAssociation>
       <feature xsi:type="aadl2:EventDataPort" href="../AirlineInformationServices_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedEventDataPort.1"/>
     </featureInstance>
     <featureInstance name="externalCellularInterface" category="eventDataPort" direction="in out">
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:RecordValue">
+            <ownedFieldValue>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.0"/>
+              <ownedValue xsi:type="aadl2:StringLiteral" value="Has symmetric Encryption"/>
+            </ownedFieldValue>
+            <ownedFieldValue>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+              <ownedValue xsi:type="aadl2:NamedValue">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.0"/>
+              </ownedValue>
+            </ownedFieldValue>
+          </ownedValue>
+        </ownedValue>
+        <propertyAssociation href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.1/@ownedPropertyAssociation.0"/>
+      </ownedPropertyAssociation>
       <feature xsi:type="aadl2:EventDataPort" href="../AirlineInformationServices_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedEventDataPort.2"/>
     </featureInstance>
     <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.1"/>
@@ -83,6 +329,20 @@
     <classifier xsi:type="aadl2:SystemType" href="../AirlineInformationServices_pkg.aadl#AirlineInformationServices_pkg.airlineInformationServices"/>
   </componentInstance>
   <componentInstance name="passenger_info_entertainment_services" category="system">
+    <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+      <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+      <ownedValue>
+        <ownedValue xsi:type="aadl2:RecordValue">
+          <ownedFieldValue>
+            <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.3"/>
+            </ownedValue>
+          </ownedFieldValue>
+        </ownedValue>
+      </ownedValue>
+      <propertyAssociation href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.0"/>
+    </ownedPropertyAssociation>
     <featureInstance name="aircraftDataNetworkInterface" category="busAccess" direction="in out">
       <feature xsi:type="aadl2:BusAccess" href="../PassengerInfoEntertainmentServices_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedBusAccess.0"/>
     </featureInstance>
@@ -90,6 +350,20 @@
       <feature xsi:type="aadl2:BusAccess" href="../PassengerInfoEntertainmentServices_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedBusAccess.1"/>
     </featureInstance>
     <featureInstance name="inflightEntertainmentInterface_PIES" direction="in out">
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:RecordValue">
+            <ownedFieldValue>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+              <ownedValue xsi:type="aadl2:NamedValue">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.3"/>
+              </ownedValue>
+            </ownedFieldValue>
+          </ownedValue>
+        </ownedValue>
+        <propertyAssociation href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.0"/>
+      </ownedPropertyAssociation>
       <feature xsi:type="aadl2:DataPort" href="../PassengerInfoEntertainmentServices_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.0"/>
     </featureInstance>
     <subcomponent xsi:type="aadl2:SystemSubcomponent" href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedSystemSubcomponent.2"/>
@@ -97,6 +371,20 @@
     <classifier xsi:type="aadl2:SystemType" href="../PassengerInfoEntertainmentServices_pkg.aadl#PassengerInfoEntertainmentServices_pkg.passengerInfoEntertainmentServices"/>
   </componentInstance>
   <componentInstance name="airframe" category="system">
+    <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+      <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+      <ownedValue>
+        <ownedValue xsi:type="aadl2:RecordValue">
+          <ownedFieldValue>
+            <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+            <ownedValue xsi:type="aadl2:NamedValue">
+              <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.3"/>
+            </ownedValue>
+          </ownedFieldValue>
+        </ownedValue>
+      </ownedValue>
+      <propertyAssociation href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.0"/>
+    </ownedPropertyAssociation>
     <featureInstance name="internalWirelessNetworkAccess" category="busAccess" direction="in out">
       <feature xsi:type="aadl2:BusAccess" href="../../AircraftAirframe_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedBusAccess.0"/>
     </featureInstance>
@@ -110,18 +398,88 @@
       <feature xsi:type="aadl2:BusAccess" href="../../AircraftAirframe_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedBusAccess.3"/>
     </featureInstance>
     <featureInstance name="closedNetworkInterface" direction="in out">
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:RecordValue">
+            <ownedFieldValue>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+              <ownedValue xsi:type="aadl2:NamedValue">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.3"/>
+              </ownedValue>
+            </ownedFieldValue>
+          </ownedValue>
+        </ownedValue>
+        <propertyAssociation href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.0"/>
+      </ownedPropertyAssociation>
       <feature xsi:type="aadl2:DataPort" href="../../AircraftAirframe_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.0"/>
     </featureInstance>
     <featureInstance name="internalwirelessInterface" category="eventDataPort" direction="in out">
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:RecordValue">
+            <ownedFieldValue>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+              <ownedValue xsi:type="aadl2:NamedValue">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.3"/>
+              </ownedValue>
+            </ownedFieldValue>
+          </ownedValue>
+        </ownedValue>
+        <propertyAssociation href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.0"/>
+      </ownedPropertyAssociation>
       <feature xsi:type="aadl2:EventDataPort" href="../../AircraftAirframe_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.0/@ownedEventDataPort.0"/>
     </featureInstance>
     <componentInstance name="internalWirelessNetwork" category="bus">
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:RecordValue">
+            <ownedFieldValue>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+              <ownedValue xsi:type="aadl2:NamedValue">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.3"/>
+              </ownedValue>
+            </ownedFieldValue>
+          </ownedValue>
+        </ownedValue>
+        <propertyAssociation href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.0"/>
+      </ownedPropertyAssociation>
       <subcomponent xsi:type="aadl2:BusSubcomponent" href="../../AircraftAirframe_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedBusSubcomponent.0"/>
       <index>0</index>
       <classifier xsi:type="aadl2:BusType" href="../../AircraftAirframe_pkg.aadl#AircraftAirframe_pkg.internalWirelessNetwork"/>
     </componentInstance>
     <componentInstance name="satelliteAntenna" category="device">
+      <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+        <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:RecordValue">
+            <ownedFieldValue>
+              <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+              <ownedValue xsi:type="aadl2:NamedValue">
+                <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.3"/>
+              </ownedValue>
+            </ownedFieldValue>
+          </ownedValue>
+        </ownedValue>
+        <propertyAssociation href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.0"/>
+      </ownedPropertyAssociation>
       <featureInstance name="closedNetworkInterface" direction="in out">
+        <ownedPropertyAssociation xsi:type="instance:PropertyAssociationInstance">
+          <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#SecurityEnforcementProperties.Encryption"/>
+          <ownedValue>
+            <ownedValue xsi:type="aadl2:RecordValue">
+              <ownedFieldValue>
+                <property href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1"/>
+                <ownedValue xsi:type="aadl2:NamedValue">
+                  <namedValue xsi:type="aadl2:EnumerationLiteral" href="../../../SecurityPropertiesCopy/SecurityEnforcementProperties.aadl#/0/@ownedProperty.0/@ownedPropertyType/@ownedField.1/@ownedPropertyType/@ownedLiteral.3"/>
+                </ownedValue>
+              </ownedFieldValue>
+            </ownedValue>
+          </ownedValue>
+          <propertyAssociation href="../TransportAircraft_Generic.aadl#/0/@ownedPublicSection/@ownedClassifier.1/@ownedPropertyAssociation.0"/>
+        </ownedPropertyAssociation>
         <feature xsi:type="aadl2:DataPort" href="../../AircraftAirframe_pkg.aadl#/0/@ownedPublicSection/@ownedClassifier.2/@ownedDataPort.0"/>
       </featureInstance>
       <featureInstance name="satelliteDataLinkAccess" category="busAccess" direction="in out">

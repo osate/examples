@@ -6,6 +6,7 @@ package AircraftControl_pkg
 -- This package contains classifiers for the aircraft control ( AC)system.
 public
 	with OperationalEnvironment_pkg,  AircraftAirframe_pkg;
+	with SecurityEnforcementProperties;
 
 -- This is a model of the aircraft control system (AC)
 	system aircraftControl
@@ -18,7 +19,11 @@ public
 			closedNetworkAccess: provides bus access AircraftAirframe_pkg::closedNetwork;
 			aeroDataLink_AC: in out event data port;
 			satelliteDataLink_AC: in out event data port;
+		-- security properties
+			properties
+			SecurityEnforcementProperties::Encryption => [description => "Has authenticated Encryption"; encryption_form=>authenticated_encryption;];		
 	end aircraftControl;
+
 
 	system implementation aircraftControl.basic
 		subcomponents
@@ -42,6 +47,10 @@ public
 			commBetweenPilotandControl: feature flightAndEmbeddedControlSystems.pilotInterface <-> pilot.pilotInterface;
 			commBetweenControlandSatellite: feature flightAndEmbeddedControlSystems.closedNetworkInterface <-> satelliteDataLink_AC;
 			commBetweenControlandGround: feature flightAndEmbeddedControlSystems.closedNetworkInterface <-> aeroDataLink_AC;
+			
+			-- Security Properties
+		properties
+			SecurityEnforcementProperties::Encryption => [description => "Has authenticated Encryption"; encryption_form=>authenticated_encryption;];		
 	end aircraftControl.basic;
 	
 -- 
@@ -66,6 +75,7 @@ public
 		features
 			pilotInterface: in out data port;
 	end pilot;
+
 
 
 	

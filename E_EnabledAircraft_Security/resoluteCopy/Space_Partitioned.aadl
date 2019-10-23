@@ -1,0 +1,32 @@
+-- Copyright 2018 Carnegie Mellon University. See Notice.txt
+-- Distribution Statement A: Approved for Public Release; Distribution is Unlimited.
+
+package Space_Partitioned
+  public
+    annex resolute {**
+	
+forall_process_space_partitioned(self: component) <=
+	** "All processes in system " self " are space partitioned" **
+	forall (p : process). contained(p, self) => memory_protected(p)
+
+-- Space partitioning is enforced on process.
+-- 1) bound to a partition (virtual processor)
+-- 2) 
+memory_protected(p : process) <=
+  ** "The memory of process " p " is protected from alterations by other processes" **
+  runs_on_partition_enforced_memory_os(p) or
+  (runs_on_no_virtual_memory_os(p) and
+   forall (mem : memory). bound(p, mem) =>
+     forall (q : process). bound(q, mem) => memory_safe_process(q))
+
+memory_safe_process(p : process) <=
+  ** "The process " p " only writes to its own memory space" **
+  forall (t : contained_threads(p)). thread_uses_memory_safe_language(t)
+
+thread_uses_memory_safe_language(t : thread) <=
+  ** "The thread " t " uses memory safe language" **
+  memory_safe_language_thread(t)
+
+**};
+	
+end Space_Partitioned;

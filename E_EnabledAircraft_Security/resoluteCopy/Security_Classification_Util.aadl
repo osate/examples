@@ -1,0 +1,142 @@
+-- Copyright 2018 Carnegie Mellon University. See Notice.txt
+-- Distribution Statement A: Approved for Public Release; Distribution is Unlimited.
+
+package Security_Classification_Util
+public
+	annex Resolute {**
+
+
+   -- by default assumed to be untrusted if property is not set
+   is_trusted(el : aadl) : bool =
+    property(el, SecurityClassificationProperties::Trusted,false) 
+
+-------------------------------------------------
+-- Security Level/Domain utility methods 
+-------------------------------------------------
+
+-- These Resolute constants should be consistent with the equivalent property constants.
+-- Once Resolute supports access to proeprty constants, we can access them
+-- Resolute does not support global constants across libraries
+
+-- These global constant should be consistent with the equivalent property constants.
+-- Once Resolute supports access to proeprty constants, we can access them
+	topsecret: string  = property(UserDefinedSecurityConstants::TopSecret)
+	secret: string = property(UserDefinedSecurityConstants::Secret)
+	confidential: string = property(UserDefinedSecurityConstants::Confidential)
+	
+	unclassified: string = property(UserDefinedSecurityConstants::Unclassified)
+
+	-- Defines ordering of the classification labels from high to low
+	-- this allows us to use a generic method to determine inclusion 
+   increasing_security_clearance_ordering : [string] = property(UserDefinedSecurityConstants::IncreasingSecurityClearanceOrdering)
+   increasing_information_security_level_ordering : [string] = property(UserDefinedSecurityConstants::IncreasingInformationSecurityLevelOrdering)
+
+
+------------------------------------
+-- Properties regarding the presence of security properties
+-----------------------------------
+
+-- Security Clearance Related Property access
+
+-- I made the parameter aadl as we can have the properties on features
+	has_security_clearance_property (cp:aadl) : bool =
+	has_property(cp, SecurityClassificationProperties::Security_Clearance)
+
+    get_security_clearance(cp: aadl) : string = 
+ 	property (cp, SecurityClassificationProperties::Security_Clearance, unclassified)
+ 
+    
+	-- true if both model elements have same security clearance
+	-- note that absent property value is interpreted as Unclassified   
+	is_same_security_clearance (element1 : aadl, element2 : aadl) : bool = 
+			get_information_security_level (element1)
+			 = get_information_security_level (element2)
+   
+	-- true if the superset model element has same or higher security clearance as the subet model element
+	-- note that absent property value is interpreted as Unclassified   
+	is_lower_or_same_security_clearance (lower : aadl, higher : aadl) : bool = 
+	 		is_before(increasing_security_clearance_ordering,
+	 			get_security_clearance (lower),
+	 			get_security_clearance (higher))
+ 
+ -- Information Security Level Related 
+ 
+ 	has_information_security_level_property (cp:aadl) : bool =
+	has_property(cp, SecurityClassificationProperties::Information_Security_Level) 
+	--
+	get_information_security_level (cp: aadl) : string =
+ 	property (cp, SecurityClassificationProperties::Information_Security_Level, unclassified) 
+  
+   
+	-- true if both model elements have same SecurityClassificationProperties::Information_Security_Level value
+	-- note that absent property value is interpreted as Unclassified   
+	is_same_information_security_level (element1 : aadl, element2 : aadl) : bool = 
+			get_information_security_level (element1)
+			 = get_information_security_level (element2)
+   
+	-- true if both subset and superset model elements have Information_Security_Level property
+	-- and the superset model element has same or higher security level as the subet model element
+	-- false otherwise  
+	is_lower_or_same_information_security_level (lower : aadl, higher : aadl) : bool = 
+	 		is_before(increasing_security_clearance_ordering,
+	 			get_information_security_level (lower),
+	 			get_information_security_level (higher))
+
+---------------------
+-- dealing with "unclassified", i.e., absence of property value interpreted as "unclassified" - see default value for get property	
+---------------------- 	
+	-- true if unclassified according to Security Clearance and Information_Security_Level
+	is_unclassified(element : aadl) : bool =
+		get_information_security_level (element)=unclassified and get_security_clearance(element)=unclassified
+
+
+------------------
+-- Security Domain
+------------------
+ 	publicdomain : string = "public domain"
+ 
+ 	has_security_domain (cp:aadl) : bool =
+	has_property(cp, SecurityClassificationProperties::Security_Domain) 
+	--
+	get_security_domain (cp: aadl) : string =
+ 	property_member ( property (cp, SecurityClassificationProperties::Security_Domain), "domain_name") 
+--
+--
+	all_components_have_symmetric_encryption() <=
+	** "All components have symmetric encryption"**
+	forall (c : component) . has_property (c, SecurityEnforcementProperties::Encryption)
+		and
+	property_member (property (c, SecurityEnforcementProperties::Encryption), "encryption_form") = "symmetric"
+----
+	is_same_security_domain (element1 : aadl, element2 : aadl) : bool = 
+		get_security_domain(element1) = get_security_domain(element2)
+-- 	
+ 	is_public_domain (cp: aadl) : bool = 
+ 	get_security_domain(cp) = publicdomain
+
+------------------
+-- Need To Know Domains
+------------------
+ 
+ 	has_need_to_know_domains (cp:aadl) : bool =
+	has_property(cp, SecurityClassificationProperties::Need_To_Know_Domains) 
+
+	--  we return an empty set if no need to know domain is specified
+	get_need_to_know_domains (cp: aadl) : {string} =
+ 	as_set(property (cp, SecurityClassificationProperties::Need_To_Know_Domains, [])) 
+
+	-- true if both model elements have the same set of need to know domains
+	is_same_need_to_know_domains (element1 : aadl, element2 : aadl) : bool = 
+		get_need_to_know_domains(element1) = get_need_to_know_domains(element2)
+
+	-- true if the subset element has a need subset of the need to know domains of the superset element
+	-- Also false if the subset element has no such property specification
+	is_subset_need_to_know_domains (subset : aadl, superset : aadl) : bool =
+		if has_need_to_know_domains(subset)
+	 	then 
+			forall(e:get_need_to_know_domains(subset)).member(e,get_need_to_know_domains(superset))
+		 else
+		    false
+  
+	**};
+end Security_Classification_Util;

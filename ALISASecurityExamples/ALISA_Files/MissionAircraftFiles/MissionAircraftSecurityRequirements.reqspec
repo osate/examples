@@ -51,12 +51,12 @@ MissionAircraft_Generic::missionAircraft.generic
 	requirement SecureMissionDataEncrypt: "All mission data must be encrypted when stored on board the aircraft."
 	
 	[
-		decomposes MissionAircraftSecurityPolicies.AccessControlPolicy MissionAircraftSecurityPolicies.SecureMissionData
+		decomposes MissionAircraftSecurityPolicies.AccessControlPolicy MissionAircraftSecurityPolicies.SecureMissionDataPolicy
 	]
 	
 	requirement SecureMissionDataClassify: "All mission data must be classified using the DoD or mission-specific classifications."
 	[
-		decomposes MissionAircraftSecurityPolicies.AccessControlPolicy decomposes MissionAircraftSecurityPolicies.SecureMissionData
+		decomposes MissionAircraftSecurityPolicies.AccessControlPolicy  MissionAircraftSecurityPolicies.SecureMissionDataPolicy
 	]
 	
 	
