@@ -1,4 +1,4 @@
---Generated from "TranslatorDemo.face" at 2019-04-03T15:16:56.415
+--Generated from "TranslatorDemo.face"
 package TranslatorDemo_integration_model
 public
 	with FACE;
