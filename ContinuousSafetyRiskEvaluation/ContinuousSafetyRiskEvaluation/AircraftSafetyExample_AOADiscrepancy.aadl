@@ -78,6 +78,21 @@ public
 			**};
 	end AuxClimbControl.sensor1;
 	
+	abstract implementation AuxClimbControl.sensor1Nominal
+			annex emv2 {**
+				use types ErrorLibrary,acemlib;
+				use behavior acemlib::ACCStates;
+				error propagations
+				controlsurfacecmd: out propagation { BoundedBadACCControl,ServiceOmission};
+				end propagations;
+				component error behavior
+				propagations
+				all -[aoa1{BadValue, ServiceOmission} ]-> controlsurfacecmd{BoundedBadACCControl};
+				all -[ fail{ACCFail}]-> controlsurfacecmd{ServiceOmission}; 
+				end component;
+			**};
+	end AuxClimbControl.sensor1Nominal;
+	
 	
 	abstract pilot
 		features
@@ -146,7 +161,7 @@ public
 				use types ErrorLibrary, acemlib;
 				use behavior acemlib::ClimbControlStates;
 				error propagations
-				autocmd : in propagation{ServiceOmission,ContinuousBadACCControl};
+				autocmd : in propagation{ServiceOmission,ContinuousBadACCControl,BoundedBadACCControl};
 				pilotcmd : in propagation{NoPilotControl};
 				flightsurfaceeffect: out propagation {Incident};
 				end propagations;
@@ -158,6 +173,7 @@ public
 				propagations
 				-- this condition indicates that we have an incident if AutoCmd misbehavior AND pilot misbehaviors when in charge, i.e., while AutoCmd fails
 				PilotInChargeMistake: PilotInCharge -[pilotcmd{NoPilotControl}]-> flightsurfaceeffect{Incident};
+				ACCContControlNominal: ACCInCharge -[autocmd{BoundedBadACCControl}]-> flightsurfaceeffect{noerror};
 				ACCContControl: ACCInCharge -[autocmd{ContinuousBadACCControl}]-> flightsurfaceeffect{Incident};
 				FSFail: all-[FlightSurfaceFailure]-> flightsurfaceeffect{Incident};
 				end component;
@@ -279,6 +295,18 @@ public
 			pilot: refined to abstract pilot.NoACCKnowledge;
 	end ac.OSSNoACCKNowledge;
 	
+	
+	system implementation ac.OSSBoundedBadACCControl extends  ac.OneSensorSpec
+		subcomponents
+			ACC: refined to abstract AuxClimbControl.sensor1Nominal;
+	end ac.OSSBoundedBadACCControl;
+
+	
+	system implementation ac.OSSBoundedBadACCControlPermanentDiscrepancyFail extends  ac.OneSensorSpec
+		subcomponents
+			ACC: refined to abstract AuxClimbControl.sensor1Nominal;
+			aoaDiscrepancyIndicator: refined to device aoadiscrepancydetector.permanentFail;
+	end ac.OSSBoundedBadACCControlPermanentDiscrepancyFail;
 
 
 end AircraftSafetyExample::AOADiscrepancy;

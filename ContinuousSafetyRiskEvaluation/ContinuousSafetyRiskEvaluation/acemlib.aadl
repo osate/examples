@@ -24,7 +24,7 @@ public
 	  AOADiscrepancyUnawareNoTurnoff:type;
 	  AOADiscrepancyAwareNoTurnoff:type;
 	  
-	  BadACCControl: type;
+	  BoundedBadACCControl: type;
 	  ContinuousBadACCControl: type;
 	  end types;	
 
