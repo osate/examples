@@ -2,10 +2,9 @@ package communication
 
 public
 
-with common;
-with EMV2;
-with ARP4761;
-
+	with common;
+	with EMV2;
+	with ARP4761;
 
 --
 --  The annunciation device is introduced to capture the
@@ -19,49 +18,44 @@ with ARP4761;
 --  See. ARP4761 document page 199, figure L3 for more
 --  details about how this error is introduced into the FTA.
 --
+	device annunciation
+		features
+			--  We add a data port that abstracts communication
+			--  within the system.
+			information: out data port common::command.announce;
+		annex EMV2 {**
+			use types error_library;
+			use behavior error_library::simple;
+			
+			error propagations
+				information: out propagation {NoService};
+				flows
+					f1: error source information {NoService};
+			end propagations;
+			
+			component error behavior
+				events
+					LossAnnunciation: error event;
+				transitions
+					t1: Operational -[LossAnnunciation]-> Failed;
+				propagations
+					p1: Failed -[]-> information {NoService};
+			end component;
+			
+			properties
+				EMV2::OccurrenceDistribution => [ProbabilityValue => 1.00; Distribution => Fixed;] applies to LossAnnunciation;
+				ARP4761::hazards => ([crossreference => "AIR6110 and ARP4761 - see ARP4761 figure 3 page 199";
+						failure => "Loss of Annunciation";
+						phases => ("all");
+						description => "The system cannot annunce an error";
+						FailureConditionClassification => Catastrophic;
+						QualitativeProbabilityObjective => ExtremelyImprobable;
+						comment => "";
+					]) applies to LossAnnunciation;
+		**};
+	end annunciation;
 
-device annunciation
-features
-	--  We add a data port that abstracts communication
-	--  within the system.
-	information : out data port common::command.announce;
-annex EMV2 {**
-
-	use types error_library;
-	use behavior error_library::simple;
-	
-	error propagations
-		information : out propagation{NoService};
-	flows
-		f1 : error source information{NoService};
-	end propagations;
-	
-	component error behavior
-	events
-		LossAnnunciation : error event;
-	transitions
-		t1 : Operational -[ LossAnnunciation ]-> Failed;
-	propagations
-		p1 : Failed -[]-> information{NoService};
-	end component;
-	
-	properties
-		EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.00 ; Distribution => Fixed;] applies to LossAnnunciation;
-		ARP4761::hazards => 
-			([	crossreference => "AIR6110 and ARP4761 - see ARP4761 figure 3 page 199";
-				failure => "Loss of Annunciation";
-				phases => ("all");
-				description => "The system cannot annunce an error";
-				FailureConditionClassification => Catastrophic;
-				QualitativeProbabilityObjective => ExtremelyImprobable;
-				comment => "";
-			])
-			applies to LossAnnunciation;
-**};
-end annunciation;
-
-device implementation annunciation.i
-end annunciation.i;
-
+	device implementation annunciation.i
+	end annunciation.i;
 
 end communication;

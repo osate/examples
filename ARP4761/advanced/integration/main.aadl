@@ -2,42 +2,42 @@ package integration::main
 
 public
 
-with functional::main;
-with impl::wbs;
+	with functional::main;
+	with impl::wbs;
 
-system main
-end main;
+	system main
+	end main;
 
-system implementation main.impl
-subcomponents
-	functional : system functional::main::Aircraft.basic;
-	wbs_impl   : system impl::wbs::wbs.ima;
-properties
+	system implementation main.impl
+		subcomponents
+			functional: system functional::main::Aircraft.basic;
+			wbs_impl: system impl::wbs::wbs.ima;
+		properties
 --  We bind the WBS physical components to functions
 --  On the physical components, we have to explicitly define bindings propagations
 --  and on the function, we define processor bindings. Right now, we make use
 --  of the processor binding mechanism to bind functions with their associated
 --  runtime component. 
-	Actual_Processor_Binding => (reference (wbs_impl.bscu)) applies to functional.alert;
-	Actual_Processor_Binding => (reference (wbs_impl)) applies to functional.decelerate.DecelerateWheels;
-	Actual_Processor_Binding => (reference (wbs_impl.blue_pump),reference (wbs_impl.green_pump),reference (wbs_impl.accumulator)) applies to functional.hydraulic;
-	Actual_Processor_Binding => (reference (wbs_impl.power),reference (wbs_impl.power.battery1),reference (wbs_impl.power.battery2)) applies to functional.electrical;
+			Actual_Processor_Binding => (reference (wbs_impl.bscu)) applies to functional.alert;
+			Actual_Processor_Binding => (reference (wbs_impl)) applies to functional.decelerate.DecelerateWheels;
+			Actual_Processor_Binding => (reference (wbs_impl.blue_pump), reference (wbs_impl.green_pump),
+				reference (wbs_impl.accumulator)) applies to functional.hydraulic;
+			Actual_Processor_Binding => (reference (wbs_impl.power), reference (wbs_impl.power.battery1),
+				reference (wbs_impl.power.battery2)) applies to functional.electrical;
 
-
-annex EMV2 {**
-	use type equivalence WBSMappingErrorLib::FunctionToImplementation;
-	use behavior WBSMappingErrorLib::Basic; 
-
-	composite error behavior
-	states
-		--  Here, we just capture the fact that the system is failing
-		--  if its functions are failing. We then refer to the
-		--  system failures.
-		[functional.Failed]-> Failed; 
-	end composite;
-	
- **};
-end main.impl;
-
+		annex EMV2 {**
+			use type equivalence WBSMappingErrorLib::FunctionToImplementation;
+			use behavior WBSMappingErrorLib::Basic;
+			
+			composite error behavior
+				states
+					--  Here, we just capture the fact that the system is failing
+					--  if its functions are failing. We then refer to the
+					--  system failures.
+					[functional.Failed]-> Failed;
+			end composite;
+			
+		**};
+	end main.impl;
 
 end integration::main;
