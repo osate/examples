@@ -1,6 +1,6 @@
 package functional::GenericFunctions
 public
-	with WBSPS, EMV2, ARP4761;
+	with WBSPS;
 
 	system Generic
 		features
@@ -19,7 +19,7 @@ public
 			
 			component error behavior
 				events
-					Failure: error event;
+					Failure: error event{WBErrorSet};
 				transitions
 					t1: Operational -[Failure]-> Failed;
 				propagations

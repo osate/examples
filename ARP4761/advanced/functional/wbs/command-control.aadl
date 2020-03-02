@@ -1,7 +1,7 @@
 package functional::WheelBrake::CommandControl
 public
 	with functional::GenericFunctions;
-	with WBSPS, EMV2, ARP4761;
+	with WBSPS, EMV2;
 	with functional::WheelBrake::Generic;
 
 	system CommandControl extends functional::WheelBrake::Generic::GenericFunction
@@ -27,10 +27,10 @@ public
 			
 			component error behavior
 				events
-					lossBrakingCommand: error event;
+					lossBrakingCommand: error event{WBErrorSet};
 				transitions
 					t1: Operational -[lossBrakingCommand]-> Failed;
-					t2: Operational -[fromElectrical {AnyFunctionalError}]-> Failed;
+					t2: Operational -[fromElectrical {AnyFunctionalError}]-> Failed{TotalWBLossUnanunciated};
 				propagations
 					p1: Failed -[]-> fromBSCU {AnyFunctionalError};
 			end component;

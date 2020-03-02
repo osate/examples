@@ -1,6 +1,6 @@
 package functional::Hydraulic
 public
-	with WBSPS, EMV2, ARP4761, functional::GenericFunctions;
+	with functional::GenericFunctions;
 
 	system Hydraulic extends functional::GenericFunctions::Generic
 
@@ -23,9 +23,9 @@ public
 			
 			component error behavior
 				events
-					GreenPumpError: error event;
-					BluePumpError: error event;
-					ComponentError: error event;
+					GreenPumpError: error event{WBErrorSet};
+					BluePumpError: error event{WBErrorSet};
+					ComponentError: error event{WBErrorSet};
 				transitions
 					t1: Operational -[GreenPumpError]-> Failed;
 					t2: Operational -[BluePumpError]-> Failed;

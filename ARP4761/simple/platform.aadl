@@ -1,7 +1,5 @@
 package platform
 public
-
-	with ARINC653;
 	with EMV2;
 	with ARP4761;
 

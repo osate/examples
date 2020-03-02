@@ -1,6 +1,6 @@
 package functional::Electrical
 public
-	with WBSPS, EMV2, ARP4761, functional::GenericFunctions;
+	with functional::GenericFunctions;
 
 	system Electrical extends functional::GenericFunctions::Generic
 		annex EMV2 {**

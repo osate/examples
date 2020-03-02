@@ -1,6 +1,6 @@
 package functional_initial
 public
-	with WBSPS, EMV2, ARP4761;
+	with WBSPS, ARP4761;
 
 	system DecelerateAircraft
 		properties
@@ -103,11 +103,12 @@ public
 		properties
 			WBSPS::IsFunction => true;
 		annex EMV2 {**
+			use types WBSFunctionalErrorLib;
 			use behavior WBSFunctionalErrorLib::Twostate;
 			
 			component error behavior
 				events
-					Failure: error event;
+					Failure: error event {WBErrorSet};
 				transitions
 					t1: Operational -[Failure]-> Failed;
 			end component;
@@ -118,11 +119,12 @@ public
 		properties
 			WBSPS::IsFunction => true;
 		annex EMV2 {**
+			use types WBSFunctionalErrorLib;
 			use behavior WBSFunctionalErrorLib::Twostate;
 			
 			component error behavior
 				events
-					Failure: error event;
+					Failure: error event {WBErrorSet};
 				transitions
 					t1: Operational -[Failure]-> Failed;
 			end component;
@@ -147,11 +149,12 @@ public
 		properties
 			WBSPS::IsFunction => true;
 		annex EMV2 {**
+			use types WBSFunctionalErrorLib;
 			use behavior WBSFunctionalErrorLib::Twostate;
 			
 			component error behavior
 				events
-					Failure: error event;
+					Failure: error event {WBErrorSet};
 				transitions
 					t1: Operational -[Failure]-> Failed;
 			end component;
@@ -203,12 +206,13 @@ public
 		properties
 			WBSPS::IsFunction => true;
 		annex EMV2 {**
+			use types WBSFunctionalErrorLib;
 			use behavior WBSFunctionalErrorLib::Twostate;
 			
 			component error behavior
 				events
-					LossHydraulicSupply: error event;
-					LossHydraulicComponents: error event;
+					LossHydraulicSupply: error event {WBErrorSet};
+					LossHydraulicComponents: error event {WBErrorSet};
 				transitions
 					t1: Operational -[LossHydraulicSupply]-> Failed;
 					t2: Operational -[LossHydraulicComponents]-> Failed;
@@ -264,11 +268,12 @@ public
 
 	system DecelerateThrottle
 		annex EMV2 {**
+			use types WBSFunctionalErrorLib;
 			use behavior WBSFunctionalErrorLib::Twostate;
 			
 			component error behavior
 				events
-					Failure: error event;
+					Failure: error event {WBErrorSet};
 				transitions
 					t1: Operational -[Failure]-> Failed;
 			

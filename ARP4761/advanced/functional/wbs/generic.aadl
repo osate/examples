@@ -1,7 +1,6 @@
 package functional::WheelBrake::Generic
 public
-	with functional::GenericFunctions;
-	with WBSPS, EMV2, ARP4761;
+	with WBSPS;
 
 	system GenericFunction
 		features
@@ -43,7 +42,7 @@ public
 			
 			component error behavior
 				events
-					Failure: error event;
+					Failure: error event{WBErrorSet};
 				transitions
 					t1: Operational -[Failure]-> Failed;
 			end component;

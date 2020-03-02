@@ -1,9 +1,6 @@
 package impl::pedals
-
 public
-
 	with common;
-	with EMV2;
 	with ARP4761;
 
 --

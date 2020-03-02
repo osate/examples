@@ -1,5 +1,4 @@
 package impl::wbs
-
 public
 
 	with impl::bscu;
@@ -9,8 +8,7 @@ public
 	with impl::pump;
 	with impl::power;
 	with impl::pedals;
-	with ARP4761;
-	with EMV2;
+
 
 --
 --  Dummy component for the wheel brake system.

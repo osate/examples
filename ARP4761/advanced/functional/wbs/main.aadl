@@ -1,6 +1,5 @@
 package functional::WheelBrake::Main
 public
-	with functional::GenericFunctions;
 	with WBSPS, EMV2, ARP4761;
 	with functional::WheelBrake::Generic;
 	with functional::WheelBrake::CommandControl;
@@ -25,9 +24,10 @@ public
 			
 			component error behavior
 				transitions
-					t1: Operational -[fromHydraulic {HydraulicLossGreen}]-> Failed;
-					t2: Operational -[fromHydraulic {HydraulicLossComponents}]-> Failed;
-					t3: Operational -[fromBSCU {AnyFunctionalError}]-> Failed;
+					--  XXX JH: must check error propagated w.r.t. initial document
+					t1: Operational -[fromHydraulic {HydraulicLossGreen}]-> Failed {PartialSymmetricalWBLossAnunciated};
+					t2: Operational -[fromHydraulic {HydraulicLossComponents}]-> Failed {PartialSymmetricalWBLossAnunciated};
+					t3: Operational -[fromBSCU {AnyFunctionalError}]-> Failed {TotalWBLossUnanunciated};
 			end component;
 			
 			properties
@@ -140,7 +140,7 @@ public
 				states
 					-- FHA for Unnanunciated loss of all wheel
 					-- from AIR6110 page 49
-			--		[decelerateonground.Failed]-> Failed(TotalWBLossAnunciated);
+					--		[decelerateonground.Failed]-> Failed(TotalWBLossAnunciated);
 					[decelerateonground.Failed]-> Failed {TotalWBLossUnAnunciated};
 					[decelerateonground.Failed and in fromAlert {AnyFunctionalError}]-> Failed {TotalWBLossAnunciated};
 			--		[decelerateonground.Failed]-> Failed;  
