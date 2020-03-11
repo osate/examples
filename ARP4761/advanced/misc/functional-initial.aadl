@@ -1,294 +1,284 @@
 package functional_initial
 public
-with WBSPS,EMV2,ARP4761;
+	with WBSPS, ARP4761;
 
+	system DecelerateAircraft
+		properties
+			WBSPS::IsFunction => true;
+	end DecelerateAircraft;
 
+	system implementation DecelerateAircraft.basic
+		subcomponents
+			DecelerateWheels: system DecelerateWheels.basic;
+			DecelerateThrottle: system DecelerateThrottle;
+		annex EMV2 {**
+			use types WBSFunctionalErrorLib;
+			use behavior WBSFunctionalErrorLib::TwostateWBS;
+			
+			composite error behavior
+				states
+					[DecelerateWheels.Failed or DecelerateThrottle.Failed]-> Failed;
+			end composite;
+		**};
+	end DecelerateAircraft.basic;
 
-system DecelerateAircraft
-properties
-	WBSPS::IsFunction => true;
-end DecelerateAircraft;
+	system DecelerateWheels
+		properties
+			WBSPS::IsFunction => true;
+	end DecelerateWheels;
 
-system implementation DecelerateAircraft.basic
-subcomponents
-	DecelerateWheels: system DecelerateWheels.basic;
-	DecelerateThrottle: system DecelerateThrottle;
-annex EMV2 {**
-	use types WBSFunctionalErrorLib;
-	use behavior WBSFunctionalErrorLib::TwostateWBS;
+	system implementation DecelerateWheels.basic
+		subcomponents
+			-- List of functions is available in AIR6110 page 30
+			ApplyWheelBrake1: system ApplyWheelBrake.basic;
+			ApplyWheelBrake2: system ApplyWheelBrake.basic;
+			nosewheelSteering: system NoseWheelSteering;
+			aircraftStatus: system AircraftStatus;
+			crewAlert: system CrewAlert;
+			electricPower: system ElectricPower;
+			hydraulicPower: system HydraulicPower;
+			annunciation: system Annunciation;
+		annex EMV2 {**
+			use types WBSFunctionalErrorLib;
+			use behavior WBSFunctionalErrorLib::TwostateWBS;
+			
+			composite error behavior
+				states
+					-- FHA for Unnanunciated loss of all wheel
+					-- from AIR6110 page 49
+					[annunciation.Failed and ApplyWheelBrake1.Failed and ApplyWheelBrake2.Failed]-> Failed;
+			end composite;
+			
+			properties
+				ARP4761::hazards => ([crossreference => "AIR6110 page 36";
+						failure => "Total Loss of wheel braking - Unannunciated loss of wheel braking";
+						phases => ("Landing", "RTO");
+						description => "Crew detects the failure when the brakes are operated. The crew uses spoilers and thrust reversers to the maximum extent possible. This may result in a runway overrun.";
+						FailureConditionClassification => Hazardous;
+						QualitativeProbabilityObjective => Remote;
+						comment => "";
+					]) applies to Failed.TotalWBLossAnunciated;
+			
+				ARP4761::hazards => ([crossreference => "AIR6110 page 36";
+						failure => "Total Loss of wheel braking - Annunciated loss of wheel braking";
+						phases => ("Landing");
+						description => "Crew selects a more suitable airport, notifies emergency ground support, and prepares occupants for runway overrun. The crew uses spoilers and thrust reversers to the maximum extent possible.";
+						FailureConditionClassification => Hazardous;
+						QualitativeProbabilityObjective => Remote;
+						comment => "";
+					]) applies to Failed.TotalWBLossUnanunciated;
+			
+				ARP4761::hazards => ([crossreference => "AIR6110 page 36";
+						failure => "Partial Symmetrical Loss of Wheel Braking - Unannunciated partial symmetrical loss of wheel braking";
+						phases => ("Landing", "RTO");
+						description => "The crew detects the failure when the brakes are used. Crew uses available wheel braking, spoilers and thrust reversers available to maximum extent to decelerate the aircraft. The temperature on wheels of the loaded brakes increases and could reach point where wheel/fire failure occurs. Depending on number of brakes lost result could be an overrun.";
+						FailureConditionClassification => Hazardous;
+						QualitativeProbabilityObjective => Remote;
+						comment => "Potentially catastrophic – to be confirmed by analysis";
+					]) applies to Failed.PartialSymmetricalWBLossUnAnunciated;
+			
+				ARP4761::hazards => ([crossreference => "AIR6110 page 36";
+						failure => "Partial Symmetrical Loss of Wheel Braking - Annunciated partial symmetrical loss of wheel braking";
+						phases => ("Landing");
+						description => "The crew is aware that there is a partial loss of braking before landing. Crew uses wheel braking, spoilers and thrust reversers available to maximum extent to decelerate the aircraft. The temperature on wheels of the loaded brakes increases and could reach point where wheel/fire failure occurs. Depending on number of brakes lost result could be an overrun.";
+						FailureConditionClassification => Major;
+						QualitativeProbabilityObjective => Remote;
+						comment => "";
+					]) applies to Failed.PartialSymmetricalWBLossanunciated;
+		**};
+	end DecelerateWheels.basic;
 
-	composite error behavior
-	states
-		[DecelerateWheels.Failed or DecelerateThrottle.Failed]-> Failed;
-	end composite;                
- **};
-end DecelerateAircraft.basic;
+	system CrewAlert
+		properties
+			WBSPS::IsFunction => true;
+		annex EMV2 {**
+			use behavior WBSFunctionalErrorLib::TwostateWBS;
+		**};
+	end CrewAlert;
 
-system DecelerateWheels
-properties
-	WBSPS::IsFunction => true;
-end DecelerateWheels;
+	system implementation CrewAlert.basic
+	end CrewAlert.basic;
 
-system implementation DecelerateWheels.basic
-subcomponents
-    -- List of functions is available in AIR6110 page 30
-	ApplyWheelBrake1: system ApplyWheelBrake.basic;
-	ApplyWheelBrake2: system ApplyWheelBrake.basic;
-	nosewheelSteering: system NoseWheelSteering;
-	aircraftStatus   : system AircraftStatus;
-	crewAlert        : system CrewAlert;
-	electricPower    : system ElectricPower;
-	hydraulicPower   : system HydraulicPower;
-	annunciation     : system Annunciation;
-annex EMV2 {**
-	use types WBSFunctionalErrorLib;
-	use behavior WBSFunctionalErrorLib::TwostateWBS;
+	system ElectricPower
+		properties
+			WBSPS::IsFunction => true;
+		annex EMV2 {**
+			use types WBSFunctionalErrorLib;
+			use behavior WBSFunctionalErrorLib::Twostate;
+			
+			component error behavior
+				events
+					Failure: error event {WBErrorSet};
+				transitions
+					t1: Operational -[Failure]-> Failed;
+			end component;
+		**};
+	end ElectricPower;
 
-	composite error behavior
-	states
-	    -- FHA for Unnanunciated loss of all wheel
-	    -- from AIR6110 page 49
-		[annunciation.Failed and ApplyWheelBrake1.Failed and ApplyWheelBrake2.Failed]-> Failed;
-	end composite;
+	system Command
+		properties
+			WBSPS::IsFunction => true;
+		annex EMV2 {**
+			use types WBSFunctionalErrorLib;
+			use behavior WBSFunctionalErrorLib::Twostate;
+			
+			component error behavior
+				events
+					Failure: error event {WBErrorSet};
+				transitions
+					t1: Operational -[Failure]-> Failed;
+			end component;
+		**};
+	end Command;
 
-	properties
-	              ARP4761::hazards => 
-              ([      crossreference => "AIR6110 page 36";
-              failure => "Total Loss of wheel braking - Unannunciated loss of wheel braking";
-              phases => ("Landing" , "RTO");
-              description => "Crew detects the failure when the brakes are operated. The crew uses spoilers and thrust reversers to the maximum extent possible. This may result in a runway overrun.";
-				FailureConditionClassification => Hazardous;
-				QualitativeProbabilityObjective => Remote;
-              comment => "";
-              ])
-              applies to Failed.TotalWBLossAnunciated;
-              
+	system implementation ElectricPower.basic
+	end ElectricPower.basic;
 
+	system HydraulicPower
+		properties
+			WBSPS::IsFunction => true;
+		annex EMV2 {**
+			use behavior WBSFunctionalErrorLib::TwostateWBS;
+		**};
+	end HydraulicPower;
 
-              ARP4761::hazards => 
-              ([      crossreference => "AIR6110 page 36";
-              failure => "Total Loss of wheel braking - Annunciated loss of wheel braking";
-              phases => ("Landing");
-              description => "Crew selects a more suitable airport, notifies emergency ground support, and prepares occupants for runway overrun. The crew uses spoilers and thrust reversers to the maximum extent possible.";
- 				FailureConditionClassification => Hazardous;
-				QualitativeProbabilityObjective => Remote;
-              comment => "";
-              ])
-              applies to Failed.TotalWBLossUnanunciated;
-               
-              ARP4761::hazards => 
-              ([      crossreference => "AIR6110 page 36";
-              failure => "Partial Symmetrical Loss of Wheel Braking - Unannunciated partial symmetrical loss of wheel braking";
-              phases => ("Landing","RTO");
-              description => "The crew detects the failure when the brakes are used. Crew uses available wheel braking, spoilers and thrust reversers available to maximum extent to decelerate the aircraft. The temperature on wheels of the loaded brakes increases and could reach point where wheel/fire failure occurs. Depending on number of brakes lost result could be an overrun.";
-				FailureConditionClassification => Hazardous;
-				QualitativeProbabilityObjective => Remote;
-              comment => "Potentially catastrophic – to be confirmed by analysis";
-              ])
-              applies to Failed.PartialSymmetricalWBLossUnAnunciated;
-               
-              
-              ARP4761::hazards => 
-              ([      crossreference => "AIR6110 page 36";
-              failure => "Partial Symmetrical Loss of Wheel Braking - Annunciated partial symmetrical loss of wheel braking";
-              phases => ("Landing");
-              description => "The crew is aware that there is a partial loss of braking before landing. Crew uses wheel braking, spoilers and thrust reversers available to maximum extent to decelerate the aircraft. The temperature on wheels of the loaded brakes increases and could reach point where wheel/fire failure occurs. Depending on number of brakes lost result could be an overrun.";
-				FailureConditionClassification => Major;
-				QualitativeProbabilityObjective => Remote;
-              comment => "";
-              ])
-              applies to Failed.PartialSymmetricalWBLossanunciated;
-                
- **};
-end DecelerateWheels.basic;
+	system implementation HydraulicPower.basic
+	end HydraulicPower.basic;
 
-system CrewAlert
-properties
-	WBSPS::IsFunction => true;
-annex EMV2 {**
-	use behavior WBSFunctionalErrorLib::TwostateWBS;
-**};
-end CrewAlert;
+	system Annunciation
+		properties
+			WBSPS::IsFunction => true;
+		annex EMV2 {**
+			use types WBSFunctionalErrorLib;
+			use behavior WBSFunctionalErrorLib::Twostate;
+			
+			component error behavior
+				events
+					Failure: error event {WBErrorSet};
+				transitions
+					t1: Operational -[Failure]-> Failed;
+			end component;
+		**};
+	end Annunciation;
 
-system implementation CrewAlert.basic
-end CrewAlert.basic;
+	system implementation Annunciation.basic
+	end Annunciation.basic;
 
-system ElectricPower
-properties
-	WBSPS::IsFunction => true;
-annex EMV2 {**
-	use behavior WBSFunctionalErrorLib::Twostate;
-	component error behavior
-	events
-		Failure : error event;
-	transitions
-		t1 : Operational -[ Failure ]-> Failed;
-	end component;
-**};
-end ElectricPower;
+	system AirCraftStatus
+		properties
+			WBSPS::IsFunction => true;
+		annex EMV2 {**
+			use behavior WBSFunctionalErrorLib::TwostateWBS;
+		**};
+	end AirCraftStatus;
 
-system Command
-properties
-	WBSPS::IsFunction => true;
-annex EMV2 {**
-	use behavior WBSFunctionalErrorLib::Twostate;
-	component error behavior
-	events
-		Failure : error event;
-	transitions
-		t1 : Operational -[ Failure ]-> Failed;
-	end component;
-**};
-end Command;
+	system implementation AirCraftStatus.basic
+	end AirCraftStatus.basic;
 
-system implementation ElectricPower.basic
-end ElectricPower.basic;
+	system ApplyWheelBrake
+		properties
+			WBSPS::IsFunction => true;
+		annex EMV2 {**
+			use behavior WBSFunctionalErrorLib::TwostateWBS;
+		**};
+	end ApplyWheelBrake;
 
-system HydraulicPower
-properties
-	WBSPS::IsFunction => true;
-annex EMV2 {**
-	use behavior WBSFunctionalErrorLib::TwostateWBS;
-**};
-end HydraulicPower;
+	system implementation ApplyWheelBrake.basic
+		subcomponents
+			BrakeWheel: system BrakeByWheel;
+			WBControl: system WBControl;
+			BrakeCommand: system BrakeCommand.basic;
+			BrakeStatus: system WBStatus;
+		annex EMV2 {**
+			use types WBSFunctionalErrorLib;
+			use behavior WBSFunctionalErrorLib::TwostateWBS;
+			
+			composite error behavior
+				states
+					-- FHA for Unnanunciated loss of all wheel
+					-- from AIR6110 page 49
+					[BrakeWheel.Failed or BrakeCommand.Failed]-> Failed;
+			end composite;
+		**};
+	end ApplyWheelBrake.basic;
 
-system implementation HydraulicPower.basic
-end HydraulicPower.basic;
+	system BrakeByWheel
+		properties
+			WBSPS::IsFunction => true;
+		annex EMV2 {**
+			use types WBSFunctionalErrorLib;
+			use behavior WBSFunctionalErrorLib::Twostate;
+			
+			component error behavior
+				events
+					LossHydraulicSupply: error event {WBErrorSet};
+					LossHydraulicComponents: error event {WBErrorSet};
+				transitions
+					t1: Operational -[LossHydraulicSupply]-> Failed;
+					t2: Operational -[LossHydraulicComponents]-> Failed;
+			end component;
+		**};
+	end BrakeByWheel;
 
+	system implementation BrakeByWheel.basic
+		properties
+			WBSPS::IsFunction => true;
+		annex EMV2 {**
+			use behavior WBSFunctionalErrorLib::Twostate;
+		**};
+	end BrakeByWheel.basic;
 
-system Annunciation
-properties
-	WBSPS::IsFunction => true;
-annex EMV2 {**
-	use behavior WBSFunctionalErrorLib::Twostate;
-	
-	component error behavior
-	events
-		Failure : error event;
-	transitions
-		t1 : Operational -[Failure]-> Failed;	
-	end component;
-**};
-end Annunciation;
+	system NoseWheelSteering
+		annex EMV2 {**
+			use behavior WBSFunctionalErrorLib::TwostateWBS;
+		**};
+	end NoseWheelSteering;
 
-system implementation Annunciation.basic
-end Annunciation.basic;
+	system WBControl
+		annex EMV2 {**
+			use behavior WBSFunctionalErrorLib::TwostateWBS;
+		**};
+	end WBControl;
 
-system AirCraftStatus
-properties
-	WBSPS::IsFunction => true;
-annex EMV2 {**
-	use behavior WBSFunctionalErrorLib::TwostateWBS;
-**};
-end AirCraftStatus;
+	system WBStatus
+		annex EMV2 {**
+			use behavior WBSFunctionalErrorLib::TwostateWBS;
+		**};
+	end WBStatus;
 
-system implementation AirCraftStatus.basic
-end AirCraftStatus.basic;
+	system BrakeCommand
+		annex EMV2 {**
+			use behavior WBSFunctionalErrorLib::TwostateWBS;
+		**};
+	end BrakeCommand;
 
-system ApplyWheelBrake
-properties
-	WBSPS::IsFunction => true;
-annex EMV2 {**
-	use behavior WBSFunctionalErrorLib::TwostateWBS;
-**};
-end ApplyWheelBrake;
+	system implementation BrakeCommand.basic
+		subcomponents
+			electricPower: system ElectricPower;
+			command: system Command;
+		annex EMV2 {**
+			use behavior WBSFunctionalErrorLib::TwostateWBS;
+			
+			composite error behavior
+				states
+					[electricPower.Failed or command.Failed]-> Failed;
+			end composite;
+		**};
+	end BrakeCommand.basic;
 
-system implementation ApplyWheelBrake.basic
-subcomponents
-	BrakeWheel: system BrakeByWheel;
-	WBControl: system WBControl;
-	BrakeCommand: system BrakeCommand.basic;
-	BrakeStatus: system WBStatus;
-annex EMV2 {**
-	use types WBSFunctionalErrorLib;
-	use behavior WBSFunctionalErrorLib::TwostateWBS;
-
-	composite error behavior
-	states
-	    -- FHA for Unnanunciated loss of all wheel
-	    -- from AIR6110 page 49
-		[BrakeWheel.Failed or BrakeCommand.Failed]-> Failed;
-	end composite;
-**};
-end ApplyWheelBrake.basic;
-
-
-system BrakeByWheel
-properties
-	WBSPS::IsFunction => true;
-annex EMV2 {**
-	use behavior WBSFunctionalErrorLib::Twostate;
-	component error behavior
-	events
-		LossHydraulicSupply : error event;
-		LossHydraulicComponents : error event;
-	transitions
-		t1 : Operational -[ LossHydraulicSupply]-> Failed;
-		t2 : Operational -[ LossHydraulicComponents]-> Failed;
-	end component;
-**};
-end BrakeByWheel;
-
-system implementation BrakeByWheel.basic
-properties
-	WBSPS::IsFunction => true;
-annex EMV2 {**
-	
-	use behavior WBSFunctionalErrorLib::Twostate;
-	
-
-**};
-end BrakeByWheel.basic;
-
-system NoseWheelSteering
-annex EMV2 {**
-	use behavior WBSFunctionalErrorLib::TwostateWBS;
-**};
-end NoseWheelSteering;
-
-system WBControl
-annex EMV2 {**
-	use behavior WBSFunctionalErrorLib::TwostateWBS;
-**};
-end WBControl;
-
-
-system WBStatus
-annex EMV2 {**
-	use behavior WBSFunctionalErrorLib::TwostateWBS;
-**};
-end WBStatus;
-
-system BrakeCommand
-annex EMV2 {**
-	use behavior WBSFunctionalErrorLib::TwostateWBS;
-**};
-end BrakeCommand;
-
-system implementation BrakeCommand.basic
-subcomponents
-	electricPower    : system ElectricPower;
-	command          : system Command;
-annex EMV2 {**
-	use behavior WBSFunctionalErrorLib::TwostateWBS;
-	composite error behavior
-	states
-		[electricPower.Failed or command.Failed ]-> Failed;
-	end composite;
-**};
-end BrakeCommand.basic;
-
-system DecelerateThrottle
-annex EMV2 {**
-	use behavior WBSFunctionalErrorLib::Twostate;
-	component error behavior
-	events
-		Failure : error event;
-	transitions
-		t1 : Operational -[ Failure]-> Failed;
-
-	end component;
-**};
-end DecelerateThrottle;
+	system DecelerateThrottle
+		annex EMV2 {**
+			use types WBSFunctionalErrorLib;
+			use behavior WBSFunctionalErrorLib::Twostate;
+			
+			component error behavior
+				events
+					Failure: error event {WBErrorSet};
+				transitions
+					t1: Operational -[Failure]-> Failed;
+			
+			end component;
+		**};
+	end DecelerateThrottle;
 
 end functional_initial;

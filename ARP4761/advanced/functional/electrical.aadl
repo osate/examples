@@ -1,21 +1,20 @@
 package functional::Electrical
 public
-with WBSPS,EMV2,ARP4761,functional::GenericFunctions;
+	with functional::GenericFunctions;
 
+	system Electrical extends functional::GenericFunctions::Generic
+		annex EMV2 {**
+			use types WBSFunctionalErrorLib;
+			
+			error propagations
+				processor: in propagation {AnyFunctionalError};
+				flows
+					f1: error path processor {AnyFunctionalError} -> isFailing {AnyFunctionalError};
+			end propagations;
+		**};
+	end Electrical;
 
-
-system Electrical extends functional::GenericFunctions::Generic
-annex EMV2 {**
-	use types WBSFunctionalErrorLib;
-	error propagations
-		processor : in propagation {AnyFunctionalError};
-	flows
-		f1 : error path processor{AnyFunctionalError} -> isFailing{AnyFunctionalError};
-	end propagations;
-**};
-end Electrical;
-
-system implementation Electrical.basic extends functional::GenericFunctions::Generic.basic
-end Electrical.basic;
+	system implementation Electrical.basic extends functional::GenericFunctions::Generic.basic
+	end Electrical.basic;
 
 end functional::Electrical;

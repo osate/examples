@@ -1,58 +1,55 @@
 package functional::WheelBrake::Generic
 public
-with functional::GenericFunctions;
-with WBSPS,EMV2,ARP4761;
+	with WBSPS;
 
-system GenericFunction
-features
-	fromElectrical : feature;
-	fromHydraulic  : feature;
-	fromAlert      : feature;
-	fromSteering   : feature;
-	fromStatus     : feature;
-properties
-	WBSPS::IsFunction => true;
-annex EMV2 {**
-	use types WBSFunctionalErrorLib;
+	system GenericFunction
+		features
+			fromElectrical: feature;
+			fromHydraulic: feature;
+			fromAlert: feature;
+			fromSteering: feature;
+			fromStatus: feature;
+		properties
+			WBSPS::IsFunction => true;
+		annex EMV2 {**
+			use types WBSFunctionalErrorLib;
+			
+			error propagations
+				fromElectrical: in propagation {AnyFunctionalError};
+				fromHydraulic: in propagation {HydraulicErrors};
+				fromAlert: in propagation {AnyFunctionalError};
+				fromSteering: in propagation {AnyFunctionalError};
+				fromStatus: in propagation {AnyFunctionalError};
+				flows
+					f1: error sink fromElectrical {AnyFunctionalError};
+					f2: error sink fromHydraulic {HydraulicErrors};
+					f3: error sink fromAlert {AnyFunctionalError};
+					f4: error sink fromSteering {AnyFunctionalError};
+					f5: error sink fromStatus {AnyFunctionalError};
+			end propagations;
+		**};
+	end GenericFunction;
 
-	error propagations
-		fromElectrical : in propagation {AnyFunctionalError};
-		fromHydraulic  : in propagation {HydraulicErrors};
-		fromAlert      : in propagation {AnyFunctionalError};
-		fromSteering   : in propagation {AnyFunctionalError};
-		fromStatus     : in propagation {AnyFunctionalError};
-	flows
-		f1 : error sink fromElectrical {AnyFunctionalError};
-		f2 : error sink fromHydraulic {HydraulicErrors};
-		f3 : error sink fromAlert {AnyFunctionalError};
-		f4 : error sink fromSteering {AnyFunctionalError};
-		f5 : error sink fromStatus {AnyFunctionalError};
-	end propagations;	
-**}; 
-end GenericFunction;
+	system implementation GenericFunction.basic
+	end GenericFunction.basic;
 
+	system GenericBrakeSystem
+		properties
+			WBSPS::IsFunction => true;
+		annex EMV2 {**
+			use types WBSFunctionalErrorLib;
+			use behavior WBSFunctionalErrorLib::Twostate;
+			
+			component error behavior
+				events
+					Failure: error event{WBErrorSet};
+				transitions
+					t1: Operational -[Failure]-> Failed;
+			end component;
+		**};
+	end GenericBrakeSystem;
 
-system implementation GenericFunction.basic
-end GenericFunction.basic;
-
-
-system GenericBrakeSystem
-properties
-	WBSPS::IsFunction => true;
-annex EMV2 {**
-	use types WBSFunctionalErrorLib;
-	use behavior WBSFunctionalErrorLib::Twostate;
-
-	component error behavior
-	events
-		Failure : error event;
-	transitions
-		t1 : Operational -[ Failure ]-> Failed;
-	end component;
-**};
-end GenericBrakeSystem;
-
-system implementation GenericBrakeSystem.basic
-end GenericBrakeSystem.basic;
+	system implementation GenericBrakeSystem.basic
+	end GenericBrakeSystem.basic;
 
 end functional::WheelBrake::Generic;

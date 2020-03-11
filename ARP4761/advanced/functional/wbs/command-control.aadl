@@ -1,52 +1,50 @@
 package functional::WheelBrake::CommandControl
 public
-with functional::GenericFunctions;
-with WBSPS,EMV2,ARP4761;
-with functional::WheelBrake::Generic;
+	with functional::GenericFunctions;
+	with WBSPS, EMV2;
+	with functional::WheelBrake::Generic;
 
+	system CommandControl extends functional::WheelBrake::Generic::GenericFunction
+		features
+			fromBSCU: feature;
+	end CommandControl;
 
-system CommandControl extends functional::WheelBrake::Generic::GenericFunction
-features
-	fromBSCU : feature;
-end CommandControl;
-
-system implementation CommandControl.basic extends functional::WheelBrake::Generic::GenericFunction.basic
-subcomponents
-	Control_Primary : system functional::GenericFunctions::Generic.basic;
-	Control_Secondary : system functional::GenericFunctions::Generic.basic;
-properties
-	WBSPS::IsFunction => true;
-annex EMV2 {**
-	use types WBSFunctionalErrorLib;
-	use behavior WBSFunctionalErrorLib::Twostate;
-
-	error propagations
-		fromBSCU : out propagation {AnyFunctionalError};
-	flows
-		f1 : error source fromBSCU {AnyFunctionalError}; 
-	end propagations;
-	
-	
-	component error behavior
-	events
-		lossBrakingCommand : error event;
-	transitions
-		t1 : Operational -[lossBrakingCommand]-> Failed;
-		t2 : Operational -[ fromElectrical {AnyFunctionalError} ]-> Failed;  
-	propagations
-		p1 : Failed -[]-> fromBSCU{AnyFunctionalError};
-	end component;
-
-	composite error behavior
-	states
-		[Control_Primary.Failed or Control_Secondary.Failed]-> Failed;
-	end composite;
-	properties
-		--  See AIR6110 page 49 for details
-		EMV2::OccurrenceDistribution => [ ProbabilityValue => 3.3e-5 ; Distribution => Poisson;] applies to lossBrakingCommand;
-**};
-end CommandControl.basic;
-
-
+	system implementation CommandControl.basic extends functional::WheelBrake::Generic::GenericFunction.basic
+		subcomponents
+			Control_Primary: system functional::GenericFunctions::Generic.basic;
+			Control_Secondary: system functional::GenericFunctions::Generic.basic;
+		properties
+			WBSPS::IsFunction => true;
+		annex EMV2 {**
+			use types WBSFunctionalErrorLib;
+			use behavior WBSFunctionalErrorLib::Twostate;
+			
+			error propagations
+				fromBSCU: out propagation {AnyFunctionalError};
+				flows
+					f1: error source fromBSCU {AnyFunctionalError};
+			end propagations;
+			
+			component error behavior
+				events
+					lossBrakingCommand: error event{WBErrorSet};
+				transitions
+					t1: Operational -[lossBrakingCommand]-> Failed;
+					t2: Operational -[fromElectrical {AnyFunctionalError}]-> Failed{TotalWBLossUnanunciated};
+				propagations
+					p1: Failed -[]-> fromBSCU {AnyFunctionalError};
+			end component;
+			
+			composite error behavior
+				states
+					[Control_Primary.Failed or Control_Secondary.Failed]-> Failed;
+			end composite;
+			
+			properties
+				--  See AIR6110 page 49 for details
+				EMV2::OccurrenceDistribution => [ProbabilityValue => 3.3e-5;
+					Distribution => Poisson;] applies to lossBrakingCommand;
+		**};
+	end CommandControl.basic;
 
 end functional::WheelBrake::CommandControl;

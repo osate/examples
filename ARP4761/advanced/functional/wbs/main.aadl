@@ -1,207 +1,191 @@
 package functional::WheelBrake::Main
 public
-with functional::GenericFunctions;
-with WBSPS,EMV2,ARP4761;
-with functional::WheelBrake::Generic;
-with functional::WheelBrake::CommandControl;
+	with WBSPS, EMV2, ARP4761;
+	with functional::WheelBrake::Generic;
+	with functional::WheelBrake::CommandControl;
 
-system NormalBrakeSystem extends functional::WheelBrake::Generic::GenericBrakeSystem
-features
-	fromHydraulic: feature;
-	fromBSCU     : feature;
-properties
-	WBSPS::IsFunction => true;
-annex EMV2 {**
-	use types WBSFunctionalErrorLib;
-	use behavior WBSFunctionalErrorLib::Twostate;
+	system NormalBrakeSystem extends functional::WheelBrake::Generic::GenericBrakeSystem
+		features
+			fromHydraulic: feature;
+			fromBSCU: feature;
+		properties
+			WBSPS::IsFunction => true;
+		annex EMV2 {**
+			use types WBSFunctionalErrorLib;
+			use behavior WBSFunctionalErrorLib::Twostate;
+			
+			error propagations
+				fromHydraulic: in propagation {HydraulicErrors};
+				fromBSCU: in propagation {AnyFunctionalError};
+				flows
+					f1: error sink fromHydraulic {HydraulicErrors};
+					f2: error sink fromBSCU {AnyFunctionalError};
+			end propagations;
+			
+			component error behavior
+				transitions
+					--  XXX JH: must check error propagated w.r.t. initial document
+					t1: Operational -[fromHydraulic {HydraulicLossGreen}]-> Failed {PartialSymmetricalWBLossAnunciated};
+					t2: Operational -[fromHydraulic {HydraulicLossComponents}]-> Failed {PartialSymmetricalWBLossAnunciated};
+					t3: Operational -[fromBSCU {AnyFunctionalError}]-> Failed {TotalWBLossUnanunciated};
+			end component;
+			
+			properties
+				-- Probability evaluated according to AIR6110, page 49
+				EMV2::OccurrenceDistribution => [ProbabilityValue => 1.0e-4; Distribution => Poisson;] applies to Failed;
+		**};
+	end NormalBrakeSystem;
 
-	error propagations
-		fromHydraulic 	: in propagation {HydraulicErrors};
-		fromBSCU  		: in propagation {AnyFunctionalError};
-	flows
-		f1 : error sink fromHydraulic {HydraulicErrors};
-		f2 : error sink fromBSCU{AnyFunctionalError};	
-	end propagations;
-	
-	component error behavior
-	transitions
-		t1 : Operational -[ fromHydraulic{HydraulicLossGreen} ]-> Failed;
-		t2 : Operational -[ fromHydraulic{HydraulicLossComponents} ]-> Failed;
-		t3 : Operational -[ fromBSCU{AnyFunctionalError} ]-> Failed;
-	end component;
-	
-	properties
-		-- Probability evaluated according to AIR6110, page 49
-		EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.0e-4 ; Distribution => Poisson;] applies to Failed; 
-**};
-end NormalBrakeSystem;
+	system DecelerateOnGround extends functional::WheelBrake::Generic::GenericFunction
+		features
+			fromBSCU: feature;
+		properties
+			WBSPS::IsFunction => true;
+		annex EMV2 {**
+			use types WBSFunctionalErrorLib;
+			
+			error propagations
+				fromBSCU: in propagation {AnyFunctionalError};
+				flows
+					f2: error sink fromBSCU {AnyFunctionalError};
+			end propagations;
+			
+		**};
+	end DecelerateOnGround;
 
+	system implementation DecelerateOnGround.basic extends functional::WheelBrake::Generic::GenericFunction.basic
+		subcomponents
+			normal: system NormalBrakeSystem;
+			alternate: system functional::WheelBrake::Generic::GenericBrakeSystem;
+			emergency: system functional::WheelBrake::Generic::GenericBrakeSystem;
+		connections
+			c1: feature fromBSCU -> normal.fromBSCU;
+		annex EMV2 {**
+			use types WBSFunctionalErrorLib;
+			use behavior WBSFunctionalErrorLib::TwostateWBS;
+			
+			composite error behavior
+				states
+					[normal.Failed or alternate.Failed or emergency.Failed]-> Failed;
+			end composite;
+			
+			properties
+				-- Probability evaluated according to AIR6110, page 49
+				EMV2::OccurrenceDistribution => [ProbabilityValue => 5.0e-3; Distribution => Poisson;] applies to ^alternate@Failed;
+				EMV2::OccurrenceDistribution => [ProbabilityValue => 5.0e-3; Distribution => Poisson;] applies to ^emergency@Failed;
+		**};
+	end DecelerateOnGround.basic;
 
+	system DecelerateWheels
+		features
+			fromElectrical: feature;
+			fromHydraulic: feature;
+			fromAlert: feature;
+			fromSteering: feature;
+			fromStatus: feature;
+		properties
+			WBSPS::IsFunction => true;
+		annex EMV2 {**
+			use types WBSFunctionalErrorLib;
+			
+			error propagations
+				fromElectrical: in propagation {AnyFunctionalError};
+				fromHydraulic: in propagation {HydraulicErrors};
+				fromAlert: in propagation {AnyFunctionalError};
+				fromSteering: in propagation {AnyFunctionalError};
+				fromStatus: in propagation {AnyFunctionalError};
+			
+			end propagations;
+		**};
+	end DecelerateWheels;
 
-system DecelerateOnGround extends functional::WheelBrake::Generic::GenericFunction
-features
-	fromBSCU     : feature;
-properties
-	WBSPS::IsFunction => true;
-annex EMV2 {**
-	use types WBSFunctionalErrorLib;
+	system implementation DecelerateWheels.basic
+		subcomponents
+			-- List of functions is available in AIR6110 page 30
+			decelerateonground: system DecelerateOnGround.basic;
+			directionalcontrol: system functional::WheelBrake::CommandControl::CommandControl.basic;
+			stopmainlanding: system functional::WheelBrake::Generic::GenericFunction.basic;
+			preventmotion: system functional::WheelBrake::Generic::GenericFunction.basic;
+		connections
+			c11: feature fromElectrical -> decelerateonground.fromElectrical;
+			c12: feature fromHydraulic -> decelerateonground.fromHydraulic;
+			c13: feature fromAlert -> decelerateonground.fromAlert;
+			c14: feature fromSteering -> decelerateonground.fromSteering;
+			c15: feature fromStatus -> decelerateonground.fromStatus;
 
-	error propagations
-		fromBSCU  		: in propagation {AnyFunctionalError};
-	flows
-		f2 : error sink fromBSCU {AnyFunctionalError};	
-	end propagations;
+			c21: feature fromElectrical -> directionalcontrol.fromElectrical;
+			c22: feature fromHydraulic -> directionalcontrol.fromHydraulic;
+			c23: feature fromAlert -> directionalcontrol.fromAlert;
+			c24: feature fromSteering -> directionalcontrol.fromSteering;
+			c25: feature fromStatus -> directionalcontrol.fromStatus;
 
-**};
-end DecelerateOnGround;
+			c31: feature fromElectrical -> stopmainlanding.fromElectrical;
+			c32: feature fromHydraulic -> stopmainlanding.fromHydraulic;
+			c33: feature fromAlert -> stopmainlanding.fromAlert;
+			c34: feature fromSteering -> stopmainlanding.fromSteering;
+			c35: feature fromStatus -> stopmainlanding.fromStatus;
 
-system implementation DecelerateOnGround.basic extends functional::WheelBrake::Generic::GenericFunction.basic
-subcomponents
-	normal    : system NormalBrakeSystem;
-	alternate : system functional::WheelBrake::Generic::GenericBrakeSystem;
-	emergency : system functional::WheelBrake::Generic::GenericBrakeSystem;
-connections
-	c1 : feature fromBSCU -> normal.fromBSCU;
-annex EMV2 {**
-	use types WBSFunctionalErrorLib;
-	use behavior WBSFunctionalErrorLib::TwostateWBS;
+			c41: feature fromElectrical -> preventmotion.fromElectrical;
+			c42: feature fromHydraulic -> preventmotion.fromHydraulic;
+			c43: feature fromAlert -> preventmotion.fromAlert;
+			c44: feature fromSteering -> preventmotion.fromSteering;
+			c45: feature fromStatus -> preventmotion.fromStatus;
 
-	composite error behavior
-	states
-		[normal.Failed or alternate.Failed or emergency.Failed]-> Failed;
-	end composite;   
-	
-	
-	properties
-		-- Probability evaluated according to AIR6110, page 49
-		EMV2::OccurrenceDistribution => [ ProbabilityValue => 5.0e-3 ; Distribution => Poisson;] applies to ^alternate@Failed;
-		EMV2::OccurrenceDistribution => [ ProbabilityValue => 5.0e-3 ; Distribution => Poisson;] applies to ^emergency@Failed;
- **};
-end DecelerateOnGround.basic;
-
-system DecelerateWheels
-features
-	fromElectrical : feature;
-	fromHydraulic  : feature;
-	fromAlert      : feature;
-	fromSteering   : feature;
-	fromStatus     : feature;
-properties
-	WBSPS::IsFunction => true;
-annex EMV2 {**
-	use types WBSFunctionalErrorLib;
-
-	error propagations
-		fromElectrical : in propagation {AnyFunctionalError};
-		fromHydraulic  : in propagation {HydraulicErrors};
-		fromAlert      : in propagation {AnyFunctionalError};
-		fromSteering   : in propagation {AnyFunctionalError};
-		fromStatus     : in propagation {AnyFunctionalError};
-
-	end propagations;	
-**};
-end DecelerateWheels;
-
-system implementation DecelerateWheels.basic
-subcomponents
-    -- List of functions is available in AIR6110 page 30
-	decelerateonground : system DecelerateOnGround.basic;
-	directionalcontrol     : system functional::WheelBrake::CommandControl::CommandControl.basic;
-	stopmainlanding      : system functional::WheelBrake::Generic::GenericFunction.basic;
-	preventmotion         : system functional::WheelBrake::Generic::GenericFunction.basic;
-connections
-	c11 : feature fromElectrical -> decelerateonground.fromElectrical;
-	c12 : feature fromHydraulic -> decelerateonground.fromHydraulic; 
-	c13 : feature fromAlert -> decelerateonground.fromAlert;
-	c14 : feature fromSteering -> decelerateonground.fromSteering;
-	c15 : feature fromStatus -> decelerateonground.fromStatus;	
- 
-	c21 : feature fromElectrical -> directionalcontrol.fromElectrical; 
-	c22 : feature fromHydraulic -> directionalcontrol.fromHydraulic;
-	c23 : feature fromAlert -> directionalcontrol.fromAlert;
-	c24 : feature fromSteering -> directionalcontrol.fromSteering;
-	c25 : feature fromStatus -> directionalcontrol.fromStatus;	
-	
-	c31 : feature fromElectrical -> stopmainlanding.fromElectrical;
-	c32 : feature fromHydraulic -> stopmainlanding.fromHydraulic;
-	c33 : feature fromAlert -> stopmainlanding.fromAlert;
-	c34 : feature fromSteering -> stopmainlanding.fromSteering;
-	c35 : feature fromStatus -> stopmainlanding.fromStatus;		
-
-	c41 : feature fromElectrical -> preventmotion.fromElectrical;
-	c42 : feature fromHydraulic -> preventmotion.fromHydraulic;
-	c43 : feature fromAlert -> preventmotion.fromAlert;
-	c44 : feature fromSteering -> preventmotion.fromSteering;
-	c45 : feature fromStatus -> preventmotion.fromStatus;			
-
-	c50 : feature directionalcontrol.fromBSCU -> decelerateonground.fromBSCU;
-annex EMV2 {**
-	use types WBSFunctionalErrorLib;
-	use behavior WBSFunctionalErrorLib::TwostateWBS;
-
-
-	
-	composite error behavior
-	states
-	    -- FHA for Unnanunciated loss of all wheel
-	    -- from AIR6110 page 49
---		[decelerateonground.Failed]-> Failed(TotalWBLossAnunciated);
-		[decelerateonground.Failed]-> Failed{TotalWBLossUnAnunciated}; 
-		[decelerateonground.Failed and in fromAlert{AnyFunctionalError}]-> Failed{TotalWBLossAnunciated};
---		[decelerateonground.Failed]-> Failed;  
-	end composite;
- 
-	properties
-		ARP4761::hazards => 
-              ([      crossreference => "AIR6110 page 36";
-              failure => "Total Loss of wheel braking - Unannunciated loss of wheel braking";
-              phases => ("Landing", "RTO");
-              description => "Crew detects the failure when the brakes are operated. The crew uses spoilers and thrust reversers to the maximum extent possible. This may result in a runway overrun.";
-				FailureConditionClassification => Hazardous;
-				QualitativeProbabilityObjective => Remote;
-              comment => "";
-              ])
-              applies to Failed.TotalWBLossAnunciated;
-              
-
-
-	ARP4761::hazards => 
-              ([      crossreference => "AIR6110 page 36";
-              failure => "Total Loss of wheel braking - Annunciated loss of wheel braking";
-              phases => ("Landing");
-              description => "Crew selects a more suitable airport, notifies emergency ground support, and prepares occupants for runway overrun. The crew uses spoilers and thrust reversers to the maximum extent possible.";
-				FailureConditionClassification => Hazardous;
-				QualitativeProbabilityObjective => Remote;
-              comment => "";
-              ])
-		applies to Failed.TotalWBLossUnanunciated;
-	-- Probability should be 5e-7 according to AIR6110, page 49
-	EMV2::OccurrenceDistribution => [ ProbabilityValue => 5.0e-7 ; Distribution => Poisson;] applies to Failed.TotalWBLossUnanunciated;
-              
-	ARP4761::hazards => 
-              ([      crossreference => "AIR6110 page 36";
-              failure => "Partial Symmetrical Loss of Wheel Braking - Unannunciated partial symmetrical loss of wheel braking";
-              phases => ("Landing or RTO");
-              description => "The crew detects the failure when the brakes are used. Crew uses available wheel braking, spoilers and thrust reversers available to maximum extent to decelerate the aircraft. The temperature on wheels of the loaded brakes increases and could reach point where wheel/fire failure occurs. Depending on number of brakes lost result could be an overrun.";
- 				FailureConditionClassification => Hazardous;
-				QualitativeProbabilityObjective => Remote;
-              comment => "Potentially catastrophic – to be confirmed by analysis";
-              ])
-              applies to Failed.PartialSymmetricalWBLossUnAnunciated;
-              
-              
-	ARP4761::hazards => 
-              ([      crossreference => "AIR6110 page 36";
-              failure => "Partial Symmetrical Loss of Wheel Braking - Annunciated partial symmetrical loss of wheel braking";
-              phases => ("Landing");
-              description => "The crew is aware that there is a partial loss of braking before landing. Crew uses wheel braking, spoilers and thrust reversers available to maximum extent to decelerate the aircraft. The temperature on wheels of the loaded brakes increases and could reach point where wheel/fire failure occurs. Depending on number of brakes lost result could be an overrun.";
- 				FailureConditionClassification => Major;
-				QualitativeProbabilityObjective => Remote;
-              comment => "";
-              ])
-              applies to Failed.PartialSymmetricalWBLossanunciated;
- **};
-end DecelerateWheels.basic;
-
+			c50: feature directionalcontrol.fromBSCU -> decelerateonground.fromBSCU;
+		annex EMV2 {**
+			use types WBSFunctionalErrorLib;
+			use behavior WBSFunctionalErrorLib::TwostateWBS;
+			
+			composite error behavior
+				states
+					-- FHA for Unnanunciated loss of all wheel
+					-- from AIR6110 page 49
+					--		[decelerateonground.Failed]-> Failed(TotalWBLossAnunciated);
+					[decelerateonground.Failed]-> Failed {TotalWBLossUnAnunciated};
+					[decelerateonground.Failed and in fromAlert {AnyFunctionalError}]-> Failed {TotalWBLossAnunciated};
+			--		[decelerateonground.Failed]-> Failed;  
+			end composite;
+			
+			properties
+				ARP4761::hazards => ([crossreference => "AIR6110 page 36";
+						failure => "Total Loss of wheel braking - Unannunciated loss of wheel braking";
+						phases => ("Landing", "RTO");
+						description => "Crew detects the failure when the brakes are operated. The crew uses spoilers and thrust reversers to the maximum extent possible. This may result in a runway overrun.";
+						FailureConditionClassification => Hazardous;
+						QualitativeProbabilityObjective => Remote;
+						comment => "";
+					]) applies to Failed.TotalWBLossAnunciated;
+			
+				ARP4761::hazards => ([crossreference => "AIR6110 page 36";
+						failure => "Total Loss of wheel braking - Annunciated loss of wheel braking";
+						phases => ("Landing");
+						description => "Crew selects a more suitable airport, notifies emergency ground support, and prepares occupants for runway overrun. The crew uses spoilers and thrust reversers to the maximum extent possible.";
+						FailureConditionClassification => Hazardous;
+						QualitativeProbabilityObjective => Remote;
+						comment => "";
+					]) applies to Failed.TotalWBLossUnanunciated;
+				-- Probability should be 5e-7 according to AIR6110, page 49
+				EMV2::OccurrenceDistribution => [ProbabilityValue => 5.0e-7;
+					Distribution => Poisson;] applies to Failed.TotalWBLossUnanunciated;
+			
+				ARP4761::hazards => ([crossreference => "AIR6110 page 36";
+						failure => "Partial Symmetrical Loss of Wheel Braking - Unannunciated partial symmetrical loss of wheel braking";
+						phases => ("Landing or RTO");
+						description => "The crew detects the failure when the brakes are used. Crew uses available wheel braking, spoilers and thrust reversers available to maximum extent to decelerate the aircraft. The temperature on wheels of the loaded brakes increases and could reach point where wheel/fire failure occurs. Depending on number of brakes lost result could be an overrun.";
+						FailureConditionClassification => Hazardous;
+						QualitativeProbabilityObjective => Remote;
+						comment => "Potentially catastrophic – to be confirmed by analysis";
+					]) applies to Failed.PartialSymmetricalWBLossUnAnunciated;
+			
+				ARP4761::hazards => ([crossreference => "AIR6110 page 36";
+						failure => "Partial Symmetrical Loss of Wheel Braking - Annunciated partial symmetrical loss of wheel braking";
+						phases => ("Landing");
+						description => "The crew is aware that there is a partial loss of braking before landing. Crew uses wheel braking, spoilers and thrust reversers available to maximum extent to decelerate the aircraft. The temperature on wheels of the loaded brakes increases and could reach point where wheel/fire failure occurs. Depending on number of brakes lost result could be an overrun.";
+						FailureConditionClassification => Major;
+						QualitativeProbabilityObjective => Remote;
+						comment => "";
+					]) applies to Failed.PartialSymmetricalWBLossanunciated;
+		**};
+	end DecelerateWheels.basic;
 
 end functional::WheelBrake::Main;

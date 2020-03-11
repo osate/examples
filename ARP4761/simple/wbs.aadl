@@ -2,201 +2,185 @@ package wbs
 
 public
 
-with bscu;
-with communication;
-with valves;
-with wheel;
-with pump;
-with power;
-with pedals;
-with ARP4761;
-with EMV2;
-
+	with bscu;
+	with communication;
+	with valves;
+	with wheel;
+	with pump;
+	with power;
+	with pedals;
+	with ARP4761;
+	with EMV2;
 
 --
 --  Dummy component for the wheel brake system.
 --
-system wbs
-end wbs;
+	system wbs
+	end wbs;
 
-system implementation wbs.generic
-subcomponents
-	-- Pedal subsystem
-	pedals			: system pedals::pedals.generic;
+	system implementation wbs.generic
+		subcomponents
+			-- Pedal subsystem
+			pedals: system pedals::pedals.generic;
 
-	-- Power subsystem
-	power      		: system power::power.generic;
-	
-    --  The two pumps at the top of the diagram
-	blue_pump  		: system pump::pump.i;
-	green_pump 		: system pump::pump.i;
-	
-	--  The accumulator pump
-	accumulator		: system pump::pump.i;
-	
-	--  The selector subsystem
-	selector   		: system valves::selector;
-	bscu       		: system bscu::bscu.generic;
+			-- Power subsystem
+			power: system power::power.generic;
 
-	wheel      		: system wheel::wheel;
-	
-	-- Annunciation device
-	annunciation 	: device communication::annunciation.i;
-connections
-    accu_to_sel: bus access selector.accumulator_input <-> accumulator.pressure_output;
-	power1     : bus access bscu.pwr1 <-> power.line1;
-	power2     : bus access power.line2 <-> bscu.pwr2;
-	pedal1     : port pedals.signal1 -> bscu.pedal1;
-	pedal2     : port pedals.signal2 -> bscu.pedal2;
-annex EMV2 {**
-	-- The WBS system has the following error states:
-	-- Operational
-	-- AnnunciatedTotalBrakingLoss
-	-- UnannunciatedTotalBrakingLoss
-	-- PartialBrakingLoss
-	-- AsymmetricLoss
-	-- InadvertentBrake
-	use types error_library;
-	use behavior error_library::wbs;
+			--  The two pumps at the top of the diagram
+			blue_pump: system pump::pump.i;
+			green_pump: system pump::pump.i;
 
-	composite error behavior
-	states
---		[blue_pump.Failed and green_pump.Failed and bscu.Failed and accumulator.Failed]-> Failed;
-				[bscu.Failed and accumulator.Failed and annunciation.Failed]-> AnnunciatedBrakingLoss;
-		[blue_pump.Failed and green_pump.Failed and accumulator.Failed and annunciation.Failed]-> AnnunciatedBrakingLoss;
-		[bscu.Failed and accumulator.Failed and annunciation.Failed]-> UnannunciatedBrakingLoss;
-		[blue_pump.Failed and green_pump.Failed and accumulator.Failed and annunciation.Failed]-> UnannunciatedBrakingLoss;
-	end composite;
-	
-	properties
-		ARP4761::hazards => 
-			([	crossreference => "AIR6110 page 35 figure 17";
-				failure => "Crew detect the failure when the brakes are operated (unanunciated) or select an appropaite landing spot (annunciated)";
-				phases => ("Landing","RTO");
-				description => "Total Loss of Wheel Braking";
-				FailureConditionClassification => Hazardous;
-				QualitativeProbabilityObjective => ExtremelyImprobable;
-				comment => "Reference to crew procedures for loss of normal and reserve modes";
-			])
-			applies to AnnunciatedBrakingLoss,UnannunciatedBrakingLoss;
+			--  The accumulator pump
+			accumulator: system pump::pump.i;
+
+			--  The selector subsystem
+			selector: system valves::selector;
+			bscu: system bscu::bscu.generic;
+
+			wheel: system wheel::wheel;
+
+			-- Annunciation device
+			annunciation: device communication::annunciation.i;
+		connections
+			accu_to_sel: bus access selector.accumulator_input <-> accumulator.pressure_output;
+			power1: bus access bscu.pwr1 <-> power.line1;
+			power2: bus access power.line2 <-> bscu.pwr2;
+			pedal1: port pedals.signal1 -> bscu.pedal1;
+			pedal2: port pedals.signal2 -> bscu.pedal2;
+		annex EMV2 {**
+			-- The WBS system has the following error states:
+			-- Operational
+			-- AnnunciatedTotalBrakingLoss
+			-- UnannunciatedTotalBrakingLoss
+			-- PartialBrakingLoss
+			-- AsymmetricLoss
+			-- InadvertentBrake
+			use types error_library;
+			use behavior error_library::wbs;
 			
-		ARP4761::hazards => 
-			([	crossreference => "AIR6110 page 35 figure 17";
-				failure => "Crew detects the failure when brakes are used. Use available wheel braking, spoilers and thrust reverses to decelerate.";
-				phases => ("Landing","RTO");
-				description => "Partial Symmetrical Loss of Wheel Braking";
-				FailureConditionClassification => Hazardous;
-				QualitativeProbabilityObjective => ExtremelyImprobable;
-				comment => "Additional study required to determine classification";
-			])
-			applies to PartialBrakingLoss;
-
-		ARP4761::hazards => 
-			([	crossreference => "AIR6110 page 36 figure 17";
-				failure => "Partial Symmetrical Loss of Wheel Braking";
-				phases => ("Landing","RTO");
-				description => "Asymmetrical Loss of Wheel Braking";
-				FailureConditionClassification => Catastrophic;
-				QualitativeProbabilityObjective => ExtremelyImprobable;
-				comment => "Decrease in braking performance. Tendency to veer off the runway.";
-			])
-			applies to AsymmetricLoss;
+			composite error behavior
+				states
+			--		[blue_pump.Failed and green_pump.Failed and bscu.Failed and accumulator.Failed]-> Failed;
+					[bscu.Failed and accumulator.Failed and annunciation.Failed]-> AnnunciatedBrakingLoss;
+					[blue_pump.Failed and green_pump.Failed and accumulator.Failed and
+						annunciation.Failed]-> AnnunciatedBrakingLoss;
+					[bscu.Failed and accumulator.Failed and annunciation.Failed]-> UnannunciatedBrakingLoss;
+					[blue_pump.Failed and green_pump.Failed and accumulator.Failed and
+						annunciation.Failed]-> UnannunciatedBrakingLoss;
+			end composite;
 			
-
-		EMV2::likelihood => ARP4761::ExtremelyImprobable applies to InadvertentBrake;
-		ARP4761::hazards => 
-			([	crossreference => "AIR6110 page 37 figure 17";
-				failure => "Inadvertent wheel brake application";
-				phases => ("Takeoff");
-				description => "Undetected inadvertent wheel brake on one wheel without locking the wheel.";
-				FailureConditionClassification => Catastrophic;
-				QualitativeProbabilityObjective => ExtremelyImprobable;
-				comment => "Crew cannot detect the failure by the asymmetry which is very small. Brake temperature can reach very high temperature.";
-			])
-			applies to InadvertentBrake;
-		
-
-	
-**};
-end wbs.generic;
-
-
+			properties
+				ARP4761::hazards => ([crossreference => "AIR6110 page 35 figure 17";
+						failure => "Crew detect the failure when the brakes are operated (unanunciated) or select an appropaite landing spot (annunciated)";
+						phases => ("Landing", "RTO");
+						description => "Total Loss of Wheel Braking";
+						FailureConditionClassification => Hazardous;
+						QualitativeProbabilityObjective => ExtremelyImprobable;
+						comment => "Reference to crew procedures for loss of normal and reserve modes";
+					]) applies to AnnunciatedBrakingLoss, UnannunciatedBrakingLoss;
+			
+				ARP4761::hazards => ([crossreference => "AIR6110 page 35 figure 17";
+						failure => "Crew detects the failure when brakes are used. Use available wheel braking, spoilers and thrust reverses to decelerate.";
+						phases => ("Landing", "RTO");
+						description => "Partial Symmetrical Loss of Wheel Braking";
+						FailureConditionClassification => Hazardous;
+						QualitativeProbabilityObjective => ExtremelyImprobable;
+						comment => "Additional study required to determine classification";
+					]) applies to PartialBrakingLoss;
+			
+				ARP4761::hazards => ([crossreference => "AIR6110 page 36 figure 17";
+						failure => "Partial Symmetrical Loss of Wheel Braking";
+						phases => ("Landing", "RTO");
+						description => "Asymmetrical Loss of Wheel Braking";
+						FailureConditionClassification => Catastrophic;
+						QualitativeProbabilityObjective => ExtremelyImprobable;
+						comment => "Decrease in braking performance. Tendency to veer off the runway.";
+					]) applies to AsymmetricLoss;
+			
+				EMV2::likelihood => ARP4761::ExtremelyImprobable applies to InadvertentBrake;
+				ARP4761::hazards => ([crossreference => "AIR6110 page 37 figure 17";
+						failure => "Inadvertent wheel brake application";
+						phases => ("Takeoff");
+						description => "Undetected inadvertent wheel brake on one wheel without locking the wheel.";
+						FailureConditionClassification => Catastrophic;
+						QualitativeProbabilityObjective => ExtremelyImprobable;
+						comment => "Crew cannot detect the failure by the asymmetry which is very small. Brake temperature can reach very high temperature.";
+					]) applies to InadvertentBrake;
+		**};
+	end wbs.generic;
 
 --  Basic/naive version that abstracts all the valves with
 --  a selector_subsystem. This selector subsystem hide
 --  the physical logic behind the selector, shutoff and meter/anti-skid
 --  valves.
-system implementation wbs.basic extends wbs.generic
-subcomponents
-	bscu : refined to system bscu::bscu.basic;
-	--  The selector subsystem
-	selector   : refined to system valves::selector_basic{Classifier_Substitution_Rule => Type_Extension;};
-	wheel      : refined to system wheel::wheel_one_input.i{Classifier_Substitution_Rule => Type_Extension;};
-connections 
-	blue_to_selector    : bus access blue_pump.pressure_output  <-> selector.blue_input; 
-	green_to_selector   : bus access green_pump.pressure_output <-> selector.green_input;
-	
-	bscu_sel_to_selector : port bscu.Select_Alternate -> selector.Select_Alternate;
-	bscu_cmdnor_to_selector : port bscu.cmd_nor -> selector.cmd_nor;
-	bscu_cmdalt_to_selector : port bscu.cmd_alt -> selector.cmd_alt;
-	
-	selector_to_wheel   : bus access selector.output <-> wheel.input;
-end wbs.basic;
+	system implementation wbs.basic extends wbs.generic
+		subcomponents
+			bscu: refined to system bscu::bscu.basic;
+			--  The selector subsystem
+			selector: refined to system valves::selector_basic {Classifier_Substitution_Rule => Type_Extension;};
+			wheel: refined to system wheel::wheel_one_input.i {Classifier_Substitution_Rule => Type_Extension;};
+		connections
+			blue_to_selector: bus access blue_pump.pressure_output <-> selector.blue_input;
+			green_to_selector: bus access green_pump.pressure_output <-> selector.green_input;
 
+			bscu_sel_to_selector: port bscu.Select_Alternate -> selector.Select_Alternate;
+			bscu_cmdnor_to_selector: port bscu.cmd_nor -> selector.cmd_nor;
+			bscu_cmdalt_to_selector: port bscu.cmd_alt -> selector.cmd_alt;
+
+			selector_to_wheel: bus access selector.output <-> wheel.input;
+	end wbs.basic;
 
 --
 --  Version with more details of the implementation, showing detail
 --  about the hydraulic system.
 -- 
-system implementation wbs.detailed extends wbs.generic
-subcomponents
-	selector   : refined to system valves::selector_detailed{Classifier_Substitution_Rule => Type_Extension;};
-	shutoff    : system valves::boolean_shutoff;
-	green_skid : system valves::cmd_shutoff; 
-	blue_skid  : system valves::cmd_shutoff; 
-	wheel      : refined to system wheel::wheel_two_inputs.i {Classifier_Substitution_Rule => Type_Extension;}; 
-connections
-    --  We connect the blue pump directly to the selector valve.
-    --  For the green pump, we connect it to the shutoff valve that
-    --  is later connected to the selector valve after.
-	blue_to_selector    : bus access blue_pump.pressure_output  <-> selector.blue_input; 
-	green_to_shutoff    : bus access green_pump.pressure_output <-> shutoff.input;
-	shutoff_to_selector : bus access shutoff.output <-> selector.green_input;
-	bscu_to_shutoff     : port bscu.Select_Alternate -> shutoff.boolean_input;
-	
-	bscu_to_selector    : port bscu.Select_Alternate -> selector.select_alternate;
-	 
-	--  Connect the command from the BSCU to the skid valves
-	bscu_to_gskid       : port bscu.cmd_nor -> green_skid.cmd_input;
-	bscu_to_bskid       : port bscu.cmd_alt -> blue_skid.cmd_input;
-	
-	--  Connect the output pressure from the selector
-	--  to the anti-skid components
-	selector_to_gskid   : bus access selector.green_output <-> green_skid.input;
-	selector_to_bskid   : bus access selector.blue_output  <-> blue_skid.input;
-	
-	--  Connect the anti-skid system to the wheel. In this version,
-	--  we see the wheel as having two paths for getting the pressure.
-	--  We see that as a physical model, not a logical one.
-	bskid_to_wheel      : bus access blue_skid.output <-> wheel.blue_input;
-	gskid_to_wheel      : bus access green_skid.output <-> wheel.green_input;
-end wbs.detailed;
- 
+	system implementation wbs.detailed extends wbs.generic
+		subcomponents
+			selector: refined to system valves::selector_detailed {Classifier_Substitution_Rule => Type_Extension;};
+			shutoff: system valves::boolean_shutoff;
+			green_skid: system valves::cmd_shutoff;
+			blue_skid: system valves::cmd_shutoff;
+			wheel: refined to system wheel::wheel_two_inputs.i {Classifier_Substitution_Rule => Type_Extension;};
+		connections
+			--  We connect the blue pump directly to the selector valve.
+			--  For the green pump, we connect it to the shutoff valve that
+			--  is later connected to the selector valve after.
+			blue_to_selector: bus access blue_pump.pressure_output <-> selector.blue_input;
+			green_to_shutoff: bus access green_pump.pressure_output <-> shutoff.input;
+			shutoff_to_selector: bus access shutoff.output <-> selector.green_input;
+			bscu_to_shutoff: port bscu.Select_Alternate -> shutoff.boolean_input;
 
-system implementation wbs.federated extends wbs.detailed
-subcomponents
-	bscu : refined to system bscu::bscu.federated;
-end wbs.federated;
+			bscu_to_selector: port bscu.Select_Alternate -> selector.select_alternate;
 
+			--  Connect the command from the BSCU to the skid valves
+			bscu_to_gskid: port bscu.cmd_nor -> green_skid.cmd_input;
+			bscu_to_bskid: port bscu.cmd_alt -> blue_skid.cmd_input;
 
-system implementation wbs.ima extends wbs.detailed
-subcomponents
-	bscu : refined to system bscu::bscu.ima;
-annex resolute {**  
+			--  Connect the output pressure from the selector
+			--  to the anti-skid components
+			selector_to_gskid: bus access selector.green_output <-> green_skid.input;
+			selector_to_bskid: bus access selector.blue_output <-> blue_skid.input;
+
+			--  Connect the anti-skid system to the wheel. In this version,
+			--  we see the wheel as having two paths for getting the pressure.
+			--  We see that as a physical model, not a logical one.
+			bskid_to_wheel: bus access blue_skid.output <-> wheel.blue_input;
+			gskid_to_wheel: bus access green_skid.output <-> wheel.green_input;
+	end wbs.detailed;
+
+	system implementation wbs.federated extends wbs.detailed
+		subcomponents
+			bscu: refined to system bscu::bscu.federated;
+	end wbs.federated;
+
+	system implementation wbs.ima extends wbs.detailed
+		subcomponents
+			bscu: refined to system bscu::bscu.ima;
+		annex resolute {**  
       	prove contain_two_power_supply()
       	prove contain_two_selector_valve() 
       	prove contain_two_bscu()
 **};
-end wbs.ima;
+	end wbs.ima;
 
 end wbs;

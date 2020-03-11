@@ -1,82 +1,78 @@
 package functional::main
 public
-with functional::GenericFunctions;
-with WBSPS,EMV2,ARP4761,functional::WheelBrake::Main,functional::Throttle,functional::Electrical,functional::Hydraulic;
+	with functional::GenericFunctions;
+	with WBSPS,functional::WheelBrake::Main, functional::Throttle, functional::Electrical, functional::Hydraulic;
 
-system Aircraft
-end Aircraft;
+	system Aircraft
+	end Aircraft;
 
-system implementation Aircraft.basic
-subcomponents
-	decelerate : system DecelerateAircraft.basic;
-	electrical : system functional::Electrical::Electrical.basic;
-	hydraulic  : system functional::Hydraulic::Hydraulic.basic;
-	alert      : system functional::GenericFunctions::Generic.basic;
-	steering   : system functional::GenericFunctions::Generic.basic;
-	status     : system functional::GenericFunctions::Generic.basic;
-connections
-	c1 : feature electrical.isFailing -> decelerate.fromElectrical;
-	c2 : feature hydraulic.isFailing -> decelerate.fromHydraulic;
-	c3 : feature alert.isFailing -> decelerate.fromAlert;
-	c4 : feature steering.isFailing -> decelerate.fromSteering;
-	c5 : feature status.isFailing -> decelerate.fromStatus;
-annex EMV2 {**
-	use types WBSFunctionalErrorLib;
-	use behavior WBSFunctionalErrorLib::Twostate;
+	system implementation Aircraft.basic
+		subcomponents
+			decelerate: system DecelerateAircraft.basic;
+			electrical: system functional::Electrical::Electrical.basic;
+			hydraulic: system functional::Hydraulic::Hydraulic.basic;
+			alert: system functional::GenericFunctions::Generic.basic;
+			steering: system functional::GenericFunctions::Generic.basic;
+			status: system functional::GenericFunctions::Generic.basic;
+		connections
+			c1: feature electrical.isFailing -> decelerate.fromElectrical;
+			c2: feature hydraulic.isFailing -> decelerate.fromHydraulic;
+			c3: feature alert.isFailing -> decelerate.fromAlert;
+			c4: feature steering.isFailing -> decelerate.fromSteering;
+			c5: feature status.isFailing -> decelerate.fromStatus;
+		annex EMV2 {**
+			use types WBSFunctionalErrorLib;
+			use behavior WBSFunctionalErrorLib::Twostate;
+			
+			composite error behavior
+				states
+					[decelerate.Failed]-> Failed;
+			end composite;
+		**};
+	end Aircraft.basic;
 
-	composite error behavior
-	states
-		[decelerate.Failed]-> Failed;
-	end composite;                
- **};
-end Aircraft.basic;
+	system DecelerateAircraft
+		features
+			fromElectrical: feature;
+			fromHydraulic: feature;
+			fromAlert: feature;
+			fromSteering: feature;
+			fromStatus: feature;
+		properties
+			WBSPS::IsFunction => true;
+		annex EMV2 {**
+			use types WBSFunctionalErrorLib;
+			
+			error propagations
+				fromElectrical: in propagation {AnyFunctionalError};
+				fromHydraulic: in propagation {HydraulicErrors};
+				fromAlert: in propagation {AnyFunctionalError};
+				fromSteering: in propagation {AnyFunctionalError};
+				fromStatus: in propagation {AnyFunctionalError};
+			end propagations;
+		**};
+	end DecelerateAircraft;
 
-
-
-system DecelerateAircraft
-features
-	fromElectrical : feature;
-	fromHydraulic  : feature;
-	fromAlert      : feature;
-	fromSteering   : feature;
-	fromStatus     : feature;
-properties
-	WBSPS::IsFunction => true;
-annex EMV2 {**
-	use types WBSFunctionalErrorLib;
-	error propagations
-		fromElectrical : in propagation {AnyFunctionalError};
-		fromHydraulic  : in propagation {HydraulicErrors};
-		fromAlert      : in propagation {AnyFunctionalError};
-		fromSteering   : in propagation {AnyFunctionalError};
-		fromStatus     : in propagation {AnyFunctionalError};
-	end propagations;	
-**};
-end DecelerateAircraft;
-
-
-
- 
-system implementation DecelerateAircraft.basic
-subcomponents
-	DecelerateWheels  : system   functional::WheelBrake::Main::DecelerateWheels.basic;
-	DecelerateThrottle: system   functional::Throttle::DecelerateThrottle;
-connections
-	c1 : feature fromElectrical -> DecelerateWheels.fromElectrical;
-	c2 : feature fromHydraulic  -> DecelerateWheels.fromHydraulic;
-	c3 : feature fromAlert      -> DecelerateWheels.fromAlert;
-	c4 : feature fromSteering   -> DecelerateWheels.fromSteering;
-	c5 : feature fromStatus     -> DecelerateWheels.fromStatus;
-annex EMV2 {**
-	use types WBSFunctionalErrorLib;
-	use behavior WBSFunctionalErrorLib::TwostateWBS;
-
-	composite error behavior
-	states
-		[DecelerateWheels.Failed{TotalWBLossAnunciated} or DecelerateWheels.Failed{TotalWBLossUnanunciated} or DecelerateThrottle.Failed]-> Failed;
-	end composite;                
- **};
-end DecelerateAircraft.basic;
-
+	system implementation DecelerateAircraft.basic
+		subcomponents
+			DecelerateWheels: system functional::WheelBrake::Main::DecelerateWheels.basic;
+			DecelerateThrottle: system functional::Throttle::DecelerateThrottle;
+		connections
+			c1: feature fromElectrical -> DecelerateWheels.fromElectrical;
+			c2: feature fromHydraulic -> DecelerateWheels.fromHydraulic;
+			c3: feature fromAlert -> DecelerateWheels.fromAlert;
+			c4: feature fromSteering -> DecelerateWheels.fromSteering;
+			c5: feature fromStatus -> DecelerateWheels.fromStatus;
+		annex EMV2 {**
+			use types WBSFunctionalErrorLib;
+			use behavior WBSFunctionalErrorLib::TwostateWBS;
+			
+			composite error behavior
+				states
+					[DecelerateWheels.Failed {TotalWBLossAnunciated} or DecelerateWheels.Failed {TotalWBLossUnanunciated} or
+						DecelerateThrottle.Failed]-> Failed;
+			end composite;
+		**};
+	end DecelerateAircraft.basic;
 
 end functional::main;

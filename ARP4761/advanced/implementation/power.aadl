@@ -1,101 +1,95 @@
 package impl::power
 
 public
-with common;
-with ARP4761;
-with EMV2;
+	with common;
+	with ARP4761;
+	with EMV2;
 
-device battery
-features
-	socket : provides bus access common::power.generic;
-annex EMV2 {**
-	use types WBSImplementationErrorLib;
-	use behavior WBSImplementationErrorLib::Twostate;
-
-	error propagations
-		socket 		: out propagation {NoPower};
-		bindings 	: out propagation {AnyImplementationError};
-	flows
-		f1 : error source socket{NoPower};
-		f2 : error source bindings{AnyImplementationError};
-	end propagations;
-	component error behavior
-	events
-		Depleted : error event;
-		Explode  : error event;
-	transitions
-		Operational -[Depleted]-> Failed;
-		Operational -[Explode]-> Failed;
-	propagations
-		p1: Failed -[]-> socket{NoPower};
-		normal : Operational -[]-> socket{NoError};
-	end component;
-	properties
-		ARP4761::hazards => 
-			([	crossreference => "ARP4761 page 277 figure 9";
-				failure => "Loss of one power source, might be critical if both are lost (primary and redundant)";
-				phases => ("Landing","RTO");
-				description => "Loss of Electrical Power to BSCU";
-				FailureConditionClassification => Major;
-				QualitativeProbabilityObjective => Probable;
-				comment => "Major hazard if both power are lost";
-			])
-			applies to socket.NoPower;
-		EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.35e-5 ; Distribution => Poisson;] applies to socket.NoPower;
---		EMV2::OccurrenceDistribution => [ ProbabilityValue => 6.75e-5 ; Distribution => Fixed;] applies to socket.NoPower;
-
-		ARP4761::hazards => 
-			([	crossreference => "TBD";
-				failure => "Battery Explode";
-				phases => ("all");
-				description => "Battery Explode, major hazard";
-				FailureConditionClassification => Catastrophic;
-				QualitativeProbabilityObjective => ExtremelyImprobable;
-				comment => "Have a physical impact on the surrounding components";
-			])
-			applies to Explode;
+	device battery
+		features
+			socket: provides bus access common::power.generic;
+		annex EMV2 {**
+			use types WBSImplementationErrorLib;
+			use behavior WBSImplementationErrorLib::Twostate;
 			
-		ARP4761::hazards => 
-			([	crossreference => "TBD";
-				failure => "Battery Depleted";
-				phases => ("all");
-				description => "No more power in the battery";
-				FailureConditionClassification => Major;
-				QualitativeProbabilityObjective => Probable;
-				comment => "Can be an issue if redundant battery is failing also";
-			])
-			applies to Depleted;
-**};
-end battery;
+			error propagations
+				socket: out propagation {NoPower};
+				bindings: out propagation {AnyImplementationError};
+				flows
+					f1: error source socket {NoPower};
+					f2: error source bindings {AnyImplementationError};
+			end propagations;
+			
+			component error behavior
+				events
+					Depleted: error event;
+					Explode: error event;
+				transitions
+					Operational -[Depleted]-> Failed;
+					Operational -[Explode]-> Failed;
+				propagations
+					p1: Failed -[]-> socket {NoPower};
+					normal: Operational -[]-> socket {NoError};
+			end component;
+			
+			properties
+				ARP4761::hazards => ([crossreference => "ARP4761 page 277 figure 9";
+						failure => "Loss of one power source, might be critical if both are lost (primary and redundant)";
+						phases => ("Landing", "RTO");
+						description => "Loss of Electrical Power to BSCU";
+						FailureConditionClassification => Major;
+						QualitativeProbabilityObjective => Probable;
+						comment => "Major hazard if both power are lost";
+					]) applies to socket.NoPower;
+				EMV2::OccurrenceDistribution => [ProbabilityValue => 1.35e-5; Distribution => Poisson;] applies to socket.NoPower;
+			--		EMV2::OccurrenceDistribution => [ ProbabilityValue => 6.75e-5 ; Distribution => Fixed;] applies to socket.NoPower;
+				ARP4761::hazards => ([crossreference => "TBD";
+						failure => "Battery Explode";
+						phases => ("all");
+						description => "Battery Explode, major hazard";
+						FailureConditionClassification => Catastrophic;
+						QualitativeProbabilityObjective => ExtremelyImprobable;
+						comment => "Have a physical impact on the surrounding components";
+					]) applies to Explode;
+			
+				ARP4761::hazards => ([crossreference => "TBD";
+						failure => "Battery Depleted";
+						phases => ("all");
+						description => "No more power in the battery";
+						FailureConditionClassification => Major;
+						QualitativeProbabilityObjective => Probable;
+						comment => "Can be an issue if redundant battery is failing also";
+					]) applies to Depleted;
+		**};
+	end battery;
 
+	device implementation battery.generic
+	end battery.generic;
 
-device implementation battery.generic
-end battery.generic;
+	system power
+		features
+			line1: provides bus access common::power.generic;
+			line2: provides bus access common::power.generic;
+		annex EMV2 {**
+			use types WBSImplementationErrorLib;
+			use behavior WBSImplementationErrorLib::Twostate;
+			
+			error propagations
+				bindings: out propagation {AnyImplementationError};
+				flows
+					f0: error source bindings {AnyImplementationError};
+			end propagations;
+		**};
+	end power;
 
-system power
-features
-	line1 : provides bus access common::power.generic;
-	line2 : provides bus access common::power.generic;
-annex EMV2 {**
-	use types WBSImplementationErrorLib;
-	use behavior WBSImplementationErrorLib::Twostate;
-
-	error propagations
-		bindings 	: out propagation {AnyImplementationError};
-	flows
-		f0 : error source bindings{AnyImplementationError};
-	end propagations;
-**};
-end power;
-
-system implementation power.generic
-subcomponents
-    --  Power buses
-	battery1 : device battery.generic;
-	battery2 : device battery.generic;
-connections
-	pwr1 : bus access  battery1.socket <-> line1;
-	pwr2 : bus access  battery2.socket <-> line2;
-end power.generic;
+	system implementation power.generic
+		subcomponents
+			--  Power buses
+			battery1: device battery.generic;
+			battery2: device battery.generic;
+		connections
+			pwr1: bus access battery1.socket <-> line1;
+			pwr2: bus access battery2.socket <-> line2;
+	end power.generic;
 
 end impl::power;

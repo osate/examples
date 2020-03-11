@@ -1,51 +1,49 @@
 package WBSFunctionalErrorLib
 public
-annex EMV2 {**
-	error types
-		AnyFunctionalError: type;
-		AliasAnyFunctionalError renames type WBSImplementationErrorLib::AnyImplementationError;
-		HydraulicLossBlue : type;
-		HydraulicLossGreen : type;
-		HydraulicLossComponents : type;
+	annex EMV2 {**
+		error types
+			AnyFunctionalError: type;
+			AliasAnyFunctionalError renames type WBSImplementationErrorLib::AnyImplementationError;
+			HydraulicLossBlue: type;
+			HydraulicLossGreen: type;
+			HydraulicLossComponents: type;
 		
-		NoService: type extends AnyFunctionalError;
-		NoValue: type extends NoService;
-		NoPower: type extends NoService;
-	
+			NoService: type extends AnyFunctionalError;
+			NoValue: type extends NoService;
+			NoPower: type extends NoService;
 		
+			TotalWBLoss: type extends AnyFunctionalError;
+			TotalWBLossAnunciated: type extends TotalWBLoss;
+			TotalWBLossUnanunciated: type extends TotalWBLoss;
+			PartialSymmetricalWBLoss: type extends AnyFunctionalError;
+			PartialSymmetricalWBLossAnunciated: type extends PartialSymmetricalWBLoss;
+			PartialSymmetricalWBLossUnanunciated: type extends PartialSymmetricalWBLoss;
+			AssymetricalWBLoss: type extends AnyFunctionalError;
+			InadvertentWB: type extends AnyFunctionalError;
 		
-		TotalWBLoss: type extends AnyFunctionalError;
-		TotalWBLossAnunciated: type extends TotalWBLoss;
-		TotalWBLossUnanunciated: type extends TotalWBLoss;
-		PartialSymmetricalWBLoss: type extends AnyFunctionalError;
-		PartialSymmetricalWBLossAnunciated: type extends PartialSymmetricalWBLoss;
-		PartialSymmetricalWBLossUnanunciated: type extends PartialSymmetricalWBLoss;
-		AssymetricalWBLoss: type extends AnyFunctionalError;
-		InadvertentWB: type extends AnyFunctionalError;
+			WBErrorSet: type set {TotalWBLossAnunciated, TotalWBLossUnanunciated, PartialSymmetricalWBLoss, AssymetricalWBLoss,
+				InadvertentWB};
 		
-		WBErrorSet: type set {TotalWBLossAnunciated,TotalWBLossUnanunciated,PartialSymmetricalWBLoss,
-			AssymetricalWBLoss,InadvertentWB
-		};
-		
-		HydraulicErrors: type set {HydraulicLossBlue,HydraulicLossGreen,HydraulicLossComponents,NoService};
+			HydraulicErrors: type set {HydraulicLossBlue, HydraulicLossGreen, HydraulicLossComponents, NoService};
 		end types;
-	
-	error behavior Twostate
-	use types WBSFunctionalErrorLib;
-	states
-		Operational:initial state;
-		failed:state {WBErrorSet};
-	end behavior;
-	
-	error behavior TwostateWBS 
-	use types WBSFunctionalErrorLib;
-	states
-		Operational:initial state;
---		failed : state WBErrorSet;
--- NOT WORKING
---		failed:state {TotalWBLoss,PartialSymmetricalWBLoss,AssymetricalWBLoss,InadvertentWB};
--- WORKING: TODO Needed to list the subtypes explicitly so they could be referenced in containment path
-		failed:state {TotalWBLossAnunciated,TotalWBLossUnanunciated,PartialSymmetricalWBLossUnanunciated,PartialSymmetricalWBLossAnunciated,AssymetricalWBLoss,InadvertentWB};
-	end behavior;
-**};
+		
+		error behavior Twostate
+			use types WBSFunctionalErrorLib;
+			states
+				Operational: initial state;
+				failed: state {WBErrorSet};
+		end behavior;
+		
+		error behavior TwostateWBS
+			use types WBSFunctionalErrorLib;
+			states
+				Operational: initial state;
+		--		failed : state WBErrorSet;
+		-- NOT WORKING
+		--		failed:state {TotalWBLoss,PartialSymmetricalWBLoss,AssymetricalWBLoss,InadvertentWB};
+		-- WORKING: TODO Needed to list the subtypes explicitly so they could be referenced in containment path
+				failed: state {TotalWBLossAnunciated, TotalWBLossUnanunciated, PartialSymmetricalWBLossUnanunciated,
+					PartialSymmetricalWBLossAnunciated, AssymetricalWBLoss, InadvertentWB};
+		end behavior;
+	**};
 end WBSFunctionalErrorLib;

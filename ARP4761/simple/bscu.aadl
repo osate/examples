@@ -1,13 +1,12 @@
 package bscu
-
 public
 
-with common;
-with platform;
-with Base_Types;
-with error_library;
-with EMV2;
-with ARP4761;
+	with common;
+	with platform;
+	with Base_Types;
+	with error_library;
+	with EMV2;
+	with ARP4761;
 
 -- This is the implementation of the BSCU of the system
 -- The BSCU contains two subsystems.
@@ -24,360 +23,334 @@ with ARP4761;
 -- that indicates wheter we should use the first subsystem
 -- (Select_Alternate == false) or if the second (backup)
 -- subsystem would be used (Select_Alternate == true).
-
-
-
 -- The command system if part of each bscu subsystem.
 -- It produces data from the brake pedal value.
 -- This component is an error sink for the error side
 -- and may fail from power-related error
 -- and service-related error (no pedal).
-process command
-features
-	brake : out data port common::command.brake;
-	skid  : out data port common::command.skid;
-	pedalvalue : in data port common::command.pedal;
-end command;
- 
-process implementation command.i
-annex EMV2 {**
-	use types     error_library;
-	use behavior  error_library::simple;
+	process command
+		features
+			brake: out data port common::command.brake;
+			skid: out data port common::command.skid;
+			pedalvalue: in data port common::command.pedal;
+	end command;
 
-	
-	error propagations
-		pedalvalue 		: in propagation {NoService};
-		brake			: out propagation{NoValue};
-		skid			: out propagation{NoValue};
-		processor 		: in propagation {SoftwareFailure,HardwareFailure};
-	flows
-		nopedal 		: error sink pedalvalue{NoService};
-		noskid			: error source skid{NoValue};
-		nobrake			: error source brake{NoValue};
-		platformerr		: error sink processor{SoftwareFailure,HardwareFailure};
-	end propagations;
-	
-	component error behavior
-	transitions
-		terrfrompedal 		: Operational -[pedalvalue{NoService}]-> Failed;
-		terrfromplatformsoft : Operational -[processor{SoftwareFailure}]-> Failed;
-		terrfromplatformhard : Operational -[processor{HardwareFailure}]-> Failed;
-	propagations
-	    --  Here, we can imply that the NoService error from pedalvalue
-	    --  is transformed into a NoValue on brake and skid features.
-	    --  So, basically, this should be shown in the FMEA/FaultImpact
-	    --  report. So, the report should show the error flows
-	    --  pedals/NoService -> commands/brake/skid/NoValue -> monitor/NoValue -> selector/NoValue 
-		p1 : Failed -[]-> brake{NoValue};
-		p2 : Failed -[]-> skid{NoValue};
-	end component;
-**};
-end command.i;
-
+	process implementation command.i
+		annex EMV2 {**
+			use types error_library;
+			use behavior error_library::simple;
+			
+			error propagations
+				pedalvalue: in propagation {NoService};
+				brake: out propagation {NoValue};
+				skid: out propagation {NoValue};
+				processor: in propagation {SoftwareFailure, HardwareFailure};
+				flows
+					nopedal: error sink pedalvalue {NoService};
+					noskid: error source skid {NoValue};
+					nobrake: error source brake {NoValue};
+					platformerr: error sink processor {SoftwareFailure, HardwareFailure};
+			end propagations;
+			
+			component error behavior
+				transitions
+					terrfrompedal: Operational -[pedalvalue {NoService}]-> Failed;
+					terrfromplatformsoft: Operational -[processor {SoftwareFailure}]-> Failed;
+					terrfromplatformhard: Operational -[processor {HardwareFailure}]-> Failed;
+				propagations
+					--  Here, we can imply that the NoService error from pedalvalue
+					--  is transformed into a NoValue on brake and skid features.
+					--  So, basically, this should be shown in the FMEA/FaultImpact
+					--  report. So, the report should show the error flows
+					--  pedals/NoService -> commands/brake/skid/NoValue -> monitor/NoValue -> selector/NoValue 
+					p1: Failed -[]-> brake {NoValue};
+					p2: Failed -[]-> skid {NoValue};
+			end component;
+		**};
+	end command.i;
 
 --  The monitor component receive the values
 --  (brake and skid values) from the command system
 --  and check if the system is valid or not. We have
 --  one monitor for each BSCU.
 --  The monitor may fail if he has no power.
-process monitor
-features
-	brake : in data port common::command.brake;
-	skid  : in data port common::command.skid;
-	valid : out data port Base_Types::Boolean;
-end monitor;
+	process monitor
+		features
+			brake: in data port common::command.brake;
+			skid: in data port common::command.skid;
+			valid: out data port Base_Types::Boolean;
+	end monitor;
 
-process implementation monitor.i
-annex EMV2 {**
-	use types     error_library;
-	use behavior  error_library::simple;
-	
-	error propagations
-		processor : in propagation {SoftwareFailure,HardwareFailure};
-		brake     : in propagation {NoValue};
-		skid      : in propagation {NoValue};
-		valid     : out propagation {NoValue};
-	flows
-		fsoft : error sink processor{SoftwareFailure,HardwareFailure};
-		val   : error source valid{NoValue};
-		bsink : error sink brake{NoValue};
-		ssink : error sink skid{NoValue};
-	end propagations;
-	
-	component error behavior
-	events
-		InvalidReport : error event;
-	transitions
-		terrinvalidreport    : Operational -[InvalidReport]-> Failed;
-		noskid               : Operational -[skid{NoValue}]-> Failed;
-		nobrake              : Operational -[brake{NoValue}]-> Failed;
-		terrfromplatformsoft : Operational -[processor{SoftwareFailure}]-> Failed;
-		terrfromplatformhard : Operational -[processor{HardwareFailure}]-> Failed;
-	propagations
-		p1 : Failed -[]-> valid{NoValue};
-	end component;
-	properties
-		ARP4761::hazards => 
-			([	crossreference => "TBD";
-				failure => "Invalid Report from BSCU Monitor";
-				phases => ("TBD");
-				description => "Report from a Monitor that causes an invalid switch to the alternate mode";
-				FailureConditionClassification => Minor;
-				QualitativeProbabilityObjective => Probable;
-				comment => "Minor Hazard";
-			])
-			applies to InvalidReport;
-**};
-end monitor.i;
+	process implementation monitor.i
+		annex EMV2 {**
+			use types error_library;
+			use behavior error_library::simple;
+			
+			error propagations
+				processor: in propagation {SoftwareFailure, HardwareFailure};
+				brake: in propagation {NoValue};
+				skid: in propagation {NoValue};
+				valid: out propagation {NoValue};
+				flows
+					fsoft: error sink processor {SoftwareFailure, HardwareFailure};
+					val: error source valid {NoValue};
+					bsink: error sink brake {NoValue};
+					ssink: error sink skid {NoValue};
+			end propagations;
+			
+			component error behavior
+				events
+					InvalidReport: error event;
+				transitions
+					terrinvalidreport: Operational -[InvalidReport]-> Failed;
+					noskid: Operational -[skid {NoValue}]-> Failed;
+					nobrake: Operational -[brake {NoValue}]-> Failed;
+					terrfromplatformsoft: Operational -[processor {SoftwareFailure}]-> Failed;
+					terrfromplatformhard: Operational -[processor {HardwareFailure}]-> Failed;
+				propagations
+					p1: Failed -[]-> valid {NoValue};
+			end component;
+			
+			properties
+				ARP4761::hazards => ([crossreference => "TBD";
+						failure => "Invalid Report from BSCU Monitor";
+						phases => ("TBD");
+						description => "Report from a Monitor that causes an invalid switch to the alternate mode";
+						FailureConditionClassification => Minor;
+						QualitativeProbabilityObjective => Probable;
+						comment => "Minor Hazard";
+					]) applies to InvalidReport;
+		**};
+	end monitor.i;
 
+	system bscu_subsystem
+		features
+			pwr: requires bus access common::power.generic;
+			pedal: in data port common::command.pedal;
+			cmd_skid: out data port common::command.skid;
+			cmd_brk: out data port common::command.brake;
+			valid: out data port Base_Types::Boolean;
+	end bscu_subsystem;
 
-system bscu_subsystem
-features
-	pwr      : requires bus access common::power.generic;
-	pedal    : in data port common::command.pedal;
-	cmd_skid : out data port common::command.skid;
-	cmd_brk  : out data port common::command.brake;
-	valid    : out data port Base_Types::Boolean; 
-end bscu_subsystem;
-
-system implementation bscu_subsystem.generic
-subcomponents
-	mon   		: process monitor.i;
-	cmd   		: process command.i;
-connections
-	pedaltocmd    : port pedal     -> cmd.pedalvalue;
-	brakecmd      : port cmd.brake -> mon.brake;
-	brakecmd_ext  : port cmd.brake -> cmd_brk;
-	skidcmd_ext   : port cmd.skid  -> cmd_skid;
-	skidcmd       : port cmd.skid  -> mon.skid;
-	isvalid       : port mon.valid -> valid;
-annex EMV2 {**
-	use types     error_library;
-	use behavior  error_library::simple;
-	
-	error propagations
-		pwr       : in propagation {NoPower};
-		valid     : out propagation {NoValue};
-	flows
-	    nopwr   : error path pwr{NoPower} -> valid{NoValue};
-	end propagations;
-	
-	component error behavior
-	transitions
-		t1 : Operational -[pwr{NoPower}]-> Failed;
-	propagations
-		p1 : Failed -[]-> valid{NoValue};
-	end component;
-	
-	composite error behavior
-	states
-		[mon.failed or cmd.failed]-> Failed;
-		[mon.operational and cmd.operational]-> Operational;
-	end composite;
-	properties
-		ARP4761::hazards => 
-		([	crossreference => "ARP4761 figure L4 page 215";
-			failure => "Failure of the BSCU, either from the monitor, the command or both";
-			phases => ("all");
-			description => "Failure of a BSCU";
-				FailureConditionClassification => Major;
-				QualitativeProbabilityObjective => Probable;
-			comment => "Would be critical if two subsystem (primary and redundant) are deffective";
-		])
-		applies to Failed;
-		EMV2::OccurrenceDistribution => [ ProbabilityValue => 3.3e-5 ; Distribution => Fixed;] applies to Failed;
-**};
-end bscu_subsystem.generic;
-
-
-
+	system implementation bscu_subsystem.generic
+		subcomponents
+			mon: process monitor.i;
+			cmd: process command.i;
+		connections
+			pedaltocmd: port pedal -> cmd.pedalvalue;
+			brakecmd: port cmd.brake -> mon.brake;
+			brakecmd_ext: port cmd.brake -> cmd_brk;
+			skidcmd_ext: port cmd.skid -> cmd_skid;
+			skidcmd: port cmd.skid -> mon.skid;
+			isvalid: port mon.valid -> valid;
+		annex EMV2 {**
+			use types error_library;
+			use behavior error_library::simple;
+			
+			error propagations
+				pwr: in propagation {NoPower};
+				valid: out propagation {NoValue};
+				flows
+					nopwr: error path pwr {NoPower} -> valid {NoValue};
+			end propagations;
+			
+			component error behavior
+				transitions
+					t1: Operational -[pwr {NoPower}]-> Failed;
+				propagations
+					p1: Failed -[]-> valid {NoValue};
+			end component;
+			
+			composite error behavior
+				states
+					[mon.failed or cmd.failed]-> Failed;
+					[mon.operational and cmd.operational]-> Operational;
+			end composite;
+			
+			properties
+				ARP4761::hazards => ([crossreference => "ARP4761 figure L4 page 215";
+						failure => "Failure of the BSCU, either from the monitor, the command or both";
+						phases => ("all");
+						description => "Failure of a BSCU";
+						FailureConditionClassification => Major;
+						QualitativeProbabilityObjective => Probable;
+						comment => "Would be critical if two subsystem (primary and redundant) are deffective";
+					]) applies to Failed;
+				EMV2::OccurrenceDistribution => [ProbabilityValue => 3.3e-5; Distribution => Fixed;] applies to Failed;
+		**};
+	end bscu_subsystem.generic;
 
 --  The select alternate is a binary operator that produces
 --  an output from two input. If the first input is true
 --  the result is false. Otherwise, the result is true. 
-system select_alternate
-features
-	input1 : in data port Base_Types::Boolean;
-	input2 : in data port Base_Types::Boolean;
-	result : out data port Base_Types::Boolean;
-annex EMV2 {**
-	use types error_library;
-	use behavior error_library::simple;
-	
-	error propagations
-		input1 : in propagation {NoValue};
-		input2 : in propagation {NoValue};
-		result : out propagation{NoValue};
-	flows
-		f1 : error source result{NoValue};
-		f2 : error sink input1{NoValue};
-		f3 : error sink input2{NoValue};
-	end propagations;  
+	system select_alternate
+		features
+			input1: in data port Base_Types::Boolean;
+			input2: in data port Base_Types::Boolean;
+			result: out data port Base_Types::Boolean;
+		annex EMV2 {**
+			use types error_library;
+			use behavior error_library::simple;
+			
+			error propagations
+				input1: in propagation {NoValue};
+				input2: in propagation {NoValue};
+				result: out propagation {NoValue};
+				flows
+					f1: error source result {NoValue};
+					f2: error sink input1 {NoValue};
+					f3: error sink input2 {NoValue};
+			end propagations;
+			
+			--
+			--  We consider that the component may have an inconsistent
+			--  behavior and select the alternate source where there is
+			--  no reason for that. We capture that using a single
+			--  event called InternalError.
+			--	
+			component error behavior
+				events
+					InternalError: error event;
+				transitions
+					t1: Operational -[InternalError]-> Failed;
+					--  If we do not have any value from each monitor,
+					--  we are no longer able to send a valid data.
+					t2: Operational -[input1 {NoValue} and input2 {NoValue}]-> Failed;
+				propagations
+					p1: Failed -[]-> result {NoValue};
+			end component;
+			
+			properties
+				-- EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.30e-5 ; Distribution => Fixed;] applies to InternalError;
+				EMV2::OccurrenceDistribution => [ProbabilityValue => 3.6e-6; Distribution => Poisson;] applies to InternalError;
+			
+				EMV2::severity => ARP4761::Hazardous applies to InternalError;
+				EMV2::likelihood => ARP4761::ExtremelyImprobable applies to InternalError;
+				ARP4761::hazards => ([crossreference => "ARP4761 figure L4 page 215";
+						failure => "";
+						phases => ("all");
+						description => "BSCU validity monitor incorrectly report a Failure causing switch to alternate";
+						FailureConditionClassification => Hazardous;
+						QualitativeProbabilityObjective => ExtremelyImprobable;
+						comment => "";
+					]) applies to InternalError;
+		**};
+	end select_alternate;
 
---
---  We consider that the component may have an inconsistent
---  behavior and select the alternate source where there is
---  no reason for that. We capture that using a single
---  event called InternalError.
---	
-	component error behavior
-	events
-		InternalError : error event;
-	transitions
-		t1 : Operational -[InternalError]-> Failed;
-		--  If we do not have any value from each monitor,
-		--  we are no longer able to send a valid data.
-		t2 : Operational -[input1{NoValue} and input2{NoValue}]-> Failed; 
-	propagations
-		p1 : Failed -[]-> result{NoValue};
-	end component;
-	
-	properties
-		-- EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.30e-5 ; Distribution => Fixed;] applies to InternalError;
-		EMV2::OccurrenceDistribution => [ ProbabilityValue => 3.6e-6 ; Distribution => Poisson;] applies to InternalError;
-	
-		EMV2::severity => ARP4761::Hazardous applies to InternalError;
-		EMV2::likelihood => ARP4761::ExtremelyImprobable applies to InternalError;
-		ARP4761::hazards => 
-			([	crossreference => "ARP4761 figure L4 page 215";
-				failure => "";
-				phases => ("all");
-				description => "BSCU validity monitor incorrectly report a Failure causing switch to alternate";
-				FailureConditionClassification => Hazardous;
-				QualitativeProbabilityObjective => ExtremelyImprobable;
-				comment => "";
-			])
-			applies to InternalError;
-**};
-end select_alternate;
+	system bscu
+		features
+			pwr1: requires bus access common::power.generic;
+			pwr2: requires bus access common::power.generic;
+			pedal1: in data port common::command.pedal;
+			pedal2: in data port common::command.pedal;
+			Select_Alternate: out data port Base_Types::Boolean;
+			cmd_nor: out data port common::command.skid;
+			cmd_alt: out data port common::command.skid;
+		annex EMV2 {**
+			use types error_library;
+			
+			error propagations
+				pwr1: in propagation {NoPower};
+				pwr2: in propagation {NoPower};
+				pedal1: in propagation {NoService};
+				pedal2: in propagation {NoService};
+			end propagations;
+		**};
+	end bscu;
 
+	system implementation bscu.basic
+		annex EMV2 {**
+			use types error_library;
+			use behavior error_library::bscu;
+			
+			error propagations
+				flows
+					es1: error sink pwr1 {NoPower};
+					es2: error sink pwr2 {NoPower};
+			
+			end propagations;
+			
+			component error behavior
+				transitions
+					nopower1: Operational -[pwr1 {NoPower}]-> Failed;
+					nopower2: Operational -[pwr2 {NoPower}]-> Failed;
+			end component;
+			
+			properties
+				ARP4761::hazards => ([crossreference => "TBD";
+						failure => "No power line";
+						phases => ("TBD");
+						description => "Permanent failure of power supply source";
+						FailureConditionClassification => Catastrophic;
+						QualitativeProbabilityObjective => ExtremelyImprobable;
+						comment => "Would be critical if both power supplies are lost";
+					]) applies to pwr1, pwr2;
+		**};
+	end bscu.basic;
 
-system bscu
-features
-	pwr1              : requires bus access common::power.generic;
-	pwr2              : requires bus access common::power.generic;
-	pedal1            : in data port common::command.pedal;
-	pedal2            : in data port common::command.pedal;
-	Select_Alternate  : out data port Base_Types::Boolean;
-	cmd_nor           : out data port common::command.skid; 
-	cmd_alt           : out data port common::command.skid; 
-annex EMV2 {**
-	use types error_library;
-	
-	
-	error propagations
-		pwr1   : in propagation {NoPower};
-		pwr2   : in propagation {NoPower};
-		pedal1 : in propagation {NoService};
-		pedal2 : in propagation {NoService};
-	end propagations;
-**};
-end bscu;
+	system implementation bscu.generic
+		subcomponents
+			sub1: system bscu_subsystem.generic;
+			sub2: system bscu_subsystem.generic;
+			select: system select_alternate;
 
-system implementation bscu.basic
-annex EMV2 {**
-	use types error_library;
-	use behavior error_library::bscu;
-	
-	error propagations
-	flows
-		es1   	: error sink pwr1{NoPower};
-		es2   	: error sink pwr2{NoPower};
+		connections
+			sub1pwr: bus access pwr1 <-> sub1.pwr;
+			sub2pwr: bus access pwr2 <-> sub2.pwr;
+			sub1pedal: port pedal1 <-> sub1.pedal;
+			sub2pedal: port pedal2 <-> sub2.pedal;
+			selectvalid1: port sub1.valid -> select.input1;
+			selectvalid2: port sub2.valid -> select.input2;
+			selectvalidout: port select.result -> Select_Alternate;
+			sub1skid: port sub1.cmd_skid -> cmd_nor;
+			sub2skid: port sub2.cmd_skid -> cmd_alt;
+		annex EMV2 {**
+			use types error_library;
+			use behavior error_library::bscu;
+			
+			component error behavior
+				transitions
+					nopower: Operational -[pwr1 {NoPower} and pwr2 {NoPower}]-> Failed;
+			end component;
+			
+			composite error behavior
+				states
+					[sub1.Failed and sub2.Failed]-> Failed;
+					[sub1.Failed and sub2.Operational]-> Alternate;
+					[sub1.Operational and sub2.Operational and select.Failed]-> Alternate;
+					[sub1.Operational and sub2.Operational and select.Operational]-> Operational;
+			end composite;
+			
+			properties
+				ARP4761::hazards => ([crossreference => "TBD";
+						failure => "No power line";
+						phases => ("TBD");
+						description => "Permanent failure of power supply source";
+						FailureConditionClassification => Hazardous;
+						QualitativeProbabilityObjective => ExtremelyImprobable;
+						comment => "Would be critical if both power supplies are lost";
+					]) applies to pwr1, pwr2;
+		**};
+	end bscu.generic;
 
-	end propagations;
-	component error behavior
-	transitions
-		nopower1 : Operational -[pwr1{NoPower}]-> Failed;
-		nopower2 : Operational -[pwr2{NoPower}]-> Failed;
-	end component;
-	
-	
-	properties
-			ARP4761::hazards => 
-		([	crossreference => "TBD";
-			failure => "No power line";
-			phases => ("TBD");
-			description => "Permanent failure of power supply source";
-				FailureConditionClassification => Catastrophic;
-				QualitativeProbabilityObjective => ExtremelyImprobable;
-			comment => "Would be critical if both power supplies are lost";
-		])
-		applies to pwr1, pwr2;
-**};
-end bscu.basic;
+	system implementation bscu.federated extends bscu.generic
+		subcomponents
+			platform: system platform::platform.federated;
+		properties
+			Actual_Processor_Binding => (reference (platform.cpu1)) applies to sub1.cmd;
+			Actual_Processor_Binding => (reference (platform.cpu1)) applies to sub1.mon;
+			Actual_Processor_Binding => (reference (platform.cpu2)) applies to sub2.cmd;
+			Actual_Processor_Binding => (reference (platform.cpu2)) applies to sub2.mon;
+	end bscu.federated;
 
-
-system implementation bscu.generic
-subcomponents
-	sub1    : system bscu_subsystem.generic;
-	sub2    : system bscu_subsystem.generic;
-	select  : system select_alternate;
-
-connections
-	sub1pwr        : bus access pwr1 <-> sub1.pwr;
-	sub2pwr        : bus access pwr2 <-> sub2.pwr;
-	sub1pedal      : port pedal1 <-> sub1.pedal;
-	sub2pedal      : port pedal2 <-> sub2.pedal;
-	selectvalid1   : port sub1.valid -> select.input1;
-	selectvalid2   : port sub2.valid -> select.input2;
-	selectvalidout : port select.result -> Select_Alternate;
-	sub1skid       : port sub1.cmd_skid -> cmd_nor;
-	sub2skid       : port sub2.cmd_skid -> cmd_alt;
-annex EMV2 {**
-	use types error_library;
-	use behavior error_library::bscu;
-	
-	
-	component error behavior
-	transitions
-		nopower : Operational -[pwr1{NoPower} and pwr2{NoPower}]-> Failed;
-	end component;
-	
-	composite error behavior
-	states
-		[sub1.Failed and sub2.Failed]-> Failed;
-		[sub1.Failed and sub2.Operational]-> Alternate;
-		[sub1.Operational and sub2.Operational and select.Failed]-> Alternate;
-		[sub1.Operational and sub2.Operational and select.Operational]->Operational;
-	end composite;
-	
-	properties
-			ARP4761::hazards => 
-		([	crossreference => "TBD";
-			failure => "No power line";
-			phases => ("TBD");
-			description => "Permanent failure of power supply source";
-				FailureConditionClassification => Hazardous;
-				QualitativeProbabilityObjective => ExtremelyImprobable;
-			comment => "Would be critical if both power supplies are lost";
-		])
-		applies to pwr1, pwr2;
-**};
-end bscu.generic;
-
-
-
-system implementation bscu.federated extends bscu.generic
-subcomponents
-	platform : system platform::platform.federated;
-properties
-	Actual_Processor_Binding => (reference (platform.cpu1)) applies to sub1.cmd;
-	Actual_Processor_Binding => (reference (platform.cpu1)) applies to sub1.mon;
-	Actual_Processor_Binding => (reference (platform.cpu2)) applies to sub2.cmd;
-	Actual_Processor_Binding => (reference (platform.cpu2)) applies to sub2.mon;	
-end bscu.federated;
-
-
-
-system implementation bscu.ima extends bscu.generic
-subcomponents
-	platform : system platform::platform.ima;
-properties
-	Actual_Processor_Binding => (reference (platform.cpu.partition1)) applies to sub1.cmd;
-	Actual_Processor_Binding => (reference (platform.cpu.partition2)) applies to sub1.mon;
-	Actual_Processor_Binding => (reference (platform.cpu.partition3)) applies to sub2.cmd;
-	Actual_Processor_Binding => (reference (platform.cpu.partition4)) applies to sub2.mon;	
-end bscu.ima;
-
+	system implementation bscu.ima extends bscu.generic
+		subcomponents
+			platform: system platform::platform.ima;
+		properties
+			Actual_Processor_Binding => (reference (platform.cpu.partition1)) applies to sub1.cmd;
+			Actual_Processor_Binding => (reference (platform.cpu.partition2)) applies to sub1.mon;
+			Actual_Processor_Binding => (reference (platform.cpu.partition3)) applies to sub2.cmd;
+			Actual_Processor_Binding => (reference (platform.cpu.partition4)) applies to sub2.mon;
+	end bscu.ima;
 
 end bscu;

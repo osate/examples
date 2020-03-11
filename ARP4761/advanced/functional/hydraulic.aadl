@@ -1,49 +1,49 @@
 package functional::Hydraulic
 public
-with WBSPS,EMV2,ARP4761,functional::GenericFunctions;
+	with functional::GenericFunctions;
 
+	system Hydraulic extends functional::GenericFunctions::Generic
 
+		annex EMV2 {**
+			use types WBSFunctionalErrorLib;
+			use behavior WBSFunctionalErrorLib::Twostate;
+			
+			error propagations
+				processor: in propagation {AnyFunctionalError};
+				isFailing: out propagation {HydraulicErrors};
+				flows
+					f1: error source isFailing {HydraulicErrors};
+					f2: error path processor {AnyFunctionalError} -> isFailing {HydraulicLossBlue};
+					f3: error path processor {AnyFunctionalError} -> isFailing {HydraulicLossGreen};
+					f4: error path processor {AnyFunctionalError} -> isFailing {HydraulicLossComponents};
+			--		f2 : error path processor -> isFailing use mappings WBSMappingErrorLib::ImplementationToFunction;
+			--		f3 : error path processor -> isFailing (HydraulicLossGreen);
+			--		f4 : error path processor -> isFailing (HydraulicLossComponents);
+			end propagations;
+			
+			component error behavior
+				events
+					GreenPumpError: error event{WBErrorSet};
+					BluePumpError: error event{WBErrorSet};
+					ComponentError: error event{WBErrorSet};
+				transitions
+					t1: Operational -[GreenPumpError]-> Failed;
+					t2: Operational -[BluePumpError]-> Failed;
+					t3: Operational -[ComponentError]-> Failed;
+				propagations
+					p1: Failed -[]-> isFailing {HydraulicLossBlue};
+					p2: Failed -[]-> isFailing {HydraulicLossGreen};
+					p3: Failed -[]-> isFailing {HydraulicLossComponents};
+			end component;
+			
+			properties
+				-- Probability evaluated according to AIR6110, page 49
+				EMV2::OccurrenceDistribution => [ProbabilityValue => 3.3e-5; Distribution => Poisson;] applies to GreenPumpError;
+				EMV2::OccurrenceDistribution => [ProbabilityValue => 3.3e-5; Distribution => Poisson;] applies to ComponentError;
+		**};
+	end Hydraulic;
 
-system Hydraulic extends functional::GenericFunctions::Generic
-
-annex EMV2 {**
-	use types WBSFunctionalErrorLib;
-	use behavior WBSFunctionalErrorLib::Twostate;
-	error propagations
-		processor : in propagation {AnyFunctionalError};
-		isFailing : out propagation {HydraulicErrors}; 
-	flows
-		f1 : error source isFailing {HydraulicErrors};
-		f2 : error path processor{AnyFunctionalError} -> isFailing {HydraulicLossBlue};
-		f3 : error path processor{AnyFunctionalError} -> isFailing {HydraulicLossGreen};
-		f4 : error path processor{AnyFunctionalError} -> isFailing {HydraulicLossComponents};
---		f2 : error path processor -> isFailing use mappings WBSMappingErrorLib::ImplementationToFunction;
---		f3 : error path processor -> isFailing (HydraulicLossGreen);
---		f4 : error path processor -> isFailing (HydraulicLossComponents);
-	end propagations;
-	
-	component error behavior
-	events
-		GreenPumpError : error event;
-		BluePumpError  : error event;
-		ComponentError : error event;
-	transitions
-		t1 : Operational -[ GreenPumpError ]-> Failed;
-		t2 : Operational -[ BluePumpError ]-> Failed;
-		t3 : Operational -[ ComponentError ]-> Failed;		
-	propagations
-		p1 : Failed -[]-> isFailing{HydraulicLossBlue};
-		p2 : Failed -[]-> isFailing{HydraulicLossGreen};
-		p3 : Failed -[]-> isFailing{HydraulicLossComponents};
-	end component;
-	properties
-		-- Probability evaluated according to AIR6110, page 49
-		EMV2::OccurrenceDistribution => [ ProbabilityValue => 3.3e-5 ; Distribution => Poisson;] applies to GreenPumpError;
-		EMV2::OccurrenceDistribution => [ ProbabilityValue => 3.3e-5 ; Distribution => Poisson;] applies to ComponentError; 
-**};
-end Hydraulic;
-
-system implementation Hydraulic.basic extends functional::GenericFunctions::Generic.basic
-end Hydraulic.basic;
+	system implementation Hydraulic.basic extends functional::GenericFunctions::Generic.basic
+	end Hydraulic.basic;
 
 end functional::Hydraulic;

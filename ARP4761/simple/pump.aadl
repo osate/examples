@@ -1,54 +1,50 @@
 package pump
 
-
 public
 
-with common;
-with ARP4761;
-with EMV2;
+	with common;
+	with ARP4761;
+	with EMV2;
 
-system pump
-features
-	pressure_output : provides bus access common::pressure.i;
-annex EMV2 {**
-	use types error_library;
-	use behavior error_library::simple;
-	
-	error propagations
-		pressure_output : out propagation{NoService};
-	flows
-		nopressure : error source pressure_output{NoService};
-	end propagations;
-	
-	component error behavior
-	events
-		HydraulicError : error event;
-	transitions
-		t1 : Operational -[ HydraulicError]-> Failed;
-	propagations
-		p1     : Failed 		-[]-> pressure_output{Noservice};
-		normal : Operational 	-[]-> pressure_output{NoError};
-	end component;
-	
-	properties
-		ARP4761::hazards => 
-			([	crossreference => "ARP4761 page 275 figure L9";
-				failure => "Hydraulic Error on a pump";
-				phases => ("TBD");
-				description => "Loss of one pump";
-				FailureConditionClassification => Major;
-				QualitativeProbabilityObjective => Probable;
-				comment => "Major hazard if both pumps are lost";
-			])
-			applies to HydraulicError;
-		-- EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.20e-4 ; Distribution => Fixed;] applies to HydraulicError, pressure_output.NoService;
-		EMV2::OccurrenceDistribution => [ ProbabilityValue => 2.5e-5 ; Distribution => Poisson;] applies to HydraulicError, pressure_output.NoService;
-		
-**};
-end pump;
+	system pump
+		features
+			pressure_output: provides bus access common::pressure.i;
+		annex EMV2 {**
+			use types error_library;
+			use behavior error_library::simple;
+			
+			error propagations
+				pressure_output: out propagation {NoService};
+				flows
+					nopressure: error source pressure_output {NoService};
+			end propagations;
+			
+			component error behavior
+				events
+					HydraulicError: error event;
+				transitions
+					t1: Operational -[HydraulicError]-> Failed;
+				propagations
+					p1: Failed -[]-> pressure_output {Noservice};
+					normal: Operational -[]-> pressure_output {NoError};
+			end component;
+			
+			properties
+				ARP4761::hazards => ([crossreference => "ARP4761 page 275 figure L9";
+						failure => "Hydraulic Error on a pump";
+						phases => ("TBD");
+						description => "Loss of one pump";
+						FailureConditionClassification => Major;
+						QualitativeProbabilityObjective => Probable;
+						comment => "Major hazard if both pumps are lost";
+					]) applies to HydraulicError;
+				-- EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.20e-4 ; Distribution => Fixed;] applies to HydraulicError, pressure_output.NoService;
+				EMV2::OccurrenceDistribution => [ProbabilityValue => 2.5e-5;
+					Distribution => Poisson;] applies to HydraulicError, pressure_output.NoService;
+		**};
+	end pump;
 
-
-system implementation pump.i
-end pump.i;
+	system implementation pump.i
+	end pump.i;
 
 end pump;

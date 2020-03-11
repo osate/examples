@@ -1,29 +1,28 @@
 package WBSMappingErrorLib
 public
-annex EMV2 {**
-	
-	error behavior Basic
-	states
-		Operational	:initial state;
-		Failed		:state ;
-	end behavior;
-
-	type mappings FunctionToImplementation
---	use types WBSImplementationErrorLib;
-		{WBSImplementationErrorLib::AnyImplementationError} 	-> {WBSFunctionalErrorLib::AnyFunctionalError}; 
-		{WBSImplementationErrorLib::HydraulicLossBlue} 			-> {WBSFunctionalErrorLib::HydraulicLossBlue}; 
-		{WBSImplementationErrorLib::HydraulicLossGreen} 		-> {WBSFunctionalErrorLib::HydraulicLossGreen}; 
-		{WBSImplementationErrorLib::HydraulicLossComponents} 	-> {WBSFunctionalErrorLib::HydraulicLossComponents}; 
-		{WBSImplementationErrorLib::NoService} 					-> {WBSFunctionalErrorLib::NoService}; 
-	end mappings;
-	
-	type mappings ImplementationToFunction
---	use types WBSImplementationErrorLib;
-		{WBSFunctionalErrorLib::AnyFunctionalError} 		-> {WBSImplementationErrorLib::AnyImplementationError}; 
-		{WBSFunctionalErrorLib::HydraulicLossBlue} 			-> {WBSImplementationErrorLib::HydraulicLossBlue}; 
-		{WBSFunctionalErrorLib::HydraulicLossGreen} 		-> {WBSImplementationErrorLib::HydraulicLossGreen}; 
-		{WBSFunctionalErrorLib::HydraulicLossComponents} 	-> {WBSImplementationErrorLib::HydraulicLossComponents}; 
-		{WBSFunctionalErrorLib::NoService} 					-> {WBSImplementationErrorLib::NoService}; 
-	end mappings;
-**};
+	annex EMV2 {**
+		error behavior Basic
+			states
+				Operational: initial state;
+				Failed: state;
+		end behavior;
+		
+		type mappings FunctionToImplementation
+		--	use types WBSImplementationErrorLib;
+			{WBSImplementationErrorLib::AnyImplementationError} -> {WBSFunctionalErrorLib::AnyFunctionalError};
+			{WBSImplementationErrorLib::HydraulicLossBlue} -> {WBSFunctionalErrorLib::HydraulicLossBlue};
+			{WBSImplementationErrorLib::HydraulicLossGreen} -> {WBSFunctionalErrorLib::HydraulicLossGreen};
+			{WBSImplementationErrorLib::HydraulicLossComponents} -> {WBSFunctionalErrorLib::HydraulicLossComponents};
+			{WBSImplementationErrorLib::NoService} -> {WBSFunctionalErrorLib::NoService};
+		end mappings;
+		
+		type mappings ImplementationToFunction
+		--	use types WBSImplementationErrorLib;
+			{WBSFunctionalErrorLib::AnyFunctionalError} -> {WBSImplementationErrorLib::AnyImplementationError};
+			{WBSFunctionalErrorLib::HydraulicLossBlue} -> {WBSImplementationErrorLib::HydraulicLossBlue};
+			{WBSFunctionalErrorLib::HydraulicLossGreen} -> {WBSImplementationErrorLib::HydraulicLossGreen};
+			{WBSFunctionalErrorLib::HydraulicLossComponents} -> {WBSImplementationErrorLib::HydraulicLossComponents};
+			{WBSFunctionalErrorLib::NoService} -> {WBSImplementationErrorLib::NoService};
+		end mappings;
+	**};
 end WBSMappingErrorLib;
