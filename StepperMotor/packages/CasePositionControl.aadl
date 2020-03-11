@@ -1,6 +1,6 @@
 package CasePositionControl
 public
-with Data_Model, ErrorLibrary,MILSTD882,PCSProperties, Base_Types, SMErrorTypes;
+with Data_Model, ErrorLibrary, PCSProperties, Base_Types, SMErrorTypes;
 
 data SM_Position
 end SM_Position;
