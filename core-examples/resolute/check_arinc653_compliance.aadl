@@ -239,13 +239,13 @@ end powerpc.impl;
 memory partition1_memory
 properties
    Base_Address => 0;
-   ARINC653::Memory_Type => (Code_Memory);
+   ARINC653::Memory_Kind => (Memory_Code);
 end partition1_memory;
 
 memory partition2_memory
 properties
    Base_Address => 100;
-   ARINC653::Memory_Type => (Code_Memory);
+   ARINC653::Memory_Kind => (Memory_Code);
 end partition2_memory;
 
 memory main_memory

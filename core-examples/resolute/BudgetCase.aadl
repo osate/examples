@@ -52,7 +52,7 @@ annex Resolute {**
 	
 	-- c omputational function to calculate total of weight budget from subcomponents
 	AddSubcomponentWeightBudgets(self: component) : real = 
-		sum({WeightBudget(t) for (t: subcomponents(self))}) 
+		sum([WeightBudget(t) for (t: subcomponents(self))])
 
 	-- total of weight budgets of all components
 	AddAllBudgets(self : component) : real = 
@@ -60,7 +60,7 @@ annex Resolute {**
 	if (length(subs) = 0) then
 		WeightBudget(self)
 	else
-		sum({WeightBudget(t) for (t: subs)}) 
+		sum([WeightBudget(t) for (t: subs)])
 
 -- retrieves weight budget or 0.0 if no budget was assigned
 WeightBudget(self:component): real =
@@ -78,7 +78,7 @@ SubcomponentsHaveWeightBudget(self:component): bool =
 
 -- calcuate the ratio of components with budget vs. all subcomponents
 SubcomponentWeightBudgetCoveragePercent(self:component): int = let subs: {component} = subcomponents(self); 
- sum({ 100 for (sub : subs) | has_property(sub,SEI::GrossWeight)})/ (length(subs))
+ sum([ 100 for (sub : subs) | has_property(sub,SEI::GrossWeight)])/ (length(subs))
  
  
  AllHaveBudgets(self : component) <= ** "Component " self " shall have a weight budget" ** 

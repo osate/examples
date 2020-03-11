@@ -2,153 +2,146 @@ package valves
 
 public
 
-with base_types;
-with common; 
+	with base_types;
+	with common;
 
-system generic
-features
-	input : requires bus access common::pressure.i;
-	output : provides bus access common::pressure.i;
-annex EMV2 {**
-	use types     error_library;
-	use behavior  error_library::simple;
-	error propagations
-		input  : in propagation {NoService};
-		output : out propagation {NoService};
-	flows
-		f1 : error path input{NoService} -> output; 
-	end propagations;
-**};
-end generic;
+	system generic
+		features
+			input: requires bus access common::pressure.i;
+			output: provides bus access common::pressure.i;
+		annex EMV2 {**
+			use types error_library;
+			use behavior error_library::simple;
+			
+			error propagations
+				input: in propagation {NoService};
+				output: out propagation {NoService};
+				flows
+					f1: error path input {NoService} -> output;
+			end propagations;
+		**};
+	end generic;
 
-system implementation generic.i
-end generic.i;
+	system implementation generic.i
+	end generic.i;
 
-system generic_pwm_input extends generic
-features
-	input_pwm : requires bus access common::pwm.generic;
-end generic_pwm_input;
+	system generic_pwm_input extends generic
+		features
+			input_pwm: requires bus access common::pwm.generic;
+	end generic_pwm_input;
 
-system implementation generic_pwm_input.i
-end generic_pwm_input.i;
+	system implementation generic_pwm_input.i
+	end generic_pwm_input.i;
 
+	system boolean_shutoff extends generic
+		features
+			boolean_input: in data port Base_Types::Boolean;
+	end boolean_shutoff;
 
-system boolean_shutoff extends generic
-features
-	boolean_input : in data port Base_Types::Boolean;
-end boolean_shutoff;
+	system cmd_shutoff extends generic
+		features
+			cmd_input: in data port common::command.skid;
+		annex EMV2 {**
+			use types error_library;
+			use behavior error_library::simple;
+			
+			error propagations
+				cmd_input: in propagation {NoValue};
+				flows
+					--  We assume that if we get no value on the input, we do
+					--  not produce any pressure at all. Then, we propagate a
+					--  NoService error on the output.
+					f1: error path cmd_input {NoValue} -> output {NoService};
+					f2: error source output {NoService};
+			end propagations;
+			
+			component error behavior
+				transitions
+					t1: Operational -[cmd_input {NoValue}]-> Failed;
+					t2: Operational -[input {NoService}]-> Failed;
+				propagations
+					p1: Failed -[]-> output {NoService};
+			end component;
+		**};
+	end cmd_shutoff;
 
-system cmd_shutoff extends generic
-features
-	cmd_input : in data port common::command.skid;
-annex EMV2 {**
-	use types     error_library;
-	use behavior  error_library::simple;
-	
-	error propagations
-		cmd_input : in propagation {NoValue};
-	flows
-	    --  We assume that if we get no value on the input, we do
-	    --  not produce any pressure at all. Then, we propagate a
-	    --  NoService error on the output.
-		f1 : error path cmd_input{NoValue} -> output{NoService};
-		f2 : error source output{NoService};
-	end propagations;
-	
-	component error behavior
-	transitions
-		t1 : Operational -[cmd_input{NoValue}]-> Failed;
-		t2 : Operational -[input{NoService}]-> Failed;
-	propagations
-		p1 : Failed -[]-> output{NoService};
-	end component;
-**};
-end cmd_shutoff;
+	system selector
+		features
+			accumulator_input: requires bus access common::pressure.i;
+			green_input: requires bus access common::pressure.i;
+			blue_input: requires bus access common::pressure.i;
+			select_alternate: in data port Base_Types::Boolean;
+			cmd_nor: in data port common::command.skid;
+			cmd_alt: in data port common::command.skid;
+		annex EMV2 {**
+			use types error_library;
+			
+			error propagations
+				select_alternate: in propagation {NoValue};
+				cmd_nor: in propagation {NoValue};
+				cmd_alt: in propagation {NoValue};
+				accumulator_input: in propagation {NoService};
+				green_input: in propagation {NoService};
+				blue_input: in propagation {NoService};
+				flows
+					f1: error sink cmd_nor {NoValue};
+					f2: error sink cmd_alt {NoValue};
+					f3: error sink select_alternate {NoValue};
+			end propagations;
+		**};
+	end selector;
 
+	system implementation selector.i
+	end selector.i;
 
+	system selector_basic extends selector
+		features
+			output: provides bus access common::pressure.i;
+		annex EMV2 {**
+			use types error_library;
+			
+			error propagations
+				output: out propagation {NoService};
+				flows
+					ns1: error path green_input {NoService} -> output;
+					ns2: error path blue_input {NoService} -> output;
+					ns3: error path accumulator_input {NoService} -> output;
+			end propagations;
+		**};
+	end selector_basic;
 
-
-system selector
-features
-	accumulator_input: requires bus access common::pressure.i;
-	green_input      : requires bus access common::pressure.i;
-	blue_input       : requires bus access common::pressure.i;
-	select_alternate : in data port Base_Types::Boolean;
-	cmd_nor          : in data port common::command.skid;
-	cmd_alt          : in data port common::command.skid;
-annex EMV2 {**
-	use types error_library;
-	
-	error propagations
-		select_alternate    : in propagation{NoValue};
-		cmd_nor    			: in propagation{NoValue};
-		cmd_alt    			: in propagation{NoValue};
-		accumulator_input 	: in propagation{NoService};
-		green_input 		: in propagation{NoService};
-		blue_input  		: in propagation{NoService};
-	flows
-		f1 : error sink cmd_nor{NoValue};
-		f2 : error sink cmd_alt{NoValue};
-		f3 : error sink select_alternate{NoValue};
-	end propagations;
-**};
-end selector;
-
-
-system implementation selector.i
-end selector.i;
-
-
-system selector_basic extends selector
-features
-	output           : provides bus access common::pressure.i;
-annex EMV2 {**
-	use types error_library;
-	
-	error propagations
-		output : out propagation{NoService};
-	flows
-		ns1 : error path green_input{NoService} 		-> output;
-		ns2 : error path blue_input{NoService} 			-> output;
-		ns3 : error path accumulator_input{NoService} 	-> output;
-	end propagations;
-**};
-end selector_basic;
-
-
-system selector_detailed extends selector
-features
-	green_output : provides bus access common::pressure.i;
-	blue_output  : provides bus access common::pressure.i;
-annex EMV2 {**
-	use types       error_library;
-	use behavior    error_library::simple;
-	error propagations
-		green_output 	: out propagation{NoService};
-		blue_output 	: out propagation{NoService};
-	flows
-		ns1 : error path green_input{NoService} 		-> green_output;
-		ns2 : error path blue_input{NoService} 			-> blue_output;
-		ns3 : error path accumulator_input{NoService} 	-> green_output;
-		ns4 : error path accumulator_input{NoService} 	-> blue_output;
-		ns5 : error path cmd_alt{NoValue}               -> blue_output{NoService};
-		ns6 : error path cmd_nor{NoValue}               -> green_output{NoService};
-		ns7 : error path Select_Alternate{NoValue}      -> green_output{NoService};
-		ns8 : error path Select_Alternate{NoValue}      -> blue_output{NoService};
-	end propagations;
-
-	component error behavior
-	transitions
-		t1 : Operational -[select_alternate{NoValue}]-> Failed;
-		t2 : Operational -[cmd_alt{NoValue}]-> Failed;
-		t3 : Operational -[cmd_nor{NoValue}]-> Failed;
-	propagations
-		p1: Failed -[]-> green_output{NoService};
-		p2: Failed -[]-> blue_output{NoService};
-	end component;
-**};
-end selector_detailed;
-
+	system selector_detailed extends selector
+		features
+			green_output: provides bus access common::pressure.i;
+			blue_output: provides bus access common::pressure.i;
+		annex EMV2 {**
+			use types error_library;
+			use behavior error_library::simple;
+			
+			error propagations
+				green_output: out propagation {NoService};
+				blue_output: out propagation {NoService};
+				flows
+					ns1: error path green_input {NoService} -> green_output;
+					ns2: error path blue_input {NoService} -> blue_output;
+					ns3: error path accumulator_input {NoService} -> green_output;
+					ns4: error path accumulator_input {NoService} -> blue_output;
+					ns5: error path cmd_alt {NoValue} -> blue_output {NoService};
+					ns6: error path cmd_nor {NoValue} -> green_output {NoService};
+					ns7: error path Select_Alternate {NoValue} -> green_output {NoService};
+					ns8: error path Select_Alternate {NoValue} -> blue_output {NoService};
+			end propagations;
+			
+			component error behavior
+				transitions
+					t1: Operational -[select_alternate {NoValue}]-> Failed;
+					t2: Operational -[cmd_alt {NoValue}]-> Failed;
+					t3: Operational -[cmd_nor {NoValue}]-> Failed;
+				propagations
+					p1: Failed -[]-> green_output {NoService};
+					p2: Failed -[]-> blue_output {NoService};
+			end component;
+		**};
+	end selector_detailed;
 
 end valves;
-

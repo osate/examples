@@ -1,184 +1,164 @@
 package platform
 public
-
-with ARINC653;
-with EMV2;
-with ARP4761; 
-
+	with EMV2;
+	with ARP4761;
 
 --
 --  We associate a fault with the partition layer, the runtime associated
 --  to manage/handle the partition itself.
 --
-virtual processor partition
-annex EMV2 {**
-	use types error_library;
-	use behavior error_library::simple;
+	virtual processor partition
+		annex EMV2 {**
+			use types error_library;
+			use behavior error_library::simple;
+			
+			error propagations
+				bindings: out propagation {SoftwareFailure, HardwareFailure};
+				processor: in propagation {HardwareFailure};
+				flows
+					fsoft: error source bindings {SoftwareFailure};
+					fhard: error path processor {HardwareFailure} -> bindings;
+			end propagations;
+			
+			component error behavior
+				events
+					SoftwareFailure: error event;
+				transitions
+					Operational -[SoftwareFailure]-> Failed;
+				propagations
+					normal: Operational -[]-> bindings {NoError};
+					p2: Failed -[]-> bindings {SoftwareFailure};
+			end component;
+			
+			properties
+				EMV2::severity => ARP4761::Major applies to SoftwareFailure;
+				EMV2::likelihood => ARP4761::Probable applies to SoftwareFailure;
+				ARP4761::hazards => ([crossreference => "TBD";
+						failure => "";
+						phases => ("all");
+						description => "Software failure from the platform (OS exception, etc.)";
+						FailureConditionClassification => Major;
+						QualitativeProbabilityObjective => Probable;
+						comment => "Impact all components that are controlled by this software";
+					]) applies to SoftwareFailure;
+				EMV2::OccurrenceDistribution => [ProbabilityValue => 1.35e-5; Distribution => Poisson;] applies to SoftwareFailure;--		EMV2::OccurrenceDistribution => [ ProbabilityValue => 6.75e-5 ; Distribution => Fixed;] applies to SoftwareFailure;
+		**};
+	end partition;
 
-	error propagations
-		bindings : out propagation {SoftwareFailure, HardwareFailure};
-		processor : in  propagation {HardwareFailure};
-	flows
-		fsoft : error source bindings{SoftwareFailure};
-		fhard : error path processor{HardwareFailure} -> bindings;
-	end propagations;
-
-	component error behavior
-	events
-		SoftwareFailure : error event;
-	transitions
-		Operational -[SoftwareFailure]-> Failed;
-	propagations
-		normal : Operational -[]-> bindings {NoError};
-		p2     : Failed -[]-> bindings{SoftwareFailure};
-	end component;
-	properties
-		EMV2::severity => ARP4761::Major applies to SoftwareFailure;
-		EMV2::likelihood => ARP4761::Probable applies to SoftwareFailure;
-		ARP4761::hazards => 
-			([	crossreference => "TBD";
-				failure => "";
-				phases => ("all");
-				description => "Software failure from the platform (OS exception, etc.)";
-				FailureConditionClassification => Major;
-				QualitativeProbabilityObjective => Probable;
-				comment => "Impact all components that are controlled by this software";
-			])
-			applies to SoftwareFailure;
-		EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.35e-5 ; Distribution => Poisson;] applies to SoftwareFailure;
---		EMV2::OccurrenceDistribution => [ ProbabilityValue => 6.75e-5 ; Distribution => Fixed;] applies to SoftwareFailure;
-
-**};
-end partition;
-
-virtual processor implementation partition.generic
-end partition.generic;
-
+	virtual processor implementation partition.generic
+	end partition.generic;
 
 --
 --  This is the generic CPU. In this model, this is used to capture the
 --  physical part of the processor. Then, for each implementation (federated and IMA)
 --  we defined the appropriate software failures.
 -- 
-processor cpu
-annex EMV2 {**
-	use types error_library;
-	use behavior error_library::simple;
-
-	--
-	--  The HardwareFailure would be automatically
-	--  added for all processors.
-	--	
-	error propagations
-		bindings : out propagation {HardwareFailure};
-	flows
-		f1 : error source bindings{HardwareFailure};
-	end propagations;
-
-
-	component error behavior
-	events
-		InternalFailure : error event;
-	transitions
-		Operational -[InternalFailure]-> Failed;
-	propagations
-		normal : Operational -[]-> bindings{NoError};
-		pfail  : Failed -[]-> bindings{HardwareFailure};
-	end component;
-	properties
-		ARP4761::hazards => 
-			([	crossreference => "TBD";
-				failure => "";
-				phases => ("all");
-				description => "Hardware Failure (processor, device, etc.)";
-				FailureConditionClassification => Major;
-				QualitativeProbabilityObjective => Probable;
-				comment => "Impact all software components associated to the hardware";
-			])
-			applies to InternalFailure;
-		EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.35e-5 ; Distribution => Poisson;] applies to InternalFailure;
-		EMV2::OccurrenceDistribution => [ ProbabilityValue => 6.75e-5 ; Distribution => Fixed;] applies to f1;
-
-**};
-end cpu;
-
+	processor cpu
+		annex EMV2 {**
+			use types error_library;
+			use behavior error_library::simple;
+			
+			--
+			--  The HardwareFailure would be automatically
+			--  added for all processors.
+			--	
+			error propagations
+				bindings: out propagation {HardwareFailure};
+				flows
+					f1: error source bindings {HardwareFailure};
+			end propagations;
+			
+			component error behavior
+				events
+					InternalFailure: error event;
+				transitions
+					Operational -[InternalFailure]-> Failed;
+				propagations
+					normal: Operational -[]-> bindings {NoError};
+					pfail: Failed -[]-> bindings {HardwareFailure};
+			end component;
+			
+			properties
+				ARP4761::hazards => ([crossreference => "TBD";
+						failure => "";
+						phases => ("all");
+						description => "Hardware Failure (processor, device, etc.)";
+						FailureConditionClassification => Major;
+						QualitativeProbabilityObjective => Probable;
+						comment => "Impact all software components associated to the hardware";
+					]) applies to InternalFailure;
+				EMV2::OccurrenceDistribution => [ProbabilityValue => 1.35e-5; Distribution => Poisson;] applies to InternalFailure;
+				EMV2::OccurrenceDistribution => [ProbabilityValue => 6.75e-5; Distribution => Fixed;] applies to f1;
+		**};
+	end cpu;
 
 --
 --  We do not add a software failure to the IMA processor. Instead, we
 --  capture this error within the partition itself.
 --
-processor implementation cpu.ima
-subcomponents
-	partition1 : virtual processor partition.generic;
-	partition2 : virtual processor partition.generic;
-	partition3 : virtual processor partition.generic;
-	partition4 : virtual processor partition.generic;
-end cpu.ima;
-
+	processor implementation cpu.ima
+		subcomponents
+			partition1: virtual processor partition.generic;
+			partition2: virtual processor partition.generic;
+			partition3: virtual processor partition.generic;
+			partition4: virtual processor partition.generic;
+	end cpu.ima;
 
 --
 --  The single processor is used for the federated architecture.
 --
-processor implementation cpu.single
-annex EMV2 {**
-	use types error_library;
-	use behavior error_library::simple;
+	processor implementation cpu.single
+		annex EMV2 {**
+			use types error_library;
+			use behavior error_library::simple;
+			
+			error propagations
+				processor: out propagation {SoftwareFailure};
+				flows
+					fsoft: error source processor {SoftwareFailure};
+			end propagations;
+			
+			component error behavior
+				events
+					SoftwareFailure: error event;
+				transitions
+					Operational -[SoftwareFailure]-> Failed;
+				propagations
+					normal: Operational -[]-> processor {NoError};
+					psoft: Failed -[]-> processor {SoftwareFailure};
+			end component;
+			
+			properties
+				ARP4761::hazards => ([crossreference => "TBD";
+						failure => "";
+						phases => ("all");
+						description => "Software failure from the platform (OS exception, etc.)";
+						FailureConditionClassification => Major;
+						QualitativeProbabilityObjective => Probable;
+						comment => "Impact all components that are controlled by this software";
+					]) applies to SoftwareFailure;
+				EMV2::OccurrenceDistribution => [ProbabilityValue => 1.35e-5; Distribution => Poisson;] applies to SoftwareFailure;--		EMV2::OccurrenceDistribution => [ ProbabilityValue => 6.75e-5 ; Distribution => Fixed;] applies to SoftwareFailure;
+		**};
+	end cpu.single;
 
-	error propagations
-		processor : out propagation {SoftwareFailure};
-	flows
-		fsoft : error source processor{SoftwareFailure};
-	end propagations;
-
-	component error behavior
-	events
-		SoftwareFailure : error event;
-	transitions
-		Operational -[SoftwareFailure]-> Failed;
-	propagations 
-		normal : Operational -[]-> processor{NoError};
-		psoft  : Failed -[]-> processor{SoftwareFailure};
-	end component;
-	properties
-		ARP4761::hazards => 
-			([	crossreference => "TBD";
-				failure => "";
-				phases => ("all");
-				description => "Software failure from the platform (OS exception, etc.)";
-				FailureConditionClassification => Major;
-				QualitativeProbabilityObjective => Probable;
-				comment => "Impact all components that are controlled by this software";
-			])
-			applies to SoftwareFailure;
-		EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.35e-5 ; Distribution => Poisson;] applies to SoftwareFailure;
---		EMV2::OccurrenceDistribution => [ ProbabilityValue => 6.75e-5 ; Distribution => Fixed;] applies to SoftwareFailure;
-
-**};
-end cpu.single;
-
-
-system platform
-end platform;
-
+	system platform
+	end platform;
 
 --
 --  The IMA platform architecture
 --
-system implementation platform.ima
-subcomponents
-	cpu : processor cpu.ima;
-end platform.ima;
-
+	system implementation platform.ima
+		subcomponents
+			cpu: processor cpu.ima;
+	end platform.ima;
 
 --
 --  The federated platform architecture
 --
-system implementation platform.federated
-subcomponents
-	cpu1 : processor cpu.single;
-	cpu2 : processor cpu.single;
-end platform.federated;
-
-
+	system implementation platform.federated
+		subcomponents
+			cpu1: processor cpu.single;
+			cpu2: processor cpu.single;
+	end platform.federated;
 
 end platform;

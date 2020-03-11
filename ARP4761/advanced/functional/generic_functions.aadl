@@ -1,35 +1,34 @@
 package functional::GenericFunctions
 public
-with WBSPS,EMV2,ARP4761;
+	with WBSPS;
 
+	system Generic
+		features
+			isFailing: feature;
+		properties
+			WBSPS::IsFunction => true;
+		annex EMV2 {**
+			use types WBSFunctionalErrorLib;
+			use behavior WBSFunctionalErrorLib::Twostate;
+			
+			error propagations
+				isFailing: out propagation {AnyFunctionalError};
+				flows
+					f1: error source isFailing {AnyFunctionalError};
+			end propagations;
+			
+			component error behavior
+				events
+					Failure: error event{WBErrorSet};
+				transitions
+					t1: Operational -[Failure]-> Failed;
+				propagations
+					p1: Failed -[]-> isFailing {AnyFunctionalError};
+			end component;
+		**};
+	end Generic;
 
-
-system Generic
-features
-	isFailing : feature;
-properties
-	WBSPS::IsFunction => true;
-annex EMV2 {**
-	use types WBSFunctionalErrorLib;
-	use behavior WBSFunctionalErrorLib::Twostate; 
-	error propagations
-		isFailing : out propagation {AnyFunctionalError};
-	flows
-		f1 : error source isFailing {AnyFunctionalError};
-	end propagations;
-	
-	component error behavior
-	events
-		Failure : error event;
-	transitions
-		t1 : Operational -[ Failure ]-> Failed;
-	propagations
-		p1 : Failed -[]-> isFailing {AnyFunctionalError};
-	end component;
-**};
-end Generic;
-
-system implementation Generic.basic
-end Generic.basic;
+	system implementation Generic.basic
+	end Generic.basic;
 
 end functional::GenericFunctions;
