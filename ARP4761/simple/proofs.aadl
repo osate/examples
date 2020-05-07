@@ -1,0 +1,25 @@
+package WBS_Proofs
+public
+
+	annex resolute {**
+	
+		contain_two_bscu () <=
+  			** "Check that we have one BSCU" **
+  			contains_geometry("C:\\jjc.stp", "BSCU",1 )
+		
+		
+	
+		contain_two_selector_valve () <=
+  			** "Check that we have two selector valves in the geometry model" **
+  			contains_geometry("C:\\jjc.stp", "SELECTOR VALVE",2 )
+		
+	
+		contain_two_power_supply () <=
+  			** "Check that we have two power supply components in the geometry model" **
+  			contains_geometry("C:\\jjc.stp", "ELECTRICAL POWER SUPPLY",2 )
+	
+		contains_geometry(filename : string, cname : string, n : int ) <=
+ 			 ** "Check that the geometry model in file " filename " contains at least " n " components with the name" cname "." ** 
+  			analysis("ngrep", filename, cname, n) 
+	**};
+end WBS_Proofs;

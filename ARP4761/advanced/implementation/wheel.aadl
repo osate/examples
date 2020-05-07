@@ -7,12 +7,12 @@ public
 	system wheel
 	end wheel;
 
---
---  This is an example of one wheel with one
---  input. We do not represent the two channels,
---  we rather abstract the two channels into a
---  single one.
---
+	--
+	--  This is an example of one wheel with one
+	--  input. We do not represent the two channels,
+	--  we rather abstract the two channels into a
+	--  single one.
+	--
 	system wheel_one_input extends wheel
 		features
 			input: requires bus access common::pressure.i;
@@ -36,12 +36,12 @@ public
 	system implementation wheel_one_input.i
 	end wheel_one_input.i;
 
---
---  This is an example of a wheel with two
---  input, one from each pump. The other model
---  abstracts the two pumps in a single bus.
---  This model explicitly represents the two channels.
---
+	--
+	--  This is an example of a wheel with two
+	--  input, one from each pump. The other model
+	--  abstracts the two pumps in a single bus.
+	--  This model explicitly represents the two channels.
+	--
 	system wheel_two_inputs extends wheel_one_input
 		features
 			green_input: requires bus access common::pressure.i;

@@ -9,10 +9,9 @@ public
 	with impl::power;
 	with impl::pedals;
 
-
---
---  Dummy component for the wheel brake system.
---
+	--
+	--  Dummy component for the wheel brake system.
+	--
 	system wbs
 	end wbs;
 
@@ -71,10 +70,10 @@ public
 		**};
 	end wbs.generic;
 
---  Basic/naive version that abstracts all the valves with
---  a selector_subsystem. This selector subsystem hide
---  the physical logic behind the selector, shutoff and meter/anti-skid
---  valves.
+	--  Basic/naive version that abstracts all the valves with
+	--  a selector_subsystem. This selector subsystem hide
+	--  the physical logic behind the selector, shutoff and meter/anti-skid
+	--  valves.
 	system implementation wbs.basic extends wbs.generic
 		subcomponents
 			bscu: refined to system impl::bscu::bscu.basic;
@@ -92,10 +91,10 @@ public
 			selector_to_wheel: bus access selector.output <-> wheel.input;
 	end wbs.basic;
 
---
---  Version with more details of the implementation, showing detail
---  about the hydraulic system.
--- 
+	--
+	--  Version with more details of the implementation, showing detail
+	--  about the hydraulic system.
+	-- 
 	system implementation wbs.detailed extends wbs.generic
 		subcomponents
 			selector: refined to system impl::valves::selector_detailed {

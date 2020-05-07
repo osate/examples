@@ -6,18 +6,18 @@ public
 	with EMV2;
 	with ARP4761;
 
---
---  The annunciation device is introduced to capture the
---  fact that we may have a communication error and lose
---  the annunciation capability in the system.
---
---  This would likely be replaced by something more
---  sophisticated. However, this level of abstraction
---  is sufficient for our needs and show an error source
---  that propagates to the main system.
---  See. ARP4761 document page 199, figure L3 for more
---  details about how this error is introduced into the FTA.
---
+	--
+	--  The annunciation device is introduced to capture the
+	--  fact that we may have a communication error and lose
+	--  the annunciation capability in the system.
+	--
+	--  This would likely be replaced by something more
+	--  sophisticated. However, this level of abstraction
+	--  is sufficient for our needs and show an error source
+	--  that propagates to the main system.
+	--  See. ARP4761 document page 199, figure L3 for more
+	--  details about how this error is introduced into the FTA.
+	--
 	device annunciation
 		features
 			--  We add a data port that abstracts communication

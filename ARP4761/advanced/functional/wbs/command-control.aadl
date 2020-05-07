@@ -27,10 +27,10 @@ public
 			
 			component error behavior
 				events
-					lossBrakingCommand: error event{WBErrorSet};
+					lossBrakingCommand: error event {WBErrorSet};
 				transitions
 					t1: Operational -[lossBrakingCommand]-> Failed;
-					t2: Operational -[fromElectrical {AnyFunctionalError}]-> Failed{TotalWBLossUnanunciated};
+					t2: Operational -[fromElectrical {AnyFunctionalError}]-> Failed {TotalWBLossUnanunciated};
 				propagations
 					p1: Failed -[]-> fromBSCU {AnyFunctionalError};
 			end component;

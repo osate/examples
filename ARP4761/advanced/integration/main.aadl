@@ -13,11 +13,11 @@ public
 			functional: system functional::main::Aircraft.basic;
 			wbs_impl: system impl::wbs::wbs.ima;
 		properties
---  We bind the WBS physical components to functions
---  On the physical components, we have to explicitly define bindings propagations
---  and on the function, we define processor bindings. Right now, we make use
---  of the processor binding mechanism to bind functions with their associated
---  runtime component. 
+			--  We bind the WBS physical components to functions
+			--  On the physical components, we have to explicitly define bindings propagations
+			--  and on the function, we define processor bindings. Right now, we make use
+			--  of the processor binding mechanism to bind functions with their associated
+			--  runtime component. 
 			Actual_Processor_Binding => (reference (wbs_impl.bscu)) applies to functional.alert;
 			Actual_Processor_Binding => (reference (wbs_impl)) applies to functional.decelerate.DecelerateWheels;
 			Actual_Processor_Binding => (reference (wbs_impl.blue_pump), reference (wbs_impl.green_pump),

@@ -19,7 +19,7 @@ public
 			
 			component error behavior
 				events
-					Failure: error event{WBErrorSet};
+					Failure: error event {WBErrorSet};
 				transitions
 					t1: Operational -[Failure]-> Failed;
 				propagations

@@ -8,26 +8,26 @@ public
 	with EMV2;
 	with ARP4761;
 
--- This is the implementation of the BSCU of the system
--- The BSCU contains two subsystems.
--- Each BSCU subsystem has the following interfaces:
---    1. Power
---    2. Pedal
--- Then, each BSCU subsystem has the following subcomponents:
---    1. A Command function that produces data from the pedal values.
---    2. A monitor function that indicates if the values are valid
---       or not.
--- The main BSCU receives data and power and forwards it
--- to each subsystem.
--- Also, the BSCU contains a Select_Alternate output data
--- that indicates wheter we should use the first subsystem
--- (Select_Alternate == false) or if the second (backup)
--- subsystem would be used (Select_Alternate == true).
--- The command system if part of each bscu subsystem.
--- It produces data from the brake pedal value.
--- This component is an error sink for the error side
--- and may fail from power-related error
--- and service-related error (no pedal).
+	-- This is the implementation of the BSCU of the system
+	-- The BSCU contains two subsystems.
+	-- Each BSCU subsystem has the following interfaces:
+	--    1. Power
+	--    2. Pedal
+	-- Then, each BSCU subsystem has the following subcomponents:
+	--    1. A Command function that produces data from the pedal values.
+	--    2. A monitor function that indicates if the values are valid
+	--       or not.
+	-- The main BSCU receives data and power and forwards it
+	-- to each subsystem.
+	-- Also, the BSCU contains a Select_Alternate output data
+	-- that indicates whether we should use the first subsystem
+	-- (Select_Alternate == false) or if the second (backup)
+	-- subsystem would be used (Select_Alternate == true).
+	-- The command system if part of each bscu subsystem.
+	-- It produces data from the brake pedal value.
+	-- This component is an error sink for the error side
+	-- and may fail from power-related error
+	-- and service-related error (no pedal).
 	process command
 		features
 			brake: out data port common::command.brake;
@@ -69,11 +69,11 @@ public
 		**};
 	end command.i;
 
---  The monitor component receive the values
---  (brake and skid values) from the command system
---  and check if the system is valid or not. We have
---  one monitor for each BSCU.
---  The monitor may fail if he has no power.
+	--  The monitor component receive the values
+	--  (brake and skid values) from the command system
+	--  and check if the system is valid or not. We have
+	--  one monitor for each BSCU.
+	--  The monitor may fail if he has no power.
 	process monitor
 		features
 			brake: in data port common::command.brake;
@@ -180,9 +180,9 @@ public
 		**};
 	end bscu_subsystem.generic;
 
---  The select alternate is a binary operator that produces
---  an output from two input. If the first input is true
---  the result is false. Otherwise, the result is true. 
+	--  The select alternate is a binary operator that produces
+	--  an output from two input. If the first input is true
+	--  the result is false. Otherwise, the result is true. 
 	system select_alternate
 		features
 			input1: in data port Base_Types::Boolean;

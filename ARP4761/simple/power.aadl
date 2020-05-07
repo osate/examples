@@ -40,7 +40,7 @@ public
 						comment => "Major hazard if both power are lost";
 					]) applies to socket.NoPower;
 				EMV2::OccurrenceDistribution => [ProbabilityValue => 1.35e-5; Distribution => Poisson;] applies to socket.NoPower;
-			--		EMV2::OccurrenceDistribution => [ ProbabilityValue => 6.75e-5 ; Distribution => Fixed;] applies to socket.NoPower;
+				--		EMV2::OccurrenceDistribution => [ ProbabilityValue => 6.75e-5 ; Distribution => Fixed;] applies to socket.NoPower;
 				ARP4761::hazards => ([crossreference => "TBD";
 						failure => "Battery Explode";
 						phases => ("all");

@@ -38,10 +38,10 @@ public
 			use types WBSFunctionalErrorLib;
 			states
 				Operational: initial state;
-		--		failed : state WBErrorSet;
-		-- NOT WORKING
-		--		failed:state {TotalWBLoss,PartialSymmetricalWBLoss,AssymetricalWBLoss,InadvertentWB};
-		-- WORKING: TODO Needed to list the subtypes explicitly so they could be referenced in containment path
+				--		failed : state WBErrorSet;
+				-- NOT WORKING
+				--		failed:state {TotalWBLoss,PartialSymmetricalWBLoss,AssymetricalWBLoss,InadvertentWB};
+				-- WORKING: TODO Needed to list the subtypes explicitly so they could be referenced in containment path
 				failed: state {TotalWBLossAnunciated, TotalWBLossUnanunciated, PartialSymmetricalWBLossUnanunciated,
 					PartialSymmetricalWBLossAnunciated, AssymetricalWBLoss, InadvertentWB};
 		end behavior;

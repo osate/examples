@@ -28,8 +28,8 @@ public
 	data implementation command.announce
 	end command.announce;
 
--- The pressure bus represents the pressure sent/received by
--- other devices/pumps
+	-- The pressure bus represents the pressure sent/received by
+	-- other devices/pumps
 	bus pressure
 	end pressure;
 

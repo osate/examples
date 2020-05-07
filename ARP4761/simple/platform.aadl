@@ -3,10 +3,10 @@ public
 	with EMV2;
 	with ARP4761;
 
---
---  We associate a fault with the partition layer, the runtime associated
---  to manage/handle the partition itself.
---
+	--
+	--  We associate a fault with the partition layer, the runtime associated
+	--  to manage/handle the partition itself.
+	--
 	virtual processor partition
 		annex EMV2 {**
 			use types error_library;
@@ -41,18 +41,18 @@ public
 						QualitativeProbabilityObjective => Probable;
 						comment => "Impact all components that are controlled by this software";
 					]) applies to SoftwareFailure;
-				EMV2::OccurrenceDistribution => [ProbabilityValue => 1.35e-5; Distribution => Poisson;] applies to SoftwareFailure;--		EMV2::OccurrenceDistribution => [ ProbabilityValue => 6.75e-5 ; Distribution => Fixed;] applies to SoftwareFailure;
+				EMV2::OccurrenceDistribution => [ProbabilityValue => 1.35e-5; Distribution => Poisson;] applies to SoftwareFailure; --		EMV2::OccurrenceDistribution => [ ProbabilityValue => 6.75e-5 ; Distribution => Fixed;] applies to SoftwareFailure;
 		**};
 	end partition;
 
 	virtual processor implementation partition.generic
 	end partition.generic;
 
---
---  This is the generic CPU. In this model, this is used to capture the
---  physical part of the processor. Then, for each implementation (federated and IMA)
---  we defined the appropriate software failures.
--- 
+	--
+	--  This is the generic CPU. In this model, this is used to capture the
+	--  physical part of the processor. Then, for each implementation (federated and IMA)
+	--  we defined the appropriate software failures.
+	-- 
 	processor cpu
 		annex EMV2 {**
 			use types error_library;
@@ -92,10 +92,10 @@ public
 		**};
 	end cpu;
 
---
---  We do not add a software failure to the IMA processor. Instead, we
---  capture this error within the partition itself.
---
+	--
+	--  We do not add a software failure to the IMA processor. Instead, we
+	--  capture this error within the partition itself.
+	--
 	processor implementation cpu.ima
 		subcomponents
 			partition1: virtual processor partition.generic;
@@ -104,9 +104,9 @@ public
 			partition4: virtual processor partition.generic;
 	end cpu.ima;
 
---
---  The single processor is used for the federated architecture.
---
+	--
+	--  The single processor is used for the federated architecture.
+	--
 	processor implementation cpu.single
 		annex EMV2 {**
 			use types error_library;
@@ -137,24 +137,24 @@ public
 						QualitativeProbabilityObjective => Probable;
 						comment => "Impact all components that are controlled by this software";
 					]) applies to SoftwareFailure;
-				EMV2::OccurrenceDistribution => [ProbabilityValue => 1.35e-5; Distribution => Poisson;] applies to SoftwareFailure;--		EMV2::OccurrenceDistribution => [ ProbabilityValue => 6.75e-5 ; Distribution => Fixed;] applies to SoftwareFailure;
+				EMV2::OccurrenceDistribution => [ProbabilityValue => 1.35e-5; Distribution => Poisson;] applies to SoftwareFailure; --		EMV2::OccurrenceDistribution => [ ProbabilityValue => 6.75e-5 ; Distribution => Fixed;] applies to SoftwareFailure;
 		**};
 	end cpu.single;
 
 	system platform
 	end platform;
 
---
---  The IMA platform architecture
---
+	--
+	--  The IMA platform architecture
+	--
 	system implementation platform.ima
 		subcomponents
 			cpu: processor cpu.ima;
 	end platform.ima;
 
---
---  The federated platform architecture
---
+	--
+	--  The federated platform architecture
+	--
 	system implementation platform.federated
 		subcomponents
 			cpu1: processor cpu.single;

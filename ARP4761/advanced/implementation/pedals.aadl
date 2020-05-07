@@ -3,9 +3,9 @@ public
 	with common;
 	with ARP4761;
 
---
---  This is a stub component for the pedal
--- 
+	--
+	--  This is a stub component for the pedal
+	-- 
 	system pedals
 		features
 			signal1: out data port common::command.pedal;

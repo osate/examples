@@ -12,9 +12,9 @@ public
 	with ARP4761;
 	with EMV2;
 
---
---  Dummy component for the wheel brake system.
---
+	--
+	--  Dummy component for the wheel brake system.
+	--
 	system wbs
 	end wbs;
 
@@ -60,7 +60,7 @@ public
 			
 			composite error behavior
 				states
-			--		[blue_pump.Failed and green_pump.Failed and bscu.Failed and accumulator.Failed]-> Failed;
+					--		[blue_pump.Failed and green_pump.Failed and bscu.Failed and accumulator.Failed]-> Failed;
 					[bscu.Failed and accumulator.Failed and annunciation.Failed]-> AnnunciatedBrakingLoss;
 					[blue_pump.Failed and green_pump.Failed and accumulator.Failed and
 						annunciation.Failed]-> AnnunciatedBrakingLoss;
@@ -109,10 +109,10 @@ public
 		**};
 	end wbs.generic;
 
---  Basic/naive version that abstracts all the valves with
---  a selector_subsystem. This selector subsystem hide
---  the physical logic behind the selector, shutoff and meter/anti-skid
---  valves.
+	--  Basic/naive version that abstracts all the valves with
+	--  a selector_subsystem. This selector subsystem hide
+	--  the physical logic behind the selector, shutoff and meter/anti-skid
+	--  valves.
 	system implementation wbs.basic extends wbs.generic
 		subcomponents
 			bscu: refined to system bscu::bscu.basic;
@@ -130,10 +130,10 @@ public
 			selector_to_wheel: bus access selector.output <-> wheel.input;
 	end wbs.basic;
 
---
---  Version with more details of the implementation, showing detail
---  about the hydraulic system.
--- 
+	--
+	--  Version with more details of the implementation, showing detail
+	--  about the hydraulic system.
+	-- 
 	system implementation wbs.detailed extends wbs.generic
 		subcomponents
 			selector: refined to system valves::selector_detailed {Classifier_Substitution_Rule => Type_Extension;};
@@ -177,10 +177,10 @@ public
 		subcomponents
 			bscu: refined to system bscu::bscu.ima;
 		annex resolute {**  
-      	prove contain_two_power_supply()
-      	prove contain_two_selector_valve() 
-      	prove contain_two_bscu()
-**};
+      		prove contain_two_power_supply()
+      		prove contain_two_selector_valve() 
+      		prove contain_two_bscu()
+		**};
 	end wbs.ima;
 
 end wbs;

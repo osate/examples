@@ -23,9 +23,9 @@ public
 			
 			component error behavior
 				events
-					GreenPumpError: error event{WBErrorSet};
-					BluePumpError: error event{WBErrorSet};
-					ComponentError: error event{WBErrorSet};
+					GreenPumpError: error event {WBErrorSet};
+					BluePumpError: error event {WBErrorSet};
+					ComponentError: error event {WBErrorSet};
 				transitions
 					t1: Operational -[GreenPumpError]-> Failed;
 					t2: Operational -[BluePumpError]-> Failed;
