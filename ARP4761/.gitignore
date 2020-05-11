@@ -1,7 +1,3 @@
 /.aadlbin-gen/
 instances/
-/bin/
-/xtend-gen/
-.metadata/
-*.emfta
 *.aird

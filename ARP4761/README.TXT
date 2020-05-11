@@ -8,7 +8,7 @@ capabilities of OSATE:
 - Fault Tree Analysis
 
 A complete description of the case-study is available on:
-https://wiki.sei.cmu.edu/aadl/index.php/ARP4761_-_Wheel_Brake_System_%28WBS%29_Example
+https://resources.sei.cmu.edu/asset_files/TechnicalReport/2014_005_001_311911.pdf
 
 TODO
 ====
