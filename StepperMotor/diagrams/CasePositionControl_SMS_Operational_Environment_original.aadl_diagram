@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="ASCII"?>
+<diagram:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:diagram="http://osate.org/diagram" formatVersion="7">
+  <element uuid="e65f0e1e-18a2-4965-828b-77370a1c91e0" manual="true">
+    <element uuid="e8f23cb1-2bc7-4ced-a712-1b24701243f4" manual="true">
+      <bo>
+        <seg>connection</seg>
+        <seg>ecutodevbus</seg>
+      </bo>
+    </element>
+    <element uuid="b5878bc4-2749-40e0-b825-4668eecfcca7" manual="true">
+      <element uuid="55f3596e-aa38-45f8-ac6e-afaab3da2501" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>fuelflowconn</seg>
+      </bo>
+    </element>
+    <element uuid="ebb00ca5-ede0-460d-ac72-b553f6633c3a" manual="true">
+      <element uuid="d0b4b819-c20d-4c6e-b232-59d794cb6e47" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>mechanicalcontrolpositionconnection</seg>
+      </bo>
+    </element>
+    <element uuid="80c6d501-cb8a-41a7-8c10-173e54492888" manual="true">
+      <bo>
+        <seg>connection</seg>
+        <seg>pwrecu</seg>
+      </bo>
+    </element>
+    <element uuid="b8c57d87-2882-4c92-aa8a-f12a8f8457bb" manual="true">
+      <bo>
+        <seg>connection</seg>
+        <seg>pwrpcs</seg>
+      </bo>
+    </element>
+    <element uuid="0786f16d-1b1b-4587-bf97-25b1b34ff7ed" manual="true">
+      <element uuid="4b1e65f7-a689-48fe-8caf-26e25a1788e0" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>smcmd</seg>
+      </bo>
+    </element>
+    <element uuid="c7f56af3-355e-44f9-b297-1337247bd510" manual="true">
+      <bo>
+        <seg>connection</seg>
+        <seg>smpcstodevbus</seg>
+      </bo>
+    </element>
+    <element uuid="25300073-1e3e-47ca-8f8d-9cd1d8761d83" manual="true">
+      <element uuid="47f55646-177e-4744-a53d-17c6e0d1752f" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>thrustreadingconn</seg>
+      </bo>
+    </element>
+    <element uuid="3d4df67a-3b57-40bd-94e8-dbd91f96504c" manual="true">
+      <element uuid="fde4dc49-87a4-438e-9982-8331f2200019" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>valvecmd</seg>
+      </bo>
+    </element>
+    <element uuid="9c7b39fe-a99c-49d1-84aa-3fa05cffb7e2" manual="true">
+      <element uuid="46fdca3f-e43f-43e2-a34b-4d362205f6ed" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>valvecontrolconnection</seg>
+      </bo>
+    </element>
+    <element uuid="2d9c8636-0450-4324-87b8-e8e5aeb47e60" manual="true">
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>dev_bus</seg>
+      </bo>
+      <position x="360.0" y="380.0"/>
+      <size width="116.0" height="35.0"/>
+    </element>
+    <element uuid="5f729bfb-fdc4-48c2-b171-0c5aab07c0ec" manual="true">
+      <element uuid="a0679050-5b54-499d-8395-4bce15c04d68" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>desiredthrust</seg>
+        </bo>
+        <position y="35.0"/>
+      </element>
+      <element uuid="5073fea9-f1f6-4910-8f3c-a99933f5e4f5" manual="true" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>thrustreading</seg>
+        </bo>
+        <position x="104.0" y="60.0"/>
+      </element>
+      <element uuid="d5838e22-d0dc-4b27-b1c7-dcfb4f5fe8b5" manual="true" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>valveposition</seg>
+        </bo>
+        <position x="109.0" y="109.0"/>
+      </element>
+      <element uuid="872c11f4-fb60-47ef-8990-f365c3b801ca" manual="true">
+        <bo>
+          <seg>flow_specification</seg>
+          <seg>flowsource</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>ecs</seg>
+      </bo>
+      <position x="50.0" y="70.0"/>
+      <size width="211.0" height="149.0"/>
+    </element>
+    <element uuid="9ec75855-5521-47c0-ad1e-e28be1e0b903" manual="true">
+      <element uuid="5e81d31a-bd59-426e-92be-4d6005f3941c" manual="true" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>dev_bus</seg>
+        </bo>
+        <position x="59.0" y="10.0"/>
+      </element>
+      <element uuid="cc441542-9220-4abb-a940-b4c48328e604" manual="true" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>power</seg>
+        </bo>
+        <position x="76.0" y="60.0"/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>ecu</seg>
+      </bo>
+      <position x="70.0" y="380.0"/>
+      <size width="133.0" height="111.0"/>
+    </element>
+    <element uuid="8e26010f-4653-4404-98ee-bdd305c8fd8c" manual="true">
+      <element uuid="20cb2f8d-3da2-4e0b-8f70-b35787592b1b" manual="true" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>fuelflow</seg>
+        </bo>
+        <position x="168.0" y="29.0"/>
+      </element>
+      <element uuid="938ef158-67f7-4e5d-a3b9-609bdc2cbba6" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>thrustreading</seg>
+        </bo>
+        <position y="23.0"/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>engine</seg>
+      </bo>
+      <position x="419.0" y="60.0"/>
+      <size width="243.0" height="74.0"/>
+    </element>
+    <element uuid="9426d56c-0227-4128-bd33-ce022e633440" manual="true">
+      <element uuid="8d43e1c1-e6a9-48ab-bc0e-133fa686e228" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>fuelflow</seg>
+        </bo>
+        <position y="20.0"/>
+      </element>
+      <element uuid="a17a3bc6-ce90-413f-aef3-bf60caaac010" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>mechanicalvalvecontrol</seg>
+        </bo>
+        <position y="70.0"/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>fuelvalve</seg>
+      </bo>
+      <position x="820.0" y="150.0"/>
+      <size width="271.0" height="122.0"/>
+    </element>
+    <element uuid="9f0b158b-318d-4543-bb47-a95cdd945c30" manual="true">
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>powersupply</seg>
+      </bo>
+      <position x="590.0" y="400.0"/>
+      <size width="141.0" height="35.0"/>
+    </element>
+    <element uuid="0f240437-3288-437a-93db-afac19dc636e" manual="true">
+      <element uuid="faa5d392-87fd-4726-b7a1-613b91afacbf" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>desired_position</seg>
+        </bo>
+        <position y="21.0"/>
+      </element>
+      <element uuid="93358fae-2f7b-4233-a873-2a41b9b214ee" manual="true" dockArea="bottom">
+        <bo>
+          <seg>feature</seg>
+          <seg>dma</seg>
+        </bo>
+        <position x="39.0" y="102.0"/>
+      </element>
+      <element uuid="5a16b766-4208-4987-a455-8c7c4c268a67" manual="true" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>mechanical_control_position</seg>
+        </bo>
+        <position x="81.0" y="40.0"/>
+      </element>
+      <element uuid="30165396-9cc9-480a-9752-60a0f21b4ded" manual="true" dockArea="bottom">
+        <bo>
+          <seg>feature</seg>
+          <seg>power</seg>
+        </bo>
+        <position x="151.0" y="102.0"/>
+      </element>
+      <element uuid="2f7435b0-d7ed-479e-b4a9-4645227fec11" manual="true">
+        <bo>
+          <seg>flow_specification</seg>
+          <seg>flowsink</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>sms</seg>
+      </bo>
+      <position x="394.0" y="200.0"/>
+      <size width="294.0" height="126.0"/>
+    </element>
+    <bo>
+      <seg>classifier</seg>
+      <seg>sms_operational_environment.original</seg>
+    </bo>
+    <position x="100.0" y="20.0"/>
+    <size width="1131.0" height="531.0"/>
+  </element>
+  <config type="structure" connectionPrimaryLabelsVisible="false">
+    <enabledAadlProperties/>
+    <context>
+      <seg>classifier</seg>
+      <seg>casepositioncontrol::sms_operational_environment.original</seg>
+    </context>
+  </config>
+</diagram:Diagram>

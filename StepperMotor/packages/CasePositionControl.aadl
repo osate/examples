@@ -1,252 +1,254 @@
 package CasePositionControl
 public
-with Data_Model, ErrorLibrary, PCSProperties, Base_Types, SMErrorTypes;
+	with Data_Model, ErrorLibrary, PCSProperties, Base_Types, SMErrorTypes;
 
-data SM_Position
-end SM_Position;
+	-- The stepper motor controls a throttle control valve. When stepper motor is at
+	-- its minimum position the valve is closed. When it is at its maximum position
+	-- the valve is fully open.
+	data SM_Position
+	end SM_Position;
 
-data implementation SM_Position.PercentOpen
-	properties
-	Data_Model::Base_Type => (classifier(Base_Types::Float));
-	Data_Model::Data_Representation => Fixed;
-	Data_Model::Measurement_Unit => "Percent"; 
-	Data_Model::Integer_Range => 0 .. 100;
-end SM_Position.PercentOpen;
+	data implementation SM_Position.PercentOpen
 
-data implementation SM_Position.Steps
-properties
-	Data_Model::Base_Type => (classifier(Base_Types::Integer));
-	Data_Model::Data_Representation => Integer;
-	Data_Model::Measurement_Unit => "Steps"; 
-	Data_Model::Integer_Range => 0 .. PCSProperties::MaxPosition;
-end SM_Position.Steps;
- 
-data SM_Position_Change
-end SM_Position_Change;
+		properties
+			Data_Model::Base_Type => (classifier (Base_Types::Float));
+			Data_Model::Data_Representation => Fixed;
+			Data_Model::Measurement_Unit => "Percent";
+			Data_Model::Integer_Range => 0 .. 100;
+	end SM_Position.PercentOpen;
 
-data implementation SM_Position_Change.DataRecord
-subcomponents
-	StepCount: data {
-	Data_Model::Data_Representation => Integer;
-	Data_Model::Measurement_Unit => "Steps";
-	Data_Model::Integer_Range => 0 .. PCSProperties::MaxStepCount;
-	};
-	Step_Direction: data {
-	Data_Model::Data_Representation => Enum;
-	Data_Model::Enumerators => ("Open","Close");
-	};
-	Step_Rate: data {
-	Data_Model::Data_Representation => Integer;
-	Data_Model::Measurement_Unit => "Steps";
-	Data_Model::Integer_Range => PCSProperties::MaxStepCount .. PCSProperties::MaxStepCount;
-	};
-end SM_Position_Change.DataRecord;
+	data implementation SM_Position.Steps
+		properties
+			Data_Model::Base_Type => (classifier (Base_Types::Integer));
+			Data_Model::Data_Representation => Integer;
+			Data_Model::Measurement_Unit => "Steps";
+			Data_Model::Integer_Range => 0 .. PCSProperties::MaxPosition;
+	end SM_Position.Steps;
 
+	data SM_Position_Change
+	end SM_Position_Change;
 
--- SMS process with position change interface
-process SMS_App_Process_SMPC 
-features
-	Desired_Position: in data port SM_Position.PercentOpen;
-	Commanded_Position:out event data port SM_Position_Change;
-flows
-	flowpath: flow path Desired_Position -> Commanded_Position;
-annex EMV2 {**
-	use types SMErrorTypes;
-	error propagations
-	Commanded_Position : out propagation { MissingCommand, NoCommandSequence, TimingError, RateError};
-	-- out of range for PCC and out of bounds on resulting position
-	Commanded_Position : not out propagation { StepCountOutOfRange,ResultingPositionOutOfRange};
-	-- on feature group vs. on the individual elements of a feature group
-	end propagations;
-	**};
-end SMS_App_Process_SMPC;
+	data implementation SM_Position_Change.DataRecord
+		subcomponents
+			StepCount: data {
+				Data_Model::Data_Representation => Integer;
+				Data_Model::Measurement_Unit => "Steps";
+				Data_Model::Integer_Range => 0 .. PCSProperties::MaxStepCount;
+			};
+			Step_Direction: data {
+				Data_Model::Data_Representation => Enum;
+				Data_Model::Enumerators => ("Open", "Close");
+			};
+			Step_Rate: data {
+				Data_Model::Data_Representation => Integer;
+				Data_Model::Measurement_Unit => "Steps";
+				Data_Model::Integer_Range => PCSProperties::MaxStepCount .. PCSProperties::MaxStepCount;
+			};
+	end SM_Position_Change.DataRecord;
 
--- SMS process with position cmd interface
-process SMS_App_Process_SMPos 
-features
-	Desired_Position: in data port SM_Position.PercentOpen;
-	Commanded_Position:out event data port SM_Position.Steps;
-flows
-	flowpath: flow path Desired_Position -> Commanded_Position;
-annex EMV2 {**
-	use types SMErrorTypes;
-	error propagations
-	Commanded_Position : out propagation { MissingCommand, NoCommandSequence, TimingError, RateError};
-	-- out of range for PCC and out of bounds on resulting position
-	Commanded_Position : not out propagation { StepCountOutOfRange,ResultingPositionOutOfRange};
-	-- on feature group vs. on the individual elements of a feature group
-	end propagations;
-	**};
-end SMS_App_Process_SMPos;
+	-- SMS process with position change interface
+	process SMS_App_Process_SMPC
+		features
+			Desired_Position: in data port SM_Position.PercentOpen;
+			Commanded_Position: out event data port SM_Position_Change;
+		flows
+			flowpath: flow path Desired_Position -> Commanded_Position;
+		annex EMV2 {**
+			use types SMErrorTypes;
+			
+			error propagations
+				Commanded_Position: out propagation {MissingCommand, NoCommandSequence, TimingError, RateError};
+				-- out of range for PCC and out of bounds on resulting position
+				Commanded_Position: not out propagation {StepCountOutOfRange, ResultingPositionOutOfRange};
+			-- on feature group vs. on the individual elements of a feature group
+			end propagations;
+		**};
+	end SMS_App_Process_SMPC;
 
--- original design, also used in buffered command solution
-process implementation SMS_App_Process_SMPC.original
-subcomponents
-	SM_PCS: thread SM_PCS.impl;
-	SM_HM: thread Health_Monitor;
-connections
-   DesiredPosCmd: port Desired_Position -> SM_PCS.Desired_Position;
-   CmdedPosition: port SM_PCS.Commanded_Position -> Commanded_Position;
-flows
-	flowpath: flow path Desired_Position -> DesiredPosCmd -> SM_PCS.flowpath -> 
-	CmdedPosition -> Commanded_Position;
-end SMS_App_Process_SMPC.original;
+	-- SMS process with position cmd interface
+	process SMS_App_Process_SMPos
+		features
+			Desired_Position: in data port SM_Position.PercentOpen;
+			Commanded_Position: out event data port SM_Position.Steps;
+		flows
+			flowpath: flow path Desired_Position -> Commanded_Position;
+		annex EMV2 {**
+			use types SMErrorTypes;
+			
+			error propagations
+				Commanded_Position: out propagation {MissingCommand, NoCommandSequence, TimingError, RateError};
+				-- out of range for PCC and out of bounds on resulting position
+				Commanded_Position: not out propagation {StepCountOutOfRange, ResultingPositionOutOfRange};
+			-- on feature group vs. on the individual elements of a feature group
+			end propagations;
+		**};
+	end SMS_App_Process_SMPos;
 
--- fixed send time solution
-process implementation SMS_App_Process_SMPC.PCSFixedTime
-subcomponents
-	SM_PCS: thread SM_PCS.impl ;
-	HM_SW: thread Health_Monitor;
-connections
-   DesiredPosCmd: port Desired_Position -> SM_PCS.Desired_Position;
-   CmdedPosition: port SM_PCS.Commanded_Position -> Commanded_Position;
-flows
-	flowpath: flow path Desired_Position -> DesiredPosCmd -> SM_PCS.flowpath -> 
-	CmdedPosition -> Commanded_Position;
-   properties
-   	Deadline => 12ms applies to SM_PCS;
-   	Output_time => ([Time => Deadline; Offset => 0 ns .. 0 ns;]) applies to SM_PCS.Commanded_Position;
-end SMS_App_Process_SMPC.PCSFixedTime;
+	-- original design, also used in buffered command solution
+	process implementation SMS_App_Process_SMPC.original
+		subcomponents
+			SM_PCS: thread SM_PCS.impl;
+			SM_HM: thread Health_Monitor;
+		connections
+			DesiredPosCmd: port Desired_Position -> SM_PCS.Desired_Position;
+			CmdedPosition: port SM_PCS.Commanded_Position -> Commanded_Position;
+		flows
+			flowpath: flow path Desired_Position -> DesiredPosCmd -> SM_PCS.flowpath -> CmdedPosition -> Commanded_Position;
+	end SMS_App_Process_SMPC.original;
 
--- position command alternative
-process implementation SMS_App_Process_SMPos.alternative
-subcomponents
-	SM_PCS: thread SM_PCS_Pos.impl;
-	HM_SW: thread Health_Monitor;
-connections
-   DesiredPosCmd: port Desired_Position -> SM_PCS.Desired_Position;
-   CmdedPosition: port SM_PCS.Commanded_Position -> Commanded_Position;
-flows
-	flowpath: flow path Desired_Position -> DesiredPosCmd -> SM_PCS.flowpath -> 
-	CmdedPosition -> Commanded_Position;
-end SMS_App_Process_SMPos.alternative;
+	-- fixed send time solution
+	process implementation SMS_App_Process_SMPC.PCSFixedTime
+		subcomponents
+			SM_PCS: thread SM_PCS.impl;
+			HM_SW: thread Health_Monitor;
+		connections
+			DesiredPosCmd: port Desired_Position -> SM_PCS.Desired_Position;
+			CmdedPosition: port SM_PCS.Commanded_Position -> Commanded_Position;
+		flows
+			flowpath: flow path Desired_Position -> DesiredPosCmd -> SM_PCS.flowpath -> CmdedPosition -> Commanded_Position;
+		properties
+			Deadline => 12ms applies to SM_PCS;
+			Output_time => ([Time => Deadline; Offset => 0ns .. 0ns;]) applies to SM_PCS.Commanded_Position;
+	end SMS_App_Process_SMPC.PCSFixedTime;
 
--- original position change commanding by SM_PCS
-thread SM_PCS
-features
-	Desired_Position: in data port SM_Position.PercentOpen {
-		Input_Rate => [ Value_Range => 0.40 .. 40.0; Rate_Unit => PerSecond;];};
-	Commanded_Position: out event data port SM_Position_Change {
-		Output_time => ([Time => Completion; Offset => 0 ns .. 0 ns;]);
-	};
-flows
-	flowpath: flow path Desired_Position -> Commanded_Position;
-properties
-	Dispatch_Protocol => Periodic;
-	Period => PCSProperties::FrameDuration;
-	Deadline => 4ms;
-annex EMV2 {**
-	use types SMErrorTypes;
-	error propagations
-	-- out of bounds captures the error that the resulting position of the position change may be outside its bounds
-	Commanded_Position : out propagation {MissingCommand, NoCommandSequence, TimingError,RateError};
-	-- out of range refers to the position change value
-	Commanded_Position : not out propagation {StepCountOutOfRange,SubtleValueError,ResultingPositionOutOfRange};
-	Desired_Position : in propagation {MissingCommand, NoCommandSequence,OutOfRange};
-	Desired_Position : not in propagation {DelayedResponse};
-	-- impact of processor
-	Processor: in propagation {NoService,CompletionTiming}; 
-	flows
-	  -- error sources
-		timingsrc: error source Commanded_Position{TimingError};
-		ratesrc: error source Commanded_Position{RateError};
-		-- error pass through
-		omissionpPassthrough: error path Desired_Position{MissingCommand, NoCommandSequence} -> Commanded_Position;
-		-- map OutOfRange into a missing command.
-		outOfRangeHandling: error path Desired_Position{OutOfRange} -> Commanded_Position{MissingCommand};
-		resourceserviceimpact: error path processor{NoService} -> Commanded_Position{NoCommandSequence};
-		resourcetimingimpact: error path processor{CompletionTiming} -> Commanded_Position{TimingError};
-	end propagations;
-	**};
-end SM_PCS;
+	-- position command alternative
+	process implementation SMS_App_Process_SMPos.alternative
+		subcomponents
+			SM_PCS: thread SM_PCS_Pos.impl;
+			HM_SW: thread Health_Monitor;
+		connections
+			DesiredPosCmd: port Desired_Position -> SM_PCS.Desired_Position;
+			CmdedPosition: port SM_PCS.Commanded_Position -> Commanded_Position;
+		flows
+			flowpath: flow path Desired_Position -> DesiredPosCmd -> SM_PCS.flowpath -> CmdedPosition -> Commanded_Position;
+	end SMS_App_Process_SMPos.alternative;
 
--- SM_PCS position change implementation with detailed behavior specification
-thread implementation SM_PCS.impl
-subcomponents
-	DesiredPositionState: data SM_Position.Steps;
-	CommandedPositionState: data SM_Position.Steps;
---annex Behavior_Specification {**
---		variables
---		    distance: Base_Types::Integer;
---		    stepcount: Base_Types::Integer;
---		states 
---			Ready: initial complete state;
---		transitions
---		Ready -[on dispatch Desired_Position]-> Ready {-- on every 25ms dispatch begin action
---        -- check for out of range if a new command has been received
---			if ((Desired_Position'fresh = true) and (Desired_Position >= 0 )and ( Desired_Position <= PCSProperties::MaxPercent)){
---                -- convert from PercentOpen to Steps
---                DesirePositionState := PCSProperties::MaxPosition*Desired_Position/100	    
---			} end if;
---			distance := DesiredPositionState - CommandedPositionState ;
---			if (abs(distance)>MaxStepCount)
---			    stepcount := MaxStepCount 
---			else
---			    stepcount := abs(distance)
---			end if;
---            Commanded_Position.Step_Rate := PCSProperties::MaxStepCount;
---            if (distance>0){
---			    Commanded_Position.Step_Direction := Open;
---			    Commanded_Position.Step_Count := stepcount;
---			    CommandedPositionState := CommandedPositionState + stepcount
---			    }
---			else {
---			    Commanded_Position.Step_Direction = Close;
---			    Commanded_Position.Step_Count = stepcount;
---			    CommandedPositionState = CommandedPositionState - stepcount
---			    }
---			end if;
---			Commanded_Position!;
---		}; -- end action
---	**};
-end SM_PCS.impl;
+	-- original position change commanding by SM_PCS
+	thread SM_PCS
+		features
+			Desired_Position: in data port SM_Position.PercentOpen {
+				Input_Rate => [Value_Range => 0.40 .. 40.0; Rate_Unit => PerSecond;];};
+			Commanded_Position: out event data port SM_Position_Change {
+				Output_time => ([Time => Completion; Offset => 0ns .. 0ns;]);
+			};
+		flows
+			flowpath: flow path Desired_Position -> Commanded_Position;
+		properties
+			Dispatch_Protocol => Periodic;
+			Period => PCSProperties::FrameDuration;
+			Deadline => 4ms;
+		annex EMV2 {**
+			use types SMErrorTypes;
+			
+			error propagations
+				-- out of bounds captures the error that the resulting position of the position change may be outside its bounds
+				Commanded_Position: out propagation {MissingCommand, NoCommandSequence, TimingError, RateError};
+				-- out of range refers to the position change value
+				Commanded_Position: not out propagation {StepCountOutOfRange, SubtleValueError, ResultingPositionOutOfRange};
+				Desired_Position: in propagation {MissingCommand, NoCommandSequence, OutOfRange};
+				Desired_Position: not in propagation {DelayedResponse};
+				-- impact of processor
+				Processor: in propagation {NoService, CompletionTiming};
+				flows
+					-- error sources
+					timingsrc: error source Commanded_Position {TimingError};
+					ratesrc: error source Commanded_Position {RateError};
+					-- error pass through
+					omissionpPassthrough: error path Desired_Position {MissingCommand, NoCommandSequence} -> Commanded_Position;
+					-- map OutOfRange into a missing command.
+					outOfRangeHandling: error path Desired_Position {OutOfRange} -> Commanded_Position {MissingCommand};
+					resourceserviceimpact: error path processor {NoService} -> Commanded_Position {NoCommandSequence};
+					resourcetimingimpact: error path processor {CompletionTiming} -> Commanded_Position {TimingError};
+			end propagations;
+		**};
+	end SM_PCS;
 
+	-- SM_PCS position change implementation with detailed behavior specification
+	thread implementation SM_PCS.impl
+		subcomponents
+			DesiredPositionState: data SM_Position.Steps;
+			CommandedPositionState: data SM_Position.Steps;
+--	annex Behavior_Specification {**
+--			variables
+--			    distance: Base_Types::Integer;
+--			    stepcount: Base_Types::Integer;
+--			states 
+--				Ready: initial complete state;
+--			transitions
+--			Ready -[on dispatch Desired_Position]-> Ready {-- on every 25ms dispatch begin action
+--	        -- check for out of range if a new command has been received
+--				if ((Desired_Position'fresh = true) and (Desired_Position >= 0 )and ( Desired_Position <= PCSProperties::MaxPercent)){
+--	                -- convert from PercentOpen to Steps
+--	                DesirePositionState := PCSProperties::MaxPosition*Desired_Position/100	    
+--				} end if;
+--				distance := DesiredPositionState - CommandedPositionState ;
+--				if (abs(distance)>MaxStepCount)
+--				    stepcount := MaxStepCount 
+--				else
+--				    stepcount := abs(distance)
+--				end if;
+--	            Commanded_Position.Step_Rate := PCSProperties::MaxStepCount;
+--	            if (distance>0){
+--				    Commanded_Position.Step_Direction := Open;
+--				    Commanded_Position.Step_Count := stepcount;
+--				    CommandedPositionState := CommandedPositionState + stepcount
+--				    }
+--				else {
+--				    Commanded_Position.Step_Direction = Close;
+--				    Commanded_Position.Step_Count = stepcount;
+--				    CommandedPositionState = CommandedPositionState - stepcount
+--				    }
+--				end if;
+--				Commanded_Position!;
+--			}; -- end action
+--		**};
+	end SM_PCS.impl;
 
--- SM_PCS position command interface
-thread SM_PCS_Pos
-features
-	Desired_Position: in data port SM_Position.PercentOpen {
-	    Input_Rate => [ Value_Range => 0.40 .. 40.0; Rate_Unit => PerSecond;] ;
-		};
-	Commanded_Position: out event data port SM_Position.Steps {
-		Output_time => ([Time => Completion; Offset => 0 ns .. 0 ns;]);
-	};
-flows
-	flowpath: flow path Desired_Position -> Commanded_Position;
-properties
-	Dispatch_Protocol => Periodic;
-	Period => 25ms;
-	Deadline => 4ms;
-annex EMV2 {**
-	use types SMErrorTypes;
-	error propagations
-	-- out of bounds captures the error that the resulting position of the position change may be outside its bounds
-	Commanded_Position : out propagation {MissingCommand, NoCommandSequence, TimingError,RateError};
-	-- out of range refers to the position change value
-	Commanded_Position : not out propagation {StepCountOutOfRange,SubtleValueError,ResultingPositionOutOfRange};
-	Desired_Position : in propagation {MissingCommand, NoCommandSequence,OutOfRange};
-	Desired_Position : not in propagation {DelayedResponse};
+	-- SM_PCS position command interface
+	thread SM_PCS_Pos
+		features
+			Desired_Position: in data port SM_Position.PercentOpen {
+				Input_Rate => [Value_Range => 0.40 .. 40.0; Rate_Unit => PerSecond;];
+			};
+			Commanded_Position: out event data port SM_Position.Steps {
+				Output_time => ([Time => Completion; Offset => 0ns .. 0ns;]);
+			};
+		flows
+			flowpath: flow path Desired_Position -> Commanded_Position;
+		properties
+			Dispatch_Protocol => Periodic;
+			Period => 25ms;
+			Deadline => 4ms;
+		annex EMV2 {**
+			use types SMErrorTypes;
+			
+			error propagations
+				-- out of bounds captures the error that the resulting position of the position change may be outside its bounds
+				Commanded_Position: out propagation {MissingCommand, NoCommandSequence, TimingError, RateError};
+				-- out of range refers to the position change value
+				Commanded_Position: not out propagation {StepCountOutOfRange, SubtleValueError, ResultingPositionOutOfRange};
+				Desired_Position: in propagation {MissingCommand, NoCommandSequence, OutOfRange};
+				Desired_Position: not in propagation {DelayedResponse};
+			
+				-- impact of processor
+				Processor: in propagation {NoService, CompletionTiming};
+				flows
+					omissionpPassthrough: error path Desired_Position {MissingCommand, NoCommandSequence} -> Commanded_Position;
+					-- (detect and) transform OutOfRange into an ignored command (MissingCommand).
+					outOfRangeHandling: error path Desired_Position {OutOfRange} -> Commanded_Position {MissingCommand};
+					timingsrc: error source Commanded_Position {TimingError};
+					ratesrc: error source Commanded_Position {RateError};
+					resourceserviceimpact: error path processor {NoService} -> Commanded_Position {NoCommandSequence};
+					resourcetimingimpact: error path processor {CompletionTiming} -> Commanded_Position {TimingError};
+			end propagations;
+		**};
+	end SM_PCS_Pos;
 
-	-- impact of processor
-	Processor: in propagation {NoService,CompletionTiming}; 
-	flows
-		omissionpPassthrough: error path Desired_Position{MissingCommand, NoCommandSequence} -> Commanded_Position;
-		-- (detect and) transform OutOfRange into an ignored command (MissingCommand).
-		outOfRangeHandling: error path Desired_Position{OutOfRange} -> Commanded_Position{MissingCommand};
-		timingsrc: error source Commanded_Position{TimingError};
-		ratesrc: error source Commanded_Position{RateError};
-		resourceserviceimpact: error path processor{NoService} -> Commanded_Position{NoCommandSequence};
-		resourcetimingimpact: error path processor{CompletionTiming} -> Commanded_Position{TimingError};
-	end propagations;
-	**};
-end SM_PCS_Pos;
-
-
--- SM_PCS position command implementation with detailed ior specification
-thread implementation SM_PCS_Pos.impl
-subcomponents
-	DesiredPositionState: data SM_Position.Steps;
-annex ior_Specification {**
+	-- SM_PCS position command implementation with detailed ior specification
+	thread implementation SM_PCS_Pos.impl
+		subcomponents
+			DesiredPositionState: data SM_Position.Steps;
+		annex ior_Specification {**
 		states
 		Ready: initial state;
 		transitions
@@ -257,517 +259,518 @@ annex ior_Specification {**
 			Commanded_Position!(DesiredPositionState)
 		};
 	**};
-end SM_PCS_Pos.impl;
+	end SM_PCS_Pos.impl;
 
+	thread Health_Monitor
+		properties
+			Dispatch_Protocol => Periodic;
+			Period => 1ms;
+	end Health_Monitor;
 
-thread Health_Monitor
-properties
-	Dispatch_Protocol => Periodic;
-	Period => 1ms;
-end Health_Monitor;
-
-
-device SM_ACT 
--- it responds to commands from SM_PCS and to completion of a step
-features
--- logical interface
-	Commanded_Position: in event data port SM_Position_Change	{
-		Queue_Size => 0;
-		Overflow_Handling_Protocol => Error;
-	};
-	SM_Command_Signals: feature group inverse of SM_Command_Signals;
--- physical interface
-	DMA: requires bus access Device_Bus;
-	Power: requires bus access Power_Supply.Volt12;
-flows
-	flowpath : flow path Commanded_Position -> SM_Command_Signals{Latency => 1 ms .. 1 ms;};
-properties 
-	Dispatch_Protocol => Aperiodic;
-annex EMV2 {**
-	use types SMErrorTypes;
-	error propagations
-	Commanded_Position : in propagation { MissingCommand, NoCommandSequence, TimingError, RateError};
-	-- out of range for PCC and out of bounds on resulting position
-	Commanded_Position : not in propagation { StepCountOutOfRange,ResultingPositionOutOfRange};
-	-- on feature group vs. on the individual elements of a feature group
-	SM_Command_Signals.SM_Cmd : out propagation {MissingStepCommand,NoCommandSequence,SlowResponse};
-	SM_Command_Signals.SM_Cmd : not out propagation {DelayedResponse};
-	SM_Command_Signals.Step_Completion: not in propagation {CompletionSignalOmission};
-	
-	Power : in propagation {NoService};
-	
-	flows
-		omissionPath1: error path Commanded_Position{ MissingCommand, NoCommandSequence} ->  SM_Command_Signals.SM_Cmd{MissedStep};
-		
-		LateDeliveryImpact: error path Commanded_Position{ LateDelivery} ->  SM_Command_Signals.SM_Cmd{SlowResponse};
-		EarlyDeliveryImpact: error path Commanded_Position{ EarlyDelivery} ->  SM_Command_Signals.SM_Cmd{MissingStepCommand};
--- try to do it once for the feature group
-		rateimpacthi: error path Commanded_Position{ HighRate} ->  SM_Command_Signals.SM_Cmd{MissingStepCommand};
-		rateimpactlo: error path Commanded_Position{ LowRate} ->  SM_Command_Signals.SM_Cmd{SlowResponse};
-
-		mechanicalFailure: error source SM_Command_Signals.SM_Cmd {NoCommandSequence} when {ActuatorFailure};
-		nopowerflow: error path power -> SM_Command_Signals.SM_Cmd {NoCommandSequence};
-	end propagations;
-	**};
-end SM_ACT;
-
-
-device implementation SM_ACT.impl
-subcomponents
-	StepsToDo: data SM_Position_Change.DataRecord;
---annex ior_Specification {**
---		states
---		Ready: initial state;
---		WaitOnStep: complete state;
---		Decide: state;
---		transitions
---		Ready -[on dispatch Commanded_Position]-> Decide {
---			StepsToDo := Commanded_Position 
---		};
---		WaitOnStep -[on dispatch Commanded_Position]-> WaitOnStep {
---			StepsToDo := Commanded_Position
---		};
---		WaitOnStep -[on dispatch DoStempCmd.StepDone]-> Decide ;
---		Decide -[StepsToDo.Step_Count = 0]-> Ready ;
---		Decide -[StepsToDo.Step_Count > 0]-> WaitOnStep {
---			StepsToDo.Step_Count :=  StepsToDo.Step_Count - 1;
---			if (StepsToDo.Step_Direction = Open)
---				SM_Command_Signals.SM_Cmd.Increment_Step!(StepsToDo.Step_Rate);
---			else 
---				SM_Command_Signals.SM_Cmd.Decrement_Step!(StepsToDo.Step_Rate);
---			end if
---		};
---	**};
-end SM_ACT.impl;
-
-
-
--- this represent the proposed improvement of queuing incoming position change commands
-device implementation SM_ACT.Buffered
-extends SM_ACT.impl
-properties
-		Queue_Size => 1 applies to Commanded_Position;
-annex EMV2 {**
-	use types SMErrorTypes;
-	error propagations
-	flows
-		timingimpact1: error sink Commanded_Position{ EarlyDelivery} ;
-		timingimpact2: error sink Commanded_Position{ EarlyDelivery} ;
-	end propagations;
-	**};
---annex Behavior_Specification {**
---		states
---			Ready: initial state;
---			Decide: state;
---			WaitOnStep: complete state;
---			Processing: state;
---		transitions
---			Ready -[on dispatch Commanded_Position]-> Decide {
---				StepsToDo := Commanded_Position
---			};
---			WaitOnStep -[on dispatch SM_Command_Signals.StepDone]-> Decide; 
---			Decide -[StepsToDo.Step_Count = 0]-> Ready ;
---			Decide -[StepsToDo.Step_Count > 0]-> WaitOnStep ;
---			{
---				StepsToDo.Step_Count :=  StepsToDo.Step_Count - 1;
---				if (StepsToDo.Step_Direction = Open)
---					SM_Command_Signals.SM_Cmd.Increment_Step!(StepsToDo.Step_Rate)
---				else 
---					SM_Command_Signals.SM_Cmd.Decrement_Step!(StepsToDo.Step_Rate)
---				end if
---			};
---	**};
-end SM_ACT.Buffered;
-
-device SM_ACT_SMPos
-	-- multi-threaded stepper motor control
-	-- it handles commands from PCS and from SM completing a step
-features
--- logical interface
-	Commanded_Position: in event data port SM_Position.Steps
-	{
-		Queue_Size => 0;
-		Overflow_Handling_Protocol => Error;
-	};
--- added for compliance of behavior specs
-	StepDone : in event port;
-	SM_Command_Signals: feature group inverse of SM_Command_Signals;
--- physical interface
-	DevBus: requires bus access Device_Bus;
-	Power: requires bus access Power_Supply.Volt12;
-flows
-	flowpath : flow path Commanded_Position -> SM_Command_Signals{Latency => 1 ms .. 1 ms;};
-properties 
-	Dispatch_Protocol => Aperiodic;
-annex EMV2 {**
-	use types SMErrorTypes;
-	error propagations
-	Commanded_Position : in propagation { MissingCommand, NoCommandSequence, TimingError, RateError};
-	-- out of range for PCC and out of bounds on resulting position
-	Commanded_Position : not in propagation { OutOfRange};
-	
-	power : in propagation {NoService};
-	
-	-- on feature group vs. on the individual elements of a feature group
-	SM_Command_Signals.SM_Cmd : out propagation {MissingStepCommand,NoCommandSequence,SlowResponse,QuickResponse};
-	SM_Command_Signals.SM_Cmd : not out propagation { DelayedResponse};
-	SM_Command_Signals.Step_Completion: not in propagation {CompletionSignalOmission};
-	flows
-		omissionPath1: error path Commanded_Position{ MissingCommand, NoCommandSequence} ->  SM_Command_Signals.SM_Cmd;
-		
-		timingimpact1: error path Commanded_Position{ LateDelivery} ->  SM_Command_Signals.SM_Cmd{SlowResponse};
-		timingimpact2: error path Commanded_Position{ EarlyDelivery} ->  SM_Command_Signals.SM_Cmd{QuickResponse};
--- try to do it once for the feature group
-		rateimpacthi: error path Commanded_Position{ HighRate} ->  SM_Command_Signals.SM_Cmd{QuickResponse};
-		rateimpactlo: error path Commanded_Position{ LowRate} ->  SM_Command_Signals.SM_Cmd{SlowResponse};
-
-
-		nopowerflow: error path power -> SM_Command_Signals.SM_Cmd {NoCommandSequence};
-	end propagations;
-	**};
-end SM_ACT_SMPos;
-
-device implementation SM_ACT_SMPos.impl
-subcomponents
-	DesiredPositionState: data SM_Position.Steps;
-	CommandedPositionState: data SM_Position.Steps;
---annex Behavior_Specification {**
---		states
---		Ready: initial complete state;
---		transitions
---		Ready -[on dispatch Commanded_Position]-> Ready {
---			DesiredPositionState := Commanded_Position  
---		};
---		Ready -[on dispatch SM_Command_Signals.StepDone]-> Ready {
---			if (CommandedPositionState > DesiredPositionState)
---			{
---				CommandedPositionState :=  CommandedPositionState - 1;
---				SM_Command_Signals.SM_Cmd.Decrement_Step!(StepsToDo.Step_Rate)
---			}
---			elsif (CommandedPositionState < DesiredPositionState)
---			{
---				CommandedPositionState :=  CommandedPositionState + 1;
---				SM_Command_Signals.SM_Cmd.Increment_Step!(StepsToDo.Step_Rate)
---			}
---			end if
---		};
---	**};
-end SM_ACT_SMPos.impl;
-
-feature group SM_Command_Signals
-Features
-	SM_Cmd: feature group SM_Step_Cmd_Signals;
-	Step_Completion: out event port;
-end SM_Command_Signals;
-
-feature group SM_Step_Cmd_Signals
-Features
-	Increment_Step: in event data port Base_Types::Integer;
-	Decrement_Step: in event data port Base_Types::Integer;
-	Goto_Home: in event port;
-end SM_Step_Cmd_Signals;
-
-
-device Stepper_Motor
-features
-	SM_Command_Signals: feature group SM_Command_Signals;
-
-	Mechanical_Control_Position: out feature; --data port SM_Position.PercentOpen;
-	Power: requires bus access Power_Supply.Volt12;
-flows
-	flowsink: flow sink SM_Command_Signals{Latency => 1 ms .. 1 ms;};
-properties
-	Dispatch_Protocol => Aperiodic;
-	Compute_Execution_Time => PCSProperties::StepDuration;
-annex EMV2 {**
-	use types SMErrorTypes;
-	error propagations
-	SM_Command_Signals.SM_Cmd : in propagation {MissingStepCommand,NoCommandSequence,SlowResponse};
-	SM_Command_Signals.SM_Cmd : not in propagation {DelayedResponse};
-	SM_Command_Signals.Step_Completion: not out propagation {CompletionSignalOmission};
-	Power: in propagation{NoService};
-	Mechanical_Control_Position:  out propagation {MissedStep,NoSteps,SlowResponse};
-	Mechanical_Control_Position:  not out propagation {DelayedResponse};
-	flows
-		SMfailure: error source Mechanical_Control_Position{NoService} when {StepperMotorFailure};
-		
-		cmdimpact1: error path SM_Command_Signals.SM_Cmd{MissingStepCommand} -> Mechanical_Control_Position{MissedStep};
-		cmdimpact2: error path SM_Command_Signals.SM_Cmd{NoCommandSequence} -> Mechanical_Control_Position{NoService};
-		cmdlate1: error path SM_Command_Signals.SM_Cmd{SlowResponse} -> Mechanical_Control_Position{SlowResponse};
-		nopower: error path Power{NoService} -> Mechanical_Control_Position{NoService};
-	end propagations;
-	**};
-end Stepper_Motor;
-
-device implementation Stepper_Motor.basic
-subcomponents
-	ActualPositionState: data SM_Position;
---	annex Behavior_Specification {**
---		states 
---		Ready: initial complete state; 
---		transitions
---		Ready -[on dispatch SM_Command_Signals.SM_Cmd.Increment_Step]-> Ready {ActualPositionState := ActualPositionState + 1};
---		Ready -[on dispatch SM_Command_Signals.SM_Cmd.Decrement_Step]-> Ready {ActualPositionState := ActualPositionState - 1};
---		};
---	**};
-end Stepper_Motor.basic; 
-
-system Engine
-features
-  FuelFlow: in feature;
-  thrustReading: out data port;
- 
- annex EMV2{**
- 		use types SMErrorTypes;
- 		use behavior ErrorLibrary::FailStop;
- error propagations
- 		FuelFlow: in propagation {StuckValve,SlowResponse,IncorrectFlow};
-		FuelFlow: not in propagation {DelayedResponse};
- 	end propagations;
- 	component error behavior 
- 	transitions
- 		Operational -[ FuelFlow{IncorrectFlow, StuckValve} ]-> FailStop;
- 	end component;
- **};
- 
-end Engine;
-
-system EngineControlSystem
-features
-	desiredThrust: in data port ;
-	thrustReading: in data port ;
-	valvePosition: out data port SM_Position;
-flows
-	flowsource : flow source valvePosition{Latency => 1 ms .. 1 ms;};
-annex EMV2{**
-	use types SMErrorTypes;
-	error propagations
-	valvePosition: out propagation {NoCommandSequence, MissingCommand};
-	valvePosition: not out propagation { DelayedResponse,OutOfRange};
-	flows
-	  fcsfailure: error source valvePosition{NoCommandSequence, MissingCommand} when {FCSFailure};
-	end propagations;
-**}; 
-end EngineControlSystem;
-
-processor ECU
-features
-	power: requires bus access Power_Supply.Volt12;
-	Dev_Bus: requires bus access Device_Bus;
-annex EMV2 {**
-	use types SMErrorTypes;
-	error propagations
-		bindings: out propagation {NoService,CompletionTiming};
-		Dev_Bus: out propagation {NoService};
-		power : in propagation {PowerLoss};
-	flows
-		passthruSW: error path power -> bindings ;
-		passthruBus: error path power -> Dev_Bus ;
-		ECUFailureProp: error source  bindings{NoService} when {ECUFailure} ;
-		ECUFailureToDevBus: error source  Dev_Bus{NoService} when {ECUFailure} ;
-	end propagations;
-**};
-end ECU;
-
-
-bus Power_Supply
-annex EMV2 {**
-	use types SMErrorTypes;
-	error propagations
-	access : out propagation {PowerLoss};
-	flows
-	powerfail: error source access{PowerLoss} when {PowerFailure};
-	end propagations;
-**};
-end Power_Supply;
-
-bus implementation Power_Supply.Volt12
-end Power_Supply.Volt12;
-
-bus implementation Power_Supply.Volt6
-end Power_Supply.Volt6;
-
-bus Device_Bus
-	annex EMV2 {**
-		use types SMErrorTypes;
-		error propagations
-		bindings: out propagation {NoService,MessageLoss, MessageCorruption};
-		access: in propagation {NoService};
+	device SM_ACT
+		-- it responds to commands from SM_PCS and to completion of a step
+		features
+			-- logical interface
+			Commanded_Position: in event data port SM_Position_Change {
+				Queue_Size => 0;
+				Overflow_Handling_Protocol => Error;
+			};
+			SM_Command_Signals: feature group inverse of SM_Command_Signals;
+			-- physical interface
+			DMA: requires bus access Device_Bus;
+			Power: requires bus access Power_Supply.Volt12;
 		flows
-		NoECUService: error path access {NoService} -> Bindings{NoService};
-		Commerror: error source bindings{MessageLoss, MessageCorruption} when {DeviceBusFailure};
-		end propagations;
-	**};
-end Device_Bus;
+			flowpath: flow path Commanded_Position -> SM_Command_Signals {Latency => 1ms .. 1ms;};
+		properties
+			Dispatch_Protocol => Aperiodic;
+		annex EMV2 {**
+			use types SMErrorTypes;
+			
+			error propagations
+				Commanded_Position: in propagation {MissingCommand, NoCommandSequence, TimingError, RateError};
+				-- out of range for PCC and out of bounds on resulting position
+				Commanded_Position: not in propagation {StepCountOutOfRange, ResultingPositionOutOfRange};
+				-- on feature group vs. on the individual elements of a feature group
+				SM_Command_Signals.SM_Cmd: out propagation {MissingStepCommand, NoCommandSequence, SlowResponse};
+				SM_Command_Signals.SM_Cmd: not out propagation {DelayedResponse};
+				SM_Command_Signals.Step_Completion: not in propagation {CompletionSignalOmission};
+			
+				Power: in propagation {NoService};
+			
+				flows
+					omissionPath1: error path Commanded_Position {MissingCommand,
+						NoCommandSequence} -> SM_Command_Signals.SM_Cmd {MissedStep};
+			
+					LateDeliveryImpact: error path Commanded_Position {LateDelivery} -> SM_Command_Signals.SM_Cmd {SlowResponse};
+					EarlyDeliveryImpact: error path Commanded_Position {EarlyDelivery} -> SM_Command_Signals.SM_Cmd {MissingStepCommand};
+					-- try to do it once for the feature group
+					rateimpacthi: error path Commanded_Position {HighRate} -> SM_Command_Signals.SM_Cmd {MissingStepCommand};
+					rateimpactlo: error path Commanded_Position {LowRate} -> SM_Command_Signals.SM_Cmd {SlowResponse};
+			
+					mechanicalFailure: error source SM_Command_Signals.SM_Cmd {NoCommandSequence} when {ActuatorFailure};
+					nopowerflow: error path power -> SM_Command_Signals.SM_Cmd {NoCommandSequence};
+			end propagations;
+		**};
+	end SM_ACT;
 
-bus DirectMemoryAccess
-end DirectMemoryAccess;
+	device implementation SM_ACT.impl
+		subcomponents
+			StepsToDo: data SM_Position_Change.DataRecord;
+	--annex ior_Specification {**
+	--		states
+	--		Ready: initial state;
+	--		WaitOnStep: complete state;
+	--		Decide: state;
+	--		transitions
+	--		Ready -[on dispatch Commanded_Position]-> Decide {
+	--			StepsToDo := Commanded_Position 
+	--		};
+	--		WaitOnStep -[on dispatch Commanded_Position]-> WaitOnStep {
+	--			StepsToDo := Commanded_Position
+	--		};
+	--		WaitOnStep -[on dispatch DoStempCmd.StepDone]-> Decide ;
+	--		Decide -[StepsToDo.Step_Count = 0]-> Ready ;
+	--		Decide -[StepsToDo.Step_Count > 0]-> WaitOnStep {
+	--			StepsToDo.Step_Count :=  StepsToDo.Step_Count - 1;
+	--			if (StepsToDo.Step_Direction = Open)
+	--				SM_Command_Signals.SM_Cmd.Increment_Step!(StepsToDo.Step_Rate);
+	--			else 
+	--				SM_Command_Signals.SM_Cmd.Decrement_Step!(StepsToDo.Step_Rate);
+	--			end if
+	--		};
+	--	**};
+	end SM_ACT.impl;
 
-device Valve
-features
-	MechanicalValveControl: in feature; --data port SM_Position.PercentOpen;
-	FuelFlow: out feature;
-	annex EMV2 {**
-		use types SMErrorTypes;
-		error propagations
-		MechanicalValveControl: in propagation {MissedStep,NoSteps, SlowResponse};
-		MechanicalValveControl: not in propagation {DelayedResponse};
-		FuelFlow: out propagation {StuckValve,SlowResponse,IncorrectFlow};
-		FuelFlow: not out propagation {DelayedResponse};
+	-- this represent the proposed improvement of queuing incoming position change commands
+	device implementation SM_ACT.Buffered extends SM_ACT.impl
+		properties
+			Queue_Size => 1 applies to Commanded_Position;
+		annex EMV2 {**
+			use types SMErrorTypes;
+			
+			error propagations
+				flows
+					timingimpact1: error sink Commanded_Position {EarlyDelivery};
+					timingimpact2: error sink Commanded_Position {EarlyDelivery};
+			end propagations;
+		**};
+	--annex Behavior_Specification {**
+	--		states
+	--			Ready: initial state;
+	--			Decide: state;
+	--			WaitOnStep: complete state;
+	--			Processing: state;
+	--		transitions
+	--			Ready -[on dispatch Commanded_Position]-> Decide {
+	--				StepsToDo := Commanded_Position
+	--			};
+	--			WaitOnStep -[on dispatch SM_Command_Signals.StepDone]-> Decide; 
+	--			Decide -[StepsToDo.Step_Count = 0]-> Ready ;
+	--			Decide -[StepsToDo.Step_Count > 0]-> WaitOnStep ;
+	--			{
+	--				StepsToDo.Step_Count :=  StepsToDo.Step_Count - 1;
+	--				if (StepsToDo.Step_Direction = Open)
+	--					SM_Command_Signals.SM_Cmd.Increment_Step!(StepsToDo.Step_Rate)
+	--				else 
+	--					SM_Command_Signals.SM_Cmd.Decrement_Step!(StepsToDo.Step_Rate)
+	--				end if
+	--			};
+	--	**};
+	end SM_ACT.Buffered;
+
+	device SM_ACT_SMPos
+		-- multi-threaded stepper motor control
+		-- it handles commands from PCS and from SM completing a step
+		features
+			-- logical interface
+			Commanded_Position: in event data port SM_Position.Steps {
+				Queue_Size => 0;
+				Overflow_Handling_Protocol => Error;
+			};
+			-- added for compliance of behavior specs
+			StepDone: in event port;
+			SM_Command_Signals: feature group inverse of SM_Command_Signals;
+			-- physical interface
+			DevBus: requires bus access Device_Bus;
+			Power: requires bus access Power_Supply.Volt12;
 		flows
-        FailedValve: error source FuelFlow{StuckValve} when {ValveFailure};
-  		MapToStuckValve: error path MechanicalValveControl{NoSteps} -> FuelFlow{StuckValve};
-		MapToIncrrectFlow: error path MechanicalValveControl{MissedStep} -> FuelFlow{IncorrectFlow};
-		MapToSluggishResponse: error path MechanicalValveControl{SlowResponse} -> FuelFlow{SlowResponse};
-		end propagations;
-	**};
-end Valve;
+			flowpath: flow path Commanded_Position -> SM_Command_Signals {Latency => 1ms .. 1ms;};
+		properties
+			Dispatch_Protocol => Aperiodic;
+		annex EMV2 {**
+			use types SMErrorTypes;
+			
+			error propagations
+				Commanded_Position: in propagation {MissingCommand, NoCommandSequence, TimingError, RateError};
+				-- out of range for PCC and out of bounds on resulting position
+				Commanded_Position: not in propagation {OutOfRange};
+			
+				power: in propagation {NoService};
+			
+				-- on feature group vs. on the individual elements of a feature group
+				SM_Command_Signals.SM_Cmd: out propagation {MissingStepCommand, NoCommandSequence, SlowResponse, QuickResponse};
+				SM_Command_Signals.SM_Cmd: not out propagation {DelayedResponse};
+				SM_Command_Signals.Step_Completion: not in propagation {CompletionSignalOmission};
+				flows
+					omissionPath1: error path Commanded_Position {MissingCommand, NoCommandSequence} -> SM_Command_Signals.SM_Cmd;
+			
+					timingimpact1: error path Commanded_Position {LateDelivery} -> SM_Command_Signals.SM_Cmd {SlowResponse};
+					timingimpact2: error path Commanded_Position {EarlyDelivery} -> SM_Command_Signals.SM_Cmd {QuickResponse};
+					-- try to do it once for the feature group
+					rateimpacthi: error path Commanded_Position {HighRate} -> SM_Command_Signals.SM_Cmd {QuickResponse};
+					rateimpactlo: error path Commanded_Position {LowRate} -> SM_Command_Signals.SM_Cmd {SlowResponse};
+			
+					nopowerflow: error path power -> SM_Command_Signals.SM_Cmd {NoCommandSequence};
+			end propagations;
+		**};
+	end SM_ACT_SMPos;
 
-system SMS
-features
-	Desired_Position: in data port SM_Position.PercentOpen;
-	Mechanical_Control_Position: out feature; --data port SM_Position.PercentOpen;
-	DMA: requires bus access Device_Bus;
-	Power: requires bus access Power_Supply.Volt12;
-flows
-	flowsink: flow sink Desired_Position ;
-properties
-	Input_Rate => [ Value_Range => 0.40 .. 40.0; Rate_Unit => PerSecond;] applies to Desired_Position;
-	Allowed_Connection_Binding_Class => (Classifier(DirectMemoryAccess)) applies to Desired_Position;
-annex EMV2 {**
-	use types SMErrorTypes;
-	error propagations
-	Desired_Position: in propagation {NoCommandSequence, MissingCommand, OutOfRange};
-	Mechanical_Control_Position: out propagation {MissedStep,NoService,SlowResponse};
-	Mechanical_Control_Position: not out propagation {DelayedResponse};
-	Power: in propagation {PowerLoss};
-    Processor: in propagation {NoService, CompletionTiming}; 
-    Connection: in propagation {NoService, MessageLoss, MessageCorruption};
-	flows
-		DPpath1: error path Desired_Position{NoCommandSequence} -> Mechanical_Control_Position{NoService};
-		DPpath2: error path Desired_Position{MissingCommand} -> Mechanical_Control_Position{MissedStep};
-		DPpath3: error path Desired_Position{NoCommandSequence} -> Mechanical_Control_Position{NoService};
-		-- mapping of power errors
-		powerpath: error path Power{PowerLoss} -> Mechanical_Control_Position{NoService};
-        ECUpath: error path Processor{NoService} -> Mechanical_Control_Position {NoService};
-        Connectionpath: error path Connection {MessageCorruption} -> Mechanical_Control_Position {MissedStep};
-	end propagations;
-**};
-end SMS;
+	device implementation SM_ACT_SMPos.impl
+		subcomponents
+			DesiredPositionState: data SM_Position.Steps;
+			CommandedPositionState: data SM_Position.Steps;
+	--annex Behavior_Specification {**
+	--		states
+	--		Ready: initial complete state;
+	--		transitions
+	--		Ready -[on dispatch Commanded_Position]-> Ready {
+	--			DesiredPositionState := Commanded_Position  
+	--		};
+	--		Ready -[on dispatch SM_Command_Signals.StepDone]-> Ready {
+	--			if (CommandedPositionState > DesiredPositionState)
+	--			{
+	--				CommandedPositionState :=  CommandedPositionState - 1;
+	--				SM_Command_Signals.SM_Cmd.Decrement_Step!(StepsToDo.Step_Rate)
+	--			}
+	--			elsif (CommandedPositionState < DesiredPositionState)
+	--			{
+	--				CommandedPositionState :=  CommandedPositionState + 1;
+	--				SM_Command_Signals.SM_Cmd.Increment_Step!(StepsToDo.Step_Rate)
+	--			}
+	--			end if
+	--		};
+	--	**};
+	end SM_ACT_SMPos.impl;
 
-system implementation SMS.Original
-subcomponents
-	SM_PCS_App: process SMS_App_Process_SMPC.original;
-	SM_ACT: device SM_ACT;--.impl;
-	SM_Motor: device Stepper_Motor;
-connections
-	IncomingDesiredPosition: port Desired_Position -> SM_PCS_App.Desired_Position;
-	SendPositionChangeCommand: port SM_PCS_App.Commanded_Position -> SM_ACT.Commanded_Position; 
-	SMCommandSignalConnection: feature group SM_ACT.SM_Command_Signals <-> SM_Motor.SM_Command_Signals;
-	-- connection between stepper motor and flow valve
-	ValveConnector: feature SM_Motor.Mechanical_Control_Position -> Mechanical_Control_Position;
-	PowerToACT: bus access Power <-> SM_ACT.Power; 
-	PowerToSM: bus access Power <-> SM_Motor.power; 
--- XXX TODO when changing the order we get an erro - bus connecting to itself.
-	ACTToDevBus: bus access  DMA <-> SM_ACT.DMA ;
-flows
-	flowsink: flow sink Desired_Position -> IncomingDesiredPosition -> SM_PCS_App.flowpath
-	-> SendPositionChangeCommand -> SM_ACT.flowpath -> SMCommandSignalConnection -> SM_Motor.flowsink;
-annex EMV2 {**
-use types SMErrorTypes;
-error propagations
-flows
-  MissedStepSource: error source Mechanical_Control_Position{MissedStep};
-end propagations;
---connection error
---use transformations ;
---end connection;
-**};
-end SMS.Original;
+	feature group SM_Command_Signals
+		Features
+			SM_Cmd: feature group SM_Step_Cmd_Signals;
+			Step_Completion: out event port;
+	end SM_Command_Signals;
 
-system implementation SMS.MidFrame extends SMS.original
-subcomponents
-	SM_PCS_App: refined to process SMS_App_Process_SMPC.PCSFixedTime;
-end SMS.MidFrame; 
+	feature group SM_Step_Cmd_Signals
+		Features
+			Increment_Step: in event data port Base_Types::Integer;
+			Decrement_Step: in event data port Base_Types::Integer;
+			Goto_Home: in event port;
+	end SM_Step_Cmd_Signals;
 
-system implementation SMS.buffered extends SMS.original
-subcomponents
-	SM_ACT: refined to device SM_ACT.buffered; 
-end SMS.Buffered;
+	device Stepper_Motor
+		features
+			SM_Command_Signals: feature group SM_Command_Signals;
 
-system implementation SMS.Position 
-subcomponents
-	SM_PCS_App: process SMS_App_Process_SMPos.alternative;
-	SM_ACT: device SM_ACT_SMPos.impl;
-	SM: device Stepper_Motor;
-connections
-	IncomingDesiredPosition: port Desired_Position -> SM_PCS_App.Desired_Position;
-	SendPositionChangeCommand: port SM_PCS_App.Commanded_Position -> SM_ACT.Commanded_Position; 
-	SMCommandSignalConnection: feature group SM_ACT.SM_Command_Signals <-> SM.SM_Command_Signals;
-	-- connection between stepper motor and flow valve
-	ValveConnector: feature SM.Mechanical_Control_Position -> Mechanical_Control_Position;
-	PowerToACT: bus access Power -> SM_ACT.Power; 
-	PowerToSM: bus access Power -> SM.power; 
+			Mechanical_Control_Position: out feature; --data port SM_Position.PercentOpen;
+			Power: requires bus access Power_Supply.Volt12;
+		flows
+			flowsink: flow sink SM_Command_Signals {Latency => 1ms .. 1ms;};
+		properties
+			Dispatch_Protocol => Aperiodic;
+			Compute_Execution_Time => PCSProperties::StepDuration;
+		annex EMV2 {**
+			use types SMErrorTypes;
+			
+			error propagations
+				SM_Command_Signals.SM_Cmd: in propagation {MissingStepCommand, NoCommandSequence, SlowResponse};
+				SM_Command_Signals.SM_Cmd: not in propagation {DelayedResponse};
+				SM_Command_Signals.Step_Completion: not out propagation {CompletionSignalOmission};
+				Power: in propagation {NoService};
+				Mechanical_Control_Position: out propagation {MissedStep, NoSteps, SlowResponse};
+				Mechanical_Control_Position: not out propagation {DelayedResponse};
+				flows
+					SMfailure: error source Mechanical_Control_Position {NoService} when {StepperMotorFailure};
+			
+					cmdimpact1: error path SM_Command_Signals.SM_Cmd {MissingStepCommand} -> Mechanical_Control_Position {MissedStep};
+					cmdimpact2: error path SM_Command_Signals.SM_Cmd {NoCommandSequence} -> Mechanical_Control_Position {NoService};
+					cmdlate1: error path SM_Command_Signals.SM_Cmd {SlowResponse} -> Mechanical_Control_Position {SlowResponse};
+					nopower: error path Power {NoService} -> Mechanical_Control_Position {NoService};
+			end propagations;
+		**};
+	end Stepper_Motor;
 
-	ACTToDevBus: bus access SM_ACT.DevBus <-> DMA;
-flows
-	flowsink: flow sink Desired_Position -> IncomingDesiredPosition -> SM_PCS_App.flowpath
-	-> SendPositionChangeCommand -> SM_ACT.flowpath -> SMCommandSignalConnection -> SM.flowsink;
-end SMS.Position;
+	device implementation Stepper_Motor.basic
+		subcomponents
+			ActualPositionState: data SM_Position;
+	--	annex Behavior_Specification {**
+	--		states 
+	--		Ready: initial complete state; 
+	--		transitions
+	--		Ready -[on dispatch SM_Command_Signals.SM_Cmd.Increment_Step]-> Ready {ActualPositionState := ActualPositionState + 1};
+	--		Ready -[on dispatch SM_Command_Signals.SM_Cmd.Decrement_Step]-> Ready {ActualPositionState := ActualPositionState - 1};
+	--		};
+	--	**};
+	end Stepper_Motor.basic;
 
-system SMS_Operational_Environment
-end SMS_Operational_Environment;
+	system Engine
+		features
+			FuelFlow: in feature;
+			thrustReading: out data port;
 
-system implementation SMS_Operational_Environment.original
-subcomponents
-	SMS: system SMS.original;
-	Powersupply: bus Power_Supply;
-	ECS: system EngineControlSystem;
-	FuelValve: device Valve;
-	ECU: processor ecu;
-	Dev_Bus: bus Device_Bus;
-	Engine: system Engine;
-connections
-	valvecmd: port ECS.valvePosition -> SMS.Desired_Position;
-	valveControlConnection: feature SMS.Mechanical_Control_Position -> FuelValve.MechanicalValveControl;
-	pwrpcs: bus access Powersupply <-> SMS.Power;
-	pwrecu: bus access Powersupply <-> ECU.Power;
-	ECUToDevBus: bus access ECU.Dev_Bus <-> Dev_Bus;
-	SMPCSToDevBus: bus access SMS.DMA <-> Dev_Bus;
-	smcmd: port ECS.valvePosition -> SMS.Desired_Position;
-	MechanicalControlPositionConnection: feature SMS.Mechanical_Control_Position -> FuelValve.MechanicalValveControl;
-	FuelFlowConn: feature FuelValve.FuelFlow -> Engine.FuelFlow;
-	thrustreadingconn: port Engine.thrustReading -> ECS.thrustReading;
-flows
-	smcmdflow: end to end flow ECS.flowsource -> valvecmd -> SMS.flowsink {Latency => 50 ms .. 50 ms;};
-properties
-	Actual_Processor_Binding => (reference(ECU)) applies to SMS.SM_PCS_App;
-	Actual_Connection_Binding => (reference(Dev_Bus)) applies to SMS.SendPositionChangeCommand;
-annex EMV2{**
- 		use types SMErrorTypes;
- 		use behavior ErrorLibrary::FailStop;
+		annex EMV2 {**
+			use types SMErrorTypes;
+			use behavior ErrorLibrary::FailStop;
+			
+			error propagations
+				FuelFlow: in propagation {StuckValve, SlowResponse, IncorrectFlow};
+				FuelFlow: not in propagation {DelayedResponse};
+			end propagations;
+			
+			component error behavior
+				transitions
+					Operational -[FuelFlow {IncorrectFlow, StuckValve}]-> FailStop;
+			end component;
+		**};
 
- 	composite error behavior 
- 	states
- 		[ engine.failstop ]-> FailStop;
- 	end composite;
- **};
-end SMS_Operational_Environment.original;
+	end Engine;
 
-system implementation SMS_Operational_Environment.buffered extends SMS_Operational_Environment.original
-subcomponents
-	SMS: refined to system SMS.buffered;
-end SMS_Operational_Environment.buffered;
+	system EngineControlSystem
+		features
+			desiredThrust: in data port;
+			thrustReading: in data port;
+			valvePosition: out data port SM_Position;
+		flows
+			flowsource: flow source valvePosition {Latency => 1ms .. 1ms;};
+		annex EMV2 {**
+			use types SMErrorTypes;
+			
+			error propagations
+				valvePosition: out propagation {NoCommandSequence, MissingCommand};
+				valvePosition: not out propagation {DelayedResponse, OutOfRange};
+				flows
+					fcsfailure: error source valvePosition {NoCommandSequence, MissingCommand} when {FCSFailure};
+			end propagations;
+		**};
+	end EngineControlSystem;
 
-system implementation SMS_Operational_Environment.MidFrame extends SMS_Operational_Environment.original
-subcomponents
-	SMS: refined to system SMS.MidFrame;
-end SMS_Operational_Environment.MidFrame;
+	processor ECU
+		features
+			power: requires bus access Power_Supply.Volt12;
+			Dev_Bus: requires bus access Device_Bus;
+		annex EMV2 {**
+			use types SMErrorTypes;
+			
+			error propagations
+				bindings: out propagation {NoService, CompletionTiming};
+				Dev_Bus: out propagation {NoService};
+				power: in propagation {PowerLoss};
+				flows
+					passthruSW: error path power -> bindings;
+					passthruBus: error path power -> Dev_Bus;
+					ECUFailureProp: error source bindings {NoService} when {ECUFailure};
+					ECUFailureToDevBus: error source Dev_Bus {NoService} when {ECUFailure};
+			end propagations;
+		**};
+	end ECU;
 
-system implementation SMS_Operational_Environment.Position extends SMS_Operational_Environment.original
-subcomponents
-	SMS: refined to system SMS.Position;
-end SMS_Operational_Environment.Position;
+	bus Power_Supply
+		annex EMV2 {**
+			use types SMErrorTypes;
+			
+			error propagations
+				access: out propagation {PowerLoss};
+				flows
+					powerfail: error source access {PowerLoss} when {PowerFailure};
+			end propagations;
+		**};
+	end Power_Supply;
 
+	bus implementation Power_Supply.Volt12
+	end Power_Supply.Volt12;
 
-end CasePositionControl ;
+	bus implementation Power_Supply.Volt6
+	end Power_Supply.Volt6;
+
+	bus Device_Bus
+		annex EMV2 {**
+			use types SMErrorTypes;
+			
+			error propagations
+				bindings: out propagation {NoService, MessageLoss, MessageCorruption};
+				access: in propagation {NoService};
+				flows
+					NoECUService: error path access {NoService} -> Bindings {NoService};
+					Commerror: error source bindings {MessageLoss, MessageCorruption} when {DeviceBusFailure};
+			end propagations;
+		**};
+	end Device_Bus;
+
+	bus DirectMemoryAccess
+	end DirectMemoryAccess;
+
+	device Valve
+		features
+			MechanicalValveControl: in feature; --data port SM_Position.PercentOpen;
+			FuelFlow: out feature;
+		annex EMV2 {**
+			use types SMErrorTypes;
+			
+			error propagations
+				MechanicalValveControl: in propagation {MissedStep, NoSteps, SlowResponse};
+				MechanicalValveControl: not in propagation {DelayedResponse};
+				FuelFlow: out propagation {StuckValve, SlowResponse, IncorrectFlow};
+				FuelFlow: not out propagation {DelayedResponse};
+				flows
+					FailedValve: error source FuelFlow {StuckValve} when {ValveFailure};
+					MapToStuckValve: error path MechanicalValveControl {NoSteps} -> FuelFlow {StuckValve};
+					MapToIncrrectFlow: error path MechanicalValveControl {MissedStep} -> FuelFlow {IncorrectFlow};
+					MapToSluggishResponse: error path MechanicalValveControl {SlowResponse} -> FuelFlow {SlowResponse};
+			end propagations;
+		**};
+	end Valve;
+
+	system SMS
+		features
+			Desired_Position: in data port SM_Position.PercentOpen;
+			Mechanical_Control_Position: out feature; --data port SM_Position.PercentOpen;
+			DMA: requires bus access Device_Bus;
+			Power: requires bus access Power_Supply.Volt12;
+		flows
+			flowsink: flow sink Desired_Position;
+		properties
+			Input_Rate => [Value_Range => 0.40 .. 40.0; Rate_Unit => PerSecond;] applies to Desired_Position;
+			Allowed_Connection_Binding_Class => (Classifier (DirectMemoryAccess)) applies to Desired_Position;
+		annex EMV2 {**
+			use types SMErrorTypes;
+			
+			error propagations
+				Desired_Position: in propagation {NoCommandSequence, MissingCommand, OutOfRange};
+				Mechanical_Control_Position: out propagation {MissedStep, NoService, SlowResponse};
+				Mechanical_Control_Position: not out propagation {DelayedResponse};
+				Power: in propagation {PowerLoss};
+				Processor: in propagation {NoService, CompletionTiming};
+				Connection: in propagation {NoService, MessageLoss, MessageCorruption};
+				flows
+					DPpath1: error path Desired_Position {NoCommandSequence} -> Mechanical_Control_Position {NoService};
+					DPpath2: error path Desired_Position {MissingCommand} -> Mechanical_Control_Position {MissedStep};
+					DPpath3: error path Desired_Position {NoCommandSequence} -> Mechanical_Control_Position {NoService};
+					-- mapping of power errors
+					powerpath: error path Power {PowerLoss} -> Mechanical_Control_Position {NoService};
+					ECUpath: error path Processor {NoService} -> Mechanical_Control_Position {NoService};
+					Connectionpath: error path Connection {MessageCorruption} -> Mechanical_Control_Position {MissedStep};
+			end propagations;
+		**};
+	end SMS;
+
+	system implementation SMS.Original
+		subcomponents
+			SM_PCS_App: process SMS_App_Process_SMPC.original;
+			SM_ACT: device SM_ACT; --.impl;
+			SM_Motor: device Stepper_Motor;
+		connections
+			IncomingDesiredPosition: port Desired_Position -> SM_PCS_App.Desired_Position;
+			SendPositionChangeCommand: port SM_PCS_App.Commanded_Position -> SM_ACT.Commanded_Position;
+			SMCommandSignalConnection: feature group SM_ACT.SM_Command_Signals <-> SM_Motor.SM_Command_Signals;
+			-- connection between stepper motor and flow valve
+			ValveConnector: feature SM_Motor.Mechanical_Control_Position -> Mechanical_Control_Position;
+			PowerToACT: bus access Power <-> SM_ACT.Power;
+			PowerToSM: bus access Power <-> SM_Motor.power;
+			-- XXX TODO when changing the order we get an error - bus connecting to itself.
+			ACTToDevBus: bus access DMA <-> SM_ACT.DMA;
+		flows
+			flowsink: flow sink Desired_Position -> IncomingDesiredPosition -> SM_PCS_App.flowpath -> SendPositionChangeCommand -> SM_ACT.flowpath -> SMCommandSignalConnection -> SM_Motor.flowsink;
+		annex EMV2 {**
+			use types SMErrorTypes;
+			
+			error propagations
+				flows
+					MissedStepSource: error source Mechanical_Control_Position {MissedStep};
+			end propagations;
+			--connection error
+			--use transformations ;
+			--end connection;
+		**};
+	end SMS.Original;
+
+	system implementation SMS.MidFrame extends SMS.original
+		subcomponents
+			SM_PCS_App: refined to process SMS_App_Process_SMPC.PCSFixedTime;
+	end SMS.MidFrame;
+
+	system implementation SMS.buffered extends SMS.original
+		subcomponents
+			SM_ACT: refined to device SM_ACT.buffered;
+	end SMS.Buffered;
+
+	system implementation SMS.Position
+		subcomponents
+			SM_PCS_App: process SMS_App_Process_SMPos.alternative;
+			SM_ACT: device SM_ACT_SMPos.impl;
+			SM: device Stepper_Motor;
+		connections
+			IncomingDesiredPosition: port Desired_Position -> SM_PCS_App.Desired_Position;
+			SendPositionChangeCommand: port SM_PCS_App.Commanded_Position -> SM_ACT.Commanded_Position;
+			SMCommandSignalConnection: feature group SM_ACT.SM_Command_Signals <-> SM.SM_Command_Signals;
+			-- connection between stepper motor and flow valve
+			ValveConnector: feature SM.Mechanical_Control_Position -> Mechanical_Control_Position;
+			PowerToACT: bus access Power -> SM_ACT.Power;
+			PowerToSM: bus access Power -> SM.power;
+
+			ACTToDevBus: bus access SM_ACT.DevBus <-> DMA;
+		flows
+			flowsink: flow sink Desired_Position -> IncomingDesiredPosition -> SM_PCS_App.flowpath -> SendPositionChangeCommand -> SM_ACT.flowpath -> SMCommandSignalConnection -> SM.flowsink;
+	end SMS.Position;
+
+	system SMS_Operational_Environment
+	end SMS_Operational_Environment;
+
+	system implementation SMS_Operational_Environment.original
+		subcomponents
+			SMS: system SMS.original;
+			Powersupply: bus Power_Supply;
+			ECS: system EngineControlSystem;
+			FuelValve: device Valve;
+			ECU: processor ecu;
+			Dev_Bus: bus Device_Bus;
+			Engine: system Engine;
+		connections
+			valvecmd: port ECS.valvePosition -> SMS.Desired_Position;
+			valveControlConnection: feature SMS.Mechanical_Control_Position -> FuelValve.MechanicalValveControl;
+			pwrpcs: bus access Powersupply <-> SMS.Power;
+			pwrecu: bus access Powersupply <-> ECU.Power;
+			ECUToDevBus: bus access ECU.Dev_Bus <-> Dev_Bus;
+			SMPCSToDevBus: bus access SMS.DMA <-> Dev_Bus;
+			smcmd: port ECS.valvePosition -> SMS.Desired_Position;
+			MechanicalControlPositionConnection: feature SMS.Mechanical_Control_Position -> FuelValve.MechanicalValveControl;
+			FuelFlowConn: feature FuelValve.FuelFlow -> Engine.FuelFlow;
+			thrustreadingconn: port Engine.thrustReading -> ECS.thrustReading;
+		flows
+			smcmdflow: end to end flow ECS.flowsource -> valvecmd -> SMS.flowsink {Latency => 50ms .. 50ms;};
+		properties
+			Actual_Processor_Binding => (reference (ECU)) applies to SMS.SM_PCS_App;
+			Actual_Connection_Binding => (reference (Dev_Bus)) applies to SMS.SendPositionChangeCommand;
+		annex EMV2 {**
+			use types SMErrorTypes;
+			use behavior ErrorLibrary::FailStop;
+			
+			composite error behavior
+				states
+					[engine.failstop]-> FailStop;
+			end composite;
+		**};
+	end SMS_Operational_Environment.original;
+
+	system implementation SMS_Operational_Environment.buffered extends SMS_Operational_Environment.original
+		subcomponents
+			SMS: refined to system SMS.buffered;
+	end SMS_Operational_Environment.buffered;
+
+	system implementation SMS_Operational_Environment.MidFrame extends SMS_Operational_Environment.original
+		subcomponents
+			SMS: refined to system SMS.MidFrame;
+	end SMS_Operational_Environment.MidFrame;
+
+	system implementation SMS_Operational_Environment.Position extends SMS_Operational_Environment.original
+		subcomponents
+			SMS: refined to system SMS.Position;
+	end SMS_Operational_Environment.Position;
+
+end CasePositionControl;

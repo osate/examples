@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="ASCII"?>
+<diagram:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:diagram="http://osate.org/diagram" formatVersion="7">
+  <element uuid="84e3251d-e887-4f35-978f-cd71290a9394" manual="true">
+    <element uuid="b8e98342-8dc0-433b-baf4-53cfa3a11a8c" manual="true">
+      <bo>
+        <seg>annex_subclause</seg>
+        <seg>emv2</seg>
+        <seg>0</seg>
+      </bo>
+      <position/>
+      <size width="121.0" height="35.0"/>
+    </element>
+    <element uuid="da0c8ce7-3ee3-4adf-9a2e-ee9877c9ddcf" manual="true">
+      <bo>
+        <seg>annex_subclause</seg>
+        <seg>emv2</seg>
+        <seg>1</seg>
+      </bo>
+      <position/>
+      <size width="121.0" height="35.0"/>
+    </element>
+    <element uuid="861fe739-9775-4181-8028-c5a92656a3f1" manual="true">
+      <bo>
+        <seg>connection</seg>
+        <seg>acttodevbus</seg>
+      </bo>
+    </element>
+    <element uuid="cdc14202-ad17-4e13-b68c-3e24acbeed53" manual="true">
+      <element uuid="db2b1a94-08b4-4b20-97d5-df4a5e630f01" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>incomingdesiredposition</seg>
+      </bo>
+    </element>
+    <element uuid="2fbe01f1-4155-4752-b7ee-f6748f7d4f01" manual="true">
+      <bo>
+        <seg>connection</seg>
+        <seg>powertoact</seg>
+      </bo>
+    </element>
+    <element uuid="1d55fa9f-0c9b-4e0e-b0a9-d5d8a2eee4c2" manual="true">
+      <bo>
+        <seg>connection</seg>
+        <seg>powertosm</seg>
+      </bo>
+    </element>
+    <element uuid="d7536dc5-931d-4cff-b553-ecda4bfa376f" manual="true">
+      <element uuid="5a3808e2-e716-436e-ac2c-31fa3d33d1dc" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>sendpositionchangecommand</seg>
+      </bo>
+    </element>
+    <element uuid="5cc14db4-7f8e-4968-ad9a-98ebd3c605c5" manual="true">
+      <bo>
+        <seg>connection</seg>
+        <seg>smcommandsignalconnection</seg>
+      </bo>
+    </element>
+    <element uuid="34e6a65b-58f1-4558-98b7-084ce063965b" manual="true">
+      <element uuid="a4539395-3945-4e0c-95e0-fb8afde89fa6" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>valveconnector</seg>
+      </bo>
+    </element>
+    <element uuid="05bfea76-c21f-4ac9-b214-2642e0da9f47" manual="true" dockArea="left">
+      <bo>
+        <seg>feature</seg>
+        <seg>desired_position</seg>
+      </bo>
+      <position y="98.0"/>
+    </element>
+    <element uuid="5e4b0e15-e258-4b1d-aac7-0339b04da13a" manual="true" dockArea="bottom">
+      <bo>
+        <seg>feature</seg>
+        <seg>dma</seg>
+      </bo>
+      <position x="909.0" y="545.0"/>
+    </element>
+    <element uuid="54482b3f-c7b8-4e4a-a661-52b099ae651e" manual="true" dockArea="right">
+      <bo>
+        <seg>feature</seg>
+        <seg>mechanical_control_position</seg>
+      </bo>
+      <position x="1660.0" y="123.0"/>
+    </element>
+    <element uuid="2cbc521c-edb8-4f3f-9363-6a579053a132" manual="true" dockArea="bottom">
+      <bo>
+        <seg>feature</seg>
+        <seg>power</seg>
+      </bo>
+      <position x="1068.0" y="545.0"/>
+    </element>
+    <element uuid="7c1f1fd6-f8d9-43ea-ae00-8052cbf25e5f" manual="true">
+      <bo>
+        <seg>flow_specification</seg>
+        <seg>flowsink</seg>
+      </bo>
+    </element>
+    <element uuid="f62a1956-1f16-4fcc-802a-ffdeeab8c13f" manual="true">
+      <bo>
+        <seg>realization</seg>
+      </bo>
+    </element>
+    <element uuid="2886ce71-fed0-4dde-97d3-967574eef001" manual="true">
+      <element uuid="11fe80e4-023c-4dfe-b52e-c55c009e37c8" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>commanded_position</seg>
+        </bo>
+        <position y="60.0"/>
+      </element>
+      <element uuid="1216c319-64aa-423e-849d-56eb57fbdc21" manual="true" dockArea="bottom">
+        <bo>
+          <seg>feature</seg>
+          <seg>dma</seg>
+        </bo>
+        <position x="111.0" y="136.0"/>
+      </element>
+      <element uuid="f8af2f0a-d457-445c-9cf8-b665c8477b9e" manual="true" dockArea="bottom">
+        <bo>
+          <seg>feature</seg>
+          <seg>power</seg>
+        </bo>
+        <position x="295.0" y="136.0"/>
+      </element>
+      <element uuid="bd1a5275-b8b2-4853-b567-ea7ad2f2a94a" manual="true" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>sm_command_signals</seg>
+        </bo>
+        <position x="198.0" y="58.0"/>
+        <size width="171.0" height="44.0"/>
+      </element>
+      <element uuid="d0baaf6d-621a-4563-9ac9-ed5640752b67" manual="true">
+        <bo>
+          <seg>flow_specification</seg>
+          <seg>flowpath</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>sm_act</seg>
+      </bo>
+      <position x="790.0" y="38.0"/>
+      <size width="369.0" height="160.0"/>
+    </element>
+    <element uuid="ed114146-6830-4012-8907-49a5f400a96a" manual="true">
+      <element uuid="05395367-2dcf-453f-ba29-8f7868f16b59" manual="true" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>mechanical_control_position</seg>
+        </bo>
+        <position x="187.0" y="37.0"/>
+      </element>
+      <element uuid="823d2369-ac69-4739-8629-77a711a4ff65" manual="true" dockArea="bottom">
+        <bo>
+          <seg>feature</seg>
+          <seg>power</seg>
+        </bo>
+        <position x="160.0" y="90.0"/>
+      </element>
+      <element uuid="bf258112-8a28-4178-9191-4131123149f0" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>sm_command_signals</seg>
+        </bo>
+        <position y="10.0"/>
+        <size width="171.0" height="44.0"/>
+      </element>
+      <element uuid="4bc0928f-149a-48ec-a73b-5ffc60955964" manual="true">
+        <bo>
+          <seg>flow_specification</seg>
+          <seg>flowsink</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>sm_motor</seg>
+      </bo>
+      <position x="1228.0" y="86.0"/>
+      <size width="400.0" height="114.0"/>
+    </element>
+    <element uuid="24213467-a1cf-4715-b28a-eda0fd7689b7" manual="true">
+      <element uuid="5f052e49-8ee0-4a9b-80f6-d7c0e22b105a" manual="true">
+        <element uuid="b5b270c5-44d7-4815-9ab5-e0d929935c51" manual="true">
+          <bo>
+            <seg>tag</seg>
+            <seg>unidirectional</seg>
+          </bo>
+        </element>
+        <bo>
+          <seg>connection</seg>
+          <seg>cmdedposition</seg>
+        </bo>
+      </element>
+      <element uuid="319baa44-5c76-4d23-bcf5-e8cc7e5d80a2" manual="true">
+        <element uuid="8fa2ae99-bab3-4f39-8169-0ae4e34a32ab" manual="true">
+          <bo>
+            <seg>tag</seg>
+            <seg>unidirectional</seg>
+          </bo>
+        </element>
+        <bo>
+          <seg>connection</seg>
+          <seg>desiredposcmd</seg>
+        </bo>
+      </element>
+      <element uuid="6968bb7f-ddf2-4998-811e-808fabd0091e" manual="true" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>commanded_position</seg>
+        </bo>
+        <position x="306.0" y="10.0"/>
+      </element>
+      <element uuid="6c32586b-ccbb-46f2-9149-41df1f4ae67d" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>desired_position</seg>
+        </bo>
+        <position y="10.0"/>
+      </element>
+      <element uuid="06d7c8d1-be4c-44dd-8663-dd0235ef2020" manual="true">
+        <bo>
+          <seg>subcomponent</seg>
+          <seg>sm_hm</seg>
+        </bo>
+        <position x="282.0" y="192.0"/>
+        <size width="108.0" height="35.0"/>
+      </element>
+      <element uuid="5302c534-c450-41b7-823c-d242bba20004" manual="true">
+        <element uuid="3cd598c0-576e-438d-b33e-1a216d12948a" manual="true" dockArea="right">
+          <bo>
+            <seg>feature</seg>
+            <seg>commanded_position</seg>
+          </bo>
+          <position x="196.0" y="49.0"/>
+        </element>
+        <element uuid="fce035ba-bb77-40cd-a465-5a3d8c3cc338" manual="true" dockArea="left">
+          <bo>
+            <seg>feature</seg>
+            <seg>desired_position</seg>
+          </bo>
+          <position y="10.0"/>
+        </element>
+        <bo>
+          <seg>subcomponent</seg>
+          <seg>sm_pcs</seg>
+        </bo>
+        <position x="60.0" y="73.0"/>
+        <size width="355.0" height="110.0"/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>sm_pcs_app</seg>
+      </bo>
+      <position x="140.0" y="137.0"/>
+      <size width="465.0" height="241.0"/>
+    </element>
+    <bo>
+      <seg>classifier</seg>
+      <seg>sms.original</seg>
+    </bo>
+    <position x="90.0"/>
+    <size width="1873.0" height="569.0"/>
+  </element>
+  <config type="structure" connectionPrimaryLabelsVisible="false">
+    <enabledAadlProperties/>
+    <context>
+      <seg>classifier</seg>
+      <seg>casepositioncontrol::sms.original</seg>
+    </context>
+  </config>
+</diagram:Diagram>
