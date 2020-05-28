@@ -168,40 +168,47 @@ public
 		subcomponents
 			DesiredPositionState: data SM_Position.Steps;
 			CommandedPositionState: data SM_Position.Steps;
---	annex Behavior_Specification {**
---			variables
---			    distance: Base_Types::Integer;
---			    stepcount: Base_Types::Integer;
---			states 
---				Ready: initial complete state;
---			transitions
---			Ready -[on dispatch Desired_Position]-> Ready {-- on every 25ms dispatch begin action
---	        -- check for out of range if a new command has been received
---				if ((Desired_Position'fresh = true) and (Desired_Position >= 0 )and ( Desired_Position <= PCSProperties::MaxPercent)){
---	                -- convert from PercentOpen to Steps
---	                DesirePositionState := PCSProperties::MaxPosition*Desired_Position/100	    
---				} end if;
---				distance := DesiredPositionState - CommandedPositionState ;
---				if (abs(distance)>MaxStepCount)
---				    stepcount := MaxStepCount 
---				else
---				    stepcount := abs(distance)
---				end if;
---	            Commanded_Position.Step_Rate := PCSProperties::MaxStepCount;
---	            if (distance>0){
---				    Commanded_Position.Step_Direction := Open;
---				    Commanded_Position.Step_Count := stepcount;
---				    CommandedPositionState := CommandedPositionState + stepcount
---				    }
---				else {
---				    Commanded_Position.Step_Direction = Close;
---				    Commanded_Position.Step_Count = stepcount;
---				    CommandedPositionState = CommandedPositionState - stepcount
---				    }
---				end if;
---				Commanded_Position!;
---			}; -- end action
---		**};
+		annex Behavior_Specification {**
+			variables
+			    distance: Base_Types::Integer;
+			    stepcount: Base_Types::Integer;
+			states 
+				Ready: initial complete state;
+			transitions
+
+			Ready -[on dispatch]-> Ready {
+				if ( 
+					(Desired_Position'fresh) and
+					(Desired_Position >= 0) and 
+					(Desired_Position <= PCSProperties::MaxPercent) 
+				   )
+				{
+	                -- convert from PercentOpen to Steps
+	                DesiredPositionState := PCSProperties::MaxPosition*Desired_Position/100   
+				} 
+				end if;
+				
+				distance := DesiredPositionState - CommandedPositionState ;
+				if (abs(distance)>MaxStepCount)
+				    stepcount := MaxStepCount; 
+				else
+				    stepcount := abs(distance);
+				end if;
+	            Commanded_Position.Step_Rate := PCSProperties::MaxStepCount;
+	            if (distance>0){
+				    Commanded_Position.Step_Direction := Open;
+				    Commanded_Position.Step_Count := stepcount;
+				    CommandedPositionState := CommandedPositionState + stepcount;
+				    }
+				else {
+				    Commanded_Position.Step_Direction = Close;
+				    Commanded_Position.Step_Count = stepcount;
+				    CommandedPositionState = CommandedPositionState - stepcount;
+				    }
+				end if;
+				Commanded_Position!;
+			}; -- end action
+		**};
 	end SM_PCS.impl;
 
 	-- SM_PCS position command interface
@@ -248,7 +255,7 @@ public
 	thread implementation SM_PCS_Pos.impl
 		subcomponents
 			DesiredPositionState: data SM_Position.Steps;
-		annex ior_Specification {**
+	annex Behavior_Specification {**
 		states
 		Ready: initial state;
 		transitions
@@ -316,29 +323,29 @@ public
 	device implementation SM_ACT.impl
 		subcomponents
 			StepsToDo: data SM_Position_Change.DataRecord;
-	--annex ior_Specification {**
-	--		states
-	--		Ready: initial state;
-	--		WaitOnStep: complete state;
-	--		Decide: state;
-	--		transitions
-	--		Ready -[on dispatch Commanded_Position]-> Decide {
-	--			StepsToDo := Commanded_Position 
-	--		};
-	--		WaitOnStep -[on dispatch Commanded_Position]-> WaitOnStep {
-	--			StepsToDo := Commanded_Position
-	--		};
-	--		WaitOnStep -[on dispatch DoStempCmd.StepDone]-> Decide ;
-	--		Decide -[StepsToDo.Step_Count = 0]-> Ready ;
-	--		Decide -[StepsToDo.Step_Count > 0]-> WaitOnStep {
-	--			StepsToDo.Step_Count :=  StepsToDo.Step_Count - 1;
-	--			if (StepsToDo.Step_Direction = Open)
-	--				SM_Command_Signals.SM_Cmd.Increment_Step!(StepsToDo.Step_Rate);
-	--			else 
-	--				SM_Command_Signals.SM_Cmd.Decrement_Step!(StepsToDo.Step_Rate);
-	--			end if
-	--		};
-	--	**};
+		annex Behavior_Specification {**
+			states
+			Ready: initial state;
+			WaitOnStep: complete state;
+			Decide: state;
+			transitions
+			Ready -[on dispatch Commanded_Position]-> Decide {
+				StepsToDo := Commanded_Position 
+			};
+			WaitOnStep -[on dispatch Commanded_Position]-> WaitOnStep {
+				StepsToDo := Commanded_Position
+			};
+			WaitOnStep -[on dispatch DoStempCmd.StepDone]-> Decide ;
+			Decide -[StepsToDo.Step_Count = 0]-> Ready ;
+			Decide -[StepsToDo.Step_Count > 0]-> WaitOnStep {
+				StepsToDo.Step_Count :=  StepsToDo.Step_Count - 1;
+				if (StepsToDo.Step_Direction = Open)
+					SM_Command_Signals.SM_Cmd.Increment_Step!(StepsToDo.Step_Rate)
+				else 
+					SM_Command_Signals.SM_Cmd.Decrement_Step!(StepsToDo.Step_Rate)
+				end if
+			};
+		**};
 	end SM_ACT.impl;
 
 	-- this represent the proposed improvement of queuing incoming position change commands
@@ -354,28 +361,28 @@ public
 					timingimpact2: error sink Commanded_Position {EarlyDelivery};
 			end propagations;
 		**};
-	--annex Behavior_Specification {**
-	--		states
-	--			Ready: initial state;
-	--			Decide: state;
-	--			WaitOnStep: complete state;
-	--			Processing: state;
-	--		transitions
-	--			Ready -[on dispatch Commanded_Position]-> Decide {
-	--				StepsToDo := Commanded_Position
-	--			};
-	--			WaitOnStep -[on dispatch SM_Command_Signals.StepDone]-> Decide; 
-	--			Decide -[StepsToDo.Step_Count = 0]-> Ready ;
-	--			Decide -[StepsToDo.Step_Count > 0]-> WaitOnStep ;
-	--			{
-	--				StepsToDo.Step_Count :=  StepsToDo.Step_Count - 1;
-	--				if (StepsToDo.Step_Direction = Open)
-	--					SM_Command_Signals.SM_Cmd.Increment_Step!(StepsToDo.Step_Rate)
-	--				else 
-	--					SM_Command_Signals.SM_Cmd.Decrement_Step!(StepsToDo.Step_Rate)
-	--				end if
-	--			};
-	--	**};
+		annex Behavior_Specification {**
+			states
+				Ready: initial state;
+				Decide: state;
+				WaitOnStep: complete state;
+				Processing: state;
+			transitions
+				Ready -[on dispatch Commanded_Position]-> Decide {
+					StepsToDo := Commanded_Position
+				};
+				WaitOnStep -[on dispatch SM_Command_Signals.StepDone]-> Decide; 
+				Decide -[StepsToDo.Step_Count = 0]-> Ready ;
+				Decide -[StepsToDo.Step_Count > 0]-> WaitOnStep 
+				{
+					StepsToDo.Step_Count :=  StepsToDo.Step_Count - 1;
+					if (StepsToDo.Step_Direction = Open)
+						SM_Command_Signals.SM_Cmd.Increment_Step!(StepsToDo.Step_Rate)
+					else 
+						SM_Command_Signals.SM_Cmd.Decrement_Step!(StepsToDo.Step_Rate)
+					end if
+				};
+		**};
 	end SM_ACT.Buffered;
 
 	device SM_ACT_SMPos
@@ -429,27 +436,27 @@ public
 		subcomponents
 			DesiredPositionState: data SM_Position.Steps;
 			CommandedPositionState: data SM_Position.Steps;
-	--annex Behavior_Specification {**
-	--		states
-	--		Ready: initial complete state;
-	--		transitions
-	--		Ready -[on dispatch Commanded_Position]-> Ready {
-	--			DesiredPositionState := Commanded_Position  
-	--		};
-	--		Ready -[on dispatch SM_Command_Signals.StepDone]-> Ready {
-	--			if (CommandedPositionState > DesiredPositionState)
-	--			{
-	--				CommandedPositionState :=  CommandedPositionState - 1;
-	--				SM_Command_Signals.SM_Cmd.Decrement_Step!(StepsToDo.Step_Rate)
-	--			}
-	--			elsif (CommandedPositionState < DesiredPositionState)
-	--			{
-	--				CommandedPositionState :=  CommandedPositionState + 1;
-	--				SM_Command_Signals.SM_Cmd.Increment_Step!(StepsToDo.Step_Rate)
-	--			}
-	--			end if
-	--		};
-	--	**};
+		annex Behavior_Specification {**
+			states
+			Ready: initial complete state;
+			transitions
+			Ready -[on dispatch Commanded_Position]-> Ready {
+				DesiredPositionState := Commanded_Position  
+			};
+			Ready -[on dispatch SM_Command_Signals.StepDone]-> Ready {
+				if (CommandedPositionState > DesiredPositionState)
+				{
+					CommandedPositionState :=  CommandedPositionState - 1;
+					SM_Command_Signals.SM_Cmd.Decrement_Step!(StepsToDo.Step_Rate)
+				}
+				elsif (CommandedPositionState < DesiredPositionState)
+				{
+					CommandedPositionState :=  CommandedPositionState + 1;
+					SM_Command_Signals.SM_Cmd.Increment_Step!(StepsToDo.Step_Rate)
+				}
+				end if
+			};
+		**};
 	end SM_ACT_SMPos.impl;
 
 	feature group SM_Command_Signals
@@ -500,14 +507,13 @@ public
 	device implementation Stepper_Motor.basic
 		subcomponents
 			ActualPositionState: data SM_Position;
-	--	annex Behavior_Specification {**
-	--		states 
-	--		Ready: initial complete state; 
-	--		transitions
-	--		Ready -[on dispatch SM_Command_Signals.SM_Cmd.Increment_Step]-> Ready {ActualPositionState := ActualPositionState + 1};
-	--		Ready -[on dispatch SM_Command_Signals.SM_Cmd.Decrement_Step]-> Ready {ActualPositionState := ActualPositionState - 1};
-	--		};
-	--	**};
+		annex Behavior_Specification {**
+			states 
+			Ready: initial complete state; 
+			transitions
+			Ready -[on dispatch SM_Command_Signals.SM_Cmd.Increment_Step]-> Ready {ActualPositionState := ActualPositionState + 1};
+			Ready -[on dispatch SM_Command_Signals.SM_Cmd.Decrement_Step]-> Ready {ActualPositionState := ActualPositionState - 1};
+		**};
 	end Stepper_Motor.basic;
 
 	system Engine
