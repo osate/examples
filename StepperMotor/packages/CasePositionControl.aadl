@@ -180,33 +180,33 @@ public
 				if ( 
 					(Desired_Position'fresh) and
 					(Desired_Position >= 0) and 
-					(Desired_Position <= PCSProperties::MaxPercent) 
+					(Desired_Position <= #PCSProperties::MaxPercent) 
 				   )
 				{
 	                -- convert from PercentOpen to Steps
-	                DesiredPositionState := PCSProperties::MaxPosition*Desired_Position/100   
+	                DesiredPositionState := #PCSProperties::MaxPosition*Desired_Position/100   
 				} 
 				end if;
 				
 				distance := DesiredPositionState - CommandedPositionState ;
 				if (abs(distance)>MaxStepCount)
-				    stepcount := MaxStepCount; 
+				    stepcount := MaxStepCount 
 				else
-				    stepcount := abs(distance);
+				    stepcount := abs(distance)
 				end if;
-	            Commanded_Position.Step_Rate := PCSProperties::MaxStepCount;
+	            Commanded_Position.Step_Rate := #PCSProperties::MaxStepCount;
 	            if (distance>0){
 				    Commanded_Position.Step_Direction := Open;
 				    Commanded_Position.Step_Count := stepcount;
-				    CommandedPositionState := CommandedPositionState + stepcount;
+				    CommandedPositionState := CommandedPositionState + stepcount
 				    }
 				else {
 				    Commanded_Position.Step_Direction = Close;
 				    Commanded_Position.Step_Count = stepcount;
-				    CommandedPositionState = CommandedPositionState - stepcount;
+				    CommandedPositionState = CommandedPositionState - stepcount
 				    }
 				end if;
-				Commanded_Position!;
+				Commanded_Position!
 			}; -- end action
 		**};
 	end SM_PCS.impl;
@@ -260,8 +260,8 @@ public
 		Ready: initial state;
 		transitions
 		Ready -[on dispatch ]-> Ready {
-			if ((Desired_Position'fresh) and  (Desired_Position >= 0)  and (Desired_Position <= PCSProperties::MaxPercent))
-			    	DesirePositionState := PCSProperties::MaxPosition*Desired_Position/100	    
+			if ((Desired_Position'fresh) and  (Desired_Position >= 0)  and (Desired_Position <= #PCSProperties::MaxPercent))
+			    	DesiredPositionState := #PCSProperties::MaxPosition*Desired_Position/100	    
 			end if;
 			Commanded_Position!(DesiredPositionState)
 		};
