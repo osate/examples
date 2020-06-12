@@ -4,120 +4,112 @@
 --  analysis of different architecture variations.
 --
 --  A full description of this case study can be found
---  on https://wiki.sei.cmu.edu/aadl/index.php/SpeedRegulation
+--  on https://resources.sei.cmu.edu/asset_files/Webinar/2014_018_101_424910.pdf
 --
 --  Copyright Carnegie Mellon Software Engineering Institute, 2014.
 --
-
 package speed_regulation::platform
 
 public
 
-with SEI;
-with emv2;
-with arp4761;
+	with SEI;
+	with emv2;
+	with arp4761;
 
-processor ecu 
-properties 
-	SEI::MIPSCapacity => 50.0 MIPS; 
-annex EMV2 {**
-	use types speed_regulation::error_library;
-	use behavior speed_regulation::error_library::simple;
+	processor ecu
+		properties
+			SEI::MIPSCapacity => 50.0 MIPS;
+		annex EMV2 {**
+			use types speed_regulation::error_library;
+			use behavior speed_regulation::error_library::simple;
+			
+			error propagations
+				bindings: out propagation {SoftwareFailure, HardwareFailure};
+				flows
+					fsoft: error source bindings {SoftwareFailure};
+					fhard: error source bindings {HardwareFailure};
+			end propagations;
+			
+			component error behavior
+				events
+					SoftwareError: error event;
+					HardwareError: error event;
+					Reset: recover event;
+				transitions
+					Operational -[SoftwareError]-> Failed;
+					Operational -[HardwareError]-> Failed;
+					Failed -[Reset]-> Operational;
+				propagations
+					normal: Operational -[]-> bindings {NoError};
+					softfailed: Failed -[]-> bindings {SoftwareFailure};
+					hardfailed: Failed -[]-> bindings {HardwareFailure};
+			end component;
+			
+			properties
+				emv2::severity => ARP4761::Major applies to SoftwareError;
+				emv2::likelihood => ARP4761::Probable applies to SoftwareError;
+				emv2::hazards => ([crossreference => "N/A";
+						failure => "SoftwareFault";
+						phases => ("all");
+						description => "Software failure from the platform (OS exception, etc.)";
+						comment => "Impact all components that are controlled by this software";
+					]) applies to SoftwareError;
+				EMV2::OccurrenceDistribution => [ProbabilityValue => 1.35e-5; Distribution => Poisson;] applies to SoftwareError;
+			
+				emv2::severity => ARP4761::Major applies to HardwareError;
+				emv2::likelihood => ARP4761::Probable applies to HardwareError;
+				emv2::hazards => ([crossreference => "N/A";
+						failure => "HardwareFault";
+						phases => ("all");
+						description => "Hardware failure from the platform (OS exception, etc.)";
+						comment => "Impact all components that are controlled by this processor";
+					]) applies to HardwareError;
+				EMV2::OccurrenceDistribution => [ProbabilityValue => 1.35e-5; Distribution => Poisson;] applies to HardwareError;
+		**};
+	end ecu;
 
-	error propagations
-		bindings : out propagation {SoftwareFailure, HardwareFailure};
-	flows
-		fsoft : error source bindings{SoftwareFailure};
-		fhard : error source bindings{HardwareFailure};
-	end propagations;
+	processor ecu_can_one_connector extends ecu
+		features
+			socket: requires bus access can;
+	end ecu_can_one_connector;
 
-	component error behavior
-	events
-		SoftwareError : error event;
-		HardwareError : error event;
-		Reset         : recover event;
-	transitions
-		Operational -[SoftwareError]-> Failed; 
-		Operational -[HardwareError]-> Failed;
-		Failed      -[Reset]->         Operational;
-	propagations
-		normal       : Operational -[]-> bindings {NoError};
-		softfailed   : Failed -[]-> bindings{SoftwareFailure};
-		hardfailed   : Failed -[]-> bindings{HardwareFailure};  
-	end component;
-	properties
-		emv2::severity => ARP4761::Major applies to SoftwareError;
-		emv2::likelihood => ARP4761::Probable applies to SoftwareError;
-		emv2::hazards => 
-			([	crossreference => "N/A";
-				failure => "SoftwareFault";
-				phases => ("all");
-				description => "Software failure from the platform (OS exception, etc.)";
-				comment => "Impact all components that are controlled by this software";
-			])
-			applies to SoftwareError;
-		EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.35e-5 ; Distribution => Poisson;] applies to SoftwareError;
+	processor ecu_rs232_one_connector extends ecu
+		features
+			socket: requires bus access rs232;
+	end ecu_rs232_one_connector;
 
+	processor ecu_can_two_connectors extends ecu
+		features
+			socket1: requires bus access can;
+			socket2: requires bus access can;
+	end ecu_can_two_connectors;
 
-		emv2::severity => ARP4761::Major applies to HardwareError;
-		emv2::likelihood => ARP4761::Probable applies to HardwareError;
-		emv2::hazards => 
-			([	crossreference => "N/A";
-				failure => "HardwareFault";
-				phases => ("all");
-				description => "Hardware failure from the platform (OS exception, etc.)";
-				comment => "Impact all components that are controlled by this processor";
-			])
-			applies to HardwareError;
-		EMV2::OccurrenceDistribution => [ ProbabilityValue => 1.35e-5 ; Distribution => Poisson;] applies to HardwareError;
-**};	
-end ecu;
+	processor ecu_rs232_two_connectors extends ecu
+		features
+			socket1: requires bus access rs232;
+			socket2: requires bus access rs232;
+	end ecu_rs232_two_connectors;
 
+    --
+	-- About CAN and bus bandwidth
+	-- Check http://www.canopen.us/faq/0143.htm
+	-- and http://www.esacademy.com/en/library/calculators/can-best-and-worst-case-calculator.html
+	-- for having an evaluator for the bus bandwidth estimation.
+	--
+	bus can
+		properties
+			Latency => 1Ms .. 1Ms;
+			SEI::BandWidthCapacity => 500000.0 bitsps;
+			Transmission_Time => [Fixed => 10ms .. 30ms;
+				PerByte => 1us .. 10us;];
+	end can;
 
-processor ecu_can_one_connector extends ecu
-features
-	socket : requires bus access can;
-end ecu_can_one_connector;
-
-
-processor ecu_rs232_one_connector extends ecu
-features
-	socket : requires bus access rs232;
-end ecu_rs232_one_connector;
-
-processor ecu_can_two_connectors extends ecu
-features
-	socket1 : requires bus access can;
-	socket2 : requires bus access can;
-end ecu_can_two_connectors;
-
-processor ecu_rs232_two_connectors extends ecu
-features
-	socket1 : requires bus access rs232;
-	socket2 : requires bus access rs232;
-end ecu_rs232_two_connectors;
-
---
--- About CAN and bus bandwidth
--- Check http://www.canopen.us/faq/0143.htm
--- and http://www.esacademy.com/en/library/calculators/can-best-and-worst-case-calculator.html
--- for having an evaluator for the bus bandwidth estimation.
---
-
-bus can
-properties
-	Latency => 1 Ms .. 1 Ms;
-	SEI::BandWidthCapacity => 500000.0 bitsps; 
-	Transmission_Time => [ Fixed => 10 ms .. 30ms;
-                          PerByte => 1 us .. 10 us; ];
-end can;
-
-bus rs232
-properties
-	Latency => 1 Ms .. 1 Ms;
-	SEI::BandWidthCapacity => 5.0 KBytesps; 
-	Transmission_Time => [ Fixed => 200 ms .. 500ms;
-                          PerByte => 2 ms .. 5 ms; ];
-end rs232;
+	bus rs232
+		properties
+			Latency => 1Ms .. 1Ms;
+			SEI::BandWidthCapacity => 5.0 KBytesps;
+			Transmission_Time => [Fixed => 200ms .. 500ms;
+				PerByte => 2ms .. 5ms;];
+	end rs232;
 
 end speed_regulation::platform;

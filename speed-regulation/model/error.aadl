@@ -4,27 +4,26 @@
 --  analysis of different architecture variations.
 --
 --  A full description of this case study can be found
---  on https://wiki.sei.cmu.edu/aadl/index.php/SpeedRegulation
+--  on https://resources.sei.cmu.edu/asset_files/Webinar/2014_018_101_424910.pdf
 --
 --  Copyright Carnegie Mellon Software Engineering Institute, 2014.
 --
-
 package speed_regulation::error_library
 public
-annex EMV2 {**
-	error types
-		NoPower   				: type;
-		ValueError				: type;
-		NoValue					: type extends ValueError;
-		InvalidValue			: type extends ValueError;
-		HardwareFailure			: type;
-		SoftwareFailure			: type;
-	end types; 
- 
-	error behavior simple
-	states
-		Operational : initial state;
-		Failed      : state;
-	end behavior;
-**};
+	annex EMV2 {**
+		error types
+			NoPower: type;
+			ValueError: type;
+			NoValue: type extends ValueError;
+			InvalidValue: type extends ValueError;
+			HardwareFailure: type;
+			SoftwareFailure: type;
+		end types;
+		
+		error behavior simple
+			states
+				Operational: initial state;
+				Failed: state;
+		end behavior;
+	**};
 end speed_regulation::error_library;

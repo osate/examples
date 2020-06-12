@@ -4,695 +4,682 @@
 --  analysis of different architecture variations.
 --
 --  A full description of this case study can be found
---  on https://wiki.sei.cmu.edu/aadl/index.php/SpeedRegulation
+--  on https://resources.sei.cmu.edu/asset_files/Webinar/2014_018_101_424910.pdf
 --
 --  Copyright Carnegie Mellon Software Engineering Institute, 2014.
 --
-
 package speed_regulation::software
 
 public
 
-
-with speed_regulation::icd; 
-with sei;
-with speed_regulation::platform;
-
--------------------------
---  Image Acquisition  --
--------------------------
-
-process image_acquisition
-features
-	picture           : in data port speed_regulation::icd::picture;
-	obstacle_detected : out data port speed_regulation::icd::boolean;
-flows
-	f0 : flow path picture -> obstacle_detected;
-annex EMV2 {**
-	use types 		speed_regulation::error_library;
-	use behavior  	speed_regulation::error_library::simple;
-
-	error propagations
-		picture : in propagation {NoValue};
-		obstacle_detected : out propagation {NoValue,InvalidValue};
-		processor : in propagation {SoftwareFailure, HardwareFailure};
-	flows
-		ef0 : error path picture{NoValue} -> obstacle_detected{NoValue};
-		ef1 : error path picture{NoValue} -> obstacle_detected{InvalidValue};
-		ef2 : error path processor{HardwareFailure,SoftwareFailure} -> obstacle_detected{NoValue};
-	end propagations;
-
-	component error behavior
-	transitions
-		t0 : Operational -[processor{SoftwareFailure}]-> Failed;
-		t1 : Operational -[processor{HardwareFailure}]-> Failed;
-		t2 : Failed -[processor{NoError}]-> Operational;
-	propagations
-	   	p1 : Failed -[]-> obstacle_detected{NoValue};
-	end component;
-**};
-end image_acquisition;
-
-process implementation image_acquisition.i
-subcomponents
-	thr_acq : thread image_acquisition_thr.i;
-connections
-	c0 : port picture -> thr_acq.picture;
-	c1 : port thr_acq.obstacle_detected -> obstacle_detected;
-flows
-	f0 : flow path picture -> c0 -> thr_acq.f0 -> c1 -> obstacle_detected;
-end image_acquisition.i;
-
-thread image_acquisition_thr
-features
-	picture           : in data port speed_regulation::icd::picture;
-	obstacle_detected : out data port speed_regulation::icd::boolean;
-flows
-	f0 : flow path picture -> obstacle_detected;
-properties
-	sei::mipsbudget   => 25.0 MIPS;
-	Dispatch_Protocol => Periodic;
-	Period            => 50ms;
-	compute_execution_time => 10 ms .. 40 ms;
-	reference_processor => classifier (speed_regulation::platform::ecu);
-	sei::instructionsperdispatch => 1.24 kipd .. 1.25 mipd; 
-end image_acquisition_thr;
-
-thread implementation image_acquisition_thr.i
-end image_acquisition_thr.i;
-
--------------------------
---  Radar Acquisition  --
--------------------------
-
-process radar_acquisition
-features
-	obstacle_distance : in data port speed_regulation::icd::distance;
-	obstacle_detected : out data port speed_regulation::icd::boolean;
-flows
-	f0 : flow path obstacle_distance -> obstacle_detected;
-annex EMV2 {**
-	use types 		speed_regulation::error_library;
-	use behavior  	speed_regulation::error_library::simple;
-
-	error propagations
-		obstacle_distance : in propagation {NoValue,InvalidValue};
-		obstacle_detected : out propagation {NoValue,InvalidValue};
-		processor : in propagation {SoftwareFailure, HardwareFailure};
-	flows
-		ef0 : error path obstacle_distance{NoValue} -> obstacle_detected{NoValue};
-		ef1 : error path obstacle_distance{NoValue} -> obstacle_detected{InvalidValue};
-		ef3 : error path obstacle_distance{InvalidValue} -> obstacle_detected{InvalidValue};
-		ef2 : error path processor{HardwareFailure,SoftwareFailure} -> obstacle_detected{NoValue};
-	end propagations;
-
-	component error behavior
-	transitions
-		t0 : Operational -[processor{SoftwareFailure}]-> Failed;
-		t1 : Operational -[processor{HardwareFailure}]-> Failed;
-		t2 : Failed -[processor{NoError}]-> Operational;
-	propagations
-	   	p1 : Failed -[]-> obstacle_detected{NoValue};
-	end component;
-**};
-end radar_acquisition;
-
-process implementation radar_acquisition.i
-subcomponents
-	thr : thread radar_acquisition_thr.i;
-connections
-	c0 : port obstacle_distance -> thr.obstacle_distance;
-	c1 : port thr.obstacle_detected -> obstacle_detected;
-flows
-	f0 : flow path obstacle_distance -> c0 -> thr.f0 -> c1 -> obstacle_detected;
-end radar_acquisition.i;
-
-thread radar_acquisition_thr
-features
-	obstacle_distance : in data port speed_regulation::icd::distance;
-	obstacle_detected : out data port speed_regulation::icd::boolean;
-flows
-	f0 : flow path obstacle_distance -> obstacle_detected;
-properties
-	Dispatch_Protocol => Periodic;
-	Period            => 10ms;
-	sei::mipsbudget   => 4.0 MIPS;
-end radar_acquisition_thr;
-
-thread implementation radar_acquisition_thr.i
-end radar_acquisition_thr.i;
-
-----------------------
---  Speed Estimate  --
-----------------------
-
-process speed_estimate
-features
-	wheel_sensor : in data port speed_regulation::icd::speed;
-	laser_sensor : in data port speed_regulation::icd::speed;
-	speed        : out data port speed_regulation::icd::speed;
-flows
-	f0 : flow path wheel_sensor -> speed;
-	f1 : flow path laser_sensor -> speed;
-annex EMV2 {**
-	use types 		speed_regulation::error_library;
-	use behavior  	speed_regulation::error_library::simple;
-
-	error propagations
-		wheel_sensor : in propagation {NoValue,InvalidValue};
-		laser_sensor : in propagation {NoValue,InvalidValue};
-		speed : out propagation {NoValue,InvalidValue};
-		processor : in propagation {SoftwareFailure, HardwareFailure};
-	flows
-		ef0 : error path wheel_sensor{NoValue} -> speed{NoValue};
-		ef1 : error path wheel_sensor{InvalidValue} -> speed{InvalidValue};
-		ef2 : error path laser_sensor{NoValue} -> speed{NoValue};
-		ef3 : error path laser_sensor{InvalidValue} -> speed{InvalidValue};
-		ef4 : error path processor{HardwareFailure,SoftwareFailure} -> speed{NoValue};
-	end propagations;
-
-	component error behavior
-	transitions
-		t0 : Operational -[processor{SoftwareFailure}]-> Failed;
-		t1 : Operational -[processor{HardwareFailure}]-> Failed;
-		t2 : Failed -[processor{NoError}]-> Operational;
-	propagations
-	   	p1 : Failed -[]-> speed{NoValue};
-	end component;
-**};
-end speed_estimate;
-
-process implementation speed_estimate.i
-subcomponents
-	thr : thread speed_estimate_thr.i;
-connections
-	c0 : port wheel_sensor -> thr.wheel_sensor;
-	c1 : port laser_sensor -> thr.laser_sensor;
-	c2 : port thr.speed -> speed;
-flows
-	f0 : flow path wheel_sensor -> c0 -> thr.f0 -> c2 -> speed;
-	f1 : flow path laser_sensor -> c1 -> thr.f1 -> c2 -> speed;
-end speed_estimate.i;
-
-thread speed_estimate_thr
-features
-	wheel_sensor : in data port speed_regulation::icd::speed;
-	laser_sensor : in data port speed_regulation::icd::speed;
-	speed        : out data port speed_regulation::icd::speed;
-flows
-	f0 : flow path wheel_sensor -> speed;
-	f1 : flow path laser_sensor -> speed;
-properties
-	Dispatch_Protocol => Periodic;
-	Period            => 8ms;
-	sei::mipsbudget   => 8.0 MIPS;
-end speed_estimate_thr;
-
-thread implementation speed_estimate_thr.i
-end speed_estimate_thr.i;
-
---------------------------
---  Obstacle Detection  --
---------------------------
-
-process obstacle_detection
-features
-	camera : in data port speed_regulation::icd::boolean;
-	radar : in data port speed_regulation::icd::boolean;
-	obstacle_detected : out data port speed_regulation::icd::boolean;
-flows
-	f0 : flow path camera -> obstacle_detected;
-	f1 : flow path radar -> obstacle_detected;
-annex EMV2 {**
-	use types 		speed_regulation::error_library;
-	use behavior  	speed_regulation::error_library::simple;
-
-	error propagations
-		camera : in propagation {NoValue,InvalidValue};
-		radar : in propagation {NoValue,InvalidValue};
-		obstacle_detected : out propagation {NoValue,InvalidValue};
-		processor : in propagation {SoftwareFailure, HardwareFailure};
-	flows
-		ef0 : error path camera{NoValue} -> obstacle_detected{NoValue};
-		ef1 : error path radar{NoValue} -> obstacle_detected{NoValue};
-		ef2 : error path camera{NoValue} -> obstacle_detected{InvalidValue};
-		ef3 : error path radar{NoValue} -> obstacle_detected{InvalidValue};
-		ef4 : error path processor{HardwareFailure} -> obstacle_detected{NoValue};
-		ef5 : error path camera{InvalidValue} -> obstacle_detected{InvalidValue};
-		ef6 : error path radar{InvalidValue} -> obstacle_detected{InvalidValue};
-		ef7 : error path processor{SoftwareFailure} -> obstacle_detected{NoValue};
-
-	end propagations;
-
-	component error behavior
-	transitions
-		t0 : Operational -[processor{SoftwareFailure}]-> Failed;
-		t1 : Operational -[processor{HardwareFailure}]-> Failed;
-		t2 : Failed -[processor{NoError}]-> Operational;
-	propagations
-	   	p1 : Failed -[]-> obstacle_detected{NoValue};
-	end component;
-**};
-end obstacle_detection;
-
-process implementation obstacle_detection.i
-subcomponents
-	thr : thread obstacle_detection_thr;
-connections
-	c0 : port camera -> thr.camera;
-	c1 : port radar -> thr.radar;
-	c2 : port thr.obstacle_detected -> obstacle_detected;
-flows
-	f0 : flow path camera -> c0 -> thr.f0 -> c2 -> obstacle_detected;
-	f1 : flow path radar -> c1 -> thr.f1 -> c2 -> obstacle_detected;
-end obstacle_detection.i;
-
-thread obstacle_detection_thr
-features
-	camera : in data port speed_regulation::icd::boolean;
-	radar : in data port speed_regulation::icd::boolean;
-	obstacle_detected : out data port speed_regulation::icd::boolean;
-flows
-	f0 : flow path camera -> obstacle_detected;
-	f1 : flow path radar -> obstacle_detected;
-properties
-	Dispatch_Protocol => Periodic;
-	Period            => 100ms;
-	Compute_Execution_Time => 20 ms .. 50 ms; 
-	sei::mipsbudget   => 10.0 MIPS; 
-	sei::instructionsperdispatch => 0.9 kipd .. 0.98 mipd; 
-	reference_processor => classifier (speed_regulation::platform::ecu);
-end obstacle_detection_thr;
-
-------------------------------------
---  Obstacle Distance Evaluation  --
-------------------------------------
-
-process obstacle_distance_evaluation
-features
-	current_speed : in data port speed_regulation::icd::speed;
-	obstacle_detected : in data port speed_regulation::icd::boolean;
-	obstacle_distance : out data port speed_regulation::icd::distance;
-flows
-	f0 : flow path current_speed -> obstacle_distance;
-	f1 : flow path obstacle_detected -> obstacle_distance;
-annex EMV2 {**
-	use types 		speed_regulation::error_library;
-	use behavior  	speed_regulation::error_library::simple;
-
-	error propagations
-		current_speed : in propagation {NoValue,InvalidValue};
-		obstacle_detected : in propagation {NoValue,InvalidValue};
-		obstacle_distance : out propagation {NoValue,InvalidValue};
-		processor : in propagation {SoftwareFailure, HardwareFailure};
-	flows
-		ef0 : error path current_speed{NoValue} -> obstacle_distance{NoValue};
-		ef1 : error path obstacle_detected{NoValue} -> obstacle_distance{NoValue};
-		ef2 : error path current_speed{InvalidValue} -> obstacle_distance{InvalidValue};
-		ef3 : error path obstacle_detected{InvalidValue} -> obstacle_distance{InvalidValue};
-		ef4 : error path processor{HardwareFailure,SoftwareFailure} -> obstacle_distance{NoValue};
-	end propagations;
-
-	component error behavior
-	transitions
-		t0 : Operational -[processor{SoftwareFailure}]-> Failed;
-		t1 : Operational -[processor{HardwareFailure}]-> Failed;
-		t2 : Failed -[processor{NoError}]-> Operational;
-	propagations
-	   	p1 : Failed -[]-> obstacle_distance{NoValue};
-	end component;
-**};
-end obstacle_distance_evaluation;
-
-process implementation obstacle_distance_evaluation.i
-subcomponents
-	thr : thread obstacle_distance_evaluation_thr;
-connections
-	c0 : port current_speed -> thr.current_speed;
-	c1 : port obstacle_detected -> thr.obstacle_detected;
-	c2 : port thr.obstacle_distance -> obstacle_distance;
-flows
-	f0 : flow path current_speed -> c0 -> thr.f0 -> c2 -> obstacle_distance;
-	f1 : flow path obstacle_detected -> c1 -> thr.f1 -> c2 -> obstacle_distance;
-end obstacle_distance_evaluation.i;
-
-thread obstacle_distance_evaluation_thr
-features
-	current_speed : in data port speed_regulation::icd::speed;
-	obstacle_detected : in data port speed_regulation::icd::boolean;
-	obstacle_distance : out data port speed_regulation::icd::distance;
-flows
-	f0 : flow path current_speed -> obstacle_distance;
-	f1 : flow path obstacle_detected -> obstacle_distance;
-properties
-	Dispatch_Protocol => Periodic;
-	Period            => 10ms;
-	sei::mipsbudget   => 8.0 MIPS;
-end obstacle_distance_evaluation_thr;
-
----------------------------
---  Emergency Detection  --
----------------------------
-
-process emergency_detection
-features
-	current_speed : in data port speed_regulation::icd::speed;
-	obstacle_distance : in data port speed_regulation::icd::distance;
-	emergency_detected : out data port speed_regulation::icd::boolean;
-flows
-	f0 : flow path current_speed -> emergency_detected;
-	f1 : flow path obstacle_distance -> emergency_detected;
-annex EMV2 {**
-	use types 		speed_regulation::error_library;
-	use behavior  	speed_regulation::error_library::simple;
-
-	error propagations
-		current_speed : in propagation {NoValue,InvalidValue};
-		obstacle_distance : in propagation {NoValue,InvalidValue};
-		emergency_detected : out propagation {NoValue,InvalidValue};
-		processor : in propagation {SoftwareFailure, HardwareFailure};
-	flows
-		ef0 : error path current_speed{NoValue} -> emergency_detected{NoValue};
-		ef1 : error path obstacle_distance{NoValue} -> emergency_detected{NoValue};
-		ef2 : error path current_speed{NoValue} -> emergency_detected{InvalidValue};
-		ef3 : error path obstacle_distance{NoValue} -> emergency_detected{InvalidValue};
-		ef4 : error path processor{HardwareFailure,SoftwareFailure} -> emergency_detected{NoValue};
-		ef5 : error path current_speed{InvalidValue} -> emergency_detected{InvalidValue};
-		ef6 : error path obstacle_distance{InvalidValue} -> emergency_detected{InvalidValue};
-	end propagations;
-
-	component error behavior
-	transitions
-		t0 : Operational -[processor{SoftwareFailure}]-> Failed;
-		t1 : Operational -[processor{HardwareFailure}]-> Failed;
-		t2 : Failed -[processor{NoError}]-> Operational;
-	propagations
-	   	p1 : Failed -[]-> emergency_detected{NoValue};
-	end component;
-**};
-end emergency_detection;
-
-process implementation emergency_detection.i
-subcomponents
-	thr : thread emergency_detection_thr;
-connections
-	c0 : port current_speed -> thr.current_speed;
-	c1 : port obstacle_distance -> thr.obstacle_distance;
-	c2 : port thr.emergency_detected -> emergency_detected;
-flows 
-	f0 : flow path current_speed -> c0 -> thr.f0 -> c2 -> emergency_detected;
-	f1 : flow path obstacle_distance -> c1 -> thr.f1 -> c2 -> emergency_detected;
-end emergency_detection.i;
-
-thread emergency_detection_thr
-features
-	current_speed : in data port speed_regulation::icd::speed;
-	obstacle_distance : in data port speed_regulation::icd::distance;
-	emergency_detected : out data port speed_regulation::icd::boolean;
-flows
-	f0 : flow path current_speed -> emergency_detected;
-	f1 : flow path obstacle_distance -> emergency_detected;
-properties
-	Dispatch_Protocol => Periodic;
-	Period            => 4ms;
-	sei::mipsbudget   => 5.0 MIPS;
-end emergency_detection_thr;
-
---------------------------
---  Warning Activation  --
---------------------------
-
-process warning_activation
-features
-	emergency_detected : in data port speed_regulation::icd::boolean;
-	activate_warning   : out data port speed_regulation::icd::boolean;
-flows
-	f0 : flow path emergency_detected -> activate_warning;
-annex EMV2 {**
-	use types 		speed_regulation::error_library;
-	use behavior  	speed_regulation::error_library::simple;
-
-	error propagations
-		emergency_detected : in propagation {NoValue,InvalidValue};
-		activate_warning : out propagation {NoValue,InvalidValue};
-		processor : in propagation {SoftwareFailure, HardwareFailure};
-	flows
-		ef0 : error path emergency_detected{NoValue} -> activate_warning{NoValue};
-		ef1 : error path emergency_detected{InvalidValue} -> activate_warning{InvalidValue};
-		ef4 : error path processor{HardwareFailure} -> activate_warning{NoValue};
-		ef5 : error path processor{SoftwareFailure} -> activate_warning{NoValue};
-	end propagations;
-
-	component error behavior
-	transitions
-		t0 : Operational -[processor{SoftwareFailure}]-> Failed;
-		t1 : Operational -[processor{HardwareFailure}]-> Failed;
-		t2 : Failed -[processor{NoError}]-> Operational;
-	propagations
-	   	p1 : Failed -[]-> activate_warning{NoValue};
-	end component;
-**};
-end warning_activation;
-
-process implementation warning_activation.i
-subcomponents
-	thr : thread warning_activation_thr;
-connections
-	c0 : port emergency_detected -> thr.emergency_detected;
-	c1 : port thr.activate_warning -> activate_warning;
-flows
-	f0 : flow path emergency_detected -> c0 -> thr.f0 -> c1 -> activate_warning;
-end warning_activation.i;
-
-thread warning_activation_thr
-features
-	emergency_detected : in data port speed_regulation::icd::boolean;
-	activate_warning   : out data port speed_regulation::icd::boolean;
-flows
-	f0 : flow path emergency_detected -> activate_warning;
-properties
-	Dispatch_Protocol => Periodic;
-	Period            => 2ms;
-	sei::mipsbudget   => 5.0 MIPS;
-end warning_activation_thr;
-
-----------------------
---  Position Voter  --
-----------------------
-
-process position_voter
-features
-	position1 : in data port speed_regulation::icd::gps_position;
-	position2 : in data port speed_regulation::icd::gps_position;
-	position  : out data port speed_regulation::icd::gps_position;
-flows
-	f0 : flow path position1 -> position;
-	f1 : flow path position2 -> position;
-annex EMV2 {**
-	use types 		speed_regulation::error_library;
-	use behavior  	speed_regulation::error_library::simple;
-
-	error propagations
-		position1 : in propagation {NoValue,InvalidValue};
-		position2 : in propagation {NoValue,InvalidValue};
-		position : out propagation {NoValue,InvalidValue};
-		processor : in propagation {SoftwareFailure, HardwareFailure};
-	flows
-		ef00 : error path position1{novalue} -> position{novalue};
-		ef01 : error path position1{invalidvalue} -> position{invalidvalue};
-		ef10 : error path position2{novalue} -> position{novalue};
-		ef11 : error path position2{invalidvalue} -> position{invalidvalue};
-		ef4 : error path processor{HardwareFailure,SoftwareFailure} -> position{NoValue};
-	end propagations;
-
-	component error behavior
-	transitions
-		t0 : Operational -[processor{SoftwareFailure}]-> Failed;
-		t1 : Operational -[processor{HardwareFailure}]-> Failed;
-		t2 : Failed -[processor{NoError}]-> Operational;
-	propagations
-	   	p1 : Failed -[]-> position{NoValue};
-	end component;
-**};
-end position_voter;
-
-process implementation position_voter.i
-subcomponents
-	thr : thread position_voter_thr;
-connections
-	c0 : port position1 -> thr.position1;
-	c1 : port position2 -> thr.position2;
-	c2 : port thr.position -> position;
-flows
-	f0 : flow path position1 -> c0 -> thr.f0 -> c2 -> position;
-	f1 : flow path position2 -> c1 -> thr.f1 -> c2 -> position;
-end position_voter.i;
-
-thread position_voter_thr
-features
-	position1 : in data port speed_regulation::icd::gps_position;
-	position2 : in data port speed_regulation::icd::gps_position;
-	position  : out data port speed_regulation::icd::gps_position;
-flows
-	f0 : flow path position1 -> position;
-	f1 : flow path position2 -> position;
-properties
-	Dispatch_Protocol => Periodic;
-	Period            => 12ms;
-	sei::mipsbudget   => 8.0 MIPS;
-end position_voter_thr;
-
------------------------------------
---  Speed Threshold Computation  --
------------------------------------
-
-process speed_threshold_computation
-features
-	position      : in data port speed_regulation::icd::gps_position;
-	current_speed : in data port speed_regulation::icd::speed;
-	threshold     : out data port speed_regulation::icd::speed;
-flows
-	f0 : flow path position -> threshold;
-	f1 : flow path current_speed -> threshold;
-annex EMV2 {**
-	use types 		speed_regulation::error_library;
-	use behavior  	speed_regulation::error_library::simple;
-
-	error propagations
-		position : in propagation {NoValue,InvalidValue};
-		current_speed : in propagation {NoValue,InvalidValue};
-		threshold : out propagation {NoValue,InvalidValue};
-		processor : in propagation {SoftwareFailure, HardwareFailure};
-	flows
-		ef0 : error path position{novalue} -> threshold{novalue};
-		ef1 : error path position{invalidvalue} -> threshold{invalidvalue};
-		ef2 : error path current_speed{novalue} -> threshold{novalue};
-		ef3 : error path current_speed{invalidvalue} -> threshold{invalidvalue};
-		ef4 : error path processor{HardwareFailure} -> threshold{NoValue};
-		ef5 : error path processor{SoftwareFailure} -> threshold{NoValue};
-	end propagations;
-
-	component error behavior
-	transitions
-		t0 : Operational -[processor{SoftwareFailure}]-> Failed;
-		t1 : Operational -[processor{HardwareFailure}]-> Failed;
-		t2 : Failed -[processor{NoError}]-> Operational;
-	propagations
-	   	p1 : Failed -[]-> threshold{NoValue};
-	end component;
-**};
-end speed_threshold_computation;
-
-process implementation speed_threshold_computation.i
-subcomponents
-	thr : thread speed_threshold_computation_thr;
-connections
-	c0 : port position -> thr.position;
-	c1 : port current_speed -> thr.current_speed;
-	c2 : port thr.threshold -> threshold;
-flows
-	f0 : flow path position -> c0 -> thr.f0 -> c2 -> threshold;
-	f1 : flow path current_speed -> c1 -> thr.f1 -> c2 -> threshold;
-end speed_threshold_computation.i; 
-
-thread speed_threshold_computation_thr
-features
-	position      : in data port speed_regulation::icd::gps_position;
-	current_speed : in data port speed_regulation::icd::speed;
-	threshold     : out data port speed_regulation::icd::speed;
-flows
-	f0 : flow path position -> threshold;
-	f1 : flow path current_speed -> threshold;
-properties
-	Dispatch_Protocol => Periodic;
-	Period            => 4ms;
-	sei::mipsbudget   => 5.0 MIPS;
-end speed_threshold_computation_thr;
-
-------------------------
---  Speed Controller  --
-------------------------
-
-process speed_controller
-features
-	position      			: in data port speed_regulation::icd::gps_position;
-	current_speed		 	: in data port speed_regulation::icd::speed;
-	threshold     			: in data port speed_regulation::icd::speed;
-	emergency_detected     	: in data port speed_regulation::icd::boolean;
-	cmd           			: out data port speed_regulation::icd::speed_command;
-flows
-	f0 : flow path position -> cmd;
-	f1 : flow path current_speed -> cmd;
-	f2 : flow path threshold -> cmd;
-	f3 : flow path emergency_detected -> cmd;
-annex EMV2 {**
-	use types 		speed_regulation::error_library;
-	use behavior  	speed_regulation::error_library::simple;
-
-	error propagations
-		position : in propagation {NoValue,InvalidValue};
-		current_speed : in propagation {NoValue,InvalidValue};
-		threshold : in propagation {NoValue,InvalidValue};
-		emergency_detected : in propagation {NoValue,InvalidValue};
-		cmd : out propagation {NoValue,InvalidValue};
-		processor : in propagation {SoftwareFailure, HardwareFailure};
-	flows
-		ef00 : error path position{NoValue} -> cmd{NoValue};
-		ef01 : error path position{InvalidValue} -> cmd{InvalidValue};
-		ef10 : error path current_speed{NoValue} -> cmd{NoValue};
-		ef11 : error path current_speed{InvalidValue} -> cmd{InvalidValue};
-		ef20 : error path threshold{NoValue} -> cmd{NoValue};
-		ef21 : error path threshold{InvalidValue} -> cmd{InvalidValue};
-		ef30 : error path emergency_detected{NoValue} -> cmd{NoValue};
-		ef31 : error path emergency_detected{InvalidValue} -> cmd{InvalidValue};
-		ef40 : error path processor{HardwareFailure} -> cmd{NoValue};
-		ef41 : error path processor{SoftwareFailure} -> cmd{NoValue};
-	end propagations;
-
-	component error behavior
-	transitions
-		t0 : Operational -[processor{SoftwareFailure}]-> Failed;
-		t1 : Operational -[processor{HardwareFailure}]-> Failed;
-		t2 : Failed -[processor{NoError}]-> Operational;
-	propagations
-	   	p1 : Failed -[]-> cmd{NoValue};
-	end component;
-**};
-end speed_controller;
-
-process implementation speed_controller.i
-subcomponents
-	thr : thread speed_controller_thr;
-connections
-	c0 : port position -> thr.position;
-	c1 : port current_speed -> thr.current_speed;
-	c2 : port threshold -> thr.threshold;
-	c3 : port emergency_detected -> thr.emergency_detected;
-	c4 : port thr.cmd -> cmd;
-flows
-	f0 : flow path position -> c0 -> thr.f0 -> c4 -> cmd;
-	f1 : flow path current_speed -> c1 -> thr.f1 -> c4 -> cmd;
-	f2 : flow path threshold -> c2 -> thr.f2 -> c4 -> cmd;
-	f3 : flow path emergency_detected -> c3 -> thr.f3 -> c4 -> cmd;
-end speed_controller.i;
-
-thread speed_controller_thr
-features
-	position      : in data port speed_regulation::icd::gps_position;
-	current_speed : in data port speed_regulation::icd::speed;
-	threshold     : in data port speed_regulation::icd::speed;
-	emergency_detected     	: in data port speed_regulation::icd::boolean;
-	cmd           : out data port speed_regulation::icd::speed_command.i;
-flows
-	f0 : flow path position -> cmd;
-	f1 : flow path current_speed -> cmd;
-	f2 : flow path threshold -> cmd;
-	f3 : flow path emergency_detected -> cmd;
-properties
-	Dispatch_Protocol => Periodic;
-	Period            => 5ms;
-	sei::mipsbudget   => 5.0 MIPS;
-end speed_controller_thr;
+	with speed_regulation::icd;
+	with sei;
+	with speed_regulation::platform;
+
+    -------------------------
+	--  Image Acquisition  --
+	-------------------------
+	process image_acquisition
+		features
+			picture: in data port speed_regulation::icd::picture;
+			obstacle_detected: out data port speed_regulation::icd::boolean;
+		flows
+			f0: flow path picture -> obstacle_detected;
+		annex EMV2 {**
+			use types speed_regulation::error_library;
+			use behavior speed_regulation::error_library::simple;
+			
+			error propagations
+				picture: in propagation {NoValue};
+				obstacle_detected: out propagation {NoValue, InvalidValue};
+				processor: in propagation {SoftwareFailure, HardwareFailure};
+				flows
+					ef0: error path picture {NoValue} -> obstacle_detected {NoValue};
+					ef1: error path picture {NoValue} -> obstacle_detected {InvalidValue};
+					ef2: error path processor {HardwareFailure, SoftwareFailure} -> obstacle_detected {NoValue};
+			end propagations;
+			
+			component error behavior
+				transitions
+					t0: Operational -[processor {SoftwareFailure}]-> Failed;
+					t1: Operational -[processor {HardwareFailure}]-> Failed;
+					t2: Failed -[processor {NoError}]-> Operational;
+				propagations
+					p1: Failed -[]-> obstacle_detected {NoValue};
+			end component;
+		**};
+	end image_acquisition;
+
+	process implementation image_acquisition.i
+		subcomponents
+			thr_acq: thread image_acquisition_thr.i;
+		connections
+			c0: port picture -> thr_acq.picture;
+			c1: port thr_acq.obstacle_detected -> obstacle_detected;
+		flows
+			f0: flow path picture -> c0 -> thr_acq.f0 -> c1 -> obstacle_detected;
+	end image_acquisition.i;
+
+	thread image_acquisition_thr
+		features
+			picture: in data port speed_regulation::icd::picture;
+			obstacle_detected: out data port speed_regulation::icd::boolean;
+		flows
+			f0: flow path picture -> obstacle_detected;
+		properties
+			sei::mipsbudget => 25.0 MIPS;
+			Dispatch_Protocol => Periodic;
+			Period => 50ms;
+			compute_execution_time => 10ms .. 40ms;
+			reference_processor => classifier (speed_regulation::platform::ecu);
+			sei::instructionsperdispatch => 1.24 kipd .. 1.25 mipd;
+	end image_acquisition_thr;
+
+	thread implementation image_acquisition_thr.i
+	end image_acquisition_thr.i;
+
+    -------------------------
+	--  Radar Acquisition  --
+	-------------------------
+	process radar_acquisition
+		features
+			obstacle_distance: in data port speed_regulation::icd::distance;
+			obstacle_detected: out data port speed_regulation::icd::boolean;
+		flows
+			f0: flow path obstacle_distance -> obstacle_detected;
+		annex EMV2 {**
+			use types speed_regulation::error_library;
+			use behavior speed_regulation::error_library::simple;
+			
+			error propagations
+				obstacle_distance: in propagation {NoValue, InvalidValue};
+				obstacle_detected: out propagation {NoValue, InvalidValue};
+				processor: in propagation {SoftwareFailure, HardwareFailure};
+				flows
+					ef0: error path obstacle_distance {NoValue} -> obstacle_detected {NoValue};
+					ef1: error path obstacle_distance {NoValue} -> obstacle_detected {InvalidValue};
+					ef3: error path obstacle_distance {InvalidValue} -> obstacle_detected {InvalidValue};
+					ef2: error path processor {HardwareFailure, SoftwareFailure} -> obstacle_detected {NoValue};
+			end propagations;
+			
+			component error behavior
+				transitions
+					t0: Operational -[processor {SoftwareFailure}]-> Failed;
+					t1: Operational -[processor {HardwareFailure}]-> Failed;
+					t2: Failed -[processor {NoError}]-> Operational;
+				propagations
+					p1: Failed -[]-> obstacle_detected {NoValue};
+			end component;
+		**};
+	end radar_acquisition;
+
+	process implementation radar_acquisition.i
+		subcomponents
+			thr: thread radar_acquisition_thr.i;
+		connections
+			c0: port obstacle_distance -> thr.obstacle_distance;
+			c1: port thr.obstacle_detected -> obstacle_detected;
+		flows
+			f0: flow path obstacle_distance -> c0 -> thr.f0 -> c1 -> obstacle_detected;
+	end radar_acquisition.i;
+
+	thread radar_acquisition_thr
+		features
+			obstacle_distance: in data port speed_regulation::icd::distance;
+			obstacle_detected: out data port speed_regulation::icd::boolean;
+		flows
+			f0: flow path obstacle_distance -> obstacle_detected;
+		properties
+			Dispatch_Protocol => Periodic;
+			Period => 10ms;
+			sei::mipsbudget => 4.0 MIPS;
+	end radar_acquisition_thr;
+
+	thread implementation radar_acquisition_thr.i
+	end radar_acquisition_thr.i;
+
+    ----------------------
+	--  Speed Estimate  --
+	----------------------
+	process speed_estimate
+		features
+			wheel_sensor: in data port speed_regulation::icd::speed;
+			laser_sensor: in data port speed_regulation::icd::speed;
+			speed: out data port speed_regulation::icd::speed;
+		flows
+			f0: flow path wheel_sensor -> speed;
+			f1: flow path laser_sensor -> speed;
+		annex EMV2 {**
+			use types speed_regulation::error_library;
+			use behavior speed_regulation::error_library::simple;
+			
+			error propagations
+				wheel_sensor: in propagation {NoValue, InvalidValue};
+				laser_sensor: in propagation {NoValue, InvalidValue};
+				speed: out propagation {NoValue, InvalidValue};
+				processor: in propagation {SoftwareFailure, HardwareFailure};
+				flows
+					ef0: error path wheel_sensor {NoValue} -> speed {NoValue};
+					ef1: error path wheel_sensor {InvalidValue} -> speed {InvalidValue};
+					ef2: error path laser_sensor {NoValue} -> speed {NoValue};
+					ef3: error path laser_sensor {InvalidValue} -> speed {InvalidValue};
+					ef4: error path processor {HardwareFailure, SoftwareFailure} -> speed {NoValue};
+			end propagations;
+			
+			component error behavior
+				transitions
+					t0: Operational -[processor {SoftwareFailure}]-> Failed;
+					t1: Operational -[processor {HardwareFailure}]-> Failed;
+					t2: Failed -[processor {NoError}]-> Operational;
+				propagations
+					p1: Failed -[]-> speed {NoValue};
+			end component;
+		**};
+	end speed_estimate;
+
+	process implementation speed_estimate.i
+		subcomponents
+			thr: thread speed_estimate_thr.i;
+		connections
+			c0: port wheel_sensor -> thr.wheel_sensor;
+			c1: port laser_sensor -> thr.laser_sensor;
+			c2: port thr.speed -> speed;
+		flows
+			f0: flow path wheel_sensor -> c0 -> thr.f0 -> c2 -> speed;
+			f1: flow path laser_sensor -> c1 -> thr.f1 -> c2 -> speed;
+	end speed_estimate.i;
+
+	thread speed_estimate_thr
+		features
+			wheel_sensor: in data port speed_regulation::icd::speed;
+			laser_sensor: in data port speed_regulation::icd::speed;
+			speed: out data port speed_regulation::icd::speed;
+		flows
+			f0: flow path wheel_sensor -> speed;
+			f1: flow path laser_sensor -> speed;
+		properties
+			Dispatch_Protocol => Periodic;
+			Period => 8ms;
+			sei::mipsbudget => 8.0 MIPS;
+	end speed_estimate_thr;
+
+	thread implementation speed_estimate_thr.i
+	end speed_estimate_thr.i;
+
+	--------------------------
+	--  Obstacle Detection  --
+	--------------------------
+	process obstacle_detection
+		features
+			camera: in data port speed_regulation::icd::boolean;
+			radar: in data port speed_regulation::icd::boolean;
+			obstacle_detected: out data port speed_regulation::icd::boolean;
+		flows
+			f0: flow path camera -> obstacle_detected;
+			f1: flow path radar -> obstacle_detected;
+		annex EMV2 {**
+			use types speed_regulation::error_library;
+			use behavior speed_regulation::error_library::simple;
+			
+			error propagations
+				camera: in propagation {NoValue, InvalidValue};
+				radar: in propagation {NoValue, InvalidValue};
+				obstacle_detected: out propagation {NoValue, InvalidValue};
+				processor: in propagation {SoftwareFailure, HardwareFailure};
+				flows
+					ef0: error path camera {NoValue} -> obstacle_detected {NoValue};
+					ef1: error path radar {NoValue} -> obstacle_detected {NoValue};
+					ef2: error path camera {NoValue} -> obstacle_detected {InvalidValue};
+					ef3: error path radar {NoValue} -> obstacle_detected {InvalidValue};
+					ef4: error path processor {HardwareFailure} -> obstacle_detected {NoValue};
+					ef5: error path camera {InvalidValue} -> obstacle_detected {InvalidValue};
+					ef6: error path radar {InvalidValue} -> obstacle_detected {InvalidValue};
+					ef7: error path processor {SoftwareFailure} -> obstacle_detected {NoValue};
+			
+			end propagations;
+			
+			component error behavior
+				transitions
+					t0: Operational -[processor {SoftwareFailure}]-> Failed;
+					t1: Operational -[processor {HardwareFailure}]-> Failed;
+					t2: Failed -[processor {NoError}]-> Operational;
+				propagations
+					p1: Failed -[]-> obstacle_detected {NoValue};
+			end component;
+		**};
+	end obstacle_detection;
+
+	process implementation obstacle_detection.i
+		subcomponents
+			thr: thread obstacle_detection_thr;
+		connections
+			c0: port camera -> thr.camera;
+			c1: port radar -> thr.radar;
+			c2: port thr.obstacle_detected -> obstacle_detected;
+		flows
+			f0: flow path camera -> c0 -> thr.f0 -> c2 -> obstacle_detected;
+			f1: flow path radar -> c1 -> thr.f1 -> c2 -> obstacle_detected;
+	end obstacle_detection.i;
+
+	thread obstacle_detection_thr
+		features
+			camera: in data port speed_regulation::icd::boolean;
+			radar: in data port speed_regulation::icd::boolean;
+			obstacle_detected: out data port speed_regulation::icd::boolean;
+		flows
+			f0: flow path camera -> obstacle_detected;
+			f1: flow path radar -> obstacle_detected;
+		properties
+			Dispatch_Protocol => Periodic;
+			Period => 100ms;
+			Compute_Execution_Time => 20ms .. 50ms;
+			sei::mipsbudget => 10.0 MIPS;
+			sei::instructionsperdispatch => 0.9 kipd .. 0.98 mipd;
+			reference_processor => classifier (speed_regulation::platform::ecu);
+	end obstacle_detection_thr;
+
+	------------------------------------
+	--  Obstacle Distance Evaluation  --
+	------------------------------------
+	process obstacle_distance_evaluation
+		features
+			current_speed: in data port speed_regulation::icd::speed;
+			obstacle_detected: in data port speed_regulation::icd::boolean;
+			obstacle_distance: out data port speed_regulation::icd::distance;
+		flows
+			f0: flow path current_speed -> obstacle_distance;
+			f1: flow path obstacle_detected -> obstacle_distance;
+		annex EMV2 {**
+			use types speed_regulation::error_library;
+			use behavior speed_regulation::error_library::simple;
+			
+			error propagations
+				current_speed: in propagation {NoValue, InvalidValue};
+				obstacle_detected: in propagation {NoValue, InvalidValue};
+				obstacle_distance: out propagation {NoValue, InvalidValue};
+				processor: in propagation {SoftwareFailure, HardwareFailure};
+				flows
+					ef0: error path current_speed {NoValue} -> obstacle_distance {NoValue};
+					ef1: error path obstacle_detected {NoValue} -> obstacle_distance {NoValue};
+					ef2: error path current_speed {InvalidValue} -> obstacle_distance {InvalidValue};
+					ef3: error path obstacle_detected {InvalidValue} -> obstacle_distance {InvalidValue};
+					ef4: error path processor {HardwareFailure, SoftwareFailure} -> obstacle_distance {NoValue};
+			end propagations;
+			
+			component error behavior
+				transitions
+					t0: Operational -[processor {SoftwareFailure}]-> Failed;
+					t1: Operational -[processor {HardwareFailure}]-> Failed;
+					t2: Failed -[processor {NoError}]-> Operational;
+				propagations
+					p1: Failed -[]-> obstacle_distance {NoValue};
+			end component;
+		**};
+	end obstacle_distance_evaluation;
+
+	process implementation obstacle_distance_evaluation.i
+		subcomponents
+			thr: thread obstacle_distance_evaluation_thr;
+		connections
+			c0: port current_speed -> thr.current_speed;
+			c1: port obstacle_detected -> thr.obstacle_detected;
+			c2: port thr.obstacle_distance -> obstacle_distance;
+		flows
+			f0: flow path current_speed -> c0 -> thr.f0 -> c2 -> obstacle_distance;
+			f1: flow path obstacle_detected -> c1 -> thr.f1 -> c2 -> obstacle_distance;
+	end obstacle_distance_evaluation.i;
+
+	thread obstacle_distance_evaluation_thr
+		features
+			current_speed: in data port speed_regulation::icd::speed;
+			obstacle_detected: in data port speed_regulation::icd::boolean;
+			obstacle_distance: out data port speed_regulation::icd::distance;
+		flows
+			f0: flow path current_speed -> obstacle_distance;
+			f1: flow path obstacle_detected -> obstacle_distance;
+		properties
+			Dispatch_Protocol => Periodic;
+			Period => 10ms;
+			sei::mipsbudget => 8.0 MIPS;
+	end obstacle_distance_evaluation_thr;
+
+	---------------------------
+	--  Emergency Detection  --
+	---------------------------
+	process emergency_detection
+		features
+			current_speed: in data port speed_regulation::icd::speed;
+			obstacle_distance: in data port speed_regulation::icd::distance;
+			emergency_detected: out data port speed_regulation::icd::boolean;
+		flows
+			f0: flow path current_speed -> emergency_detected;
+			f1: flow path obstacle_distance -> emergency_detected;
+		annex EMV2 {**
+			use types speed_regulation::error_library;
+			use behavior speed_regulation::error_library::simple;
+			
+			error propagations
+				current_speed: in propagation {NoValue, InvalidValue};
+				obstacle_distance: in propagation {NoValue, InvalidValue};
+				emergency_detected: out propagation {NoValue, InvalidValue};
+				processor: in propagation {SoftwareFailure, HardwareFailure};
+				flows
+					ef0: error path current_speed {NoValue} -> emergency_detected {NoValue};
+					ef1: error path obstacle_distance {NoValue} -> emergency_detected {NoValue};
+					ef2: error path current_speed {NoValue} -> emergency_detected {InvalidValue};
+					ef3: error path obstacle_distance {NoValue} -> emergency_detected {InvalidValue};
+					ef4: error path processor {HardwareFailure, SoftwareFailure} -> emergency_detected {NoValue};
+					ef5: error path current_speed {InvalidValue} -> emergency_detected {InvalidValue};
+					ef6: error path obstacle_distance {InvalidValue} -> emergency_detected {InvalidValue};
+			end propagations;
+			
+			component error behavior
+				transitions
+					t0: Operational -[processor {SoftwareFailure}]-> Failed;
+					t1: Operational -[processor {HardwareFailure}]-> Failed;
+					t2: Failed -[processor {NoError}]-> Operational;
+				propagations
+					p1: Failed -[]-> emergency_detected {NoValue};
+			end component;
+		**};
+	end emergency_detection;
+
+	process implementation emergency_detection.i
+		subcomponents
+			thr: thread emergency_detection_thr;
+		connections
+			c0: port current_speed -> thr.current_speed;
+			c1: port obstacle_distance -> thr.obstacle_distance;
+			c2: port thr.emergency_detected -> emergency_detected;
+		flows
+			f0: flow path current_speed -> c0 -> thr.f0 -> c2 -> emergency_detected;
+			f1: flow path obstacle_distance -> c1 -> thr.f1 -> c2 -> emergency_detected;
+	end emergency_detection.i;
+
+	thread emergency_detection_thr
+		features
+			current_speed: in data port speed_regulation::icd::speed;
+			obstacle_distance: in data port speed_regulation::icd::distance;
+			emergency_detected: out data port speed_regulation::icd::boolean;
+		flows
+			f0: flow path current_speed -> emergency_detected;
+			f1: flow path obstacle_distance -> emergency_detected;
+		properties
+			Dispatch_Protocol => Periodic;
+			Period => 4ms;
+			sei::mipsbudget => 5.0 MIPS;
+	end emergency_detection_thr;
+
+	--------------------------
+	--  Warning Activation  --
+	--------------------------
+	process warning_activation
+		features
+			emergency_detected: in data port speed_regulation::icd::boolean;
+			activate_warning: out data port speed_regulation::icd::boolean;
+		flows
+			f0: flow path emergency_detected -> activate_warning;
+		annex EMV2 {**
+			use types speed_regulation::error_library;
+			use behavior speed_regulation::error_library::simple;
+			
+			error propagations
+				emergency_detected: in propagation {NoValue, InvalidValue};
+				activate_warning: out propagation {NoValue, InvalidValue};
+				processor: in propagation {SoftwareFailure, HardwareFailure};
+				flows
+					ef0: error path emergency_detected {NoValue} -> activate_warning {NoValue};
+					ef1: error path emergency_detected {InvalidValue} -> activate_warning {InvalidValue};
+					ef4: error path processor {HardwareFailure} -> activate_warning {NoValue};
+					ef5: error path processor {SoftwareFailure} -> activate_warning {NoValue};
+			end propagations;
+			
+			component error behavior
+				transitions
+					t0: Operational -[processor {SoftwareFailure}]-> Failed;
+					t1: Operational -[processor {HardwareFailure}]-> Failed;
+					t2: Failed -[processor {NoError}]-> Operational;
+				propagations
+					p1: Failed -[]-> activate_warning {NoValue};
+			end component;
+		**};
+	end warning_activation;
+
+	process implementation warning_activation.i
+		subcomponents
+			thr: thread warning_activation_thr;
+		connections
+			c0: port emergency_detected -> thr.emergency_detected;
+			c1: port thr.activate_warning -> activate_warning;
+		flows
+			f0: flow path emergency_detected -> c0 -> thr.f0 -> c1 -> activate_warning;
+	end warning_activation.i;
+
+	thread warning_activation_thr
+		features
+			emergency_detected: in data port speed_regulation::icd::boolean;
+			activate_warning: out data port speed_regulation::icd::boolean;
+		flows
+			f0: flow path emergency_detected -> activate_warning;
+		properties
+			Dispatch_Protocol => Periodic;
+			Period => 2ms;
+			sei::mipsbudget => 5.0 MIPS;
+	end warning_activation_thr;
+
+	----------------------
+	--  Position Voter  --
+	----------------------
+	process position_voter
+		features
+			position1: in data port speed_regulation::icd::gps_position;
+			position2: in data port speed_regulation::icd::gps_position;
+			position: out data port speed_regulation::icd::gps_position;
+		flows
+			f0: flow path position1 -> position;
+			f1: flow path position2 -> position;
+		annex EMV2 {**
+			use types speed_regulation::error_library;
+			use behavior speed_regulation::error_library::simple;
+			
+			error propagations
+				position1: in propagation {NoValue, InvalidValue};
+				position2: in propagation {NoValue, InvalidValue};
+				position: out propagation {NoValue, InvalidValue};
+				processor: in propagation {SoftwareFailure, HardwareFailure};
+				flows
+					ef00: error path position1 {novalue} -> position {novalue};
+					ef01: error path position1 {invalidvalue} -> position {invalidvalue};
+					ef10: error path position2 {novalue} -> position {novalue};
+					ef11: error path position2 {invalidvalue} -> position {invalidvalue};
+					ef4: error path processor {HardwareFailure, SoftwareFailure} -> position {NoValue};
+			end propagations;
+			
+			component error behavior
+				transitions
+					t0: Operational -[processor {SoftwareFailure}]-> Failed;
+					t1: Operational -[processor {HardwareFailure}]-> Failed;
+					t2: Failed -[processor {NoError}]-> Operational;
+				propagations
+					p1: Failed -[]-> position {NoValue};
+			end component;
+		**};
+	end position_voter;
+
+	process implementation position_voter.i
+		subcomponents
+			thr: thread position_voter_thr;
+		connections
+			c0: port position1 -> thr.position1;
+			c1: port position2 -> thr.position2;
+			c2: port thr.position -> position;
+		flows
+			f0: flow path position1 -> c0 -> thr.f0 -> c2 -> position;
+			f1: flow path position2 -> c1 -> thr.f1 -> c2 -> position;
+	end position_voter.i;
+
+	thread position_voter_thr
+		features
+			position1: in data port speed_regulation::icd::gps_position;
+			position2: in data port speed_regulation::icd::gps_position;
+			position: out data port speed_regulation::icd::gps_position;
+		flows
+			f0: flow path position1 -> position;
+			f1: flow path position2 -> position;
+		properties
+			Dispatch_Protocol => Periodic;
+			Period => 12ms;
+			sei::mipsbudget => 8.0 MIPS;
+	end position_voter_thr;
+
+	-----------------------------------
+	--  Speed Threshold Computation  --
+	-----------------------------------
+	process speed_threshold_computation
+		features
+			position: in data port speed_regulation::icd::gps_position;
+			current_speed: in data port speed_regulation::icd::speed;
+			threshold: out data port speed_regulation::icd::speed;
+		flows
+			f0: flow path position -> threshold;
+			f1: flow path current_speed -> threshold;
+		annex EMV2 {**
+			use types speed_regulation::error_library;
+			use behavior speed_regulation::error_library::simple;
+			
+			error propagations
+				position: in propagation {NoValue, InvalidValue};
+				current_speed: in propagation {NoValue, InvalidValue};
+				threshold: out propagation {NoValue, InvalidValue};
+				processor: in propagation {SoftwareFailure, HardwareFailure};
+				flows
+					ef0: error path position {novalue} -> threshold {novalue};
+					ef1: error path position {invalidvalue} -> threshold {invalidvalue};
+					ef2: error path current_speed {novalue} -> threshold {novalue};
+					ef3: error path current_speed {invalidvalue} -> threshold {invalidvalue};
+					ef4: error path processor {HardwareFailure} -> threshold {NoValue};
+					ef5: error path processor {SoftwareFailure} -> threshold {NoValue};
+			end propagations;
+			
+			component error behavior
+				transitions
+					t0: Operational -[processor {SoftwareFailure}]-> Failed;
+					t1: Operational -[processor {HardwareFailure}]-> Failed;
+					t2: Failed -[processor {NoError}]-> Operational;
+				propagations
+					p1: Failed -[]-> threshold {NoValue};
+			end component;
+		**};
+	end speed_threshold_computation;
+
+	process implementation speed_threshold_computation.i
+		subcomponents
+			thr: thread speed_threshold_computation_thr;
+		connections
+			c0: port position -> thr.position;
+			c1: port current_speed -> thr.current_speed;
+			c2: port thr.threshold -> threshold;
+		flows
+			f0: flow path position -> c0 -> thr.f0 -> c2 -> threshold;
+			f1: flow path current_speed -> c1 -> thr.f1 -> c2 -> threshold;
+	end speed_threshold_computation.i;
+
+	thread speed_threshold_computation_thr
+		features
+			position: in data port speed_regulation::icd::gps_position;
+			current_speed: in data port speed_regulation::icd::speed;
+			threshold: out data port speed_regulation::icd::speed;
+		flows
+			f0: flow path position -> threshold;
+			f1: flow path current_speed -> threshold;
+		properties
+			Dispatch_Protocol => Periodic;
+			Period => 4ms;
+			sei::mipsbudget => 5.0 MIPS;
+	end speed_threshold_computation_thr;
+
+	------------------------
+	--  Speed Controller  --
+	------------------------
+	process speed_controller
+		features
+			position: in data port speed_regulation::icd::gps_position;
+			current_speed: in data port speed_regulation::icd::speed;
+			threshold: in data port speed_regulation::icd::speed;
+			emergency_detected: in data port speed_regulation::icd::boolean;
+			cmd: out data port speed_regulation::icd::speed_command;
+		flows
+			f0: flow path position -> cmd;
+			f1: flow path current_speed -> cmd;
+			f2: flow path threshold -> cmd;
+			f3: flow path emergency_detected -> cmd;
+		annex EMV2 {**
+			use types speed_regulation::error_library;
+			use behavior speed_regulation::error_library::simple;
+			
+			error propagations
+				position: in propagation {NoValue, InvalidValue};
+				current_speed: in propagation {NoValue, InvalidValue};
+				threshold: in propagation {NoValue, InvalidValue};
+				emergency_detected: in propagation {NoValue, InvalidValue};
+				cmd: out propagation {NoValue, InvalidValue};
+				processor: in propagation {SoftwareFailure, HardwareFailure};
+				flows
+					ef00: error path position {NoValue} -> cmd {NoValue};
+					ef01: error path position {InvalidValue} -> cmd {InvalidValue};
+					ef10: error path current_speed {NoValue} -> cmd {NoValue};
+					ef11: error path current_speed {InvalidValue} -> cmd {InvalidValue};
+					ef20: error path threshold {NoValue} -> cmd {NoValue};
+					ef21: error path threshold {InvalidValue} -> cmd {InvalidValue};
+					ef30: error path emergency_detected {NoValue} -> cmd {NoValue};
+					ef31: error path emergency_detected {InvalidValue} -> cmd {InvalidValue};
+					ef40: error path processor {HardwareFailure} -> cmd {NoValue};
+					ef41: error path processor {SoftwareFailure} -> cmd {NoValue};
+			end propagations;
+			
+			component error behavior
+				transitions
+					t0: Operational -[processor {SoftwareFailure}]-> Failed;
+					t1: Operational -[processor {HardwareFailure}]-> Failed;
+					t2: Failed -[processor {NoError}]-> Operational;
+				propagations
+					p1: Failed -[]-> cmd {NoValue};
+			end component;
+		**};
+	end speed_controller;
+
+	process implementation speed_controller.i
+		subcomponents
+			thr: thread speed_controller_thr;
+		connections
+			c0: port position -> thr.position;
+			c1: port current_speed -> thr.current_speed;
+			c2: port threshold -> thr.threshold;
+			c3: port emergency_detected -> thr.emergency_detected;
+			c4: port thr.cmd -> cmd;
+		flows
+			f0: flow path position -> c0 -> thr.f0 -> c4 -> cmd;
+			f1: flow path current_speed -> c1 -> thr.f1 -> c4 -> cmd;
+			f2: flow path threshold -> c2 -> thr.f2 -> c4 -> cmd;
+			f3: flow path emergency_detected -> c3 -> thr.f3 -> c4 -> cmd;
+	end speed_controller.i;
+
+	thread speed_controller_thr
+		features
+			position: in data port speed_regulation::icd::gps_position;
+			current_speed: in data port speed_regulation::icd::speed;
+			threshold: in data port speed_regulation::icd::speed;
+			emergency_detected: in data port speed_regulation::icd::boolean;
+			cmd: out data port speed_regulation::icd::speed_command.i;
+		flows
+			f0: flow path position -> cmd;
+			f1: flow path current_speed -> cmd;
+			f2: flow path threshold -> cmd;
+			f3: flow path emergency_detected -> cmd;
+		properties
+			Dispatch_Protocol => Periodic;
+			Period => 5ms;
+			sei::mipsbudget => 5.0 MIPS;
+	end speed_controller_thr;
 
 end speed_regulation::software;
-  

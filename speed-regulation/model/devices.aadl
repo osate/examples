@@ -4,369 +4,340 @@
 --  analysis of different architecture variations.
 --
 --  A full description of this case study can be found
---  on https://wiki.sei.cmu.edu/aadl/index.php/SpeedRegulation
+--  on https://resources.sei.cmu.edu/asset_files/Webinar/2014_018_101_424910.pdf
 --
 --  Copyright Carnegie Mellon Software Engineering Institute, 2014.
 --
-
 package speed_regulation::devices
-
 
 public
 
-with speed_regulation::icd;
-with emv2;
-with arp4761;
- 
------------------------------------
---  Camera and Object Detection  --
------------------------------------
-   
-device camera
-features
-	picture : out data port speed_regulation::icd::picture;
-flows
-	f0 : flow source picture;
-properties 
-	Period => 200ms;
-	compute_execution_time => 20 ms .. 50 ms;
-annex EMV2 {**
-	use types speed_regulation::error_library; 
+	with speed_regulation::icd;
+	with emv2;
+	with arp4761;
 
-	error propagations
-		picture : out propagation {NoValue};
-	flows
-		ef0 : error source picture{NoValue};
-	end propagations;
-
-	properties
-		emv2::severity => ARP4761::Major applies to picture;
-		emv2::likelihood => ARP4761::Probable applies to picture;
-		emv2::hazards => 
-			([	crossreference => "N/A";
-				failure => "Novalue";
-				phases => ("all");
-				description => "No picture from the camera";
-				comment => "Would impact the detection of obstacle if the radar is not working as well";
-			])
-			applies to picture.novalue;
-**};	
-end camera;
-
-device radar
-features
-	distance_estimate : out data port speed_regulation::icd::distance;
-flows
-	f0 : flow source distance_estimate;
-properties 
-	Period => 10ms;
-	compute_execution_time => 6 ms .. 8 ms;
-annex EMV2 {**
-	use types speed_regulation::error_library;
-
-	error propagations
-		distance_estimate : out propagation {NoValue,InvalidValue};
-	flows
-		ef0 : error source distance_estimate{NoValue,InvalidValue};
-	end propagations;
-
-	properties
-		emv2::severity => ARP4761::Major applies to distance_estimate.novalue;
-		emv2::likelihood => ARP4761::Probable applies to distance_estimate.novalue;
-		emv2::hazards => 
-			([	crossreference => "N/A";
-				failure => "NoValue";
-				phases => ("all");
-				description => "No information from the Radar";
-				comment => "Error if both the camera and the radar does not send any value";
-			])
-			applies to distance_estimate.novalue;
-
-		emv2::severity => ARP4761::Minor applies to distance_estimate.invalidvalue;
-		emv2::likelihood => ARP4761::Probable applies to distance_estimate.invalidvalue;
-		emv2::hazards => 
-			([	crossreference => "N/A";
-				failure => "InvalidValue";
-				phases => ("all");
-				description => "Invalid distance sent by the radar";
-				comment => "First occurrences of invalid data Should be handled by the distance estimator.";
-			])
-			applies to distance_estimate.invalidvalue;
-**};
-end radar;
- 
----------------------
---  Speed Sensors  --
----------------------
-
-device speed_sensor
-features
-	speed : out data port speed_regulation::icd::speed;
-flows
-	f0 : flow source speed;
-annex EMV2 {**
-	use types speed_regulation::error_library;
-
-	error propagations
-		speed : out propagation {NoValue,InvalidValue};
-	flows
-		ef0 : error source speed{NoValue,InvalidValue};
-	end propagations;
-
-	properties
-		emv2::severity => ARP4761::Major applies to speed.invalidvalue;
-		emv2::likelihood => ARP4761::Probable applies to speed.invalidvalue;
-		emv2::severity => ARP4761::Major applies to speed.novalue;
-		emv2::likelihood => ARP4761::Probable applies to speed.novalue;
-**};
-end speed_sensor; 
-
-device speed_wheel_sensor extends speed_sensor
-properties
-	Period => 10ms;
-	compute_execution_time => 6 ms .. 9 ms;
-annex EMV2 {**
-	properties
-		emv2::hazards => 
-			([	crossreference => "N/A";
-				failure => "InvalidValue";
-				phases => ("all");
-				description => "Invalid value from wheel sensor";
-				comment => "The speed sensor sends invalid value. This should be then discovered and handled by the speed controller.";
-			])
-			applies to speed.invalidvalue;	
+	-----------------------------------
+	--  Camera and Object Detection  --
+	-----------------------------------
+	device camera
+		features
+			picture: out data port speed_regulation::icd::picture;
+		flows
+			f0: flow source picture;
+		properties
+			Period => 200ms;
+			compute_execution_time => 20ms .. 50ms;
+		annex EMV2 {**
+			use types speed_regulation::error_library;
 			
-		emv2::hazards => 
-			([	crossreference => "N/A";
-				failure => "NoValue";
-				phases => ("all");
-				description => "No speed from wheel sensor";
-				comment => "The sensor does not sendn any speed, might be an error if all sensors does not send a consistent value";
-			])
-			applies to speed.novalue;
-**};
-end speed_wheel_sensor;
-
-device speed_laser_sensor extends speed_sensor
-properties
-	Period => 10ms;
-	compute_execution_time => 6 ms .. 9 ms;
-annex EMV2 {**
-	properties
-		emv2::hazards => 
-			([	crossreference => "N/A";
-				failure => "InvalidValue";
-				phases => ("all");
-				description => "Invalid value from laser sensor";
-				comment => "The speed sensor sends invalid value. This should be then discovered and handled by the speed controller.";
-			])
-			applies to speed.invalidvalue;	
+			error propagations
+				picture: out propagation {NoValue};
+				flows
+					ef0: error source picture {NoValue};
+			end propagations;
 			
-		emv2::hazards => 
-			([	crossreference => "N/A";
-				failure => "NoValue";
-				phases => ("all");
-				description => "No speed from laser sensor";
-				comment => "The sensor does not sendn any speed, might be an error if all sensors does not send a consistent value";
-			])
-			applies to speed.novalue;
-**};
-end speed_laser_sensor;
+			properties
+				emv2::severity => ARP4761::Major applies to picture;
+				emv2::likelihood => ARP4761::Probable applies to picture;
+				emv2::hazards => ([crossreference => "N/A";
+						failure => "Novalue";
+						phases => ("all");
+						description => "No picture from the camera";
+						comment => "Would impact the detection of obstacle if the radar is not working as well";
+					]) applies to picture.novalue;
+		**};
+	end camera;
 
-------------------
---  GPS device  --
------------------- 
-
-device gps
-features
-	position : out data port speed_regulation::icd::gps_position;
-flows
-	f0 : flow source position;
-annex EMV2 {**
-	use types speed_regulation::error_library;
-
-	error propagations
-		position : out propagation {NoValue,InvalidValue};
-	flows
-		ef0 : error source position{NoValue,InvalidValue};
-	end propagations;
-
-	properties
-		emv2::severity => ARP4761::Major applies to position;
-		emv2::likelihood => ARP4761::Probable applies to position;			
-		emv2::OccurrenceDistribution => [ ProbabilityValue => 3.4e-5 ; Distribution => Fixed;] applies to position.invalidvalue;
+	device radar
+		features
+			distance_estimate: out data port speed_regulation::icd::distance;
+		flows
+			f0: flow source distance_estimate;
+		properties
+			Period => 10ms;
+			compute_execution_time => 6ms .. 8ms;
+		annex EMV2 {**
+			use types speed_regulation::error_library;
 			
-**};
-end gps;
-
-device implementation gps.impl1
-properties
-	Period => 6ms;
-annex EMV2 {**
-	use types speed_regulation::error_library;
-
-	error propagations
-		position : out propagation {NoValue,InvalidValue};
-	flows
-		ef0 : error source position{novalue};
-		ef1 : error source position{invalidValue};
-	end propagations;
-
-	properties
-		emv2::severity => ARP4761::Major applies to position;
-		emv2::likelihood => ARP4761::Probable applies to position;
-		emv2::hazards => 
-			([	crossreference => "N/A";
-				failure => "Novalue";
-				phases => ("all");
-				description => "No value from the gps from vendor1";
-				comment => "No value from the GPS, may then be an issue if the voter has no position from all gps";
-			])
-			applies to position.novalue;
-		emv2::hazards => 
-			([	crossreference => "N/A";
-				failure => "InvalidValue";
-				phases => ("all");
-				description => "Invalid value from the gps";
-				comment => "Invalid value from the GPS that can then trigger issue in the position voter";
-			])
-			applies to position.invalidvalue;
+			error propagations
+				distance_estimate: out propagation {NoValue, InvalidValue};
+				flows
+					ef0: error source distance_estimate {NoValue, InvalidValue};
+			end propagations;
 			
-		emv2::OccurrenceDistribution => [ ProbabilityValue => 3.4e-5 ; Distribution => Fixed;] applies to position.invalidvalue;
+			properties
+				emv2::severity => ARP4761::Major applies to distance_estimate.novalue;
+				emv2::likelihood => ARP4761::Probable applies to distance_estimate.novalue;
+				emv2::hazards => ([crossreference => "N/A";
+						failure => "NoValue";
+						phases => ("all");
+						description => "No information from the Radar";
+						comment => "Error if both the camera and the radar does not send any value";
+					]) applies to distance_estimate.novalue;
 			
-**};
-end gps.impl1;
+				emv2::severity => ARP4761::Minor applies to distance_estimate.invalidvalue;
+				emv2::likelihood => ARP4761::Probable applies to distance_estimate.invalidvalue;
+				emv2::hazards => ([crossreference => "N/A";
+						failure => "InvalidValue";
+						phases => ("all");
+						description => "Invalid distance sent by the radar";
+						comment => "First occurrences of invalid data Should be handled by the distance estimator.";
+					]) applies to distance_estimate.invalidvalue;
+		**};
+	end radar;
 
-device implementation gps.impl2
-properties
-	Period => 9ms;
-annex EMV2 {**
-	use types speed_regulation::error_library;
-
-	error propagations
-		position : out propagation {NoValue,InvalidValue};
-	flows
-		ef0 : error source position{noValue};
-		ef1 : error source position{invalidValue};
-	end propagations;
-
-	properties
-		emv2::severity => ARP4761::Major applies to position;
-		emv2::likelihood => ARP4761::Probable applies to position;
-		emv2::hazards => 
-			([	crossreference => "N/A";
-				failure => "Novalue";
-				phases => ("all");
-				description => "No value from the gps from vendor2";
-				comment => "No value from the GPS, may then be an issue if the voter has no position from all gps";
-			])
-			applies to position.novalue;
-		emv2::hazards => 
-			([	crossreference => "N/A";
-				failure => "InvalidValue";
-				phases => ("all");
-				description => "Invalid value from the gps from vendor2";
-				comment => "Invalid value from the GPS that can then trigger issue in the position voter";
-			])
-			applies to position.invalidvalue;
+	---------------------
+	--  Speed Sensors  --
+	---------------------
+	device speed_sensor
+		features
+			speed: out data port speed_regulation::icd::speed;
+		flows
+			f0: flow source speed;
+		annex EMV2 {**
+			use types speed_regulation::error_library;
 			
-		emv2::OccurrenceDistribution => [ ProbabilityValue => 3.4e-5 ; Distribution => Fixed;] applies to position.invalidvalue;	
-**};
-end gps.impl2;
+			error propagations
+				speed: out propagation {NoValue, InvalidValue};
+				flows
+					ef0: error source speed {NoValue, InvalidValue};
+			end propagations;
+			
+			properties
+				emv2::severity => ARP4761::Major applies to speed.invalidvalue;
+				emv2::likelihood => ARP4761::Probable applies to speed.invalidvalue;
+				emv2::severity => ARP4761::Major applies to speed.novalue;
+				emv2::likelihood => ARP4761::Probable applies to speed.novalue;
+		**};
+	end speed_sensor;
 
-----------------------
---  Warning Device  --
-----------------------
+	device speed_wheel_sensor extends speed_sensor
+		properties
+			Period => 10ms;
+			compute_execution_time => 6ms .. 9ms;
+		annex EMV2 {**
+			properties
+				emv2::hazards => ([crossreference => "N/A";
+						failure => "InvalidValue";
+						phases => ("all");
+						description => "Invalid value from wheel sensor";
+						comment => "The speed sensor sends invalid value. This should be then discovered and handled by the speed controller.";
+					]) applies to speed.invalidvalue;
+			
+				emv2::hazards => ([crossreference => "N/A";
+						failure => "NoValue";
+						phases => ("all");
+						description => "No speed from wheel sensor";
+						comment => "The sensor does not sendn any speed, might be an error if all sensors does not send a consistent value";
+					]) applies to speed.novalue;
+		**};
+	end speed_wheel_sensor;
 
-device warning_device
-features
-	warning : in data port speed_regulation::icd::boolean;
-flows
-	f0 : flow sink warning;
-properties
-	Period => 500ms;
-	Deadline => 400ms;
-	Compute_Execution_Time => 20ms .. 50ms;
-annex EMV2 {**
-	use types 		speed_regulation::error_library;
-	use behavior  	speed_regulation::error_library::simple;
+	device speed_laser_sensor extends speed_sensor
+		properties
+			Period => 10ms;
+			compute_execution_time => 6ms .. 9ms;
+		annex EMV2 {**
+			properties
+				emv2::hazards => ([crossreference => "N/A";
+						failure => "InvalidValue";
+						phases => ("all");
+						description => "Invalid value from laser sensor";
+						comment => "The speed sensor sends invalid value. This should be then discovered and handled by the speed controller.";
+					]) applies to speed.invalidvalue;
+			
+				emv2::hazards => ([crossreference => "N/A";
+						failure => "NoValue";
+						phases => ("all");
+						description => "No speed from laser sensor";
+						comment => "The sensor does not sendn any speed, might be an error if all sensors does not send a consistent value";
+					]) applies to speed.novalue;
+		**};
+	end speed_laser_sensor;
 
-	error propagations
-		warning : in propagation {NoValue,InvalidValue};
-	flows
-		ef0 : error sink warning{NoValue,InvalidValue};
-	end propagations;
-	
-	component error behavior
-	events
-		Reset : recover event;
-	transitions
-		t0 : Operational -[warning{NoValue}]-> Failed;
-		t1 : Operational -[warning{InvalidValue}]-> Failed;
-		t2 : Failed -[Reset]-> Operational;
-	end component;
-**};
-end warning_device;
+	------------------
+	--  GPS device  --
+	------------------ 
+	device gps
+		features
+			position: out data port speed_regulation::icd::gps_position;
+		flows
+			f0: flow source position;
+		annex EMV2 {**
+			use types speed_regulation::error_library;
+			
+			error propagations
+				position: out propagation {NoValue, InvalidValue};
+				flows
+					ef0: error source position {NoValue, InvalidValue};
+			end propagations;
+			
+			properties
+				emv2::severity => ARP4761::Major applies to position;
+				emv2::likelihood => ARP4761::Probable applies to position;
+				emv2::OccurrenceDistribution => [ProbabilityValue => 3.4e-5;
+					Distribution => Fixed;] applies to position.invalidvalue;
+		**};
+	end gps;
 
--------------
---  Brake  --
--------------
+	device implementation gps.impl1
+		properties
+			Period => 6ms;
+		annex EMV2 {**
+			use types speed_regulation::error_library;
+			
+			error propagations
+				position: out propagation {NoValue, InvalidValue};
+				flows
+					ef0: error source position {novalue};
+					ef1: error source position {invalidValue};
+			end propagations;
+			
+			properties
+				emv2::severity => ARP4761::Major applies to position;
+				emv2::likelihood => ARP4761::Probable applies to position;
+				emv2::hazards => ([crossreference => "N/A";
+						failure => "Novalue";
+						phases => ("all");
+						description => "No value from the gps from vendor1";
+						comment => "No value from the GPS, may then be an issue if the voter has no position from all gps";
+					]) applies to position.novalue;
+				emv2::hazards => ([crossreference => "N/A";
+						failure => "InvalidValue";
+						phases => ("all");
+						description => "Invalid value from the gps";
+						comment => "Invalid value from the GPS that can then trigger issue in the position voter";
+					]) applies to position.invalidvalue;
+			
+				emv2::OccurrenceDistribution => [ProbabilityValue => 3.4e-5;
+					Distribution => Fixed;] applies to position.invalidvalue;
+		**};
+	end gps.impl1;
 
-device brake
-features
-	cmd : in data port speed_regulation::icd::speed_command.i;
-flows
-	f0 : flow sink cmd;
-properties
-	Period => 2ms;
-annex EMV2 {**
-	use types speed_regulation::error_library;
-	use behavior  	speed_regulation::error_library::simple;
+	device implementation gps.impl2
+		properties
+			Period => 9ms;
+		annex EMV2 {**
+			use types speed_regulation::error_library;
+			
+			error propagations
+				position: out propagation {NoValue, InvalidValue};
+				flows
+					ef0: error source position {noValue};
+					ef1: error source position {invalidValue};
+			end propagations;
+			
+			properties
+				emv2::severity => ARP4761::Major applies to position;
+				emv2::likelihood => ARP4761::Probable applies to position;
+				emv2::hazards => ([crossreference => "N/A";
+						failure => "Novalue";
+						phases => ("all");
+						description => "No value from the gps from vendor2";
+						comment => "No value from the GPS, may then be an issue if the voter has no position from all gps";
+					]) applies to position.novalue;
+				emv2::hazards => ([crossreference => "N/A";
+						failure => "InvalidValue";
+						phases => ("all");
+						description => "Invalid value from the gps from vendor2";
+						comment => "Invalid value from the GPS that can then trigger issue in the position voter";
+					]) applies to position.invalidvalue;
+			
+				emv2::OccurrenceDistribution => [ProbabilityValue => 3.4e-5;
+					Distribution => Fixed;] applies to position.invalidvalue;
+		**};
+	end gps.impl2;
 
-	error propagations
-		cmd : in propagation {NoValue,InvalidValue};
-	flows
-		ef0 : error sink cmd{NoValue,InvalidValue};
-	end propagations;
-	
-	component error behavior
-	events
-		Reset : recover event;
-	transitions
-		t0 : Operational -[cmd{NoValue}]-> Failed;
-		t1 : Operational -[cmd{InvalidValue}]-> Failed;
-		t2 : Failed -[Reset]-> Operational;
-	end component;
-**};
-end brake;
+    ----------------------
+	--  Warning Device  --
+	----------------------
+	device warning_device
+		features
+			warning: in data port speed_regulation::icd::boolean;
+		flows
+			f0: flow sink warning;
+		properties
+			Period => 500ms;
+			Deadline => 400ms;
+			Compute_Execution_Time => 20ms .. 50ms;
+		annex EMV2 {**
+			use types speed_regulation::error_library;
+			use behavior speed_regulation::error_library::simple;
+			
+			error propagations
+				warning: in propagation {NoValue, InvalidValue};
+				flows
+					ef0: error sink warning {NoValue, InvalidValue};
+			end propagations;
+			
+			component error behavior
+				events
+					Reset: recover event;
+				transitions
+					t0: Operational -[warning {NoValue}]-> Failed;
+					t1: Operational -[warning {InvalidValue}]-> Failed;
+					t2: Failed -[Reset]-> Operational;
+			end component;
+		**};
+	end warning_device;
 
-device acceleration
-features
-	cmd : in data port speed_regulation::icd::speed_command.i;
-flows
-	f0 : flow sink cmd;
-properties
-	Period => 2ms;
-annex EMV2 {**
-	use types speed_regulation::error_library;
-	use behavior  	speed_regulation::error_library::simple;
+    -------------
+	--  Brake  --
+	-------------
+	device brake
+		features
+			cmd: in data port speed_regulation::icd::speed_command.i;
+		flows
+			f0: flow sink cmd;
+		properties
+			Period => 2ms;
+		annex EMV2 {**
+			use types speed_regulation::error_library;
+			use behavior speed_regulation::error_library::simple;
+			
+			error propagations
+				cmd: in propagation {NoValue, InvalidValue};
+				flows
+					ef0: error sink cmd {NoValue, InvalidValue};
+			end propagations;
+			
+			component error behavior
+				events
+					Reset: recover event;
+				transitions
+					t0: Operational -[cmd {NoValue}]-> Failed;
+					t1: Operational -[cmd {InvalidValue}]-> Failed;
+					t2: Failed -[Reset]-> Operational;
+			end component;
+		**};
+	end brake;
 
-	error propagations
-		cmd : in propagation {NoValue,InvalidValue};
-	flows
-		ef0 : error sink cmd{NoValue,InvalidValue};
-	end propagations;
-	
-	
-	component error behavior
-	events
-		Reset : recover event;
-	transitions
-		t0 : Operational -[cmd{NoValue}]-> Failed;
-		t1 : Operational -[cmd{InvalidValue}]-> Failed;
-		t2 : Failed -[Reset]-> Operational;
-	end component;
-**};
-end acceleration;
+	device acceleration
+		features
+			cmd: in data port speed_regulation::icd::speed_command.i;
+		flows
+			f0: flow sink cmd;
+		properties
+			Period => 2ms;
+		annex EMV2 {**
+			use types speed_regulation::error_library;
+			use behavior speed_regulation::error_library::simple;
+			
+			error propagations
+				cmd: in propagation {NoValue, InvalidValue};
+				flows
+					ef0: error sink cmd {NoValue, InvalidValue};
+			end propagations;
+			
+			component error behavior
+				events
+					Reset: recover event;
+				transitions
+					t0: Operational -[cmd {NoValue}]-> Failed;
+					t1: Operational -[cmd {InvalidValue}]-> Failed;
+					t2: Failed -[Reset]-> Operational;
+			end component;
+		**};
+	end acceleration;
 
 end speed_regulation::devices;
