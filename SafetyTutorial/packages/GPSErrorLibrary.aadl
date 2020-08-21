@@ -2,42 +2,44 @@ package GPSErrorLibrary
 public
 	annex EMV2 {**
 		error types
-		use types ErrorLibrary;
-		SensorFailure: type;
-		CPUFailure: type;
-		PowerSupplyFailure: type;
-		NetworkFailure: type;
-		-- low precision when GPS operates with one sensor only
-		LowPrecisionData: type;
-		-- incorrect data if there is a computing error in the algorithm
-		IncorrectData: type;
-		NoSignal: type;
-		LowSignal: type;
-		ObservableErrorTypes: type set {ServiceOmission, LowPrecisionData,IncorrectData};
+			use types ErrorLibrary;
+			SensorFailure: type;
+			CPUFailure: type;
+			PowerSupplyFailure: type;
+			NetworkFailure: type;
+			-- low precision when GPS operates with one sensor only
+			LowPrecisionData: type;
+			-- incorrect data if there is a computing error in the algorithm
+			IncorrectData: type;
+			NoSignal: type;
+			LowSignal: type;
+			ObservableErrorTypes: type set {ServiceOmission, LowPrecisionData, IncorrectData};
 		end types;
--- state machine for simple FailStop behavior
-error behavior FailStopState
-states
-	Operational : initial state ;
-	FailStop : state ;
-end behavior ;
-error behavior GPSProcessingFailed
-states
-	Operational : initial state ;
-	NoService : state ;
-	LowPrecision : state ;
-	Incorrect : state ;
-end behavior ;
-
-error behavior FailStopTransient
-events
-	Failure: error event;
-states
-	Operational : initial state ;
-	FailStop : state ;
-	transitions
-	-- sensor failure may be transient. We assume a 20% persistent sesnor failure rate.
-		FailureTransition: Operational -[Failure]-> (FailStop with 0.2, Operational with 0.8);
-end behavior ;
+		
+		-- state machine for simple FailStop behavior
+		error behavior FailStopState
+			states
+				Operational: initial state;
+				FailStop: state;
+		end behavior;
+		
+		error behavior GPSProcessingFailed
+			states
+				Operational: initial state;
+				NoService: state;
+				LowPrecision: state;
+				Incorrect: state;
+		end behavior;
+		
+		error behavior FailStopTransient
+			events
+				Failure: error event;
+			states
+				Operational: initial state;
+				FailStop: state;
+			transitions
+				-- sensor failure may be transient. We assume a 20% persistent sesnor failure rate.
+				FailureTransition: Operational -[Failure]-> (FailStop with 0.2, Operational with 0.8);
+		end behavior;
 	**};
 end GPSErrorLibrary;

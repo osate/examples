@@ -1,63 +1,59 @@
 package FlightSystem
 public
 	with GPSSystem, AutomatedFlightGuidance;
-with FlightControl, EMV2;
+	with FlightControl, EMV2;
 	with GPSParts, HardwareParts;
 
 	-- The flight system provides an operational context for the GPS example.
 	-- It has a safety requirement that leads to a particular reliability value.
 	-- From this we derive the expected reliability of the GPS.
 	-- If the design of the GPS cannot achieve this value, we consider a design with two GPS instances and a GPSvoter.
-
 	-- The flight system is used as the root for hazard analysis. 
 	-- Three subsystems have been identified as hazard sources, one of them the GPS.
 	-- The FHA can be run on the tier1 implementation.
-	
 	-- The flight system is also used as the root for fault impact analysis (aka. FMEA).
 	-- This analysis can be run on both the tier1 and tier2 implementation.
 	-- The report presents the impact of error sources within the flight system as well as external sources (pilot input)
-	
 	-- Finally the flight system is used for fault tree analysis using the observable failure of the flight system as starting point.
 	-- We can also select Flight Control, the last subsystem in the control flow of the flight system as starting point of an FTA.
-	
 	system FlightSystem
-	features
-	satelliteSignal: in feature;	
-	pilotInput: in data port;
-	ObservableFailure: out feature;
-	annex EMV2 {**
-		use types ErrorLibrary, AFGErrorLibrary,GPSErrorLibrary;
-		use behavior GPSErrorLibrary::FailStopState;
-		error propagations
-		satelliteSignal: in propagation {NoSignal, LowSignal};
-		pilotInput: in propagation {NoPilotInput, ErraticPilotInput};
-		ObservableFailure: out propagation {ServiceOmission, ErraticBehavior};
-		flows
-			NoFlightSystem: error source ObservableFailure{ServiceOmission} when {FlightSystemfailure};
-			ErraticFlightSystem: error source ObservableFailure{ErraticBehavior};
-			ErraticPilot: error path pilotInput{ErraticPilotInput} -> ObservableFailure{ErraticBehavior};
-			NoPilot: error path pilotInput{NoPilotInput} -> ObservableFailure{ServiceOmission};
-			SatelliteError: error path satelliteSignal{NoSignal} -> ObservableFailure{ServiceOmission}; 
-		end propagations;
-		properties
-			-- requirement that flight system should not fail to provide service 
-			emv2::OccurrenceDistribution => [ ProbabilityValue => 8.0e-7 ; Distribution => Poisson;] 
-			applies to ObservableFailure.ServiceOmission, FailStop;
-			-- a requirement that GPS should only operate erratically
-			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.0e-7 ; Distribution => Poisson;] 
-			applies to ObservableFailure.ErraticBehavior;
-			-- assumed probability of pilot error
-			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.0e-7 ; Distribution => Poisson;] 
-			applies to pilotInput.NoPilotInput;
-			emv2::OccurrenceDistribution => [ ProbabilityValue => 7.0e-7 ; Distribution => Poisson;] 
-			applies to pilotInput.ErraticPilotInput;
-			-- assumed satellite signal error probability
-			emv2::OccurrenceDistribution => [ ProbabilityValue => 2.0e-7 ; Distribution => Poisson;] 
-			applies to satelliteSignal.NoSignal;
-	**};
+		features
+			satelliteSignal: in feature;
+			pilotInput: in data port;
+			ObservableFailure: out feature;
+		annex EMV2 {**
+			use types ErrorLibrary, AFGErrorLibrary, GPSErrorLibrary;
+			use behavior GPSErrorLibrary::FailStopState;
+			
+			error propagations
+				satelliteSignal: in propagation {NoSignal, LowSignal};
+				pilotInput: in propagation {NoPilotInput, ErraticPilotInput};
+				ObservableFailure: out propagation {ServiceOmission, ErraticBehavior};
+				flows
+					NoFlightSystem: error source ObservableFailure {ServiceOmission} when {FlightSystemfailure};
+					ErraticFlightSystem: error source ObservableFailure {ErraticBehavior};
+					ErraticPilot: error path pilotInput {ErraticPilotInput} -> ObservableFailure {ErraticBehavior};
+					NoPilot: error path pilotInput {NoPilotInput} -> ObservableFailure {ServiceOmission};
+					SatelliteError: error path satelliteSignal {NoSignal} -> ObservableFailure {ServiceOmission};
+			end propagations;
+			
+			properties
+				-- requirement that flight system should not fail to provide service 
+				emv2::OccurrenceDistribution => [ProbabilityValue => 8.0e-7;
+					Distribution => Poisson;] applies to ObservableFailure.ServiceOmission, FailStop;
+				-- a requirement that GPS should only operate erratically
+				emv2::OccurrenceDistribution => [ProbabilityValue => 2.0e-7;
+					Distribution => Poisson;] applies to ObservableFailure.ErraticBehavior;
+				-- assumed probability of pilot error
+				emv2::OccurrenceDistribution => [ProbabilityValue => 2.0e-7;
+					Distribution => Poisson;] applies to pilotInput.NoPilotInput;
+				emv2::OccurrenceDistribution => [ProbabilityValue => 7.0e-7;
+					Distribution => Poisson;] applies to pilotInput.ErraticPilotInput;
+				-- assumed satellite signal error probability
+				emv2::OccurrenceDistribution => [ProbabilityValue => 2.0e-7;
+					Distribution => Poisson;] applies to satelliteSignal.NoSignal;
+		**};
 	end FlightSystem;
-	
-
 
 	-- The tier1 configuration utilizes component specifications (types) only
 	-- It relies on the EMV2 information in the type, which represents an abstraction of the implementation fault model
@@ -65,11 +61,11 @@ with FlightControl, EMV2;
 	-- based on specified failure occurrences of the subsystems.
 	-- This leads to the (derived) requirement of GPS achieving the specified probability.
 	system implementation FlightSystem.tier1parts
-	subcomponents
-		GPS: system GPSSystem::GPS;
-		AutoFlightGuidance: system AutomatedFlightGuidance::AutomatedFlightGuidance;
-		FlightControl: system FlightControl::FlightControl;
-		FSpowersupply: device HardwareParts::PowerSupply;
+		subcomponents
+			GPS: system GPSSystem::GPS;
+			AutoFlightGuidance: system AutomatedFlightGuidance::AutomatedFlightGuidance;
+			FlightControl: system FlightControl::FlightControl;
+			FSpowersupply: device HardwareParts::PowerSupply;
 --	annex EMV2 {**
 --		use types ErrorLibrary,GPSErrorLibrary;
 --		use behavior GPSErrorLibrary::FailStopState;
@@ -82,105 +78,107 @@ with FlightControl, EMV2;
 --		end composite;
 --	**};
 	end FlightSystem.tier1parts;
-	
+
 	system implementation FlightSystem.tier1 extends FlightSystem.tier1parts
-	connections
-		satellite: feature satelliteSignal -> GPS.satelliteSignal;
-		gpstoafg: port GPS.location -> AutoFlightGuidance.position;
-		afgtofc: port AutoFlightGuidance.AFGOutput -> FlightControl.guidanceCommands;
-		PilottoAfg: port pilotInput -> AutoFlightGuidance.operatorCommand;
-		FlightControlEffect: feature FlightControl.flightSurfaceControl -> ObservableFailure;
-		power1: feature FSpowersupply.power -> AutoFlightGuidance.powersupply;
-		power2: feature FSpowersupply.power -> FlightControl.powersupply;
-	annex EMV2 {**
-		use types ErrorLibrary,GPSErrorLibrary;
-		use behavior GPSErrorLibrary::FailStopState;
-		component error behavior
-		-- flight control service represents the service of the flight system
-		-- we map its output (physical control of flight surface) to the observable point
-		-- at the flight system level. 
-		propagations
-		FTAObservableFailureStart: all-[FlightControl.flightSurfaceControl{ServiceOmission}]-> ObservableFailure{ServiceOmission};
-		end component;
-		composite error behavior
-		-- flight system failure in terms of its part failure modes 
-		states
-		[1 ormore(GPS.FailStop , AutoFlightGuidance.CriticalModeFailure 
-			, FlightControl.FailStop, FSpowersupply.FailStop )
-		]-> FailStop;
-		end composite;
-	**};
+		connections
+			satellite: feature satelliteSignal -> GPS.satelliteSignal;
+			gpstoafg: port GPS.location -> AutoFlightGuidance.position;
+			afgtofc: port AutoFlightGuidance.AFGOutput -> FlightControl.guidanceCommands;
+			PilottoAfg: port pilotInput -> AutoFlightGuidance.operatorCommand;
+			FlightControlEffect: feature FlightControl.flightSurfaceControl -> ObservableFailure;
+			power1: feature FSpowersupply.power -> AutoFlightGuidance.powersupply;
+			power2: feature FSpowersupply.power -> FlightControl.powersupply;
+		annex EMV2 {**
+			use types ErrorLibrary, GPSErrorLibrary;
+			use behavior GPSErrorLibrary::FailStopState;
+			
+			component error behavior
+				-- flight control service represents the service of the flight system
+				-- we map its output (physical control of flight surface) to the observable point
+				-- at the flight system level. 
+				propagations
+					FTAObservableFailureStart: all -[FlightControl.flightSurfaceControl {ServiceOmission}]-> ObservableFailure {ServiceOmission};
+			end component;
+			
+			composite error behavior
+				-- flight system failure in terms of its part failure modes 
+				states
+					[1 ormore (GPS.FailStop, AutoFlightGuidance.CriticalModeFailure, FlightControl.FailStop,
+						FSpowersupply.FailStop)]-> FailStop;
+			end composite;
+		**};
 	end FlightSystem.tier1;
 
 	system implementation FlightSystem.tier2CEBound extends FlightSystem.tier1
-	subcomponents
-		GPS: refined to system GPSSystem::GPS.CEBound;
-		AutoFlightGuidance: refined to system AutomatedFlightGuidance::AutomatedFlightGuidance.functional;
+		subcomponents
+			GPS: refined to system GPSSystem::GPS.CEBound;
+			AutoFlightGuidance: refined to system AutomatedFlightGuidance::AutomatedFlightGuidance.functional;
 	end FlightSystem.tier2CEBound;
+
 	system implementation FlightSystem.tier2CE extends FlightSystem.tier1
-	subcomponents
-		GPS: refined to system GPSSystem::GPS.computeerror;
-		AutoFlightGuidance: refined to system AutomatedFlightGuidance::AutomatedFlightGuidance.functional;
+		subcomponents
+			GPS: refined to system GPSSystem::GPS.computeerror;
+			AutoFlightGuidance: refined to system AutomatedFlightGuidance::AutomatedFlightGuidance.functional;
 	end FlightSystem.tier2CE;
 
-
 	system implementation FlightSystem.DualGPS
-	subcomponents
-		GPS1: system GPSSystem::GPS;--.CEBound;
-		GPS2: system GPSSystem::GPS;--.CEBound;
-		voter: abstract GPSParts::GPSVoter; 
-		AutoFlightGuidance: system AutomatedFlightGuidance::AutomatedFlightGuidance;--.functional;
-		FlightControl: system FlightControl::FlightControl;
-		FSpowersupply: device HardwareParts::PowerSupply;
-	connections
-		satellite1: feature satelliteSignal -> GPS1.satelliteSignal;
-		satellite2: feature satelliteSignal -> GPS2.satelliteSignal;
-		gps1tovoter: port GPS1.location -> voter.inLocation1;
-		gps2tovoter: port GPS2.location -> voter.inLocation2;
-		votertoafg: port voter.outLocation -> autoFlightGuidance.position;
-		afgtofc: port autoFlightGuidance.AFGOutput -> flightControl.guidanceCommands;
-		pilottoafg: port pilotInput -> autoFlightGuidance.operatorCommand;
-		FlightControlEffect: feature FlightControl.flightSurfaceControl -> ObservableFailure;
-		power1: feature FSpowersupply.power -> AutoFlightGuidance.powersupply;
-		power2: feature FSpowersupply.power -> FlightControl.powersupply;
-	annex EMV2 {**
-		use types ErrorLibrary;
-		component error behavior
-		-- flight control service represents the service of the flight system
-		-- we map its output (physical control of flight surface) to the observable point
-		-- at the flight system level. 
-		propagations
-		FTAObservableFailureStart: all-[flightControl.flightSurfaceControl{ServiceOmission}]-> ObservableFailure;
-		end component;
-	**};
+		subcomponents
+			GPS1: system GPSSystem::GPS; --.CEBound;
+			GPS2: system GPSSystem::GPS; --.CEBound;
+			voter: abstract GPSParts::GPSVoter;
+			AutoFlightGuidance: system AutomatedFlightGuidance::AutomatedFlightGuidance; --.functional;
+			FlightControl: system FlightControl::FlightControl;
+			FSpowersupply: device HardwareParts::PowerSupply;
+		connections
+			satellite1: feature satelliteSignal -> GPS1.satelliteSignal;
+			satellite2: feature satelliteSignal -> GPS2.satelliteSignal;
+			gps1tovoter: port GPS1.location -> voter.inLocation1;
+			gps2tovoter: port GPS2.location -> voter.inLocation2;
+			votertoafg: port voter.outLocation -> autoFlightGuidance.position;
+			afgtofc: port autoFlightGuidance.AFGOutput -> flightControl.guidanceCommands;
+			pilottoafg: port pilotInput -> autoFlightGuidance.operatorCommand;
+			FlightControlEffect: feature FlightControl.flightSurfaceControl -> ObservableFailure;
+			power1: feature FSpowersupply.power -> AutoFlightGuidance.powersupply;
+			power2: feature FSpowersupply.power -> FlightControl.powersupply;
+		annex EMV2 {**
+			use types ErrorLibrary;
+			
+			component error behavior
+				-- flight control service represents the service of the flight system
+				-- we map its output (physical control of flight surface) to the observable point
+				-- at the flight system level. 
+				propagations
+					FTAObservableFailureStart: all -[flightControl.flightSurfaceControl {ServiceOmission}]-> ObservableFailure;
+			end component;
+		**};
 	end FlightSystem.DualGPS;
-	
-		system implementation FlightSystem.DualGPSImpl extends FlightSystem.DualGPS
-	subcomponents
-		GPS1: refined to system GPSSystem::GPS.CEBound;
-		GPS2: refined to system GPSSystem::GPS.CEBound;
+
+	system implementation FlightSystem.DualGPSImpl extends FlightSystem.DualGPS
+		subcomponents
+			GPS1: refined to system GPSSystem::GPS.CEBound;
+			GPS2: refined to system GPSSystem::GPS.CEBound;
 	end FlightSystem.DualGPSImpl;
-	
+
 	system implementation FlightSystem.PartsSingleSensorGPS extends FlightSystem.tier1parts
-	subcomponents
-		GPS: refined to system GPSSystem::GPS.parts_SingleSensor;
+		subcomponents
+			GPS: refined to system GPSSystem::GPS.parts_SingleSensor;
 	end FlightSystem.PartsSingleSensorGPS;
-	
+
 	system implementation FlightSystem.SingleSensorGPS extends FlightSystem.tier1
-	subcomponents
-		GPS: refined to system GPSSystem::GPS.parts_SingleSensor;
+		subcomponents
+			GPS: refined to system GPSSystem::GPS.parts_SingleSensor;
 	end FlightSystem.SingleSensorGPS;
-	
+
 	system implementation FlightSystem.PartsTwoSensorGPS extends FlightSystem.tier1parts
-	subcomponents
-		GPS: refined to system GPSSystem::GPS.parts_TwoSensor;
+		subcomponents
+			GPS: refined to system GPSSystem::GPS.parts_TwoSensor;
 	end FlightSystem.PartsTwoSensorGPS;
-	
+
 	system implementation FlightSystem.TwoSensorGPS extends FlightSystem.tier1
-	subcomponents
-		GPS: refined to system GPSSystem::GPS.BasicRedundancy;
+		subcomponents
+			GPS: refined to system GPSSystem::GPS.BasicRedundancy;
 	end FlightSystem.TwoSensorGPS;
-	
+
 	system implementation FlightSystem.TwoSensorGPSState extends FlightSystem.tier1
 		subcomponents
 			GPS: refined to system GPSSystem::GPS.BasicState;
@@ -188,25 +186,24 @@ with FlightControl, EMV2;
 
 	-- parts model to evaluate occurrence probability early in process (similar to RBD) with redundancy logic expressed by composite state declaration
 	system implementation FlightSystem.DualGPSSingleSensor
-	subcomponents
-		GPS1: system GPSSystem::GPS.parts_SingleSensor;
-		GPS2: system GPSSystem::GPS.parts_SingleSensor;
-		voter: abstract GPSParts::GPSVoter; 
-		AutoFlightGuidance: system AutomatedFlightGuidance::AutomatedFlightGuidance;
-		FlightControl: system FlightControl::FlightControl;
-		FSpowersupply: device HardwareParts::PowerSupply;
-	annex EMV2 {**
-		use behavior GPSErrorLibrary::FailStopState;
-		composite error behavior
-		-- flight system failure in terms of its part failure modes 
-		-- In this case we have redundant GPS instances
-		states
-		[1 ormore(GPS1.FailStop and GPS2.FailStop, voter.FailStop ,AutoFlightGuidance.CriticalModeFailure 
-			, FlightControl.FailStop, FSPowerSupply.FailStop )
-		]-> FailStop;
-		end composite;
-	**};
+		subcomponents
+			GPS1: system GPSSystem::GPS.parts_SingleSensor;
+			GPS2: system GPSSystem::GPS.parts_SingleSensor;
+			voter: abstract GPSParts::GPSVoter;
+			AutoFlightGuidance: system AutomatedFlightGuidance::AutomatedFlightGuidance;
+			FlightControl: system FlightControl::FlightControl;
+			FSpowersupply: device HardwareParts::PowerSupply;
+		annex EMV2 {**
+			use behavior GPSErrorLibrary::FailStopState;
+			
+			composite error behavior
+				-- flight system failure in terms of its part failure modes 
+				-- In this case we have redundant GPS instances
+				states
+					[1 ormore (GPS1.FailStop and GPS2.FailStop, voter.FailStop, AutoFlightGuidance.CriticalModeFailure,
+						FlightControl.FailStop, FSPowerSupply.FailStop)]-> FailStop;
+			end composite;
+		**};
 	end FlightSystem.DualGPSSingleSensor;
-
 
 end FlightSystem;

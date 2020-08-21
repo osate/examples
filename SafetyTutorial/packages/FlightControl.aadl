@@ -1,42 +1,41 @@
 package FlightControl
 public
-with EMV2;
+	with EMV2;
 
 -- flight control is te system that manipulates the flight surface
-system FlightControl
-features
-guidanceCommands: in data port;
-flightSurfaceControl: out data port;
-powersupply : in feature ;
-annex emv2 {**
-	use types AFGErrorLibrary;
-	use behavior GPSErrorLibrary::FailStopState;
- 	error propagations
-	flightSurfaceControl: out propagation {NoService,ErraticBehavior};
-	guidanceCommands: in propagation {NoService,ErraticValue};
-	powersupply: in propagation {NoService};
-	flows
-	fces: error source flightSurfaceControl{NoService} if "SourcePeterCondition";
-	fgtofcNo: error path guidanceCommands{NoService} -> flightSurfaceControl{NoService};
-	fgtofcErratic: error path guidanceCommands{ErraticValue} -> flightSurfaceControl{ErraticBehavior};
-	epPower: error path powersupply{NoService} -> flightSurfaceControl{NoService};
-	end propagations;
-	
-	properties
-	EMV2::hazards => 
-	([	crossreference => "1.1.2";
-		failure => "Loss of flight control";
-		phases => ("all");
-		severity => ARP4761::Hazardous;
-		likelihood => ARP4761::Remote;
-		description => "Loss of flight control leads to non-operational flight surface";
-		comment => "Becomes critical hazard.";
-			])
-			applies to fces;
-	-- Here we express the failure rate of the flight control unit itself through the eror source. 
-	-- Same probability of being in FailStop state
-	emv2::OccurrenceDistribution => [ ProbabilityValue => 0.7e-9 ; Distribution => Poisson;] applies to fces, FailStop;
-	**};
-end FlightControl;
+	system FlightControl
+		features
+			guidanceCommands: in data port;
+			flightSurfaceControl: out data port;
+			powersupply: in feature;
+		annex emv2 {**
+			use types AFGErrorLibrary;
+			use behavior GPSErrorLibrary::FailStopState;
+			
+			error propagations
+				flightSurfaceControl: out propagation {NoService, ErraticBehavior};
+				guidanceCommands: in propagation {NoService, ErraticValue};
+				powersupply: in propagation {NoService};
+				flows
+					fces: error source flightSurfaceControl {NoService} if "SourcePeterCondition";
+					fgtofcNo: error path guidanceCommands {NoService} -> flightSurfaceControl {NoService};
+					fgtofcErratic: error path guidanceCommands {ErraticValue} -> flightSurfaceControl {ErraticBehavior};
+					epPower: error path powersupply {NoService} -> flightSurfaceControl {NoService};
+			end propagations;
+			
+			properties
+				EMV2::hazards => ([crossreference => "1.1.2";
+						failure => "Loss of flight control";
+						phases => ("all");
+						severity => ARP4761::Hazardous;
+						likelihood => ARP4761::Remote;
+						description => "Loss of flight control leads to non-operational flight surface";
+						comment => "Becomes critical hazard.";
+					]) applies to fces;
+				-- Here we express the failure rate of the flight control unit itself through the eror source. 
+				-- Same probability of being in FailStop state
+				emv2::OccurrenceDistribution => [ProbabilityValue => 0.7e-9; Distribution => Poisson;] applies to fces, FailStop;
+		**};
+	end FlightControl;
 
 end FlightControl;

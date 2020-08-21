@@ -1,7 +1,6 @@
 package HardwareParts
 public
 	with EMV2;
-
 	with SEI;
 
 	-- The CPU uses an error behavior state machine without explicit error events and transitions.
@@ -24,13 +23,13 @@ public
 				powersource: in propagation {ServiceOmission};
 				networkaccess: in propagation {ServiceOmission};
 				networkaccess: out propagation {ServiceOmission};
-			flows
-				cpu_es1: error source bindings {ServiceOmission, ValueError} when {CPUFailure};
+				flows
+					cpu_es1: error source bindings {ServiceOmission, ValueError} when {CPUFailure};
 			end propagations;
 			
 			component error behavior
-			propagations
-				FailStop -[]-> bindings {ServiceOmission};
+				propagations
+					FailStop -[]-> bindings {ServiceOmission};
 			end component;
 			
 			properties
@@ -41,10 +40,10 @@ public
 		**};
 	end CPU;
 
-		-- Here we specify the occurrence probability on the error source for flow based analysis
-		-- and on the state for composite state analysis.
-		-- We should be able to specify when FailStop as the error source condition and 
-		-- the analysis should pick up the probability from this identified state.
+	-- Here we specify the occurrence probability on the error source for flow based analysis
+	-- and on the state for composite state analysis.
+	-- We should be able to specify when FailStop as the error source condition and 
+	-- the analysis should pick up the probability from this identified state.
 	bus Network
 		features
 			power: in feature;
@@ -60,11 +59,11 @@ public
 				power: in propagation {ServiceOmission};
 				access: in propagation {ServiceOmission};
 				access: out propagation {ServiceOmission};
-			flows
-				cpu_es: error path access {ServiceOmission} -> bindings {ServiceOmission};
-				power_es: error path power {ServiceOmission} -> bindings {ServiceOmission};
-				network_binding_es: error source bindings {ServiceOmission} when {NetworkFailure};
-				network_access_es: error source access {ServiceOmission} when {NetworkFailure};
+				flows
+					cpu_es: error path access {ServiceOmission} -> bindings {ServiceOmission};
+					power_es: error path power {ServiceOmission} -> bindings {ServiceOmission};
+					network_binding_es: error source bindings {ServiceOmission} when {NetworkFailure};
+					network_access_es: error source access {ServiceOmission} when {NetworkFailure};
 			end propagations;
 			
 			properties
@@ -76,8 +75,8 @@ public
 		**};
 	end Network;
 
-		-- Here we have the occurrence probability on the state and on the error event.
-		-- The flow based analysis picks up the error event, while the composite state analysis the state value.
+	-- Here we have the occurrence probability on the state and on the error event.
+	-- The flow based analysis picks up the error event, while the composite state analysis the state value.
 	device PowerSupply
 		features
 			power: out feature;
@@ -87,17 +86,17 @@ public
 			
 			error propagations
 				power: out propagation {ServiceOmission};
-			flows
-				power_es: error source power {ServiceOmission};
+				flows
+					power_es: error source power {ServiceOmission};
 			end propagations;
 			
 			component error behavior
-			events
-				PowerFailure: error event;
-			transitions
-				Operational -[PowerFailure]-> FailStop;
-			propagations
-				FailStop -[]-> power {ServiceOmission};
+				events
+					PowerFailure: error event;
+				transitions
+					Operational -[PowerFailure]-> FailStop;
+				propagations
+					FailStop -[]-> power {ServiceOmission};
 			end component;
 			
 			properties
@@ -106,8 +105,8 @@ public
 		**};
 	end PowerSupply;
 
-		-- represents electrical power
+	-- represents electrical power
 	abstract ElectricalPower
 	end ElectricalPower;
-	
+
 end HardwareParts;
