@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="ASCII"?>
+<diagram:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:diagram="http://osate.org/diagram" formatVersion="7">
+  <element uuid="ac396f9d-3c71-41f9-bbdb-eeffb51bc192" manual="true">
+    <element uuid="3523c9fc-adcc-4a0d-9841-12db9e2bbb47" manual="true">
+      <element uuid="da47baf0-60af-437a-a0e7-7cdc660a18e8" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>afgtofc</seg>
+      </bo>
+    </element>
+    <element uuid="47f57bf4-605d-4423-b566-89bf488c5dc4" manual="true">
+      <element uuid="5349e34f-d9a4-4630-8607-2f65150bc978" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>flightcontroleffect</seg>
+      </bo>
+    </element>
+    <element uuid="1065a470-f304-4bb2-bdf7-75a1dcc5a035" manual="true">
+      <element uuid="beb9d7a7-18d4-41f4-8ae8-05372daea846" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>gpstoafg</seg>
+      </bo>
+    </element>
+    <element uuid="5fe0eea4-bdbf-45ac-bf0f-75a29b561e9b" manual="true">
+      <element uuid="4de3ae61-90bb-4899-a04d-7c071cd7c119" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>pilottoafg</seg>
+      </bo>
+      <bendpoints>
+        <point x="536.0" y="192.0"/>
+        <point x="536.0" y="195.0"/>
+      </bendpoints>
+    </element>
+    <element uuid="c455f0bf-834b-4939-8136-1a347bc59a5d" manual="true">
+      <element uuid="2bc155c2-512c-4de9-98fa-2be88be0a904" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>power1</seg>
+      </bo>
+      <bendpoints>
+        <point x="536.0" y="92.0"/>
+        <point x="536.0" y="145.0"/>
+      </bendpoints>
+    </element>
+    <element uuid="4df16f32-70df-42d6-a4f0-2cb456cb32ae" manual="true">
+      <element uuid="e26ae69d-3ba0-4045-90a8-f03597e5a0a3" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>power2</seg>
+      </bo>
+      <bendpoints>
+        <point x="1015.0" y="92.0"/>
+        <point x="1015.0" y="145.0"/>
+      </bendpoints>
+    </element>
+    <element uuid="3772db2d-06af-4130-b859-4addbb89cd94" manual="true">
+      <element uuid="2f989e4a-8e5f-452d-bea6-ec07919aa108" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>satellite</seg>
+      </bo>
+    </element>
+    <element uuid="63dd9d6c-93eb-41ff-9731-a29c16ca22c1" manual="true" dockArea="right">
+      <bo>
+        <seg>feature</seg>
+        <seg>observablefailure</seg>
+      </bo>
+      <position x="1475.0" y="126.0"/>
+    </element>
+    <element uuid="dc6c5a22-430e-48da-8cf4-5735669e1c31" manual="true" dockArea="left">
+      <bo>
+        <seg>feature</seg>
+        <seg>pilotinput</seg>
+      </bo>
+      <position y="148.0"/>
+    </element>
+    <element uuid="dec530fc-9049-4a0e-b115-aec258183396" manual="true" dockArea="left">
+      <bo>
+        <seg>feature</seg>
+        <seg>satellitesignal</seg>
+      </bo>
+      <position y="201.0"/>
+    </element>
+    <element uuid="91571ad7-02b2-4531-9bce-e0a1bca9b6de" manual="true">
+      <element uuid="86e06139-5f56-48d9-baca-e524f4caae5c" manual="true" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>afgoutput</seg>
+        </bo>
+        <position x="370.0" y="60.0"/>
+      </element>
+      <element uuid="ff7a5887-071b-41a0-a187-8d7def9ee236" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>operatorcommand</seg>
+        </bo>
+        <position y="60.0"/>
+      </element>
+      <element uuid="5a1151da-a7c9-400d-857a-bfce234e6e25" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>position</seg>
+        </bo>
+        <position y="110.0"/>
+      </element>
+      <element uuid="cb8e807d-af63-458d-994c-0ebad3eaf27f" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>powersupply</seg>
+        </bo>
+        <position y="10.0"/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>autoflightguidance</seg>
+      </bo>
+      <position x="534.0" y="91.0"/>
+      <size width="459.0" height="160.0"/>
+    </element>
+    <element uuid="33876a99-12c2-4185-ba2f-c18f01135d80" manual="true">
+      <element uuid="defef3de-4ce5-4966-b602-67c4cfcdca5b" manual="true" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>flightsurfacecontrol</seg>
+        </bo>
+        <position x="291.0" y="35.0"/>
+      </element>
+      <element uuid="faeb9c1e-93ae-4645-b9fe-ccd28e0bddf9" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>guidancecommands</seg>
+        </bo>
+        <position y="60.0"/>
+      </element>
+      <element uuid="85089281-4988-4919-ac2d-43be0fccdfcd" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>powersupply</seg>
+        </bo>
+        <position y="10.0"/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>flightcontrol</seg>
+      </bo>
+      <position x="1013.0" y="91.0"/>
+      <size width="440.0" height="110.0"/>
+    </element>
+    <element uuid="84da6fa9-052b-43ac-88b1-dc2159f995bf" manual="true">
+      <element uuid="7f08ce73-66f1-406b-b2b4-aa22ebf28f18" manual="true" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>power</seg>
+        </bo>
+        <position x="214.0" y="10.0"/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>fspowersupply</seg>
+      </bo>
+      <position x="243.0" y="38.0"/>
+      <size width="271.0" height="60.0"/>
+    </element>
+    <element uuid="5f8a5a4e-74a1-4b41-8239-23e23fe576cd" manual="true">
+      <element uuid="f1795c60-0f2e-458c-a511-8d61dfd2de4e" manual="true" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>location</seg>
+        </bo>
+        <position x="232.0" y="10.0"/>
+      </element>
+      <element uuid="c8e0d9de-dcd8-47a2-ac89-bee5a98ba99b" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>satellitesignal</seg>
+        </bo>
+        <position y="10.0"/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>gps</seg>
+      </bo>
+      <position x="214.0" y="191.0"/>
+      <size width="300.0" height="60.0"/>
+    </element>
+    <bo>
+      <seg>classifier</seg>
+      <seg>flightsystem.tier1</seg>
+    </bo>
+    <position x="12.0" y="12.0"/>
+    <size width="1609.0" height="263.0"/>
+  </element>
+  <config type="structure" connectionPrimaryLabelsVisible="false">
+    <enabledAadlProperties/>
+    <context>
+      <seg>classifier</seg>
+      <seg>flightsystem::flightsystem.tier1</seg>
+    </context>
+  </config>
+</diagram:Diagram>

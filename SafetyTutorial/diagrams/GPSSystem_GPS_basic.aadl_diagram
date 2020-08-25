@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="ASCII"?>
+<diagram:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:diagram="http://osate.org/diagram" formatVersion="7">
+  <element uuid="3a60d98e-c250-4600-99f7-a22363cd0e18" manual="true">
+    <element uuid="eeef5e6b-2088-4e9b-8d4b-960b9da889b5" manual="true">
+      <bo>
+        <seg>connection</seg>
+        <seg>cputonetwork</seg>
+      </bo>
+      <bendpoints>
+        <point x="863.0" y="213.0"/>
+      </bendpoints>
+    </element>
+    <element uuid="4daf4a9b-0067-4eb0-aaac-f04a54fa471d" manual="true">
+      <element uuid="7077a990-8436-457c-a389-15894ed516aa" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>powertocpu</seg>
+      </bo>
+      <bendpoints>
+        <point x="518.0" y="142.0"/>
+        <point x="518.0" y="213.0"/>
+      </bendpoints>
+    </element>
+    <element uuid="c9d71124-0449-4ceb-be27-10ad6b820c5d" manual="true">
+      <element uuid="0667307d-9104-4492-baf3-7c696f39da48" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>powertonetwork</seg>
+      </bo>
+      <bendpoints>
+        <point x="853.0" y="142.0"/>
+        <point x="853.0" y="195.0"/>
+      </bendpoints>
+    </element>
+    <element uuid="94e2099a-5b04-418a-81fb-883ba6f2afed" manual="true">
+      <element uuid="47de00b0-6e67-4a60-a51d-574735ce9356" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>powertos1</seg>
+      </bo>
+    </element>
+    <element uuid="0948fb9d-4f3b-4a9c-9204-406f3fac80e5" manual="true">
+      <element uuid="dcc33890-1d58-4283-a5d0-44eba45fe15b" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>powertos2</seg>
+      </bo>
+      <bendpoints>
+        <point x="518.0" y="142.0"/>
+        <point x="518.0" y="322.0"/>
+      </bendpoints>
+    </element>
+    <element uuid="bbb8931f-33fb-4d70-9e61-2cc85e9b3de2" manual="true">
+      <element uuid="eab0e0b9-210c-4f79-9671-d2ba706e8d6a" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>proctoext</seg>
+      </bo>
+    </element>
+    <element uuid="92302ec2-e19f-4f3d-9009-88b57e753c6b" manual="true">
+      <bo>
+        <seg>connection</seg>
+        <seg>s1tonetwork</seg>
+      </bo>
+      <bendpoints>
+        <point x="1091.0" y="176.33333333333334"/>
+        <point x="1097.0" y="176.33333333333334"/>
+        <point x="1097.0" y="192.0"/>
+      </bendpoints>
+    </element>
+    <element uuid="5287d7ad-9ef2-405c-b850-6065efc3e599" manual="true">
+      <element uuid="e02cb3c4-8431-439e-9389-f735a5f56548" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>s1toproc</seg>
+      </bo>
+    </element>
+    <element uuid="5b6c58f4-1642-4b82-9f10-074b9e6f199b" manual="true">
+      <bo>
+        <seg>connection</seg>
+        <seg>s2tonetwork</seg>
+      </bo>
+      <bendpoints>
+        <point x="1091.0" y="199.66666666666669"/>
+        <point x="1097.0" y="199.66666666666669"/>
+        <point x="1097.0" y="272.0"/>
+      </bendpoints>
+    </element>
+    <element uuid="dac3fbc0-56b4-40b4-99f6-a73f2a93e6fd" manual="true">
+      <element uuid="315c6db5-5df3-47e2-b1f7-9b93c1aef1e7" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>s2toproc</seg>
+      </bo>
+      <bendpoints>
+        <point x="1562.0" y="322.0"/>
+        <point x="1562.0" y="192.0"/>
+      </bendpoints>
+    </element>
+    <element uuid="d425315d-d998-4dd5-8c4e-e5b0ed61834c" manual="true">
+      <element uuid="1ff28bcf-ddc3-426f-9d0b-1687c46c9f63" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>sattosatellitesignalreceiver1</seg>
+      </bo>
+      <bendpoints>
+        <point x="1097.0" y="89.0"/>
+        <point x="1097.0" y="92.0"/>
+      </bendpoints>
+    </element>
+    <element uuid="dbde3265-eed4-4ce1-a169-79c1dba97cd9" manual="true">
+      <element uuid="b5569e9d-97fe-4300-aefd-d684495a7709" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>sattosatellitesignalreceiver2</seg>
+      </bo>
+      <bendpoints>
+        <point x="236.0" y="89.0"/>
+        <point x="236.0" y="333.0"/>
+        <point x="1097.0" y="333.0"/>
+        <point x="1097.0" y="372.0"/>
+      </bendpoints>
+    </element>
+    <element uuid="804ea2e0-b97b-4bdd-a607-48c1b272b989" manual="true" dockArea="right">
+      <bo>
+        <seg>feature</seg>
+        <seg>location</seg>
+      </bo>
+      <position x="1874.0" y="123.0"/>
+    </element>
+    <element uuid="ef05ef30-2ef4-447a-8aa7-adddaae6326b" manual="true" dockArea="left">
+      <bo>
+        <seg>feature</seg>
+        <seg>satellitesignal</seg>
+      </bo>
+      <position y="45.0"/>
+    </element>
+    <element uuid="5e546df6-e4c7-4a28-9876-5dd4ddcc71a3" manual="true">
+      <element uuid="334e4678-fd70-4e7f-8cd2-ede4a17193c9" manual="true" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>networkaccess</seg>
+        </bo>
+        <position x="203.0" y="10.0"/>
+      </element>
+      <element uuid="f3f40da9-52a4-4153-af46-f7551159a73c" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>powersource</seg>
+        </bo>
+        <position y="10.0"/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>cpu1</seg>
+      </bo>
+      <position x="516.0" y="159.0"/>
+      <size width="315.0" height="60.0"/>
+    </element>
+    <element uuid="a49892c7-b2ed-4523-a0c6-c071086e776a" manual="true">
+      <element uuid="88b9e5be-5793-4982-9a34-ce399cf73bcf" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>power</seg>
+        </bo>
+        <position y="10.0"/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>network</seg>
+      </bo>
+      <position x="851.0" y="141.0"/>
+      <size width="224.0" height="70.0"/>
+    </element>
+    <element uuid="436dc752-d66f-4ce2-b968-b1697feda00f" manual="true">
+      <element uuid="4f99709b-5c85-4a72-9671-a84e9a3b4b13" manual="true" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>power</seg>
+        </bo>
+        <position x="205.0" y="10.0"/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>powersupply1</seg>
+      </bo>
+      <position x="234.0" y="88.0"/>
+      <size width="262.0" height="60.0"/>
+    </element>
+    <element uuid="736e132f-9789-4c0b-8ddc-870cece25cae" manual="true">
+      <element uuid="7dc65ebe-75fd-4ca8-bd56-20506acc135c" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>insensor1</seg>
+        </bo>
+        <position y="10.0"/>
+      </element>
+      <element uuid="4073f78d-b088-4044-824f-2530ab870006" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>insensor2</seg>
+        </bo>
+        <position y="60.0"/>
+      </element>
+      <element uuid="e3950d2d-fb72-48ce-b853-73a4b9dbcff2" manual="true" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>location</seg>
+        </bo>
+        <position x="224.0" y="35.0"/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>processing</seg>
+      </bo>
+      <position x="1560.0" y="88.0"/>
+      <size width="292.0" height="110.0"/>
+    </element>
+    <element uuid="b090ecb5-ebf1-4293-9cdb-4b707f93678d" manual="true">
+      <element uuid="b07e59e9-9d2d-4c7d-b0e0-7607774d2c0d" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>networkaccess</seg>
+        </bo>
+        <position y="110.0"/>
+      </element>
+      <element uuid="884e7fe2-90e7-4108-8fad-6d373df44879" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>powersource</seg>
+        </bo>
+        <position y="60.0"/>
+      </element>
+      <element uuid="3d311f98-7afc-4248-ba0c-ba872aae29cb" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>satellitesignal</seg>
+        </bo>
+        <position y="10.0"/>
+      </element>
+      <element uuid="c76b7935-8e10-43aa-897d-a51d6d150564" manual="true" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>senseddata</seg>
+        </bo>
+        <position x="354.0" y="60.0"/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>satellitesignalreceiver1</seg>
+      </bo>
+      <position x="1095.0" y="38.0"/>
+      <size width="445.0" height="160.0"/>
+    </element>
+    <element uuid="58581fec-a066-475e-914f-00647f5859d7" manual="true">
+      <element uuid="375be8fe-35db-49f7-93c6-d588dcdf450d" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>networkaccess</seg>
+        </bo>
+        <position y="10.0"/>
+      </element>
+      <element uuid="aabf4fe0-f769-4cd6-a0e9-11dbf8abc15f" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>powersource</seg>
+        </bo>
+        <position y="60.0"/>
+      </element>
+      <element uuid="c9d81388-ad8e-4560-976a-8a2235686fcc" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>satellitesignal</seg>
+        </bo>
+        <position y="110.0"/>
+      </element>
+      <element uuid="2526ff39-8249-4756-8a8f-3eec926dd980" manual="true" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>senseddata</seg>
+        </bo>
+        <position x="354.0" y="60.0"/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>satellitesignalreceiver2</seg>
+      </bo>
+      <position x="1095.0" y="218.0"/>
+      <size width="445.0" height="160.0"/>
+    </element>
+    <bo>
+      <seg>classifier</seg>
+      <seg>gps.basic</seg>
+    </bo>
+    <position x="12.0" y="12.0"/>
+    <size width="1942.0" height="390.0"/>
+  </element>
+  <config type="structure" connectionPrimaryLabelsVisible="false">
+    <enabledAadlProperties/>
+    <context>
+      <seg>classifier</seg>
+      <seg>gpssystem::gps.basic</seg>
+    </context>
+  </config>
+</diagram:Diagram>

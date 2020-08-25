@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="ASCII"?>
+<diagram:Diagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:diagram="http://osate.org/diagram" formatVersion="7">
+  <element uuid="58455479-cb70-4e1f-abcf-21238865caa3" manual="true">
+    <element uuid="65bace6b-3542-43cb-904a-070090a236dd" manual="true">
+      <element uuid="e6079700-071c-491e-9dff-6339cd25d045" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>afgtofc</seg>
+      </bo>
+    </element>
+    <element uuid="d896e4e2-14ab-492c-ba90-77092db005c5" manual="true">
+      <element uuid="6593793a-ead9-4491-889a-c0ebfbafa528" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>flightcontroleffect</seg>
+      </bo>
+    </element>
+    <element uuid="72105865-bc1e-49d9-add2-9ed0b06ded4d" manual="true">
+      <element uuid="57f1a085-e627-44ce-8c32-ccb1e1500672" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>gps1tovoter</seg>
+      </bo>
+    </element>
+    <element uuid="191abf59-ae0b-4ccb-8c65-5e13dbb7791a" manual="true">
+      <element uuid="04096c26-4dac-48d7-bf4e-a74032943d93" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>gps2tovoter</seg>
+      </bo>
+      <bendpoints>
+        <point x="563.0" y="142.0"/>
+        <point x="563.0" y="172.0"/>
+      </bendpoints>
+    </element>
+    <element uuid="0d9cb4c0-1eb7-4086-ad85-aaec194faebc" manual="true">
+      <element uuid="85bf30b2-4fe3-42aa-a608-a19860bdf3ab" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>pilottoafg</seg>
+      </bo>
+      <bendpoints>
+        <point x="861.0" y="272.0"/>
+        <point x="861.0" y="247.0"/>
+      </bendpoints>
+    </element>
+    <element uuid="151a53d6-0da9-4caa-85fc-499ab5289791" manual="true">
+      <element uuid="4f5b7d81-3c9e-4bea-ab70-4bb55e04096e" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>power1</seg>
+      </bo>
+      <bendpoints>
+        <point x="861.0" y="92.0"/>
+        <point x="861.0" y="147.0"/>
+      </bendpoints>
+    </element>
+    <element uuid="f4088a29-0cd9-48f4-8338-ba95f926f9bc" manual="true">
+      <element uuid="f354d26e-4f55-4345-9da1-714d9fa6a440" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>power2</seg>
+      </bo>
+      <bendpoints>
+        <point x="1340.0" y="92.0"/>
+        <point x="1340.0" y="147.0"/>
+      </bendpoints>
+    </element>
+    <element uuid="9f734fab-d0eb-4105-8638-ebde98234abd" manual="true">
+      <element uuid="831da35b-ff2a-4d3b-9b84-40d6b865ca62" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>satellite1</seg>
+      </bo>
+    </element>
+    <element uuid="ecca8db6-d712-4067-a5a9-e3f4ee64a193" manual="true">
+      <element uuid="a0554ae7-1e19-4def-81e6-9d626ebaa3b4" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>satellite2</seg>
+      </bo>
+      <bendpoints>
+        <point x="236.0" y="222.0"/>
+        <point x="236.0" y="142.0"/>
+      </bendpoints>
+    </element>
+    <element uuid="65024215-8aff-4d26-9b0b-527d17994122" manual="true">
+      <element uuid="16540609-b395-4f10-b901-14958adb88b6" manual="true">
+        <bo>
+          <seg>tag</seg>
+          <seg>unidirectional</seg>
+        </bo>
+      </element>
+      <bo>
+        <seg>connection</seg>
+        <seg>votertoafg</seg>
+      </bo>
+    </element>
+    <element uuid="b9c96ad2-f901-4934-a6b1-b69e96f53378" manual="true" dockArea="right">
+      <bo>
+        <seg>feature</seg>
+        <seg>observablefailure</seg>
+      </bo>
+      <position x="1800.0" y="128.0"/>
+    </element>
+    <element uuid="3bb36294-1620-4f1d-a0df-cb565d3ec831" manual="true" dockArea="left">
+      <bo>
+        <seg>feature</seg>
+        <seg>pilotinput</seg>
+      </bo>
+      <position y="228.0"/>
+    </element>
+    <element uuid="6701c726-9f11-4c64-93ec-b1d27951411f" manual="true" dockArea="left">
+      <bo>
+        <seg>feature</seg>
+        <seg>satellitesignal</seg>
+      </bo>
+      <position y="178.0"/>
+    </element>
+    <element uuid="514fac2d-2dff-4636-b132-ad9c62d0d5c8" manual="true">
+      <element uuid="3323883f-b34b-4809-89f0-a10a70ac93d1" manual="true" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>afgoutput</seg>
+        </bo>
+        <position x="370.0" y="60.0"/>
+      </element>
+      <element uuid="60482ada-1023-4280-82b1-ef933429ebb5" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>operatorcommand</seg>
+        </bo>
+        <position y="110.0"/>
+      </element>
+      <element uuid="b6c81dd1-e69e-4d71-b787-7e64923502be" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>position</seg>
+        </bo>
+        <position y="60.0"/>
+      </element>
+      <element uuid="f5a059cb-2f69-4ea8-990f-d705dcc2eda2" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>powersupply</seg>
+        </bo>
+        <position y="10.0"/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>autoflightguidance</seg>
+      </bo>
+      <position x="859.0" y="93.0"/>
+      <size width="459.0" height="160.0"/>
+    </element>
+    <element uuid="09f26df5-af88-4fe3-93d0-a2142d5dd185" manual="true">
+      <element uuid="6fc67fc2-69d2-4279-8774-aadb9cf6c28e" manual="true" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>flightsurfacecontrol</seg>
+        </bo>
+        <position x="291.0" y="35.0"/>
+      </element>
+      <element uuid="92344746-15c7-46c8-8ed1-4e09b5dbc05b" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>guidancecommands</seg>
+        </bo>
+        <position y="60.0"/>
+      </element>
+      <element uuid="f8d50fe1-6092-4e2b-a0ed-84b58d5cb8bb" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>powersupply</seg>
+        </bo>
+        <position y="10.0"/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>flightcontrol</seg>
+      </bo>
+      <position x="1338.0" y="93.0"/>
+      <size width="440.0" height="110.0"/>
+    </element>
+    <element uuid="95089dcb-ab26-4518-9e31-2b755fb4b356" manual="true">
+      <element uuid="e7d8ae63-7379-4c48-b0d3-d37278001f32" manual="true" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>power</seg>
+        </bo>
+        <position x="214.0" y="10.0"/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>fspowersupply</seg>
+      </bo>
+      <position x="568.0" y="38.0"/>
+      <size width="271.0" height="60.0"/>
+    </element>
+    <element uuid="07c85842-74a2-42b4-ae7d-7821ac1a4612" manual="true">
+      <element uuid="09838d72-73f0-450d-a29e-735f23a23a7a" manual="true" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>location</seg>
+        </bo>
+        <position x="239.0" y="10.0"/>
+      </element>
+      <element uuid="eea32af2-ef5f-4580-b49d-eeb3fdd0184b" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>satellitesignal</seg>
+        </bo>
+        <position y="10.0"/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>gps1</seg>
+      </bo>
+      <position x="234.0" y="168.0"/>
+      <size width="307.0" height="60.0"/>
+    </element>
+    <element uuid="2fba37db-7b75-439a-b125-ccc87c28ae04" manual="true">
+      <element uuid="5d1262d8-c77a-4260-8c50-27508b2aebc3" manual="true" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>location</seg>
+        </bo>
+        <position x="239.0" y="10.0"/>
+      </element>
+      <element uuid="e9b7e582-1176-4129-a6d9-b02acad03a01" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>satellitesignal</seg>
+        </bo>
+        <position y="10.0"/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>gps2</seg>
+      </bo>
+      <position x="234.0" y="88.0"/>
+      <size width="307.0" height="60.0"/>
+    </element>
+    <element uuid="847f7453-b368-4b3d-8fc3-60ccf926d7e4" manual="true">
+      <element uuid="745da5b1-f77e-4574-bbdd-437eb1e68e92" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>inlocation1</seg>
+        </bo>
+        <position y="60.0"/>
+      </element>
+      <element uuid="e359dff7-5a70-4c46-a205-95b3866d3be2" manual="true" dockArea="left">
+        <bo>
+          <seg>feature</seg>
+          <seg>inlocation2</seg>
+        </bo>
+        <position y="10.0"/>
+      </element>
+      <element uuid="ade086ac-81dc-47f3-aded-ca075f385025" manual="true" dockArea="right">
+        <bo>
+          <seg>feature</seg>
+          <seg>outlocation</seg>
+        </bo>
+        <position x="185.0" y="35.0"/>
+      </element>
+      <bo>
+        <seg>subcomponent</seg>
+        <seg>voter</seg>
+      </bo>
+      <position x="561.0" y="118.0"/>
+      <size width="278.0" height="110.0"/>
+    </element>
+    <bo>
+      <seg>classifier</seg>
+      <seg>flightsystem.dualgps</seg>
+    </bo>
+    <position x="12.0" y="12.0"/>
+    <size width="1934.0" height="280.0"/>
+  </element>
+  <config type="structure" connectionPrimaryLabelsVisible="false">
+    <enabledAadlProperties/>
+    <context>
+      <seg>classifier</seg>
+      <seg>flightsystem::flightsystem.dualgps</seg>
+    </context>
+  </config>
+</diagram:Diagram>
